@@ -13,6 +13,24 @@ defineProps({
     title: String,
 });
 
+const menues = [
+    {
+        label: 'Inicio',
+        route_name: 'dashboard',
+        is_active: route().current('dashboard'),
+    },
+    {
+        label: 'Nóminas',
+        route_name: 'dashboard',
+        is_active: route().current('dashboard'+'.*'),
+    },
+    {
+        label: 'Inventario',
+        route_name: 'dashboard',
+        is_active: route().current('dashboard'+'.*'),
+    },
+];
+
 const showingNavigationDropdown = ref(false);
 
 const switchToTeam = (team) => {
@@ -49,8 +67,8 @@ const logout = () => {
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                <NavLink v-for="(menu, index) in menues" :key="index" :href="route(menu.route_name)" :active="menu.is_active">
+                                   {{ menu.label}}
                                 </NavLink>
                             </div>
                         </div>
@@ -208,8 +226,8 @@ const logout = () => {
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
+                        <ResponsiveNavLink v-for="(menu, index) in menues" :key="index" :href="route('dashboard')" :active="menu.is_active">
+                            {{ menu.label }}
                         </ResponsiveNavLink>
                     </div>
 

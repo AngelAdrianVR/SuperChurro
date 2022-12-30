@@ -13,7 +13,7 @@
                          <i class="fa-regular fa-clock text-lg mr-2"></i>
                          No has registrado Entrada.
                     </div>
-                    <SecondaryButton class="ml-2">Entrada</SecondaryButton>
+               <QrScanner label="Entrada" />
                </div> 
                <div class="flex items-center justify-between">
                     <div>
@@ -99,6 +99,8 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import QrScanner from "@/Components/QrScanner.vue";
+
 export default {
     data(){
         return{
@@ -109,6 +111,7 @@ export default {
      AppLayout,
      PrimaryButton,
      SecondaryButton,
+     QrScanner,
     },
     props:{
 

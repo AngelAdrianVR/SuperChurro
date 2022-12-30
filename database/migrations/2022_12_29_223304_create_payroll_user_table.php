@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('payroll_user', function (Blueprint $table) {
             $table->id();
-            $table->json('registers');
+            $table->json('registers')->nullable();
             $table->unsignedMediumInteger('discounts')->nullable();
             $table->timestamps();
         });

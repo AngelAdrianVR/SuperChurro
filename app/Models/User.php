@@ -27,6 +27,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
+        'is_active',
+        'employee_properties',
     ];
 
     /**
@@ -48,6 +51,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'employee_properties' => 'array',
     ];
 
     /**
@@ -58,4 +62,18 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    //Relationships
+    public function payrolls()
+    {
+        return $this->belongsToMany(Payroll::class)->using(PayrollUser::class);
+    }
+
+    public function loans(){
+        return $this->hasMany(Loan::class);
+    }
+
+    public function workPermits(){
+        return $this->hasMany(WorkPermit::class);
+    }
 }

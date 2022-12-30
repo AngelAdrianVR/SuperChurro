@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\LoanController;
+use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\WorkPermitController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,3 +36,10 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+Route::resource('payrolls', PayrollController::class);
+
+Route::resource('work-permits', WorkPermitController::class);
+
+Route::resource('loans', LoanController::class);
+

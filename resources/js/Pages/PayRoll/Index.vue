@@ -1,5 +1,5 @@
 <template>
-<AppLayout>
+<AppLayout title="Nóminas">
  <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">Nóminas</h2>
     </template>
@@ -10,7 +10,7 @@
     </div>
 
     <div class="globe-container">
-        <div class="globe">
+        <div class="globe hover:bg-gray-200 cursor-pointer">
             <div class="globe-title pb-2">
                 Semana 3: 14 Ene., 2023 al 20 Ene., 2023
             </div>
@@ -20,13 +20,9 @@
                     <span><i class="fa-solid fa-xmark mr-2"></i>1 falta(s)</span> 
                 </div>
         </div>
-    </div>
 
-
-
-    <!-- -----------------Borrar--------------- -->
-    <div class="globe-container">
-        <div class="globe">
+        <!-- ------------------borrar--------------------- -->
+        <div class="globe hover:bg-gray-200 cursor-pointer">
             <div class="globe-title pb-2">
                 Semana 3: 14 Ene., 2023 al 20 Ene., 2023
             </div>
@@ -36,10 +32,7 @@
                     <span><i class="fa-solid fa-xmark mr-2"></i>1 falta(s)</span> 
                 </div>
         </div>
-    </div>
-
-    <div class="globe-container">
-        <div class="globe">
+        <div class="globe hover:bg-gray-200 cursor-pointer">
             <div class="globe-title pb-2">
                 Semana 3: 14 Ene., 2023 al 20 Ene., 2023
             </div>
@@ -49,8 +42,30 @@
                     <span><i class="fa-solid fa-xmark mr-2"></i>1 falta(s)</span> 
                 </div>
         </div>
+        <div class="globe hover:bg-gray-200 cursor-pointer">
+            <div class="globe-title pb-2">
+                Semana 3: 14 Ene., 2023 al 20 Ene., 2023
+            </div>
+                <div class="flex justify-between items-center">
+                   <span><i class="fa-regular fa-dollar-sign mr-2"></i>1,000</span> 
+                   <span><i class="fa-solid fa-check mr-2"></i>5 Asistencia(s)</span> 
+                    <span><i class="fa-solid fa-xmark mr-2"></i>1 falta(s)</span> 
+                </div>
+        </div>
+        <div class="globe hover:bg-gray-200 cursor-pointer">
+            <div class="globe-title pb-2">
+                Semana 3: 14 Ene., 2023 al 20 Ene., 2023
+            </div>
+                <div class="flex justify-between items-center">
+                   <span><i class="fa-regular fa-dollar-sign mr-2"></i>1,000</span> 
+                   <span><i class="fa-solid fa-check mr-2"></i>5 Asistencia(s)</span> 
+                    <span><i class="fa-solid fa-xmark mr-2"></i>1 falta(s)</span> 
+                </div>
+        </div>
+                <!-- ------------------borrar--------------------- -->
+
     </div>
-<!-- ----------------Borrar----------------------------------- -->
+
 </AppLayout>
     
 </template>

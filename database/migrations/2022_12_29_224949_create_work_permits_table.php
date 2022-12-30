@@ -16,9 +16,11 @@ return new class extends Migration
         Schema::create('work_permits', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->unsignedTinyInteger('time_requested');
-            $table->text('description');
-            $table->unsignedTinyInteger('status');
+            $table->unsignedTinyInteger('time_requested')->nullable();
+            $table->text('description')->nullable();
+            $table->unsignedTinyInteger('status')->default(1); //Revisando o esperado aprobación
+            $table->foreignId('permission_type_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

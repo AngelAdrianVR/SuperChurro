@@ -14,6 +14,8 @@ class WorkPermit extends Model
         'time_requested',
         'description',
         'status',
+        'permission_type_id',
+        'user_id',
     ];
 
     protected $dates = [

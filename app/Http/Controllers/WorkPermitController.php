@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PermissionType;
 use App\Models\WorkPermit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class WorkPermitController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +31,8 @@ class WorkPermitController extends Controller
      */
     public function create()
     {
-        //
+        $permission_types = PermissionType::all();
+        return Inertia::render('WorkPermit/Create', compact('permission_types'));
     }
 
     /**

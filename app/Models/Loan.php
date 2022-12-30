@@ -12,6 +12,7 @@ class Loan extends Model
     protected $fillable = [
         'amount',
         'status',
+        'user_id',
     ];
 
     //Rellationships

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedMediumInteger('amount');
             $table->unsignedTinyInteger('status');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

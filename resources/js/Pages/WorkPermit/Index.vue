@@ -1,5 +1,5 @@
 <template>
-  <AppLayout>
+  <AppLayout title="Permisos">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         Permisos
@@ -7,9 +7,9 @@
     </template>
 
     <div class="flex justify-end">
-      <!-- <Link :href="route('guest.create')"> -->
+      <Link :href="route('work-permits.create')">
       <SecondaryButton class="mr-7 mt-4">Solicitar Permiso</SecondaryButton>
-      <!-- </Link> -->
+      </Link>
     </div>
 
     <div class="globe-container">

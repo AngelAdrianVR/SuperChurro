@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LoanResource;
 use App\Models\Loan;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,7 +16,9 @@ class LoanController extends Controller
      */
     public function index()
     {
-       return Inertia::render('Loan/Index');
+        $loans = LoanResource::collection(auth()->user()->loans()->latest()->get());
+        // return $loans;
+       return Inertia::render('Loan/Index', compact('loans'));
     }
 
     /**
@@ -25,7 +28,7 @@ class LoanController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Loan/Create');
     }
 
     /**
@@ -36,7 +39,17 @@ class LoanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'amount' => 'numeric|min:1',
+            'description' => 'max:191',
+        ]);
+
+        Loan::create($validated + ['user_id'=>auth()->id()]);
+        
+        request()->session()->flash('flash.banner', '¡Se ha creado tu solicitud correctamente!');
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return redirect()->route('loans.index');
     }
 
     /**
@@ -81,6 +94,10 @@ class LoanController extends Controller
      */
     public function destroy(Loan $loan)
     {
-        //
+        $loan->delete();
+        request()->session()->flash('flash.banner', '¡Se ha eliminado correctamente!');
+        request()->session()->flash('flash.bannerStyle', 'success'); 
+        return redirect()->route('loans.index');
+
     }
 }

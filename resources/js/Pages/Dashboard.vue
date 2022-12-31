@@ -13,7 +13,9 @@
                          <i class="fa-regular fa-clock text-lg mr-2"></i>
                          No has registrado Entrada.
                     </div>
-               <QrScanner label="Entrada" />
+                    <Link :href="route('qr-scanner')">
+               <SecondaryButton>Entrada</SecondaryButton>
+                    </Link>
                </div> 
                <div class="flex items-center justify-between">
                     <div>
@@ -99,7 +101,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import QrScanner from "@/Components/QrScanner.vue";
+import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
     data(){
@@ -111,7 +113,7 @@ export default {
      AppLayout,
      PrimaryButton,
      SecondaryButton,
-     QrScanner,
+     Link,
     },
     props:{
 

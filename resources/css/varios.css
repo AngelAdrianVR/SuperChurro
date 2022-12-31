@@ -3,7 +3,7 @@
 }
 
 .globe {
-    @apply bg-white text-gray-700 overflow-auto shadow-lg shadow-gray-400/70 rounded-lg w-[90%] md:w-full md:mx-2 mx-auto p-4;
+    @apply bg-white text-gray-700 overflow-auto shadow-lg shadow-gray-400/70 rounded-lg w-[90%] md:w-full md:mx-2 mx-auto px-3 pb-3 pt-1;
 }
 
 .globe-title {

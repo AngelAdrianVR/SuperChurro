@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\BarterController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkPermitController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -37,9 +39,10 @@ Route::middleware([
     })->name('dashboard');
 });
 
+// how to protect pages from not admin useres? (custom middleware)
 Route::resource('payrolls', PayrollController::class);
-
 Route::resource('work-permits', WorkPermitController::class);
-
+Route::resource('barters', BarterController::class);
 Route::resource('loans', LoanController::class);
+Route::resource('users', UserController::class);
 

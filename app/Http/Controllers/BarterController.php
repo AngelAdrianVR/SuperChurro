@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Payroll;
+use App\Models\Barter;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
-class PayrollController extends Controller
+class BarterController extends Controller
 {
     public function __construct()
     {
@@ -19,7 +18,7 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        return Inertia::render('PayRoll/Index');
+        return inertia('Barter/Index');
     }
 
     /**
@@ -46,10 +45,10 @@ class PayrollController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Payroll  $payroll
+     * @param  \App\Models\Barter  $barter
      * @return \Illuminate\Http\Response
      */
-    public function show(Payroll $payroll)
+    public function show(Barter $barter)
     {
         //
     }
@@ -57,10 +56,10 @@ class PayrollController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Payroll  $payroll
+     * @param  \App\Models\Barter  $barter
      * @return \Illuminate\Http\Response
      */
-    public function edit(Payroll $payroll)
+    public function edit(Barter $barter)
     {
         //
     }
@@ -69,10 +68,10 @@ class PayrollController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Payroll  $payroll
+     * @param  \App\Models\Barter  $barter
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Payroll $payroll)
+    public function update(Request $request, Barter $barter)
     {
         //
     }
@@ -80,10 +79,10 @@ class PayrollController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Payroll  $payroll
+     * @param  \App\Models\Barter  $barter
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Payroll $payroll)
+    public function destroy(Barter $barter)
     {
         //
     }

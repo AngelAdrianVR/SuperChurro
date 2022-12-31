@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\WorkPermitResource;
 use App\Models\PermissionType;
 use App\Models\WorkPermit;
 use Illuminate\Http\Request;
@@ -21,7 +22,9 @@ class WorkPermitController extends Controller
      */
     public function index()
     {
-        return Inertia::render('WorkPermit/Index');
+        $work_permits = WorkPermitResource::collection(auth()->user()->workPermits()->latest()->get());
+        // return  $work_permits;
+        return Inertia::render('WorkPermit/Index',compact('work_permits'));
     }
 
     /**
@@ -43,7 +46,19 @@ class WorkPermitController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'date' => 'required|after:today',
+            'time_requested' => 'max:1',
+            'description' => 'max:191',
+            'permission_type_id' => 'required',
+        ]);
+
+        WorkPermit::create($validated + ['user_id'=>auth()->id()]);
+        
+        request()->session()->flash('flash.banner', '¡Se ha creado tu solicitud correctamente!');
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return redirect()->route('work-permits.index');
     }
 
     /**
@@ -54,7 +69,7 @@ class WorkPermitController extends Controller
      */
     public function show(WorkPermit $workPermit)
     {
-        //
+             
     }
 
     /**
@@ -88,6 +103,9 @@ class WorkPermitController extends Controller
      */
     public function destroy(WorkPermit $workPermit)
     {
-        //
+        $workPermit->delete();
+        request()->session()->flash('flash.banner', '¡Se ha eliminado correctamente!');
+        request()->session()->flash('flash.bannerStyle', 'success'); 
+        return redirect()->route('work-permits.index');
     }
 }

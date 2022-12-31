@@ -1,14 +1,14 @@
 <template>
-  <AppLayout title="Solicitud de permiso">
+  <AppLayout title="Solicitud de préstamo">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Solicitud de permiso
+        Solicitud de préstamo
       </h2>
     </template>
 
     <div class="flex justify-start">
       <Link
-        :href="route('work-permits.index')"
+        :href="route('loans.index')"
         class="flex items-center mt-2 text-slate-700"
       >
         <i
@@ -44,85 +44,9 @@
       "
     >
       <form @submit.prevent="store">
-        <select
-          @change="
-            is_full_day = permission_types.find(
-              (item) => item.id === form.permission_type_id
-            )?.is_full_day
-          "
-          class="
-            bg-gray-200
-            mb-7
-            mr-2
-            rounded-lg
-            border border-gray-300
-            text-gray-500
-            focus:border-stone-500 focus:text-stone-500
-          "
-          required
-          v-model="form.permission_type_id"
-        >
-          <option disabled selected class="text-gray-500" value="">
-            -- Tipo de Permiso --
-          </option>
-          <option
-            class="text-gray-500"
-            v-for="permission_type in permission_types"
-            :key="permission_type.id"
-            :value="permission_type.id"
-          >
-            {{ permission_type.name }}
-          </option>
-        </select>
         <div class="relative z-0 mb-6 w-full group">
           <input
-            v-model="form.date"
-            type="date"
-            name="floating_date"
-            autocomplete="off"
-            class="
-              block
-              py-2.5
-              px-0
-              w-full
-              text-sm text-gray-900
-              bg-transparent
-              border-0 border-b-2 border-gray-300
-              appearance-none
-              dark:text-white dark:border-gray-600 dark:focus:border-stone-500
-              focus:outline-none focus:ring-0 focus:border-stone-600
-              peer
-            "
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_date"
-            class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-400
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            "
-            >Fecha de permiso</label
-          >
-          <InputError :message="$page.props?.errors.date" />
-        </div>
-        <div v-if="!is_full_day" class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.time_requested"
+            v-model="form.amount"
             type="number"
             name="floating_time_requested"
             autocomplete="off"
@@ -143,7 +67,7 @@
             placeholder=" "
           />
           <label
-            for="floating_time_requested"
+            for="floating_amount"
             class="
               absolute
               text-sm text-gray-500
@@ -162,9 +86,9 @@
               peer-placeholder-shown:translate-y-0
               peer-focus:scale-75 peer-focus:-translate-y-6
             "
-            >Tiempo requerido (hrs)</label
+            >Cantidad solicitada*</label
           >
-          <InputError :message="$page.props?.errors.time_requested" />
+          <InputError :message="$page.props?.errors.amount" />
         </div>
         <div class="relative z-0 mb-6 w-full group">
           <input
@@ -211,7 +135,7 @@
           >
         </div>
         <div class="flex justify-center lg:justify-end">
-          <PrimaryButton :disabled="form.processing">Programar</PrimaryButton>
+          <PrimaryButton :disabled="form.processing">Solicitar</PrimaryButton>
         </div>
       </form>
     </div>
@@ -227,14 +151,11 @@ import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
 export default {
   data() {
     const form = useForm({
-      time_requested: null,
-      permission_type_id: "",
+      amount: null,
       description: "",
-      date: "",
     });
     return {
       form,
-      is_full_day: 0,
     };
   },
   components: {
@@ -246,11 +167,11 @@ export default {
     InputError,
   },
   props: {
-    permission_types: Array,
+
   },
   methods: {
     store() {
-      this.form.post(this.route("work-permits.store"));
+      this.form.post(this.route("loans.store"));
     },
   },
 };

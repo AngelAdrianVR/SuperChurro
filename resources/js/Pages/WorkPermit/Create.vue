@@ -16,7 +16,7 @@
             fas
             fa-long-arrow-alt-left
             text-lg
-            hover:bg-gray-300
+            active:bg-gray-300
             bg-opacity-100
             rounded-full
             w-7

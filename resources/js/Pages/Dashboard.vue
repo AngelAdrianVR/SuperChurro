@@ -56,15 +56,15 @@
                </div> 
                <div class="flex justify-between items-center">
                    <span><i class="fa-regular fa-calendar-days mr-2"></i>2-Ene-2022</span> 
-                    <span class="text-orange-600"><i class="fa-solid fa-hourglass-start mr-2"></i>Revisando.</span> 
+                    <span class="text-orange-600 font-bold"><i class="fa-solid fa-hourglass-start mr-2"></i>Revisando.</span> 
                </div>
                <div class="flex justify-between items-center">
                     <span><i class="fa-regular fa-calendar-days mr-2"></i>2-Ene-2022</span>
-                    <span class="text-green-600"><i class="fa-solid fa-check mr-2"></i>Aprobado.</span> 
+                    <span class="text-green-600 font-bold"><i class="fa-solid fa-check mr-2"></i>Aprobado.</span> 
                </div>
                <div class="flex justify-between items-center">
                     <span><i class="fa-regular fa-calendar-days mr-2"></i>2-Ene-2022</span>
-                    <span class="text-red-600"><i class="fa-solid fa-xmark mr-2"></i>Rechazado.</span> 
+                    <span class="text-red-600 font-bold"><i class="fa-solid fa-xmark mr-2"></i>Rechazado.</span> 
                </div>
             </div>
 <!-- -----------------Préstamos----------------- -->

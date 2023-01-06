@@ -6,6 +6,16 @@
       </h2>
     </template>
 
+     <div class=" bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
+  <div class="flex">
+    <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
+    <div>
+      <p class="font-bold">Vacaciones disponibles</p>
+      <p class="text-sm">Tienes <strong>{{$page.props.user.employee_properties?.vacations}}</strong> días de vacaciones</p>
+    </div>
+  </div>
+</div>
+
     <div class="flex justify-start">
       <Link
         :href="route('work-permits.index')"
@@ -22,12 +32,14 @@
             w-7
             h-7
             pl-1
+            ml-2
           "
         ></i>
         <span class="ml-1 cursor-default">Atrás</span>
       </Link>
     </div>
 
+   
     <!-- component -->
     <!-- This is an example component -->
     <div
@@ -48,7 +60,10 @@
           @change="
             is_full_day = permission_types.find(
               (item) => item.id === form.permission_type_id
-            )?.is_full_day
+            )?.is_full_day;
+             vacation_id = permission_types.find(
+              (item) => item.id === form.permission_type_id
+            )?.id
           "
           class="
             bg-gray-200
@@ -124,6 +139,7 @@
           <input
             v-model="form.time_requested"
             type="number"
+            step="0.1"
             name="floating_time_requested"
             autocomplete="off"
             required
@@ -211,8 +227,10 @@
           >
         </div>
         <div class="flex justify-center lg:justify-end">
-          <PrimaryButton :disabled="form.processing">Programar</PrimaryButton>
+        <!-- the button is configured to disabled when vacations == 0 and type of permit is vacations. ID of vacation = 3. change taking Id from database -->
+          <PrimaryButton :disabled="form.processing || vacation_id == 3 && $page.props.user.employee_properties?.vacations < 1 ">Programar</PrimaryButton>
         </div>
+          <p v-if="vacation_id == 3 && $page.props.user.employee_properties?.vacations < 1 " class="mt-2 text-center text-sm text-red-600">Necesitas tener al menos 1 día de vacaciones.</p>
       </form>
     </div>
   </AppLayout>
@@ -235,6 +253,7 @@ export default {
     return {
       form,
       is_full_day: 0,
+      vacation_id: 0,
     };
   },
   components: {

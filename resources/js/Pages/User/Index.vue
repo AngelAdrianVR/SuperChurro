@@ -4,7 +4,7 @@
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">Usuarios</h2>
     </template>
 
-    <div class="flex justify-end">
+    <div class="flex justify-end mb-3">
       <Link :href="route('users.create')">
         <SecondaryButton class="mr-7 mt-4">Crear nuevo</SecondaryButton>
       </Link>

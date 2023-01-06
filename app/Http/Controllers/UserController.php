@@ -43,6 +43,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        
         $validated = $request->validate([
             'name'=> 'required|max:30',
             'email'=> 'email',
@@ -51,11 +52,13 @@ class UserController extends Controller
             'employee_properties.base_salary'=> 'required|numeric',
             'employee_properties.shifts'=> 'required',
             'employee_properties.work_days'=> 'required',
+            'employee_properties.vacations'=> 'numeric',
+            
         ]);
-
         User::create($validated + [
             'employee_properties.vacations_updated_date' => now(),
             'password' => '123',
+            
         ]);
 
         request()->session()->flash('flash.banner', '¡Se ha creado un nuevo usuario correctamente!');

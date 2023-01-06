@@ -16,12 +16,13 @@
             fas
             fa-long-arrow-alt-left
             text-lg
-            hover:bg-gray-300
+            active:bg-gray-300
             bg-opacity-100
             rounded-full
             w-7
             h-7
             pl-1
+            ml-2
           "
         ></i>
         <span class="ml-1 cursor-default">Atrás</span>

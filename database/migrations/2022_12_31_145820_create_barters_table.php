@@ -18,10 +18,10 @@ return new class extends Migration
             
             $table->date('date');
             $table->unsignedTinyInteger('status')->default(1);
-            $table->unsignedSmallInteger('transmitter_user_id');
-            $table->unsignedSmallInteger('receptor_user_id')->nullable();
-            $table->foreign('transmitter_user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->foreign('receptor_user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->unsignedInteger('transmitter_user_id');
+            $table->unsignedInteger('receptor_user_id')->nullable();
+            // $table->foreign('transmitter_user_id')->references('id')->on('users');
+            // $table->foreign('receptor_user_id')->references('id')->on('users');
 
             $table->timestamps();
         });

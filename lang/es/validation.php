@@ -158,5 +158,6 @@ return [
         'limit_date' => 'fecha límite',
         'terms' => 'Términos y condiciones',
         'today' => 'Hoy',
+        'phone_number' => 'Número telefónico',
     ],
 ];

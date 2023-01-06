@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -18,8 +19,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = UserResource::collection(User::all());
 
+        // return $users;
         return inertia('User/Index', compact('users'));
     }
 
@@ -30,7 +32,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('User/Create');
     }
 
     /**
@@ -41,7 +43,26 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name'=> 'required|max:30',
+            'email'=> 'email',
+            'phone_number'=> 'required|numeric|digits:10',
+            'employee_properties.birthdate'=> 'required|date',
+            'employee_properties.base_salary'=> 'required|numeric',
+            'employee_properties.shifts'=> 'required',
+            'employee_properties.work_days'=> 'required',
+        ]);
+
+        User::create($validated + [
+            'employee_properties.vacations_updated_date' => now(),
+            'password' => '123',
+        ]);
+
+        request()->session()->flash('flash.banner', '¡Se ha creado un nuevo usuario correctamente!');
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return redirect()->route('users.index');
+
     }
 
     /**
@@ -52,7 +73,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        // return $user;
+        return inertia('User/Show', compact('user'));
     }
 
     /**

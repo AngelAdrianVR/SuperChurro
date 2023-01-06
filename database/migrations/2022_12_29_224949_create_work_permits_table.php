@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('work_permits', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->unsignedTinyInteger('time_requested')->nullable();
+            $table->unsignedFloat('time_requested')->nullable();
             $table->text('description')->nullable();
             $table->unsignedTinyInteger('status')->default(1); //Revisando o esperado aprobación
             $table->foreignId('permission_type_id')->constrained()->cascadeOnDelete();

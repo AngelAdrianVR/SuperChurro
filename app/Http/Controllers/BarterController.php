@@ -18,6 +18,7 @@ class BarterController extends Controller
      */
     public function index()
     {
+        
         return inertia('Barter/Index');
     }
 
@@ -39,7 +40,18 @@ class BarterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'date' => 'required|date|after:today',
+        ]);
+        
+        var_dump($validated);
+
+        Barter::create($validated + ['transmitter_user_id'=>auth()->id()]);
+
+        request()->session()->flash('flash.banner', '¡Se ha publicado una solicitud de permuta correctamente!');
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return redirect()->route('barters.index');
     }
 
     /**

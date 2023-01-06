@@ -9,7 +9,12 @@ class Barter extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date', 'status', 'transitter_user_id', 'receptor_user_id'];
+    protected $fillable = [
+        'date',
+        'status',
+        'transmitter_user_id',
+        'receptor_user_id'
+    ];
 
     protected $dates = ['date'];
 

@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MovementConcept extends Model
+class SaleToEmployee extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'is_entry',
+        'products',
+        'user_id',
+    ];
+
+    protected $casts = [
+        'products' => 'array',
     ];
 }

@@ -238,7 +238,6 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import PayRollTable from "@/Components/PayRollTable.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputError from "@/Components/InputError.vue";
 import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
@@ -258,7 +257,6 @@ export default {
   },
   components: {
     AppLayout,
-    PayRollTable,
     Link,
     useForm,
     PrimaryButton,

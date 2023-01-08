@@ -10,7 +10,7 @@
           >Venta a empleado</SecondaryButton
         ></Link
       >
-      <Link :href="route('carts.create')"
+      <Link :href="route('product-request.create')"
         ><SecondaryButton class="mt-5 ml-2"
           >Solicitar mercancía</SecondaryButton
         ></Link

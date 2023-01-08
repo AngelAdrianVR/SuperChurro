@@ -9,7 +9,10 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'unit_id',
+    ];
 
     // relationships
     public function prices() 

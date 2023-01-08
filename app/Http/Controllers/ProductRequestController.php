@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\ProductRequest;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,9 @@ class ProductRequestController extends Controller
      */
     public function create()
     {
-        //
+        $products = Product::all();
+        // return $products;
+        return inertia('ProductRequest/Create', compact('products'));
     }
 
     /**

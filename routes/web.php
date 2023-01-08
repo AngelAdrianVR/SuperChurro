@@ -4,6 +4,7 @@ use App\Http\Controllers\BarterController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\ProductRequestController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
@@ -61,4 +62,5 @@ Route::resource('users', UserController::class);
 Route::resource('sales', SaleController::class);
 Route::resource('carts', CartController::class);
 Route::resource('warehouses', WarehouseController::class);
+Route::resource('product-request', ProductRequestController::class);
 

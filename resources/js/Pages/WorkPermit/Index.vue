@@ -16,7 +16,7 @@
       <div v-for="work_permit in work_permits.data" :key="work_permit.id" class="globe relative">
         <div class="globe-title !justify-between">
           <p>Fecha requerida: {{work_permit.date}}</p>
-          <button @click="delete_confirm = true; item_to_delete = work_permit;">
+          <button class="absolute bottom-1 right-2" @click="delete_confirm = true; item_to_delete = work_permit;">
           <i v-if="work_permit.status == 1" class="fa-solid fa-trash text-red-600"></i>
           </button>
         </div>
@@ -26,7 +26,7 @@
             <span v-if="work_permit.status == 2" class="text-green-600 font-bold mt-2"><i class="fa-solid fa-check mr-2"></i>Aprobado</span>  
             <span v-if="work_permit.status == 3" class="text-red-600 font-bold mt-2"><i class="fa-solid fa-xmark mr-2"></i>Rechazado</span>  
         </div>
-        <div class="absolute bottom-0 right-2 text-xs text-gray-400">Creado el: {{ work_permit.created_at }}</div>
+        <div class="absolute bottom-0 left-2 text-xs text-gray-400">Creado el: {{ work_permit.created_at }}</div>
       </div>
     </div>
 

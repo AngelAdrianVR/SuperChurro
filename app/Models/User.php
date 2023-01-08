@@ -77,4 +77,12 @@ class User extends Authenticatable
     public function workPermits(){
         return $this->hasMany(WorkPermit::class);
     }
+
+    public function myBarters(){
+        return $this->hasMany(Barter::class,'transmitter_user_id');
+    }
+
+    public function aceptedBarters(){
+        return $this->hasMany(Barter::class,'receptor_user_id');
+    }
 }

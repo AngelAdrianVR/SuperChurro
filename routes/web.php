@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\BarterController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WorkPermitController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -55,4 +58,7 @@ Route::resource('work-permits', WorkPermitController::class);
 Route::resource('barters', BarterController::class);
 Route::resource('loans', LoanController::class);
 Route::resource('users', UserController::class);
+Route::resource('sales', SaleController::class);
+Route::resource('carts', CartController::class);
+Route::resource('warehouses', WarehouseController::class);
 

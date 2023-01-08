@@ -16,8 +16,8 @@ defineProps({
 const admin_menues = [
     {
         label: 'Historial de ventas',
-        route_name: 'dashboard',
-        is_active: route().current('dashboard'),
+        route_name: 'sales.index',
+        is_active: route().current('sales' + '.*'),
     },
     {
         label: 'Configuraciones',
@@ -58,9 +58,14 @@ const menues = [
         is_active: route().current('loans' + '.*'),
     },
     {
-        label: 'Inventario',
-        route_name: 'dashboard',
-        is_active: route().current('dashboard' + '.*'),
+        label: 'Cocina',
+        route_name: 'warehouses.index',
+        is_active: route().current('warehouses' + '.*'),
+    },
+    {
+        label: 'Carrito',
+        route_name: 'carts.index',
+        is_active: route().current('carts' + '.*'),
     },
 ];
 

@@ -27,7 +27,7 @@ Si ya tienes un préstamo activo, no podrás solicitar otro.</p>
       <div v-for="loan in loans.data" :key="loan.id" class="globe relative">
         <div class="globe-title !justify-between">
           <p>Solicitado el: {{loan.created_at}}</p>
-          <button @click="delete_confirm = true; item_to_delete = loan;">
+          <button class="absolute bottom-1 right-2" @click="delete_confirm = true; item_to_delete = loan;">
           <i v-if="loan.status == 1" class="fa-solid fa-trash text-red-600"></i>
           </button>
         </div>

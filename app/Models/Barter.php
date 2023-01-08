@@ -21,11 +21,12 @@ class Barter extends Model
     // relationships
     public function transmitter()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'transmitter_user_id');
     }
 
     public function receptor()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'receptor_user_id');
     }
+
 }

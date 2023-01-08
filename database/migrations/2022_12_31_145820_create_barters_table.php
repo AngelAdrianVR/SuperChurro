@@ -20,8 +20,6 @@ return new class extends Migration
             $table->unsignedTinyInteger('status')->default(1);
             $table->unsignedInteger('transmitter_user_id');
             $table->unsignedInteger('receptor_user_id')->nullable();
-            // $table->foreign('transmitter_user_id')->references('id')->on('users');
-            // $table->foreign('receptor_user_id')->references('id')->on('users');
 
             $table->timestamps();
         });

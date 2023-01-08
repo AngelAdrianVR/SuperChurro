@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BarterResource;
 use App\Models\Barter;
 use Illuminate\Http\Request;
 
@@ -18,8 +19,9 @@ class BarterController extends Controller
      */
     public function index()
     {
-        
-        return inertia('Barter/Index');
+        $barters = BarterResource::collection(auth()->user()->myBarters()->with('receptor')->latest()->get());
+        // return $barters;
+        return inertia('Barter/Index',compact('barters'));
     }
 
     /**
@@ -44,8 +46,6 @@ class BarterController extends Controller
             'date' => 'required|date|after:today',
         ]);
         
-        var_dump($validated);
-
         Barter::create($validated + ['transmitter_user_id'=>auth()->id()]);
 
         request()->session()->flash('flash.banner', '¡Se ha publicado una solicitud de permuta correctamente!');
@@ -96,6 +96,9 @@ class BarterController extends Controller
      */
     public function destroy(Barter $barter)
     {
-        //
+        $barter->delete();
+        request()->session()->flash('flash.banner', '¡Se ha eliminado correctamente!');
+        request()->session()->flash('flash.bannerStyle', 'success'); 
+        return redirect()->route('barters.index');
     }
 }

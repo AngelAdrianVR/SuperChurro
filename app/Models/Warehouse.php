@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Warehouse extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'location',
+        'products',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'products' => 'array',
+    ];
 }

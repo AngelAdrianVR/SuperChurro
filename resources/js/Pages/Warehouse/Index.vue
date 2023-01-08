@@ -5,7 +5,7 @@
     </template>
 
     <div class="flex justify-end">
-      <Link :href="route('carts.create')"
+      <Link :href="route('warehouses.create')"
         ><SecondaryButton class="mt-5 mr-2"
           >Registrar Entrada/Salida</SecondaryButton
         ></Link
@@ -59,7 +59,7 @@
 
         <div class="globe-container flex-col">
           <div class="globe hover:bg-gray-200 cursor-pointer">
-            <div class="globe-title pb-2">
+            <div class="globe-title !justify-start pb-2">
               Bolsa para churros
             </div>
             <div class="flex justify-between items-center">
@@ -68,7 +68,7 @@
           </div>
 
           <div class="globe hover:bg-gray-200 cursor-pointer">
-            <div class="globe-title pb-2">
+            <div class="globe-title !justify-start pb-2">
               Botanas
             </div>
             <div class="flex justify-between items-center">
@@ -76,7 +76,7 @@
             </div>
           </div>
           <div class="globe hover:bg-gray-200 cursor-pointer">
-            <div class="globe-title pb-2">
+            <div class="globe-title !justify-start pb-2">
               Tostitos
             </div>
 

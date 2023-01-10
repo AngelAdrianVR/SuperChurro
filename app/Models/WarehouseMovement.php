@@ -17,4 +17,15 @@ class WarehouseMovement extends Model
         'product_id',
         'warehouse_id',
     ];  
+
+    // relationships
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function concept()
+    {
+        return $this->belongsTo(MovementConcept::class, 'movement_concept_id');
+    }
 }

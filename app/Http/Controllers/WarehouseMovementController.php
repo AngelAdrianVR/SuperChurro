@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\WarehouseMovement;
 use Illuminate\Http\Request;
 
@@ -38,15 +39,14 @@ class WarehouseMovementController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\WarehouseMovement  $warehouseMovement
-     * @return \Illuminate\Http\Response
-     */
-    public function show(WarehouseMovement $warehouseMovement)
+    public function showProductRecord($product_id)
     {
-        //
+        $product = Product::with(['movements' => ['user', 'concept'], 'unit'])
+            ->find($product_id);
+
+        // return $product;
+
+        return inertia('Warehouse/ShowProductRecord', compact('product'));
     }
 
     /**

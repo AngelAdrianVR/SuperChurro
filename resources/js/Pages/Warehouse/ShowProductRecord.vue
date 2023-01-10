@@ -1,0 +1,70 @@
+<template>
+  <AppLayout title="Historial de movimientos">
+    <template #header>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        Historial de "{{ product.name }}"
+      </h2>
+    </template>
+
+    <div class="flex justify-start">
+      <Link :href="route('warehouses.index')" class="flex items-center mt-2 text-slate-700">
+      <i class="
+            fas
+            fa-long-arrow-alt-left
+            text-lg
+            active:bg-gray-300
+            bg-opacity-100
+            rounded-full
+            w-7
+            h-7
+            pl-1
+            ml-2
+          "></i>
+      <span class="ml-1 cursor-default">Atrás</span>
+      </Link>
+    </div>
+    <div class="globe-container flex-col">
+      <div v-for="movement in product.movements" :key="movement" class="globe hover:bg-gray-200 cursor-pointer">
+        <p class="globe-title !justify-start pb-2 text-gray-500">
+          <i class="fa-solid fa-user mr-1"></i>
+          {{ movement.user.name }}
+        </p>
+        <p class="font-bold">
+          <i class="fa-solid fa-tag mr-1"></i>
+          {{ movement.concept.name }}
+        </p>
+        <p style="white-space: pre-line;" class="my-1 text-gray-500 text-sm">
+          <i class="fa-regular fa-comment mr-1"></i>
+          {{ movement.notes ?? '--'}}
+        </p>
+        <div class="flex justify-between items-center"
+          :class="movement.concept.is_entry ? 'text-green-500' : 'text-red-500'">
+          <span>{{ movement.quantity }} {{ product.unit.name }}</span>
+        </div>
+      </div>
+      <p v-if="product.movements.length === 0" class="text-sm text-gray-500 text-center my-3">
+        No hay ningún movimiento registrado para este producto.
+      </p>
+    </div>
+  </AppLayout>
+</template>
+
+<script>
+import AppLayout from "@/Layouts/AppLayout.vue";
+import { Link } from "@inertiajs/inertia-vue3";
+export default {
+  data() {
+    return {
+    };
+  },
+  components: {
+    AppLayout,
+    Link,
+  },
+  props: {
+    product: Object,
+  },
+  methods: {
+  },
+};
+</script>

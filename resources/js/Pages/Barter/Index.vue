@@ -57,7 +57,7 @@
       >
     </div>
 
-    <div class="globe-container">
+    <div v-if="barters.data.length" class="globe-container">
       <div v-for="barter in barters.data" :key="barter.id" class="globe relative">
         <div class="globe-title !justify-between">
           <div class="flex flex-col text-left">
@@ -95,6 +95,10 @@
           </span>
         </div>
       </div>
+    </div>
+
+    <div v-else class="text-center">    
+          <p>No hay información para mostrar.</p>
     </div>
 
     <ConfirmationModal :show="delete_confirm" @close="delete_confirm = false">

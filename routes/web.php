@@ -6,6 +6,7 @@ use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\ProductRequestController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SaleToEmployeeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseMovementController;
@@ -64,6 +65,7 @@ Route::resource('sales', SaleController::class);
 Route::resource('carts', CartController::class);
 Route::resource('warehouses', WarehouseController::class);
 Route::resource('product-request', ProductRequestController::class);
+Route::resource('sells-to-employees', SaleToEmployeeController::class);
 
 Route::get('warehouses-movements/show-product-record/{product}', [WarehouseMovementController::class, 'showProductRecord'])
     ->middleware('auth')

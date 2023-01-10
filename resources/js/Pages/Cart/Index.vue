@@ -5,7 +5,7 @@
     </template>
 
     <div class="flex justify-between">
-      <Link :href="route('carts.create')"
+      <Link :href="route('sells-to-employees.create')"
         ><SecondaryButton class="mt-5 mr-2"
           >Venta a empleado</SecondaryButton
         ></Link
@@ -18,7 +18,7 @@
     </div>
 
     <div class="flex justify-center">
-      <Link :href="route('carts.create')"
+      <Link :href="route('sales.create')"
         ><SecondaryButton class="mt-2">Hacer corte</SecondaryButton></Link
       >
     </div>

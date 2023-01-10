@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
+use App\Models\Product;
 use App\Models\Sale;
 use Illuminate\Http\Request;
 
@@ -24,7 +26,7 @@ class SaleController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Sales/Create');
     }
 
     /**
@@ -35,7 +37,7 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**

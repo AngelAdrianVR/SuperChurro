@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\SaleToEmployee;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,7 @@ class SaleToEmployeeController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('SaleToEmployee/Create');
     }
 
     /**

@@ -12,7 +12,7 @@
       </Link>
     </div>
 
-    <div class="globe-container">
+    <div v-if="work_permits.data.length" class="globe-container">
       <div v-for="work_permit in work_permits.data" :key="work_permit.id" class="globe relative">
         <div class="globe-title !justify-between">
           <p>Fecha requerida: {{work_permit.date}}</p>
@@ -29,6 +29,12 @@
         <div class="absolute bottom-0 left-2 text-xs text-gray-400">Creado el: {{ work_permit.created_at }}</div>
       </div>
     </div>
+
+    <div v-else class="text-center">    
+          <p>No hay información para mostrar.</p>
+    </div>
+
+    
 
     <ConfirmationModal :show="delete_confirm" @close="delete_confirm = false">
     <template #title>

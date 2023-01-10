@@ -57,7 +57,7 @@ class UserController extends Controller
         ]);
         User::create($validated + [
             'employee_properties.vacations_updated_date' => now(),
-            'password' => '123',
+            'password' => bcrypt('123'),
             
         ]);
 

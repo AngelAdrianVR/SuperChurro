@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductRequestController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\WarehouseMovementController;
 use App\Http\Controllers\WorkPermitController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -64,3 +65,6 @@ Route::resource('carts', CartController::class);
 Route::resource('warehouses', WarehouseController::class);
 Route::resource('product-request', ProductRequestController::class);
 
+Route::get('warehouses-movements/show-product-record/{product}', [WarehouseMovementController::class, 'showProductRecord'])
+    ->middleware('auth')
+    ->name('warehouse-movements.show-product-record');

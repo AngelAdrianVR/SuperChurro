@@ -11,6 +11,7 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'low_stock',
         'unit_id',
     ];
 
@@ -18,6 +19,16 @@ class Product extends Model
     public function prices() 
     {
         return $this->hasMany(Price::class);
+    }
+
+    public function unit() 
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
+    public function movements()
+    {
+        return $this->hasMany(WarehouseMovement::class);
     }
 
     public function currentPrice()

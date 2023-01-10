@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('name');
+            $table->string('low_stock')->default(0);
             $table->foreignId('unit_id')->constrained()->cascadeOnDelete();
             
             $table->timestamps();

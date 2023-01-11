@@ -9,3 +9,7 @@
 .globe-title {
     @apply font-bold text-center flex justify-center items-center pb-2;
 }
+
+.select {
+    @apply rounded-lg border border-gray-300 text-gray-500 focus:border-stone-500 focus:text-stone-500;
+}

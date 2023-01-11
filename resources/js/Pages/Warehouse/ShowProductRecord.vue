@@ -37,8 +37,10 @@
           <i class="fa-regular fa-comment mr-1"></i>
           {{ movement.notes ?? '--'}}
         </p>
-        <div class="flex justify-between items-center"
+        <div class="flex items-center"
           :class="movement.concept.is_entry ? 'text-green-500' : 'text-red-500'">
+          <i v-if="movement.concept.is_entry" class="fa-solid fa-plus mr-1"></i>
+          <i v-else class="fa-solid fa-minus mr-1"></i>
           <span>{{ movement.quantity }} {{ product.unit.name }}</span>
         </div>
       </div>

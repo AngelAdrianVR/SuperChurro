@@ -70,6 +70,7 @@ Route::resource('sells-to-employees', SaleToEmployeeController::class)->middlewa
 //Specific-action routes
 Route::put('/disable/{user}', [UserController::class, 'disable'])->middleware('auth')->name('user.disable');
 Route::put('/enable/{user}', [UserController::class, 'enable'])->middleware('auth')->name('user.enable');
+Route::put('/reset-pass/{user}', [UserController::class, 'resetPass'])->middleware('auth')->name('user.reset-pass');
 
 Route::get('warehouses-movements/show-product-record/{product}', [WarehouseMovementController::class, 'showProductRecord'])
     ->middleware('auth')

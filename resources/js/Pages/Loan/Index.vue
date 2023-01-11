@@ -6,7 +6,7 @@
       </h2>
     </template>
 
-      <div class="mt-2 bg-sky-100 border-t-4 border-sky-500 rounded-b text-sky-900 px-4 py-3 shadow-md" role="alert">
+      <div class=" bg-sky-100 border-t-4 border-sky-500 rounded-b text-sky-900 px-4 py-3 shadow-md" role="alert">
   <div class="flex">
     <div class="py-1"><svg class="fill-current h-6 w-6 text-sky-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
     <div>
@@ -23,7 +23,7 @@ Si ya tienes un préstamo activo, no podrás solicitar otro.</p>
       </Link>
     </div>
 
-    <div class="globe-container">
+    <div v-if="loans.data.length" class="globe-container">
       <div v-for="loan in loans.data" :key="loan.id" class="globe relative">
         <div class="globe-title !justify-between">
           <p>Solicitado el: {{loan.created_at}}</p>
@@ -42,6 +42,10 @@ Si ya tienes un préstamo activo, no podrás solicitar otro.</p>
         </div>
             <div v-if="loan.payed_at" class="absolute bottom-0 right-2 text-xs text-gray-400">pagado el: {{ loan.payed_at }}</div>
       </div>
+    </div>
+
+    <div v-else class="text-center">    
+          <p>No hay información para mostrar.</p>
     </div>
 
     <ConfirmationModal :show="delete_confirm" @close="delete_confirm = false">

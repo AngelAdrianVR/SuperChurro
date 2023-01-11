@@ -31,11 +31,13 @@
     </div>
 
     <div class="flex justify-center items-center">
-      <PrimaryButton v-if="$page.props.user.is_active" @click="$inertia.put(route('user.disable',$page.props.user.id))" class="!bg-red-600 m-2 shadow-md shadow-red-900/100"
-        >Dar de baja</PrimaryButton>
-      <PrimaryButton v-else @click="$inertia.put(route('user.enable',$page.props.user.id))" class="!bg-green-600 m-2 shadow-md shadow-green-900/100"
-        >Dar de alta</PrimaryButton>
-      <PrimaryButton class="m-2">Resetear contraseña</PrimaryButton>
+
+        <PrimaryButton v-if="$page.props.user.is_active" @click="$inertia.put(route('user.disable', $page.props.user.id))" class="!bg-red-600 m-2 shadow-md shadow-red-900/100"
+          >Dar de baja</PrimaryButton>
+        <PrimaryButton v-else @click="$inertia.put(route('user.enable', $page.props.user.id))" class="!bg-green-600 m-2 shadow-md shadow-green-900/100"
+          >Dar de alta</PrimaryButton>
+
+      <PrimaryButton @click="$inertia.put(route('user.reset-pass', $page.props.user.id))" class="m-2">Resetear contraseña</PrimaryButton>
       <Dropdown align="right" width="48">
         <template #trigger>
           <PrimaryButton class="m-2 shadow-md">Cálculos</PrimaryButton>
@@ -76,7 +78,7 @@
         my-2
       "
     >
-      <form @submit.prevent="store">
+      <form @submit.prevent="update">
         <div class="relative z-0 mb-6 w-full group">
           <input
             v-model="form.name"
@@ -560,8 +562,8 @@ export default {
     user: Object,
   },
   methods: {
-    store() {
-      this.form.post(this.route("users.store"));
+    update() {
+      this.form.put(this.route("users.update", this.user.id));
     },
   },
 };

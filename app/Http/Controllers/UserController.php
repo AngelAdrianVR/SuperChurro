@@ -100,7 +100,21 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $validated = $request->validate([
+            'name'=> 'required|max:30',
+            'email'=> 'email',
+            'phone_number'=> 'required|numeric|digits:10',
+            'employee_properties.birthdate'=> 'required|date',
+            'employee_properties.base_salary'=> 'required|numeric',
+            'employee_properties.shifts'=> 'required',
+            'employee_properties.work_days'=> 'required',            
+        ]);
+        $user->update($validated);
+
+        request()->session()->flash('flash.banner', '¡Se ha actualizado la iformación del usuario!');
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -131,6 +145,17 @@ class UserController extends Controller
         $user->save();
 
         request()->session()->flash('flash.banner', '¡Se ha dado de alta al usuario correctamente!');
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return redirect()->route('users.index');
+    }
+
+    public function resetPass(User $user)
+    {
+        $user->password = bcrypt('12345678');
+        $user->save();
+
+        request()->session()->flash('flash.banner', '¡Se ha dado reseteado la contraseña correctamente!');
         request()->session()->flash('flash.bannerStyle', 'success');
 
         return redirect()->route('users.index');

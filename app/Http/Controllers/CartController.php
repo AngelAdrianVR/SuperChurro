@@ -14,7 +14,9 @@ class CartController extends Controller
      */
     public function index()
     {
-        return inertia('Cart/Index');
+        $cart_products = Cart::get('products');
+        // return $cart_products;
+        return inertia('Cart/Index', compact('cart_products'));
     }
 
     /**

@@ -69,12 +69,12 @@
       </p>
 
         <div class="globe-container flex-col">
-          <div v-for="cart_product in cart_products" :key="cart_product" class="globe hover:bg-gray-200 cursor-pointer">
+          <div v-for="cart_product in cart_products[0]" :key="cart_product" class="globe hover:bg-gray-200 cursor-pointer">
             <div class="globe-title pb-2">
-              {{ cart_product[1] }}
+              {{ cart_product[4] }}
             </div>
             <div class="flex justify-between items-center">
-              <span>{{ cart_product }}</span>
+              <span>{{ cart_product[2] }}</span>
             </div>
           </div>
         </div>

@@ -6,6 +6,8 @@
       </h2>
     </template>
 
+    
+
     <div class="flex justify-start ml-2">
       <Link
         :href="route('users.index')"
@@ -26,6 +28,36 @@
         ></i>
         <span class="ml-1 cursor-default">Atrás</span>
       </Link>
+    </div>
+
+    <div class="flex justify-center items-center">
+      <PrimaryButton v-if="$page.props.user.is_active" @click="$inertia.put(route('user.disable',$page.props.user.id))" class="!bg-red-600 m-2 shadow-md shadow-red-900/100"
+        >Dar de baja</PrimaryButton>
+      <PrimaryButton v-else @click="$inertia.put(route('user.enable',$page.props.user.id))" class="!bg-green-600 m-2 shadow-md shadow-green-900/100"
+        >Dar de alta</PrimaryButton>
+      <PrimaryButton class="m-2">Resetear contraseña</PrimaryButton>
+      <Dropdown align="right" width="48">
+        <template #trigger>
+          <PrimaryButton class="m-2 shadow-md">Cálculos</PrimaryButton>
+        </template>
+        <template #content>
+          <DropdownLink
+            href="#"
+          >
+            Aguinaldo
+          </DropdownLink>
+          <DropdownLink
+            href="#"
+          >
+            Finiquito
+          </DropdownLink>
+          <DropdownLink
+            href="#"
+          >
+            Prima vacacional
+          </DropdownLink>
+        </template>
+      </Dropdown>
     </div>
 
     <!-- component -->
@@ -225,7 +257,9 @@
             "
             >Fecha de nacimiento*</label
           >
-          <InputError :message="$page.props?.errors.employee_properties?.birthdate" />
+          <InputError
+            :message="$page.props?.errors.employee_properties?.birthdate"
+          />
         </div>
         <div class="relative z-0 mb-6 w-full group">
           <input
@@ -271,76 +305,173 @@
             "
             >Salario base*</label
           >
-          <InputError :message="$page.props?.errors.employee_properties?.base_salary" />
+          <InputError
+            :message="$page.props?.errors.employee_properties?.base_salary"
+          />
         </div>
-        
+
         <div>
-        <select
-          class="
-            bg-gray-200
-            mb-7
-            mr-2
-            rounded-lg
-            border border-gray-300
-            text-gray-500
-            focus:border-stone-500 focus:text-stone-500
-          "
-          v-model="form.employee_properties.shifts"
-        >
-          <option disabled selected class="text-gray-500" value="">
-            -- Seleeciona un turno --
-          </option>
-          <option
-            class="text-gray-500"
-            value="cocina"
+          <select
+            class="
+              bg-gray-200
+              mb-7
+              mr-2
+              rounded-lg
+              border border-gray-300
+              text-gray-500
+              focus:border-stone-500 focus:text-stone-500
+            "
+            v-model="form.employee_properties.shifts"
           >
-            Cocina
-          </option>
-          <option
-            class="text-gray-500"
-            value="carrito matutino"
-          >
-            Carrito Matutino
-          </option>
-          <option
-            class="text-gray-500"
-            value="carrito vespertino"
-          >
-            Carrito Vespertino
-          </option>
-        </select>
+            <option disabled selected class="text-gray-500" value="">
+              -- Seleeciona un turno --
+            </option>
+            <option class="text-gray-500" value="cocina">Cocina</option>
+            <option class="text-gray-500" value="carrito matutino">
+              Carrito Matutino
+            </option>
+            <option class="text-gray-500" value="carrito vespertino">
+              Carrito Vespertino
+            </option>
+          </select>
         </div>
-        <label class="mb-6 w-full text-sm text-gray-500">Días de trabajo
-            <div class="grid grid-cols-3 gap-2 mt-3">
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="0" name="sunday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Domingo</span>
-                </label>
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="1" name="monday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Lunes</span>
-                </label>
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="2" name="tuesday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Martes</span>
-                </label>
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="3" name="wednesday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Miércoles</span>
-                </label>
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="4" name="thursday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Jueves</span>
-                </label>
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="5" name="fruday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Viernes</span>
-                </label>
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="6" name="saturday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Sábado</span>
-                </label>
-            </div>
+        <label class="mb-6 w-full text-sm text-gray-500"
+          >Días de trabajo
+          <div class="grid grid-cols-3 gap-2 mt-3">
+            <label class="flex items-center col-span-1">
+              <input
+                v-model="form.employee_properties.work_days"
+                type="checkbox"
+                value="0"
+                name="sunday"
+                class="
+                  rounded
+                  border-gray-300
+                  text-indigo-600
+                  shadow-sm
+                  focus:border-indigo-300
+                  focus:ring
+                  focus:ring-indigo-200
+                  focus:ring-opacity-50
+                "
+              />
+              <span class="ml-2 text-sm text-gray-600">Domingo</span>
+            </label>
+            <label class="flex items-center col-span-1">
+              <input
+                v-model="form.employee_properties.work_days"
+                type="checkbox"
+                value="1"
+                name="monday"
+                class="
+                  rounded
+                  border-gray-300
+                  text-indigo-600
+                  shadow-sm
+                  focus:border-indigo-300
+                  focus:ring
+                  focus:ring-indigo-200
+                  focus:ring-opacity-50
+                "
+              />
+              <span class="ml-2 text-sm text-gray-600">Lunes</span>
+            </label>
+            <label class="flex items-center col-span-1">
+              <input
+                v-model="form.employee_properties.work_days"
+                type="checkbox"
+                value="2"
+                name="tuesday"
+                class="
+                  rounded
+                  border-gray-300
+                  text-indigo-600
+                  shadow-sm
+                  focus:border-indigo-300
+                  focus:ring
+                  focus:ring-indigo-200
+                  focus:ring-opacity-50
+                "
+              />
+              <span class="ml-2 text-sm text-gray-600">Martes</span>
+            </label>
+            <label class="flex items-center col-span-1">
+              <input
+                v-model="form.employee_properties.work_days"
+                type="checkbox"
+                value="3"
+                name="wednesday"
+                class="
+                  rounded
+                  border-gray-300
+                  text-indigo-600
+                  shadow-sm
+                  focus:border-indigo-300
+                  focus:ring
+                  focus:ring-indigo-200
+                  focus:ring-opacity-50
+                "
+              />
+              <span class="ml-2 text-sm text-gray-600">Miércoles</span>
+            </label>
+            <label class="flex items-center col-span-1">
+              <input
+                v-model="form.employee_properties.work_days"
+                type="checkbox"
+                value="4"
+                name="thursday"
+                class="
+                  rounded
+                  border-gray-300
+                  text-indigo-600
+                  shadow-sm
+                  focus:border-indigo-300
+                  focus:ring
+                  focus:ring-indigo-200
+                  focus:ring-opacity-50
+                "
+              />
+              <span class="ml-2 text-sm text-gray-600">Jueves</span>
+            </label>
+            <label class="flex items-center col-span-1">
+              <input
+                v-model="form.employee_properties.work_days"
+                type="checkbox"
+                value="5"
+                name="fruday"
+                class="
+                  rounded
+                  border-gray-300
+                  text-indigo-600
+                  shadow-sm
+                  focus:border-indigo-300
+                  focus:ring
+                  focus:ring-indigo-200
+                  focus:ring-opacity-50
+                "
+              />
+              <span class="ml-2 text-sm text-gray-600">Viernes</span>
+            </label>
+            <label class="flex items-center col-span-1">
+              <input
+                v-model="form.employee_properties.work_days"
+                type="checkbox"
+                value="6"
+                name="saturday"
+                class="
+                  rounded
+                  border-gray-300
+                  text-indigo-600
+                  shadow-sm
+                  focus:border-indigo-300
+                  focus:ring
+                  focus:ring-indigo-200
+                  focus:ring-opacity-50
+                "
+              />
+              <span class="ml-2 text-sm text-gray-600">Sábado</span>
+            </label>
+          </div>
           <label
             for="floating_work_days"
             class="
@@ -363,13 +494,19 @@
             "
             >Días de trabajo*</label
           >
-          <InputError :message="$page.props?.errors.employee_properties?.work_days" />
+          <InputError
+            :message="$page.props?.errors.employee_properties?.work_days"
+          />
         </label>
 
-        <label class="text-gray-600 my-4"> Documentos del empleado
+        <label class="text-gray-600 mt-4 block">
+          Documentos del empleado
           <FileUploader @input="form.resources = $event.target.files" />
         </label>
-
+        <p class="mb-3 text-gray-600 underline underline-offset-4 font-bold">
+          Vacaciones disponibles:
+          {{ $page.props.user.employee_properties.vacations }}
+        </p>
         <div class="flex justify-center lg:justify-end">
           <PrimaryButton :disabled="form.processing">Actualizar</PrimaryButton>
         </div>
@@ -386,6 +523,8 @@ import InputError from "@/Components/InputError.vue";
 import FileUploader from "@/Components/FileUploader.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from '@/Components/DropdownLink.vue';
 export default {
   data() {
     const form = useForm({
@@ -393,12 +532,12 @@ export default {
       email: this.user.email,
       phone_number: this.user.phone_number,
       employee_properties: {
-          birthdate: this.user.employee_properties.birthdate,
-          base_salary: this.user.employee_properties.base_salary,
-          work_days: this.user.employee_properties.work_days,
-          shifts: this.user.employee_properties.shifts,
-          vacations: 0,
-          resources: null,
+        birthdate: this.user.employee_properties.birthdate,
+        base_salary: this.user.employee_properties.base_salary,
+        work_days: this.user.employee_properties.work_days,
+        shifts: this.user.employee_properties.shifts,
+        vacations: 0,
+        resources: null,
       },
     });
     return {
@@ -414,6 +553,8 @@ export default {
     InputError,
     Checkbox,
     FileUploader,
+    Dropdown,
+    DropdownLink,
   },
   props: {
     user: Object,

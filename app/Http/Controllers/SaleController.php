@@ -47,7 +47,7 @@ class SaleController extends Controller
         for($i=0; $i<14; $i++){
             $solt_products[$i] = $cart_products[$i+1] - $request->remaining[$i];
         }
-         return $solt_products;
+        //  return $solt_products;
         // Sale::create()
         
         for($i=0; $i<14; $i++){

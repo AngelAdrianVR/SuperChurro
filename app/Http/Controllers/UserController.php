@@ -113,4 +113,26 @@ class UserController extends Controller
     {
         //
     }
+
+    public function disable(User $user)
+    {
+        $user->is_active = false;
+        $user->save();
+
+        request()->session()->flash('flash.banner', '¡Se ha dado de baja al usuario correctamente!');
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return redirect()->route('users.index');
+    }
+
+    public function enable(User $user)
+    {
+        $user->is_active = true;
+        $user->save();
+
+        request()->session()->flash('flash.banner', '¡Se ha dado de alta al usuario correctamente!');
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return redirect()->route('users.index');
+    }
 }

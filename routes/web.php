@@ -55,14 +55,18 @@ Route::middleware([
 });
 
 // how to protect pages from not admin useres? (custom middleware)
-Route::resource('payrolls', PayrollController::class);
-Route::resource('work-permits', WorkPermitController::class);
-Route::resource('barters', BarterController::class);
-Route::resource('loans', LoanController::class);
-Route::resource('users', UserController::class);
-Route::resource('sales', SaleController::class);
-Route::resource('carts', CartController::class);
-Route::resource('warehouses', WarehouseController::class);
-Route::resource('product-request', ProductRequestController::class);
-Route::resource('sells-to-employees', SaleToEmployeeController::class);
+Route::resource('payrolls', PayrollController::class)->middleware('auth');
+Route::resource('work-permits', WorkPermitController::class)->middleware('auth');
+Route::resource('barters', BarterController::class)->middleware('auth');
+Route::resource('loans', LoanController::class)->middleware('auth');
+Route::resource('users', UserController::class)->middleware('auth');
+Route::resource('sales', SaleController::class)->middleware('auth');
+Route::resource('carts', CartController::class)->middleware('auth');
+Route::resource('warehouses', WarehouseController::class)->middleware('auth');
+Route::resource('product-request', ProductRequestController::class)->middleware('auth');
+Route::resource('sells-to-employees', SaleToEmployeeController::class)->middleware('auth');
+
+//Specific-action routes
+Route::put('/disable/{user}', [UserController::class, 'disable'])->middleware('auth')->name('user.disable');
+Route::put('/enable/{user}', [UserController::class, 'enable'])->middleware('auth')->name('user.enable');
 

@@ -69,30 +69,12 @@
       </p>
 
         <div class="globe-container flex-col">
-          <div class="globe hover:bg-gray-200 cursor-pointer">
+          <div v-for="cart_product in cart_products" :key="cart_product" class="globe hover:bg-gray-200 cursor-pointer">
             <div class="globe-title pb-2">
-              Bolsa para churros
+              {{ cart_product[1] }}
             </div>
             <div class="flex justify-between items-center">
-              <span>150 piezas.</span>
-            </div>
-          </div>
-
-          <div class="globe hover:bg-gray-200 cursor-pointer">
-            <div class="globe-title pb-2">
-              Botanas
-            </div>
-            <div class="flex justify-between items-center">
-              <span>15 piezas.</span>
-            </div>
-          </div>
-          <div class="globe hover:bg-gray-200 cursor-pointer">
-            <div class="globe-title pb-2">
-              Tostitos
-            </div>
-
-            <div class="flex justify-between items-center">
-              <span>10 piezas.</span>
+              <span>{{ cart_product }}</span>
             </div>
           </div>
         </div>
@@ -115,7 +97,9 @@ export default {
     Link,
     ConfirmationModal,
   },
-  props: {},
+  props: {
+    cart_products: Object,
+  },
   methods: {},
 };
 </script>

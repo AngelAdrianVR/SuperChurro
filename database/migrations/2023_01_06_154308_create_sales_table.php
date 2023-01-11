@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedFloat('quantity');
+            $table->unsignedMediumInteger('quantity');
             $table->foreignId('price_id');
             $table->foreignId('product_id');
 

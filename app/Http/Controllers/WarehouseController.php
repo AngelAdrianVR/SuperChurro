@@ -20,7 +20,7 @@ class WarehouseController extends Controller
 
     public function create()
     {
-        return inertia('Warehouse/Create');
+        //
     }
 
     public function store(Request $request)

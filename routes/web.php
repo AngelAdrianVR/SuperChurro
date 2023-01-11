@@ -70,3 +70,6 @@ Route::resource('sells-to-employees', SaleToEmployeeController::class);
 Route::get('warehouses-movements/show-product-record/{product}', [WarehouseMovementController::class, 'showProductRecord'])
     ->middleware('auth')
     ->name('warehouse-movements.show-product-record');
+Route::resource('warehouse-movements', WarehouseMovementController::class)
+    ->middleware('auth')
+    ->except(['show, index, destroy, edit, update']);

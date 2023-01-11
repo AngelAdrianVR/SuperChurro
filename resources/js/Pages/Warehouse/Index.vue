@@ -5,7 +5,7 @@
     </template>
 
     <div class="flex justify-end">
-      <Link :href="route('warehouses.create')">
+      <Link :href="route('warehouse-movements.create')">
         <SecondaryButton class="mt-5 mr-2">Registrar Entrada/Salida</SecondaryButton>
       </Link>
     </div>

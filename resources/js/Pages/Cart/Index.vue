@@ -6,12 +6,12 @@
 
     <div class="flex justify-center items-center">
       <Link :href="route('sells-to-employees.create')"
-        ><SecondaryButton class="mt-5 mr-2 px-3 py-3"
+        ><SecondaryButton class="mt-5 mr-2"
           >Venta a empleado</SecondaryButton
         ></Link
       >
       <Link :href="route('product-request.create')"
-        ><SecondaryButton class="mt-5 ml-2 px-3 py-3"
+        ><SecondaryButton class="mt-5 ml-2"
           >Solicitar mercancía</SecondaryButton
         ></Link
       >
@@ -19,7 +19,7 @@
 
     <div class="flex justify-center">
       <Link :href="route('sales.create')"
-        ><SecondaryButton class="mt-2 px-3 py-3">Hacer corte</SecondaryButton></Link>
+        ><SecondaryButton class="mt-2">Hacer corte</SecondaryButton></Link>
     </div>
 
     <div>

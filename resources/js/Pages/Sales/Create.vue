@@ -6,23 +6,24 @@
       </h2>
     </template>
 
-    <div class=" bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
-  <div class="flex">
-    <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
-    <div>
-      <p class="font-bold">Atención</p>
-      <p class="text-sm">Colocar el <strong>sobrante</strong> de productos en los siguientes campos:</p>
+    <div class="w-11/12 mx-auto mt-2 bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
+      role="alert">
+      <div class="flex">
+        <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20">
+            <path
+              d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+          </svg></div>
+        <div>
+          <p class="font-bold">Atención</p>
+          <p class="text-sm">Colocar el <strong>sobrante</strong> de productos en los siguientes campos:</p>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-    <div class="flex justify-start">
-      <Link
-        :href="route('carts.index')"
-        class="flex items-center mt-2 text-slate-700"
-      >
-        <i
-          class="
+    <div class="flex">
+      <Link :href="route('carts.index')" class="flex items-center mt-2 text-slate-700">
+      <i class="
             fas
             fa-long-arrow-alt-left
             text-lg
@@ -33,16 +34,12 @@
             h-7
             pl-1
             ml-2
-          "
-        ></i>
-        <span class="ml-1 cursor-default">Atrás</span>
+          "></i>
+      <span class="ml-1 cursor-default">Atrás</span>
       </Link>
     </div>
 
-    <!-- component -->
-    <!-- This is an example component -->
-    <div
-      class="
+    <div class="
         max-w-2xl
         md:mx-auto
         mt-5
@@ -52,20 +49,12 @@
         py-8
         bg-white
         mx-4
-      "
-    >
+      ">
       <form @submit.prevent="store">
-      <div class="grid grid-cols-2 gap-3">
-      
-      
-        <div v-for="(product,index) in products" :key="product.id" class="relative z-0 mb-2 w-full group">
-          <input
-            v-model="form.remaining[index]"
-            type="number"
-            name="floating_churro_relleno"
-            autocomplete="off"
-            required
-            class="
+        <div class="grid grid-cols-2 gap-3">
+          <div v-for="(product, index) in products" :key="product.id" class="relative z-0 mb-2 w-full group">
+            <input v-model="form.remaining[index]" type="number" min="0" name="floating_churro_relleno"
+              autocomplete="off" required class="
               block
               py-2.5
               px-0
@@ -77,12 +66,8 @@
               dark:text-white dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
               peer
-            "
-            placeholder=""
-          />
-          <label
-            for="floating_churro_relleno"
-            class="
+            " placeholder="" />
+            <label for="floating_churro_relleno" class="
               absolute
               text-sm text-gray-500
               dark:text-gray-400
@@ -99,15 +84,13 @@
               peer-placeholder-shown:scale-100
               peer-placeholder-shown:translate-y-0
               peer-focus:scale-75 peer-focus:-translate-y-6
-            "
-            >{{ product.name }}</label
-          >
-<InputError :message="$page.props?.errors.amount" />
+            ">{{ product.name }}</label>
+            <InputError :message="$page.props?.errors.amount" />
+          </div>
+
+
         </div>
 
-        
-        </div>
-        
         <div class="flex justify-center lg:justify-end mt-5">
           <PrimaryButton @click="store" :disabled="form.processing">Hacer corte</PrimaryButton>
         </div>
@@ -121,12 +104,12 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import InputError from "@/Components/InputError.vue";
-import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
 export default {
   data() {
     const form = useForm({
       remaining: [
-        
+
       ],
     });
     return {
@@ -136,7 +119,6 @@ export default {
   components: {
     AppLayout,
     Link,
-    useForm,
     PrimaryButton,
     InputError,
     SecondaryButton,
@@ -146,7 +128,7 @@ export default {
   },
   methods: {
     store() {
-      this.form.post(this.route("sales.store"));
+      this.form.post(route("sales.store"));
     },
   },
 };

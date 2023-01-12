@@ -25,18 +25,28 @@ class SaleToEmployeeController extends Controller
      */
     public function create()
     {
-        return inertia('SaleToEmployee/Create');
+        $products = Product::with('unit')->get();
+
+        return inertia('SaleToEmployee/Create', compact('products'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'items.*.quantity' => 'required|numeric|min:1',
+            'items.*.product_id' => 'required|numeric|min:1',
+        ]);
+
+        // create sells
+        SaleToEmployee::create([
+            'products' => $request->items,
+            'user_id' => auth()->id()
+        ]);
+
+        request()->session()->flash('flash.banner', 'Se registró la venta a ' . auth()->user()->name);
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return to_route('carts.index');
     }
 
     /**

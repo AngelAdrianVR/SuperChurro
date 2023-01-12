@@ -6,12 +6,13 @@
       common-container
     ">
         <div>
-            <select @change="syncItem" v-model="selection" class="select w-2/3 lg:w-3/4">
+            <select @change="syncItem" v-model="selection" class="select w-2/3 lg:w-3/4" required>
                 <option value="x">-- Seleccionar producto --</option>
                 <option v-for="product in products" :key="product.id" :value="product.id">
                     {{ product.name }}
                 </option>
             </select>
+            <p v-if="error_validation" class="text-red-400 text-xs">Favor de seleccionar el producto</p>
         </div>
         <div class="relative z-0 mb-6 w-1/4 group">
             <input @change="syncItem" v-model.number="quantity" min="1" type="number" name="floating_description"
@@ -66,7 +67,8 @@ export default {
     data() {
         return {
             selection: "x",
-            quantity: 0,
+            quantity: 1,
+            error_validation: false,
         };
     },
     emits: ['deleteItem', 'syncItem'],
@@ -100,12 +102,16 @@ export default {
                 : 0;
         },
         syncItem() {
-            if (this.selection != 'x' && this.quantity)
+            if (this.selection != 'x' && this.quantity) {
                 this.$emit('syncItem', {
                     id: this.id,
                     product_id: this.selection,
                     quantity: this.quantity,
                 });
+                this.error_validation = false;
+            } else {
+                this.error_validation = true;
+            }
         },
     },
 };

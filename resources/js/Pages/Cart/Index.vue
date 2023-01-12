@@ -68,12 +68,12 @@
       </p>
 
         <div class="globe-container flex-col">
-          <div v-for="cart_product in cart_products[0]" :key="cart_product" class="globe hover:bg-gray-200 cursor-pointer">
+          <div v-for="cart_product_id in Object.keys(cart_products[0].products)" :key="cart_product_id" class="globe hover:bg-gray-200 cursor-pointer">
             <div class="globe-title pb-2">
-              {{ cart_product[4] }}
+              {{ products.find(product => product.id == cart_product_id ).name }}
             </div>
             <div class="flex justify-between items-center">
-              <span>{{ cart_product[2] }}</span>
+              <span>{{ cart_products[0].products[cart_product_id] }} {{ products.find(product => product.id == cart_product_id ).unit.name }}</span>
             </div>
           </div>
         </div>
@@ -97,6 +97,7 @@ export default {
     ConfirmationModal,
   },
   props: {
+    products: Array,
     cart_products: Object,
   },
   methods: {},

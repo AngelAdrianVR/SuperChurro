@@ -2,43 +2,68 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Product;
 use App\Models\ProductRequest;
+use App\Models\Warehouse;
+use App\Models\WarehouseMovement;
 use Illuminate\Http\Request;
 
 class ProductRequestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $products = Product::all();
-        // return $products;
-        return inertia('ProductRequest/Create', compact('products'));
+        $warehouse_stock = Warehouse::find(1)->products;
+
+        return inertia('ProductRequest/Create', compact('products', 'warehouse_stock'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'items.*.quantity' => 'required|numeric|min:1',
+            'items.*.product_id' => 'required|numeric|min:1',
+        ]);
+
+        // create request
+        ProductRequest::create([
+            'products' => $request->items,
+            'user_id' => auth()->id(),
+            'cart_id' => 1,
+        ]);
+
+        // update warehouse stock
+        $warehouse = Warehouse::find(1);
+        $current_products = $warehouse->products;
+
+        $cart = Cart::find(1);
+        $current_products_cart = $cart->products;      
+        foreach($request->items as $item) {
+            WarehouseMovement::create([
+                'quantity' => $item['quantity'],
+                'product_id' => $item['product_id'],
+                'movement_concept_id' => 3,
+                'notes' => 'Mercancía solicitada para carrito 1',
+                'user_id' => auth()->id(),
+                'warehouse_id' => 1
+            ]);
+
+            $current_products[$item['product_id']] -= $item['quantity'];
+            $current_products_cart[$item['product_id']] += $item['quantity'];
+        }
+
+        $warehouse->update(['products' => $current_products]);
+
+        request()->session()->flash('flash.banner', 'Se ha pasado la mercancía de la cocina al carrito');
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return to_route('carts.index');
     }
 
     /**

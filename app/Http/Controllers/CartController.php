@@ -3,20 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $cart_products = Cart::get('products');
-        // return $cart_products;
-        return inertia('Cart/Index', compact('cart_products'));
+        $products = Product::with('unit')->get();
+
+        return inertia('Cart/Index', compact('cart_products', 'products'));
     }
 
     /**

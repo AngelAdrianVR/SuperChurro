@@ -7,12 +7,8 @@
     </template>
 
     <div class="flex justify-start">
-      <Link
-        :href="route('carts.index')"
-        class="flex items-center mt-2 text-slate-700"
-      >
-        <i
-          class="
+      <Link :href="route('carts.index')" class="flex items-center mt-2 text-slate-700">
+      <i class="
             fas
             fa-long-arrow-alt-left
             text-lg
@@ -23,112 +19,37 @@
             h-7
             pl-1
             ml-2
-          "
-        ></i>
-        <span class="ml-1 cursor-default">Atrás</span>
+          "></i>
+      <span class="ml-1 cursor-default">Atrás</span>
       </Link>
     </div>
 
-    <!-- component -->
-    <!-- This is an example component -->
-    <div
-      class="
+    <div class="
         max-w-2xl
         md:mx-auto
         mt-5
         shadow-md shadow-gray-500/70
         rounded-lg
         px-5
-        py-8
+        pt-4
+        pb-5
         bg-white
         mx-4
-      "
-    >
+      ">
+      <p v-if="validation_message" class="text-red-400 text-xs mb-2" v-html="validation_message"></p>
       <form @submit.prevent="store">
-      <div class="flex justify-between">
-      
-      <select
-          class="
-            bg-gray-200
-            w-52
-            mb-3
-            mr-4
-            rounded-lg
-            border border-gray-300
-            text-gray-500
-            focus:border-stone-500 focus:text-stone-500
-          "
-          required
-          v-model="form.product_id"
-        >
-          <option disabled selected class="text-gray-600" value="">
-            -- Seleccione el producto --
-          </option>
-          <option
-            class="text-gray-500"
-            v-for="product in products"
-            :key="product.id"
-            :value="product.id"
-          >
-            {{ product.name }}
-          </option>
-        </select>
-        <div class="relative z-0 mb-2 w-full group">
-          <input
-            v-model="form.amount"
-            type="number"
-            step="0.1"
-            name="floating_amount"
-            autocomplete="off"
-            required
-            class="
-              block
-              py-2.5
-              px-0
-              w-full
-              text-sm text-gray-900
-              bg-transparent
-              border-0 border-b-2 border-gray-300
-              appearance-none
-              dark:text-white dark:border-gray-600 dark:focus:border-stone-500
-              focus:outline-none focus:ring-0 focus:border-stone-600
-              peer
-            "
-            placeholder=" "
-          />
-          <label
-            for="floating_amount"
-            class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-400
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            "
-            >Cantidad*</label
-          >
-          <InputError :message="$page.props?.errors.amount" />
+        <div>
+          <ProductInput :products="products" v-for="(item, index) in form.items" :key="item.id" :id="item.id"
+            @deleteItem="deleteItem(index)" @syncItem="syncItems(index, $event)" class="mb-5" />
         </div>
+        <p v-if="!form.items.length" class="text-sm text-gray-600"> Click al botón de "+" para empezar a agregar
+          productos </p>
+        <div class="my-2 text-center">
+          <button type="button" @click="addNewItem">
+            <i class="fa-solid fa-circle-plus text-2xl text-blue-400"></i>
+          </button>
         </div>
-        
-        <div class="flex justify-center lg:justify-end mb-4">
-          <SecondaryButton :disabled="form.processing">+</SecondaryButton>
-        </div>
-
-        <div class="flex justify-center lg:justify-end">
-          <PrimaryButton :disabled="form.processing">Solicitar</PrimaryButton>
-        </div>
+        <PrimaryButton :disabled="form.processing">Solicitar</PrimaryButton>
       </form>
     </div>
   </AppLayout>
@@ -138,32 +59,66 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import ProductInput from "@/Components/ProductInput.vue";
 import InputError from "@/Components/InputError.vue";
-import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
 export default {
   data() {
     const form = useForm({
-      product_id: null,
-      amount: null,
-    });
+      items: [
+        {
+          id: 1,
+          product_id: null,
+          quantity: null,
+        }
+      ],
+    })
     return {
+      validation_message: "",
+      next_item_id: 2,
       form,
     };
   },
   components: {
     AppLayout,
     Link,
-    useForm,
     PrimaryButton,
     InputError,
     SecondaryButton,
+    ProductInput,
   },
   props: {
     products: Array,
+    warehouse_stock: Object,
   },
   methods: {
+    addNewItem() {
+      this.form.items.push({ id: this.next_item_id++, product_id: null, quantity: null });
+    },
+    deleteItem(index) {
+      if (this.form.items.length > 1) {
+        this.form.items.splice(index, 1);
+      }
+    },
+    syncItems(index, product_obj) {
+      this.form.items[index] = product_obj;
+    },
     store() {
-      this.form.post(this.route("product-request.store"));
+      this.quantityValidated();
+      console.log(this.validation_message == "");
+      if(this.validation_message == "") {
+        this.form.post(this.route("product-request.store"));
+      }
+    },
+    quantityValidated() {
+      this.validation_message = "";
+      this.form.items.forEach(product => {
+        const available_quantity = this.warehouse_stock[product.product_id];
+        if (available_quantity < product.quantity) {
+          this.validation_message += `- Sólo hay disponible <strong>${available_quantity}</strong> unidades del producto <strong>` +
+            this.products.find(item => item.id == product.product_id).name + '</strong></br>';
+        }
+      });
     },
   },
 };

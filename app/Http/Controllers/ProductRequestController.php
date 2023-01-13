@@ -26,14 +26,14 @@ class ProductRequestController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $items = $request->validate([
             'items.*.quantity' => 'required|numeric|min:1',
             'items.*.product_id' => 'required|numeric|min:1',
         ]);
 
         // create request
         ProductRequest::create([
-            'products' => $request->items,
+            'products' => $items['items'],
             'user_id' => auth()->id(),
             'cart_id' => 1,
         ]);
@@ -59,6 +59,7 @@ class ProductRequestController extends Controller
         }
 
         $warehouse->update(['products' => $current_products]);
+        $cart->update(['products' => $current_products_cart]);
 
         request()->session()->flash('flash.banner', 'Se ha pasado la mercancía de la cocina al carrito');
         request()->session()->flash('flash.bannerStyle', 'success');
@@ -66,15 +67,11 @@ class ProductRequestController extends Controller
         return to_route('carts.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ProductRequest  $productRequest
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ProductRequest $productRequest)
+    public function show(ProductRequest $product_request)
     {
-        //
+        $products = Product::with('unit')->get();
+        
+        return inertia('ProductRequest/Show', compact('product_request', 'products'));
     }
 
     /**

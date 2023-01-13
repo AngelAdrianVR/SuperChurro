@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\ProductRequest;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -12,8 +13,10 @@ class CartController extends Controller
     {
         $cart_products = Cart::get('products');
         $products = Product::with('unit')->get();
+        $requests = ProductRequest::whereDate('created_at', now())->with('user')->latest()->get();
 
-        return inertia('Cart/Index', compact('cart_products', 'products'));
+        // return $requests;
+        return inertia('Cart/Index', compact('cart_products', 'products', 'requests'));
     }
 
     /**

@@ -25,9 +25,12 @@
     </div>
     <div class="globe-container flex-col">
       <div v-for="movement in product.movements" :key="movement" class="globe hover:bg-gray-200 cursor-pointer">
-        <p class="globe-title !justify-start pb-2 text-gray-500">
-          <i class="fa-solid fa-user mr-1"></i>
-          {{ movement.user.name }}
+        <p class="globe-title !justify-between pb-2 text-gray-500">
+          <div>
+            <i class="fa-solid fa-user mr-1"></i>
+            {{ movement.user.name }}
+          </div>
+          <small class="text-gray-400">{{ dateTimeFormatter(movement.created_at) }}</small>
         </p>
         <p class="font-bold">
           <i class="fa-solid fa-tag mr-1"></i>
@@ -54,9 +57,11 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/inertia-vue3";
+
 export default {
   data() {
     return {
+      movements_reversed: null
     };
   },
   components: {
@@ -67,6 +72,10 @@ export default {
     product: Object,
   },
   methods: {
+    dateTimeFormatter(timestamp) {
+      const date_n_time = timestamp.split('T');
+      return date_n_time[0] + ' a las ' + date_n_time[1].split('.')[0];
+    }
   },
 };
 </script>

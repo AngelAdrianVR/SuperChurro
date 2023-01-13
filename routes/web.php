@@ -4,6 +4,7 @@ use App\Http\Controllers\BarterController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\productController;
 use App\Http\Controllers\ProductRequestController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleToEmployeeController;
@@ -60,12 +61,15 @@ Route::resource('payrolls', PayrollController::class)->middleware('auth');
 Route::resource('work-permits', WorkPermitController::class)->middleware('auth');
 Route::resource('barters', BarterController::class)->middleware('auth');
 Route::resource('loans', LoanController::class)->middleware('auth');
-Route::resource('users', UserController::class)->middleware('auth');
-Route::resource('sales', SaleController::class)->middleware('auth');
 Route::resource('carts', CartController::class)->middleware('auth');
 Route::resource('warehouses', WarehouseController::class)->middleware('auth');
 Route::resource('product-request', ProductRequestController::class)->middleware('auth');
 Route::resource('sells-to-employees', SaleToEmployeeController::class)->middleware('auth');
+
+// admin routes
+Route::resource('products', productController::class)->middleware('auth');
+Route::resource('users', UserController::class)->middleware('auth');
+Route::resource('sales', SaleController::class)->middleware('auth');
 
 //Specific-action routes
 Route::put('/disable/{user}', [UserController::class, 'disable'])->middleware('auth')->name('user.disable');

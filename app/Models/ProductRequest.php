@@ -18,4 +18,10 @@ class ProductRequest extends Model
     protected $casts = [
         'products' => 'array',
     ];
+
+    // relationships
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

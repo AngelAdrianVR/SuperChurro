@@ -67,7 +67,10 @@ class User extends Authenticatable
     //Relationships
     public function payrolls()
     {
-        return $this->belongsToMany(Payroll::class)->using(PayrollUser::class);
+        return $this->belongsToMany(Payroll::class)
+            ->using(PayrollUser::class)
+            ->withPivot(['attendance', 'discounts'])
+            ->withTimestamps();
     }
 
     public function loans(){

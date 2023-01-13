@@ -23,6 +23,9 @@ class Payroll extends Model
     //Rellationships
     public function users()
     {
-        return $this->belongsToMany(User::class)->using(PayrollUser::class);
+        return $this->belongsToMany(User::class)
+            ->using(PayrollUser::class)
+            ->withPivot(['attendance', 'discounts'])
+            ->withTimestamps();
     }
 }

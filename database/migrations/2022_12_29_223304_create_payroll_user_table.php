@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('payroll_user', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('payroll_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->json('attendance')->nullable();
             $table->unsignedMediumInteger('discounts')->nullable();
             $table->timestamps();

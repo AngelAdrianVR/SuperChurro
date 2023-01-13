@@ -22,6 +22,11 @@ class WorkPermit extends Model
         'date',
     ];
 
+    // constants
+    const STATUS_IN_CHECKING = 0,
+        STATUS_APPROVED = 1,
+        STATUS_REJECTED = 2;
+
     //Relationships
     public function user(){
         return $this->belongsTo(User::class);

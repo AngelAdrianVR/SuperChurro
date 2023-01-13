@@ -51,6 +51,7 @@
               <span> {{ request.products.length }} producto(s) - (click para ver)</span>
             </div>
           </Link> 
+          <p class="text-center text-xs text-gray-500 col-span-full">No hay solicitudes aún</p>
         </div>
     </div>
 

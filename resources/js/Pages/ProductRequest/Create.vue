@@ -105,7 +105,6 @@ export default {
     },
     store() {
       this.quantityValidated();
-      console.log(this.validation_message == "");
       if(this.validation_message == "") {
         this.form.post(this.route("product-request.store"));
       }

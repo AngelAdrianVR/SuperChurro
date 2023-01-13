@@ -42,23 +42,15 @@
       </p>
 
         <div class="globe-container flex-col">
-          <div class="globe hover:bg-gray-200 cursor-pointer">
-            <div class="globe-title pb-2">
-              A las 5:55 por: nombre del empleado que solicitó.
+          <Link :href="route('product-request.show', request)" v-for="request in requests" :key="request.id" class="globe hover:bg-gray-200 cursor-pointer">
+            <div class="globe-title !justify-between pb-2">
+              <span class="text-gray-500"><i class="fa-solid fa-user mr-1"></i> {{ request.user.name }}</span>
+              <small class="text-gray-400">{{ timeFormatter(request.created_at) }}</small>
             </div>
             <div class="flex justify-between items-center">
-              <span>ver todos los productos..</span>
+              <span> {{ request.products.length }} producto(s) - (click para ver)</span>
             </div>
-          </div>
-
-          <div class="globe hover:bg-gray-200 cursor-pointer">
-            <div class="globe-title pb-2">
-              A las 5:55 por: nombre del empleado que solicitó.
-            </div>
-            <div class="flex justify-between items-center">
-              <span>ver todos los productos..</span>
-            </div>
-          </div> 
+          </Link> 
         </div>
     </div>
 
@@ -98,8 +90,14 @@ export default {
   },
   props: {
     products: Array,
+    requests: Array,
     cart_products: Object,
   },
-  methods: {},
+  methods: {
+    timeFormatter(timestamp) {
+      const date_n_time = timestamp.split('T');
+      return ' a las ' + date_n_time[1].split('.')[0];
+    }
+  },
 };
 </script>

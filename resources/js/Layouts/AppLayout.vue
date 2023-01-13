@@ -29,6 +29,11 @@ const admin_menues = [
         route_name: 'users.index',
         is_active: route().current('users.*'),
     },
+    {
+        label: 'Productos',
+        route_name: 'products.index',
+        is_active: route().current('products.*'),
+    },
 ];
 
 const menues = [

@@ -43,9 +43,9 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="user_id" value="Número de empleado" />
+                <InputLabel for="id" value="Número de empleado" />
                 <TextInput
-                    id="user_id"
+                    id="id"
                     v-model="form.id"
                     type="number"
                     class="mt-1 block w-full"

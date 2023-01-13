@@ -42,29 +42,18 @@
         Solicitudes de mercancía (Hoy)
       </p>
 
-      <div class="globe-container flex-col">
-        <Link
-          :href="route('product-request.show', request)"
-          v-for="request in requests"
-          :key="request.id"
-          class="globe hover:bg-gray-200 cursor-pointer"
-        >
-          <div class="globe-title !justify-between pb-2">
-            <span class="text-gray-500"
-              ><i class="fa-solid fa-user mr-1"></i>
-              {{ request.user.name }}</span
-            >
-            <small class="text-gray-400">{{
-              timeFormatter(request.created_at)
-            }}</small>
-          </div>
-          <div class="flex justify-between items-center">
-            <span>
-              {{ request.products.length }} producto(s) - (click para ver)</span
-            >
-          </div>
-        </Link>
-      </div>
+        <div class="globe-container flex-col">
+          <Link :href="route('product-request.show', request)" v-for="request in requests" :key="request.id" class="globe hover:bg-gray-200 cursor-pointer">
+            <div class="globe-title !justify-between pb-2">
+              <span class="text-gray-500"><i class="fa-solid fa-user mr-1"></i> {{ request.user.name }}</span>
+              <small class="text-gray-400">{{ timeFormatter(request.created_at) }}</small>
+            </div>
+            <div class="flex justify-between items-center">
+              <span> {{ request.products.length }} producto(s) - (click para ver)</span>
+            </div>
+          </Link> 
+          <p class="text-center text-xs text-gray-500 col-span-full">No hay solicitudes aún</p>
+        </div>
     </div>
 
     <div>

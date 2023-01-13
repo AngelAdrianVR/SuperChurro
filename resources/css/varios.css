@@ -11,5 +11,5 @@
 }
 
 .select {
-    @apply w-full rounded-lg border border-gray-400 text-gray-500 focus:border-stone-500 focus:text-stone-500;
+    @apply w-5/6 rounded-lg border border-gray-400 text-gray-500 focus:border-stone-500 focus:text-stone-500;
 }

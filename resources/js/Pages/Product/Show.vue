@@ -1,8 +1,8 @@
 <template>
-  <AppLayout title="Nuevo producto">
+  <AppLayout title="Editar Producto">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Nuevo producto
+        Editar producto: <strong>{{ product.name }}</strong>
       </h2>
     </template>
 
@@ -44,7 +44,7 @@
         mx-4
       "
     >
-      <form @submit.prevent="store">
+      <form @submit.prevent="update">
         <div class="relative z-0 mb-6 w-full group">
           <input
             v-model="form.name"
@@ -198,7 +198,7 @@
           </option>
         </select>
         <div class="flex justify-center lg:justify-end">
-          <PrimaryButton :disabled="form.processing">Agregar</PrimaryButton>
+          <PrimaryButton :disabled="form.processing">Actualizar</PrimaryButton>
         </div>
       </form>
     </div>
@@ -214,10 +214,10 @@ import { Link, useForm } from "@inertiajs/inertia-vue3";
 export default {
   data() {
     const form = useForm({
-      name: null,
-      low_stock: null,
-      unit_id: null,
-      price: null,
+      name: this.product.name,
+      low_stock: this.product.low_stock,
+      unit_id: this.product.unit.id,
+      price: this.product.current_price.price,
     });
     return {
       form,
@@ -231,11 +231,12 @@ export default {
     InputError,
   },
   props: {
+    product: Object,
     units: Array,
   },
   methods: {
-    store() {
-      this.form.post(route("products.store"));
+    update() {
+      this.form.put(route("products.update",this.product.id));
     },
   },
 };

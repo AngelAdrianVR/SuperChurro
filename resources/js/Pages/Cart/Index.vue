@@ -19,7 +19,8 @@
 
     <div class="flex justify-center">
       <Link :href="route('sales.create')"
-        ><SecondaryButton class="mt-2">Hacer corte</SecondaryButton></Link>
+        ><SecondaryButton class="mt-2">Hacer corte</SecondaryButton></Link
+      >
     </div>
 
     <div>
@@ -60,16 +61,26 @@
         Inventario Actual
       </p>
 
-        <div class="globe-container flex-col">
-          <div v-for="cart_product_id in Object.keys(cart_products[0].products)" :key="cart_product_id" class="globe hover:bg-gray-200 cursor-pointer">
-            <div class="globe-title pb-2">
-              {{ products.find(product => product.id == cart_product_id ).name }}
-            </div>
-            <div class="flex justify-between items-center">
-              <span>{{ cart_products[0].products[cart_product_id] }} {{ products.find(product => product.id == cart_product_id ).unit.name }}</span>
-            </div>
+      <div class="globe-container flex-col">
+        <div
+          v-for="cart_product_id in Object.keys(cart_products[0].products)"
+          :key="cart_product_id"
+          class="globe hover:bg-gray-200 cursor-pointer"
+        >
+          <div class="globe-title pb-2">
+            {{ products.find((product) => product.id == cart_product_id).name }}
+          </div>
+          <div class="flex justify-between items-center">
+            <span
+              >{{ cart_products[0].products[cart_product_id] }}
+              {{
+                products.find((product) => product.id == cart_product_id).unit
+                  .name
+              }}</span
+            >
           </div>
         </div>
+      </div>
     </div>
   </AppLayout>
 </template>
@@ -96,9 +107,9 @@ export default {
   },
   methods: {
     timeFormatter(timestamp) {
-      const date_n_time = timestamp.split('T');
-      return ' a las ' + date_n_time[1].split('.')[0];
-    }
+      const date_n_time = timestamp.split("T");
+      return " a las " + date_n_time[1].split(".")[0];
+    },
   },
 };
 </script>

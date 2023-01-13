@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\PermissionType;
+use App\Models\WarehouseMovement;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,5 +23,16 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        $this->call([
+            UserSeeder::class,
+            CartSeeder::class,
+            MovementConceptSeeder::class,
+            PermissionTypeSeeder::class,
+            UnitsSeeder::class,
+            WarehouseSeeder::class,
+            ProductSeeder::class,
+            PriceSeeder::class,
+        ]);
     }
 }

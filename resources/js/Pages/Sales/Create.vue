@@ -92,7 +92,7 @@
         </div>
 
         <div class="flex justify-center lg:justify-end mt-5">
-          <PrimaryButton @click="store" :disabled="form.processing">Hacer corte</PrimaryButton>
+          <PrimaryButton :disabled="form.processing">Hacer corte</PrimaryButton>
         </div>
       </form>
     </div>

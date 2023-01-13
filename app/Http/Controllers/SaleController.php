@@ -44,13 +44,13 @@ class SaleController extends Controller
         $sales = Cart::find(1);
         $solt_products = [];
 
-        for($i=0; $i<14; $i++){
+        for($i=0; $i<count($cart_products); $i++){
             $solt_products[$i] = $cart_products[$i+1] - $request->remaining[$i];
         }
         //  return $solt_products;
         // Sale::create()
         
-        for($i=0; $i<14; $i++){
+        for($i=0; $i<count($cart_products); $i++){
             $cart_products[$i+1] = $request->remaining[$i];
         }
     

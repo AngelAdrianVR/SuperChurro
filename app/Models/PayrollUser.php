@@ -26,24 +26,34 @@ class PayrollUser extends Pivot
     public function weekAttendanceArray()
     {
         $current_attendance = $this->attendance;
-        $current_payroll = Payroll::latest()->take(1)->get()->all()[0];
+        $current_payroll = Payroll::where('id', $this->payroll_id)->get()->all()[0];
         for ($i = 0; $i < 7; $i ++) { 
             if(!array_key_exists($i, $current_attendance)) {
                 // check if this day is off, applied leave or holyday
                 $current_attendance[$i] = $this->typeOfAbsent($current_payroll->start_date->addDays($i));
             }
+
+            // add day in the register
+            $current_attendance[$i]['day'] = $current_payroll->start_date->addDays($i)->isoFormat('dd, DD/MMM/YYYY');
         }
         return $current_attendance;
     }
 
     private function typeOfAbsent($date)
     {
-        if($this->isDayOff($date->dayOfWeek)) return "Día de descanso";
-        if($this->isVacation($date)) return "Vacaciones";
-        if($this->isLeave($date)) return "Permiso aprobado";
-        // if($this->isHollyday($date)) return "Día feriado";
-        if($date->greaterThanOrEqualTo(now())) "Sin información";
-        return "Falta";
+        $absent_type = "Falta";
+        $attendance = [
+            'in' => $absent_type,
+            'out' => $absent_type
+        ];
+
+        if($this->isDayOff($date->dayOfWeek)) $absent_type = "Día de descanso";
+        if($this->isVacation($date)) $absent_type = "Vacaciones";
+        if($this->isLeave($date)) $absent_type = "Permiso aprobado";
+        if($this->isHoliday($date)) $absent_type = "Día feriado";
+        if($date->greaterThanOrEqualTo(now())) $absent_type = "--:--:--";
+
+        return $attendance;
     }
 
     private function isDayOff($day_of_week)
@@ -78,12 +88,13 @@ class PayrollUser extends Pivot
         return $is_there_an_approved_vacation;
     }
 
-    // private function isHoliday($date)
-    // {
-    //     $is_holiday = Holiday::whereDate('date', $date)
-    //         ->get()
-    //         ->count();
+    private function isHoliday($date)
+    {
+        $is_holiday = Holiday::where('date', $date->isoFormat('DD-MM'))
+            ->whereMonth('date', $date)
+            ->get()
+            ->count();
 
-    //     return $is_holiday;
-    // }
+        return $is_holiday;
+    }
 }

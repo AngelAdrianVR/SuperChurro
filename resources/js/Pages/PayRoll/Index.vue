@@ -5,12 +5,14 @@
         </template>
 
         <div class="mt-5 text-bold text-lg text-gray-700">
-            <p class="my-2 ml-5">Nómina en curso</p>
-            <PayRollTable />
+            <p class="my-2 ml-5">Detalle de nómina</p>
+            <PayRollTable :payroll="payroll_selected" />
         </div>
 
         <div class="globe-container">
-            <div v-for="payroll in payrolls.data" :key="payroll.id" class="globe hover:bg-gray-200 cursor-pointer">
+            <div v-for="payroll in payrolls.data" :key="payroll.id" @click="payroll_selected = payroll"
+                class="globe hover:bg-gray-100 cursor-pointer"
+                :class="{ 'border-4 border-sky-500 !bg-sky-100': payroll_selected.id === payroll.id }">
                 <div class="globe-title pb-2">
                     Semana {{ payroll.week }}: {{ payroll.start_date }} al {{ payroll.end_date }}
                 </div>
@@ -32,7 +34,7 @@ import PayRollTable from '@/Components/PayRollTable.vue'
 export default {
     data() {
         return {
-
+            payroll_selected: this.payrolls.data[0]
         };
     },
     components: {
@@ -40,7 +42,7 @@ export default {
         PayRollTable,
     },
     props: {
-        payrolls: Array,
+        payrolls: Object,
     },
 }
 </script>

@@ -21,8 +21,8 @@ const admin_menues = [
   },
   {
     label: "Configuraciones",
-    route_name: "dashboard",
-    is_active: route().current("dashboard"),
+    route_name: "settings.index",
+    is_active: route().current("settings" + ".*"),
   },
   {
     label: "Usuarios",

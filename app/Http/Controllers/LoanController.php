@@ -9,10 +9,6 @@ use Inertia\Inertia;
 
 class LoanController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +17,6 @@ class LoanController extends Controller
     public function index()
     {
         $loans = LoanResource::collection(auth()->user()->loans()->latest()->get());
-        // return $loans;
        return Inertia::render('Loan/Index', compact('loans'));
     }
 

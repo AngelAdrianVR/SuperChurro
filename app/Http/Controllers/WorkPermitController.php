@@ -11,15 +11,6 @@ use Inertia\Inertia;
 class WorkPermitController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $work_permits = WorkPermitResource::collection(auth()->user()->workPermits()->latest()->get());
@@ -46,9 +37,10 @@ class WorkPermitController extends Controller
      */
     public function store(Request $request)
     {
+      
         $validated = $request->validate([
             'date' => 'required|after:today',
-            'time_requested' => 'numeric',
+            'time_requested' => 'numeric|nullable',
             'description' => 'max:191',
             'permission_type_id' => 'required',
         ]);

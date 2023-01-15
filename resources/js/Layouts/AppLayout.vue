@@ -46,36 +46,44 @@ const menues = [
     label: "Inicio",
     route_name: "dashboard",
     is_active: route().current("dashboard"),
+    is_a: route().current("dashboard"),
+    admin_can_see: true, 
   },
   {
     label: "Nóminas",
     route_name: "payrolls.index",
     is_active: route().current("payrolls" + ".*"),
+    admin_can_see: false,
   },
   {
     label: "Permisos",
     route_name: "work-permits.index",
     is_active: route().current("work-permits" + ".*"),
+    admin_can_see: false,
   },
   {
     label: "Permutas",
     route_name: "barters.index",
     is_active: route().current("barters" + ".*"),
+    admin_can_see: false,
   },
   {
     label: "Préstamos",
     route_name: "loans.index",
     is_active: route().current("loans" + ".*"),
+    admin_can_see: false,
   },
   {
     label: "Cocina",
     route_name: "warehouses.index",
     is_active: route().current("warehouses" + ".*"),
+    admin_can_see: true,
   },
   {
     label: "Carrito",
     route_name: "carts.index",
     is_active: route().current("carts" + ".*"),
+    admin_can_see: true,
   },
 ];
 
@@ -127,14 +135,15 @@ const logout = () => {
 
               <!-- Navigation Links -->
               <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+               <template v-for="(menu, index) in menues" :key="index">
                 <NavLink
-                  v-for="(menu, index) in menues"
-                  :key="index"
+                  v-if="menu.admin_can_see || !$page.props.user.is_admin"
                   :href="route(menu.route_name)"
                   :active="menu.is_active"
                 >
                   {{ menu.label }}
                 </NavLink>
+               </template>
               </div>
             </div>
 
@@ -424,14 +433,15 @@ const logout = () => {
           class="sm:hidden"
         >
           <div class="pt-2 pb-3 space-y-1">
-            <ResponsiveNavLink
-              v-for="(menu, index) in menues"
-              :key="index"
-              :href="route(menu.route_name)"
-              :active="menu.is_active"
-            >
-              {{ menu.label }}
-            </ResponsiveNavLink>
+            <template v-for="(menu, index) in menues" :key="index">
+                <ResponsiveNavLink
+                  v-if="menu.admin_can_see || !$page.props.user.is_admin"
+                  :href="route(menu.route_name)"
+                  :active="menu.is_active"
+                >
+                  {{ menu.label }}
+                </ResponsiveNavLink>
+               </template>
 
             <!-- admin menu -->
             <div

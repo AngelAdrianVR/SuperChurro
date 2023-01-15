@@ -21,7 +21,7 @@ class WorkPermitResource extends JsonResource
             'time_requested' => $this->time_requested,
             'description' => $this->description,
             'status' => $this->status,
-            'permission_type_id' => $this->permission_tyoe_id,
+            'permission_type_id' => $this->permission_type_id,
             'user_id' => $this->user_id,
         ];
     }

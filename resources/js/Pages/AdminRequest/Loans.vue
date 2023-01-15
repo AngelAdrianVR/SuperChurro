@@ -18,9 +18,9 @@
           <i v-if="loan.status == 1" class="fa-solid fa-trash text-red-600"></i>
           </button>
         </div>
-          <p>Cantidad Solicitada: ${{loan.amount}}</p>
+          <p><strong>Cantidad Solicitada: </strong> ${{loan.amount}}</p>
         <div class="flex flex-col">
-           <p>Notas: {{ loan.description }} </p>
+           <p><strong> Notas: </strong>{{ loan.description }} </p>
             <span v-if="loan.status == 1" class="text-orange-500 font-bold mt-2"><i class="fa-solid fa-hourglass-start mr-2"></i>Revisando...</span>  
             <span v-if="loan.status == 2" class="text-green-600 font-bold mt-2"><i class="fa-solid fa-check mr-2"></i>Aprobado</span>  
             <span v-if="loan.status == 3" class="text-red-600 font-bold mt-2"><i class="fa-solid fa-xmark mr-2"></i>Rechazado</span>  

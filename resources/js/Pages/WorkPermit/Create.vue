@@ -66,13 +66,7 @@
             )?.id
           "
           class="
-            bg-gray-200
-            mb-7
-            mr-2
-            rounded-lg
-            border border-gray-300
-            text-gray-500
-            focus:border-stone-500 focus:text-stone-500
+           select mb-5
           "
           required
           v-model="form.permission_type_id"
@@ -142,7 +136,6 @@
             step="0.1"
             name="floating_time_requested"
             autocomplete="off"
-            required
             class="
               block
               py-2.5
@@ -245,7 +238,7 @@ export default {
   data() {
     const form = useForm({
       time_requested: null,
-      permission_type_id: "",
+      permission_type_id: null,
       description: "",
       date: "",
     });

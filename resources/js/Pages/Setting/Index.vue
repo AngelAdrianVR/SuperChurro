@@ -11,9 +11,15 @@
         <div class="globe-title">
             Configuraciones Generales
       </div>
-        <div class="!justify-between">
+      <div class="flex flex-col space-y-2">
+        <div class="flex justify-between items-center">
             <p class="font-bold">Porcentaje de comision</p>
-            <input type="number" class="rounded-lg w-1/2">
+              <input type="number" class="rounded-lg w-1/2 h-7">
+      </div>
+        <div class="flex justify-between items-center">
+            <p class="font-bold">porcentaje de descuento de venta a empleado</p>
+              <input type="number" class="rounded-lg w-1/2 h-7">
+      </div>
       </div>
     </div>
 </div>

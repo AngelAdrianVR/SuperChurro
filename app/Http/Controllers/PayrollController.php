@@ -10,16 +10,11 @@ use Inertia\Inertia;
 
 class PayrollController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     
     public function index()
     {
         $payrolls = PayrollUserResource::collection(auth()->user()->payrolls);
 
-        return $payrolls;
         return Inertia::render('PayRoll/Index', compact('payrolls'));
     }
 

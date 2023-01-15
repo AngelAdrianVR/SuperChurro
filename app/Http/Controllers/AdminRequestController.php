@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\LoanResource;
 use App\Http\Resources\WorkPermitResource;
 use App\Models\Loan;
+use App\Models\User;
 use App\Models\WorkPermit;
 use Illuminate\Http\Request;
 
@@ -26,8 +27,19 @@ class AdminRequestController extends Controller
 
     public function acceptWorkPermit(WorkPermit $work_permit)
     {
+        $user = WorkPermit::find($work_permit->id)->user;
+        $current_properties = $user->employee_properties;
+        // return $user;
+
+        if($work_permit->permission_type_id == 3){
+            $current_properties['vacations'] -= 1;
+            $user->update(['employee_properties' => $current_properties]);
+        }
+
         $work_permit->status = 2;
         $work_permit->save();
+
+
         request()->session()->flash('flash.banner', '¡Se ha aceptado el permiso!');
         request()->session()->flash('flash.bannerStyle', 'success');
 

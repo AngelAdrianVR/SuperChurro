@@ -301,13 +301,13 @@
             class="text-gray-500"
             value="carrito matutino"
           >
-            Carrito Matutino
+            Carrito T/M
           </option>
           <option
             class="text-gray-500"
             value="carrito vespertino"
           >
-            Carrito Vespertino
+            Carrito T/V
           </option>
         </select>
         </div>

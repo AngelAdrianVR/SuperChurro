@@ -31,7 +31,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="(attendance, index) in payroll.week_attendance" :key="index">
+              <tr v-for="(attendance, index) in payroll.week_attendance.payroll" :key="index">
                 <th
                   class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 text-left flex items-center">
                   <span class="ml-3 font-bold text-white"> {{ attendance.day }} </span>

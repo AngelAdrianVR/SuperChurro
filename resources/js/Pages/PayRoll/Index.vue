@@ -16,10 +16,12 @@
                 <div class="globe-title pb-2">
                     Semana {{ payroll.week }}: {{ payroll.start_date }} al {{ payroll.end_date }}
                 </div>
-                <div class="flex justify-between items-center">
-                    <span><i class="fa-regular fa-dollar-sign mr-2"></i>1,000</span>
-                    <span><i class="fa-solid fa-check mr-2"></i>5 Asistencia(s)</span>
-                    <span><i class="fa-solid fa-xmark mr-2"></i>1 falta(s)</span>
+                <div class="grid grid-cols-3 gap-1 text-sm">
+                    <span>-<i class="text-red-400 fa-solid fa-dollar mr-1"></i>{{ payroll.discounts }} descuentos</span>
+                    <span>+<i class="text-green-700 fa-solid fa-dollar mr-1"></i>{{ payroll.vacation_premium }} prima vacacional</span>
+                    <span><i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{ payroll.paid }} total</span>
+                    <span><i class="text-green-400 fa-solid fa-check mr-1"></i>{{ payroll.week_attendance.attendances }} Asistencias</span>
+                    <span><i class="text-yellow-400 fa-solid fa-umbrella-beach mr-1"></i>{{ payroll.week_attendance.vacations }} Vacaciones</span>
                 </div>
             </div>
         </div>

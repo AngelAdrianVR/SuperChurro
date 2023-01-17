@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('payroll_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->json('attendance')->nullable();
-            $table->unsignedMediumInteger('discounts')->nullable();
+            $table->json('discounts')->nullable();
             $table->timestamps();
         });
     }

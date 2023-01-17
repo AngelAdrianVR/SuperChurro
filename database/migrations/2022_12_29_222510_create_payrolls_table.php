@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedTinyInteger('week');
             $table->date('start_date');
+            $table->json('commissions')->nullable();
             $table->boolean('is_active');
             $table->timestamps();
         });

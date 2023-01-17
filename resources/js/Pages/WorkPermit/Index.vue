@@ -22,13 +22,13 @@
         </div>
         <div class="flex flex-col mb-2">
           <p ><strong> Tipo de permiso: </strong>{{permission_type_name[work_permit.permission_type_id - 1]}}</p>
-          <p v-if="work_permit.permission_type_id == 1 || work_permit.permission_type_id == 2 "><strong>Tiempo requerido: </strong>{{work_permit.time_requested}} hr(s)</p>
+          <p v-if="work_permit.permission_type_id == 1 || work_permit.permission_type_id == 2 "><strong>Tiempo requerido: </strong>{{work_permit.time_requested}} minutos</p>
            <p><strong>Notas: </strong>{{ work_permit.description }} </p>
             <span v-if="work_permit.status == 1" class="text-orange-500 font-bold mt-2"><i class="fa-solid fa-hourglass-start mr-2"></i>Revisando...</span>  
             <span v-if="work_permit.status == 2" class="text-green-600 font-bold mt-2"><i class="fa-solid fa-check mr-2"></i>Aprobado</span>  
             <span v-if="work_permit.status == 3" class="text-red-600 font-bold mt-2"><i class="fa-solid fa-xmark mr-2"></i>Rechazado</span>  
         </div>
-        <div class="absolute bottom-0 left-2 text-xs text-gray-400">Creado el: {{ work_permit.created_at }}</div>
+        <div class="absolute bottom-0 left-2 text-xs text-gray-400">Solicitado el: {{ work_permit.created_at }}</div>
       </div>
     </div>
 

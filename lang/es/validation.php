@@ -159,5 +159,6 @@ return [
         'terms' => 'Términos y condiciones',
         'today' => 'Hoy',
         'phone_number' => 'Número telefónico',
+        'date' => 'fecha',
     ],
 ];

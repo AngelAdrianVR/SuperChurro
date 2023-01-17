@@ -8,18 +8,12 @@ use Illuminate\Http\Request;
 
 class BarterController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        $barters = BarterResource::collection(auth()->user()->myBarters()->with('receptor')->latest()->get());
+        $barters = BarterResource::collection(Barter::with('receptor','transmitter')->latest()->get());
+        // return $barters;
+        // $my_barters = BarterResource::collection(auth()->user()->myBarters()->with('receptor')->latest()->get()); //auth user's barters
         // return $barters;
         return inertia('Barter/Index',compact('barters'));
     }
@@ -83,9 +77,15 @@ class BarterController extends Controller
      * @param  \App\Models\Barter  $barter
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Barter $barter)
+    public function update(Barter $barter)
     {
-        //
+        $barter->status = 2;
+        $barter->receptor_user_id = auth()->user()->id;
+ 
+        $barter->save();
+
+        return redirect()->route('barters.index');
+        
     }
 
     /**

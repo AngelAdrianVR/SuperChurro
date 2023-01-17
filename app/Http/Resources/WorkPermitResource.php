@@ -22,7 +22,7 @@ class WorkPermitResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
             'permission_type_id' => $this->permission_type_id,
-            'user_id' => $this->user_id,
+            'user' => $this->whenLoaded('user'),
         ];
     }
 }

@@ -13,6 +13,7 @@
           type="date"
           name="floating_date"
           autocomplete="off"
+          required
           class="
             block
             py-2.5
@@ -50,6 +51,7 @@
           "
           >Fecha de permuta</label
         >
+         <InputError :message="$page.props?.errors.date" />
       </div>
 
       <SecondaryButton @click="store" class="mr-7 mt-4"
@@ -63,11 +65,10 @@
           <div class="flex flex-col text-left">
             <p>
               Permuta para el {{ barter.date }} -
-              {{ $page.props.user.employee_properties?.shifts }}
+              {{ $page.props.user.employee_properties?.shift }}
             </p>
-            <small class="text-gray-500"
-              >Publicado el {{ barter.created_at }}</small
-            >
+            <small class="text-gray-500">Publicado el {{ barter.created_at }}</small>
+            <small class="text-gray-500">Publicado por {{ barter.transmitter.name }}</small>
           </div>
           <button class="absolute bottom-1 right-2"
             @click="
@@ -93,6 +94,9 @@
           <span v-if="barter.status == 3" class="text-red-600 mt-2 text-xs">
             <i class="fa-solid fa-xmark mr-2"></i>Expiró.
           </span>
+        </div>
+        <div v-if="barter.transmitter.id != $page.props.user.id && barter.status == 1 " class="flex justify-center my-1">
+          <PrimaryButton @click="barter_confirm = true; barter_id = barter.id" class="bg-green-600"> Aceptar permuta</PrimaryButton>
         </div>
       </div>
     </div>
@@ -151,6 +155,56 @@
         </div>
       </template>
     </ConfirmationModal>
+    <ConfirmationModal :show="barter_confirm" @close="barter_confirm = false">
+      <template #title>
+        <div>¿Deseas continuar?</div>
+      </template>
+      <template #content>
+        <div>
+          Estás a punto de aceptar una permuta. Una vez aceptada no podrá ser cancelada a menos 
+          que te pongas en contacto con administración.
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end">
+          <button
+            @click="this.accept()"
+            class="
+              px-2
+              py-1
+              font-semibold
+              border
+              rounded
+              border-red-500
+              text-red-500
+              hover:bg-red-500 hover:text-white
+              transition
+              duration-200
+              mr-2
+            "
+          >
+            Aceptar
+          </button>
+          <button
+            class="
+              px-2
+              py-1
+              font-semibold
+              border
+              rounded
+              border-gray-500
+              text-gray-500
+              hover:bg-gray-100
+              transition
+              duration-200
+            "
+            @click="barter_confirm = false"
+          >
+            Cancelar
+          </button>
+        </div>
+      </template>
+    </ConfirmationModal>
   </AppLayout>
 </template>
   
@@ -158,8 +212,10 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PayRollTable from "@/Components/PayRollTable.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import InputError from "@/Components/InputError.vue";
 export default {
   data() {
     const form = useForm({
@@ -169,6 +225,8 @@ export default {
       form,
       delete_confirm: false,
       item_to_delete: {},
+      barter_confirm: false,
+      barter_id: null,
     };
   },
   components: {
@@ -178,6 +236,8 @@ export default {
     Link,
     useForm,
     ConfirmationModal,
+    InputError,
+    PrimaryButton,
   },
   props: {
     barters: Object,
@@ -185,10 +245,15 @@ export default {
   methods: {
     store() {
       this.form.post(this.route("barters.store"));
+      this.form.date = null;
     },
     delete() {
       this.$inertia.delete(this.route("barters.destroy", this.item_to_delete));
       this.delete_confirm = false;
+    },
+    accept() {
+      this.$inertia.put(this.route("barters.update", this.barter_id));
+      this.barter_confirm = false;
     },
   },
 };

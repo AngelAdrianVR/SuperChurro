@@ -13,7 +13,7 @@ class AdminRequestController extends Controller
 {
     public function permits()
     {
-        $work_permits = WorkPermitResource::collection(WorkPermit::latest()->get());
+        $work_permits = WorkPermitResource::collection(WorkPermit::with('user')->latest()->get());
         // return $work_permits;
         return inertia('AdminRequest/Permits', compact('work_permits')); 
     }

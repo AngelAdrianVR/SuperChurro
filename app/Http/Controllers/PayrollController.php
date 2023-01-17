@@ -54,5 +54,10 @@ class PayrollController extends Controller
         return $payroll;
         
         return inertia('PayRoll/Template');
+     }
+
+    public function adminIndex()
+    {
+        return inertia('PayRoll/Admin/Index');
     }
 }

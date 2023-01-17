@@ -62,6 +62,8 @@ Route::resource('products', ProductController::class)->middleware('auth');
 Route::resource('users', UserController::class)->middleware('auth');
 Route::resource('sales', SaleController::class)->middleware('auth');
 Route::resource('settings', SettingController::class)->middleware('auth');
+Route::get('/admin/payrolls', [PayrollController::class, 'adminIndex'])->middleware('auth')->name('payroll-admin.index');
+
 
 //Specific-action routes
 Route::put('/disable/{user}', [UserController::class, 'disable'])->middleware('auth')->name('user.disable');

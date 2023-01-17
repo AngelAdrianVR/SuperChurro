@@ -70,7 +70,7 @@ class UserController extends Controller
             'phone_number' => 'required|numeric|digits:10',
             'employee_properties.birthdate' => 'required|date',
             'employee_properties.base_salary' => 'required|numeric',
-            'employee_properties.shifts' => 'required',
+            'employee_properties.shift' => 'required',
             'employee_properties.work_days' => 'required',
         ]);
         $user->update($validated);

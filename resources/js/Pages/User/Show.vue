@@ -323,17 +323,17 @@
               text-gray-500
               focus:border-stone-500 focus:text-stone-500
             "
-            v-model="form.employee_properties.shifts"
+            v-model="form.employee_properties.shift"
           >
             <option disabled selected class="text-gray-500" value="">
               -- Seleeciona un turno --
             </option>
             <option class="text-gray-500" value="cocina">Cocina</option>
             <option class="text-gray-500" value="carrito matutino">
-              Carrito Matutino
+              Carrito T/M
             </option>
             <option class="text-gray-500" value="carrito vespertino">
-              Carrito Vespertino
+              Carrito T/V
             </option>
           </select>
         </div>
@@ -537,7 +537,7 @@ export default {
         birthdate: this.user.employee_properties.birthdate,
         base_salary: this.user.employee_properties.base_salary,
         work_days: this.user.employee_properties.work_days,
-        shifts: this.user.employee_properties.shifts,
+        shifts: this.user.employee_properties.shift,
         vacations: 0,
         resources: null,
       },

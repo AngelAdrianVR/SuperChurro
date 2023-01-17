@@ -13,20 +13,16 @@
     </div>
 
     <div class="globe-container flex-col">
-        <Link
-          :href="route('products.show', product.id)"
-          v-for="product in products.data"
+        <div v-for="product in products.data"
           :key="product.id"
-          class="globe hover:bg-gray-200 cursor-pointer relative"
-        >
+           class="globe hover:bg-gray-200 cursor-pointer relative z-0">
+        <Link
+          :href="route('products.show', product.id)">
           <div class="globe-title !justify-between pb-2">
             <span class="text-gray-500"
               ><i class="fa-solid fa-box mr-1"></i>
               {{ product.name }}</span
             >
-            <button class="absolute bottom-1 right-2" @click="delete_confirm = true; item_to_delete = product;">
-          <i class="fa-solid fa-trash text-red-600"></i>
-          </button>
           </div>
           <div class="flex flex-col">
             <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Stock mínimo: {{ product.low_stock }} </span> 
@@ -34,6 +30,10 @@
             <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Precio actual: ${{ product.price.price }} </span> 
           </div>
         </Link>
+        <button class="absolute bottom-1 right-2 z-10" @click="delete_confirm = true; item_to_delete = product;">
+          <i class="fa-solid fa-trash text-red-600"></i>
+          </button>
+        </div>
       </div>
 
       <ConfirmationModal :show="delete_confirm" @close="delete_confirm = false">

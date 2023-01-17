@@ -171,7 +171,7 @@
               peer-placeholder-shown:translate-y-0
               peer-focus:scale-75 peer-focus:-translate-y-6
             "
-            >Tiempo requerido (hrs)</label
+            >Tiempo requerido en minutos</label
           >
           <InputError :message="$page.props?.errors.time_requested" />
         </div>

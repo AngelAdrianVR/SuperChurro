@@ -286,7 +286,7 @@
             text-gray-500
             focus:border-stone-500 focus:text-stone-500
           "
-          v-model="form.employee_properties.shifts"
+          v-model="form.employee_properties.shift"
         >
           <option disabled selected class="text-gray-500" value="">
             -- Seleeciona un turno --
@@ -397,7 +397,7 @@ export default {
           birthdate: "",
           base_salary: "",
           work_days: [],
-          shifts: "",
+          shift: "",
           vacations: 0,
           resources: null,
       },

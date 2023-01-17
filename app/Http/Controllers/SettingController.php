@@ -14,7 +14,8 @@ class SettingController extends Controller
      */
     public function index()
     {
-        return inertia('Setting/Index');
+        $settings = Setting::all();
+        return inertia('Setting/Index',compact('settings'));
     }
 
     /**
@@ -24,7 +25,7 @@ class SettingController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Setting/Create');
     }
 
     /**
@@ -35,7 +36,17 @@ class SettingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'key' => 'required|max:191',
+            'value' => 'required',
+        ]);
+
+        Setting::create($validated);
+
+        request()->session()->flash('flash.banner', '¡Se ha creado una nueva configuración correctamente!');
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return to_route('settings.index');
     }
 
     /**

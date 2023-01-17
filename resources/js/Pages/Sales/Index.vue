@@ -6,6 +6,15 @@
       </h2>
     </template>
 
+  <template>
+
+  <p class="mt-4 mb-2 text-center font-bold"> Enero 2023</p>
+  <div>
+
+  </div>
+   
+  </template>
+
   </AppLayout>
 </template>
 
@@ -17,6 +26,36 @@ import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 export default {
   data() {
     return {
+      calendar: [
+          { 
+            'year':[this.years],
+            'mes':[this.months],
+            'days':[]
+          },
+      ],
+
+      years:[
+        '2023',
+        '2024',
+        '2025',
+        '2026',
+        '2027',
+        ],
+
+        months: [
+          'Enero',
+          'Febrero',
+          'Marzo',
+          'Abril',
+          'Mayo',
+          'Junio',
+          'Julio',
+          'Agosto',
+          'Septiembre',
+          'Octubre',
+          'Noviembre',
+          'Diciembre',
+        ]
 
       }
   },
@@ -27,8 +66,10 @@ export default {
     ConfirmationModal,
   },
   props: {
-
-  },
+    sales: Array,
+    years: Array,
+    months: Array,
+  }, 
   methods: {
     
 },

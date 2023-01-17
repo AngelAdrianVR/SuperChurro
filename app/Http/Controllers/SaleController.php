@@ -16,7 +16,10 @@ class SaleController extends Controller
      */
     public function index()
     {
-        return inertia('Sales/Index');
+        $sales = Sale::all();
+ 
+
+        return inertia('Sales/Index', compact('sales'));
     }
 
     /**

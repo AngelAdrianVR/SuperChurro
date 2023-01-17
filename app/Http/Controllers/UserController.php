@@ -29,14 +29,15 @@ class UserController extends Controller
     {
 
         $validated = $request->validate([
-            'name' => 'required|max:30',
-            'email' => 'email',
-            'phone_number' => 'required|numeric|digits:10',
-            'employee_properties.birthdate' => 'required|date',
-            'employee_properties.base_salary' => 'required|numeric',
-            'employee_properties.shifts' => 'required',
-            'employee_properties.work_days' => 'required',
-            'employee_properties.vacations' => 'numeric',
+
+            'name'=> 'required|max:30',
+            'email'=> 'email',
+            'phone_number'=> 'required|numeric|digits:10',
+            'employee_properties.birthdate'=> 'required|date',
+            'employee_properties.base_salary'=> 'required|numeric',
+            'employee_properties.shift'=> 'required',
+            'employee_properties.work_days'=> 'required',
+            'employee_properties.vacations'=> 'numeric',
 
         ]);
         User::create($validated + [

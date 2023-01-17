@@ -74,10 +74,10 @@ class productController extends Controller
         ]);
 
        $product->update($validated);
-        $price = Price::find($product->id);
-        $price->update([
+        Price::create([
             'price' => $request->price,
-            'updated_at' => now(),
+            'product_id' => $product->id,
+            'createdated_at' => now(),
         ]);
 
         request()->session()->flash('flash.banner', '¡Se ha actualizado correctamente!');

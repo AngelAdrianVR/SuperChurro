@@ -48,6 +48,14 @@ class PayrollController extends Controller
         //
     }
 
+    // admin
+    public function seeUserPayrolls(Payroll $payroll)
+    {
+        return $payroll;
+        
+        return inertia('PayRoll/Template');
+     }
+
     public function adminIndex()
     {
         return inertia('PayRoll/Admin/Index');

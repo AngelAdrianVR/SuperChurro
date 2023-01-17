@@ -32,9 +32,6 @@ class PayrollUser extends Pivot
         $current_payroll = Payroll::find($this->payroll_id);
         $attendances = count($user->employee_properties['work_days']);
         $vacations = 0;
-        $entry = $user->employee_properties['shift'] === 'carrito vespertino'
-            ? Carbon::parse('15:00:00')
-            : Carbon::parse('9:00:00');
         $extras = 0; // minutes
         $late = 0; // minutes
 
@@ -47,27 +44,39 @@ class PayrollUser extends Pivot
                 else $attendances--;
             } else if ($current_attendance[$i]['out'] !== '--:--:--') {
                 // calculate extras
-                $_extras = Carbon::parse($current_attendance[$i]['out'])
-                    ->diffInMinutes($entry) - 360;
-                if ($_extras < 0) $_extras = 0;
-                $extras += $_extras;
+                $extras_per_day = Carbon::parse($current_attendance[$i]['out'])
+                    ->diffInMinutes($user->getEntryTime()) - $user->getTimeToWork();
+                if ($extras_per_day < 0) $extras_per_day = 0;
+                $extras += $extras_per_day;
 
                 // late
-                $_late = $entry
+                // serch for "permiso de llegada tarde" for this day
+                $late_entry_permit = WorkPermit::whereDate('date', $current_payroll->start_date->addDays($i))
+                    ->where('user_id', $this->user_id)
+                    ->where('permission_type_id', 1)
+                    ->where('status', WorkPermit::STATUS_APPROVED)
+                    ->first();
+                $late_per_day = $user->getEntryTime()
                     ->diffInMinutes(Carbon::parse($current_attendance[$i]['in']), false);
-                if ($_late < 0) $_late = 0;
-                $late += $_late;
+
+                if ($late_entry_permit) $late_per_day -= $late_entry_permit->time_requested;
+
+                if ($late_per_day < 0) $late_per_day = 0;
+                $late += $late_per_day;
             }
 
             // add day in the register
-            $current_attendance[$i]['day'] = $current_payroll->start_date->addDays($i)->isoFormat('dd, DD/MMM/YYYY');
+            $current_attendance[$i]['day'] = $current_payroll
+                ->start_date
+                ->addDays($i)
+                ->isoFormat('dd, DD/MMM/YYYY');
         }
 
         return [
             'payroll' => collect($current_attendance),
             'attendances' => $attendances,
             'vacations' => $vacations,
-            'extras' => $extras,
+            'extras' => $user->employee_properties['shift'] === "carrito vespertino" ? $extras : 0,
             'late' => $late,
         ];
     }

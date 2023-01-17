@@ -17,28 +17,31 @@ class UnitsSeeder extends Seeder
     {
         DB::table('units')->insert([
             [
-            'name' => 'Bolsa(s)',
+                'name' => 'Bolsa(s)',
             ],
             [
-            'name' => 'Pieza(s)',
+                'name' => 'Pieza(s)',
             ],
             [
-            'name' => 'Litro(s)',
+                'name' => 'Litro(s)',
             ],
             [
-            'name' => 'Cubeta(s)',
+                'name' => 'Cubeta(s)',
             ],
             [
-            'name' => 'Plato(s)',
+                'name' => 'Plato(s)',
             ],
             [
-            'name' => 'botella(s)',
+                'name' => 'botella(s)',
             ],
             [
-            'name' => 'Kilogramo(s)',
+                'name' => 'Kilogramo(s)',
             ],
             [
-            'name' => 'Vaso(s)',
+                'name' => 'Vaso(s)',
+            ],
+            [
+                'name' => 'Caja(s)',
             ],
         ]);
     }

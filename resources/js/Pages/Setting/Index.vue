@@ -6,23 +6,26 @@
       </h2>
     </template>
 
-    <div class="globe-container">
+    <div class="flex justify-end">
+      <Link :href="route('settings.create')">
+      <SecondaryButton class="mr-7 my-5">Nueva configuración</SecondaryButton>
+      </Link>
+    </div>
+
+
+    <div class="globe-container !flex">
       <div class="globe relative">
         <div class="globe-title">
             Configuraciones Generales
       </div>
       <div class="flex flex-col space-y-2">
-        <div class="flex justify-between items-center">
-            <p class="font-bold">Porcentaje de comision</p>
-              <input type="number" class="rounded-lg w-1/2 h-7">
+        <div v-for="setting in settings" :key="setting.id" class="flex justify-between items-center">
+            <p class="font-bold">{{ setting.key }}</p>
+              <input type="number" class="rounded-lg w-1/2 h-7" :value="setting.value">
       </div>
-        <div class="flex justify-between items-center">
-            <p class="font-bold">porcentaje de descuento de venta a empleado</p>
-              <input type="number" class="rounded-lg w-1/2 h-7">
       </div>
       </div>
     </div>
-</div>
 
   </AppLayout>
 </template>
@@ -45,7 +48,7 @@ export default {
     ConfirmationModal,
   },
   props: {
-
+settings: Array,
   },
   methods: {
     

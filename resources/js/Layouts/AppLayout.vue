@@ -39,6 +39,11 @@ const admin_menues = [
     route_name: "admin-requests.permits",
     is_active: route().current("admin-requests.*"),
   },
+  {
+    label: "Nóminas",
+    route_name: "payroll-admin.index",
+    is_active: route().current("payroll-admin.*"),
+  },
 ];
 
 const menues = [

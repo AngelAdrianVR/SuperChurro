@@ -48,4 +48,9 @@ class PayrollController extends Controller
     {
         //
     }
+
+    public function adminIndex()
+    {
+        return inertia('PayRoll/Admin/Index');
+    }
 }

@@ -25,7 +25,7 @@
                         payroll.vacation_premium
                     }} prima
                         vacacional</span>
-                    <span><i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{ payroll.base_salary }} salario
+                    <span>+<i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{ payroll.base_salary }} salario
                         base</span>
                     <span>+<i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{ payroll.commissions }}
                         comisiones</span>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -87,5 +88,28 @@ class User extends Authenticatable
 
     public function aceptedBarters(){
         return $this->hasMany(Barter::class,'receptor_user_id');
+    }
+
+    // methods
+    public function getTimeToWork()
+    {
+        if($this->employee_properties['shift'] === 'carrito vespertino') {
+            $time_to_work = 360; // minutes (6 hours)
+        } else {
+            $time_to_work = 300; // minutes (5 hours)
+        }
+
+        return $time_to_work;
+    }
+
+    public function getEntryTime()
+    {
+        if($this->employee_properties['shift'] === 'carrito vespertino') {
+            $entry = Carbon::parse('15:00:00');
+        } else {
+            $entry = Carbon::parse('10:00:00');
+        }
+
+        return $entry;
     }
 }

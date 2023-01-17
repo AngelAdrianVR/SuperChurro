@@ -6,6 +6,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\Price;
 use App\Models\Product;
 use App\Models\Unit;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 
 class productController extends Controller
@@ -42,6 +43,11 @@ class productController extends Controller
             'product_id' => $new_product->id,
             'created_at' => now(),
         ]);
+
+        // Add new product to warehouse
+        $warehouse = Warehouse::first();
+        $products = $warehouse->products + [$new_product->id => $request->initial_stock];
+        $warehouse->update(['products' => $products]);
 
         request()->session()->flash('flash.banner', '¡Se ha creado un nuevo producto correctamente!');
         request()->session()->flash('flash.bannerStyle', 'success');

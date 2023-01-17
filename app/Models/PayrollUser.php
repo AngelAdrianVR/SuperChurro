@@ -26,24 +26,45 @@ class PayrollUser extends Pivot
     public function weekAttendanceArray()
     {
         $current_attendance = $this->attendance;
-        $current_payroll = Payroll::latest()->take(1)->get()->all()[0];
-        for ($i = 0; $i < 7; $i ++) { 
-            if(!array_key_exists($i, $current_attendance)) {
+        $current_payroll = Payroll::find($this->payroll_id);
+        $attendances = count(User::find($this->user_id)->employee_properties['work_days']);
+        $vacations = 0;
+
+        for ($i = 0; $i < 7; $i++) {
+            if (!array_key_exists($i, $current_attendance)) {
                 // check if this day is off, applied leave or holyday
                 $current_attendance[$i] = $this->typeOfAbsent($current_payroll->start_date->addDays($i));
+
+                if($current_attendance[$i]['in'] === 'Vacaciones') $vacations ++;
+                else $attendances --;
             }
+
+            // add day in the register
+            $current_attendance[$i]['day'] = $current_payroll->start_date->addDays($i)->isoFormat('dd, DD/MMM/YYYY');
         }
-        return $current_attendance;
+
+        return [
+            'payroll' => collect($current_attendance),
+            'attendances' => $attendances,
+            'vacations' => $vacations
+        ];
     }
 
     private function typeOfAbsent($date)
     {
-        if($this->isDayOff($date->dayOfWeek)) return "Día de descanso";
-        if($this->isVacation($date)) return "Vacaciones";
-        if($this->isLeave($date)) return "Permiso aprobado";
-        // if($this->isHollyday($date)) return "Día feriado";
-        if($date->greaterThanOrEqualTo(now())) "Sin información";
-        return "Falta";
+        $absent_type = "Falta";
+        $attendance = [
+            'in' => $absent_type,
+            'out' => $absent_type
+        ];
+
+        if ($this->isDayOff($date->dayOfWeek)) $absent_type = "Día de descanso";
+        if ($this->isVacation($date)) $absent_type = "Vacaciones";
+        if ($this->isLeave($date)) $absent_type = "Permiso aprobado";
+        if ($this->isHoliday($date)) $absent_type = "Día feriado";
+        if ($date->greaterThanOrEqualTo(now())) $absent_type = "--:--:--";
+
+        return $attendance;
     }
 
     private function isDayOff($day_of_week)
@@ -69,21 +90,50 @@ class PayrollUser extends Pivot
     private function isVacation($date)
     {
         $is_there_an_approved_vacation = WorkPermit::where('user_id', $this->user_id)
-        ->whereDate('date', $date)
-        ->where('status', WorkPermit::STATUS_APPROVED)
-        ->where('permission_type_id', 3)
-        ->get()
-        ->count();
-        
+            ->whereDate('date', $date)
+            ->where('status', WorkPermit::STATUS_APPROVED)
+            ->where('permission_type_id', 3)
+            ->get()
+            ->count();
+
         return $is_there_an_approved_vacation;
     }
 
-    // private function isHoliday($date)
-    // {
-    //     $is_holiday = Holiday::whereDate('date', $date)
-    //         ->get()
-    //         ->count();
+    private function isHoliday($date)
+    {
+        $is_holiday = Holiday::where('date', $date->isoFormat('DD-MM'))
+            ->whereMonth('date', $date)
+            ->get()
+            ->count();
 
-    //     return $is_holiday;
-    // }
+        return $is_holiday;
+    }
+
+    public function paid()
+    {
+        return $this->baseSalary() +
+            $this->vacationPremium() +
+            $this->salaryForExtras() -
+            $this->discounts;
+    }
+
+    private function baseSalary()
+    {
+        $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
+        return $this->weekAttendanceArray()['attendances'] * $base_salary;
+    }
+
+    private function salaryForExtras()
+    {
+        return 0;
+    }
+
+    public function vacationPremium()
+    {
+        $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
+        $vacation_days = $this->weekAttendanceArray()['vacations'];
+
+        return 0.25 * $base_salary * $vacation_days;
+    }
+
 }

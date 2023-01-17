@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class PayrollUser extends Pivot
@@ -20,23 +21,42 @@ class PayrollUser extends Pivot
 
     protected $casts = [
         'attendance' => 'array',
+        'discounts' => 'array',
     ];
 
     // methods
     public function weekAttendanceArray()
     {
+        $user = User::find($this->user_id);
         $current_attendance = $this->attendance;
         $current_payroll = Payroll::find($this->payroll_id);
-        $attendances = count(User::find($this->user_id)->employee_properties['work_days']);
+        $attendances = count($user->employee_properties['work_days']);
         $vacations = 0;
+        $entry = $user->employee_properties['shift'] === 'carrito vespertino'
+            ? Carbon::parse('15:00:00')
+            : Carbon::parse('9:00:00');
+        $extras = 0; // minutes
+        $late = 0; // minutes
 
         for ($i = 0; $i < 7; $i++) {
             if (!array_key_exists($i, $current_attendance)) {
                 // check if this day is off, applied leave or holyday
                 $current_attendance[$i] = $this->typeOfAbsent($current_payroll->start_date->addDays($i));
 
-                if($current_attendance[$i]['in'] === 'Vacaciones') $vacations ++;
-                else $attendances --;
+                if ($current_attendance[$i]['in'] === 'Vacaciones') $vacations++;
+                else $attendances--;
+            } else if ($current_attendance[$i]['out'] !== '--:--:--') {
+                // calculate extras
+                $_extras = Carbon::parse($current_attendance[$i]['out'])
+                    ->diffInMinutes($entry) - 360;
+                if ($_extras < 0) $_extras = 0;
+                $extras += $_extras;
+
+                // late
+                $_late = $entry
+                    ->diffInMinutes(Carbon::parse($current_attendance[$i]['in']), false);
+                if ($_late < 0) $_late = 0;
+                $late += $_late;
             }
 
             // add day in the register
@@ -46,23 +66,25 @@ class PayrollUser extends Pivot
         return [
             'payroll' => collect($current_attendance),
             'attendances' => $attendances,
-            'vacations' => $vacations
+            'vacations' => $vacations,
+            'extras' => $extras,
+            'late' => $late,
         ];
     }
 
     private function typeOfAbsent($date)
     {
-        $absent_type = "Falta";
+        if ($this->isDayOff($date->dayOfWeek)) $absent_type = "Día de descanso";
+        else if ($this->isVacation($date)) $absent_type = "Vacaciones";
+        else if ($this->isLeave($date)) $absent_type = "Permiso aprobado";
+        else if ($this->isHoliday($date)) $absent_type = "Día feriado";
+        else if ($date->greaterThanOrEqualTo(today())) $absent_type = "--:--:--";
+        else $absent_type = "Falta";
+
         $attendance = [
             'in' => $absent_type,
             'out' => $absent_type
         ];
-
-        if ($this->isDayOff($date->dayOfWeek)) $absent_type = "Día de descanso";
-        if ($this->isVacation($date)) $absent_type = "Vacaciones";
-        if ($this->isLeave($date)) $absent_type = "Permiso aprobado";
-        if ($this->isHoliday($date)) $absent_type = "Día feriado";
-        if ($date->greaterThanOrEqualTo(now())) $absent_type = "--:--:--";
 
         return $attendance;
     }
@@ -111,21 +133,28 @@ class PayrollUser extends Pivot
 
     public function paid()
     {
-        return $this->baseSalary() +
+        $total = $this->baseSalary() +
             $this->vacationPremium() +
+            $this->commissions() +
             $this->salaryForExtras() -
-            $this->discounts;
+            collect($this->discounts)->sum('amount');
+
+        return round($total);
     }
 
-    private function baseSalary()
+    public function baseSalary()
     {
         $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
         return $this->weekAttendanceArray()['attendances'] * $base_salary;
     }
 
-    private function salaryForExtras()
+    public function salaryForExtras()
     {
-        return 0;
+        $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
+        $pesos_per_minute =  $base_salary / 360;
+        $extras = $this->weekAttendanceArray()['extras'] * $pesos_per_minute;
+
+        return $extras;
     }
 
     public function vacationPremium()
@@ -136,4 +165,12 @@ class PayrollUser extends Pivot
         return 0.25 * $base_salary * $vacation_days;
     }
 
+    public function commissions()
+    {
+        $current_payroll = Payroll::find($this->payroll_id);
+
+        if ($current_payroll->is_active) return null;
+
+        return collect($current_payroll->commissions['amounts'])->sum();
+    }
 }

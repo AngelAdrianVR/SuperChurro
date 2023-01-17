@@ -13,11 +13,12 @@ class Payroll extends Model
         'week',
         'start_date',
         'is_active',
+        'commissions',
     ];
 
-    protected $dates = [
-        'start_date'
-    ];
+    protected $dates = ['start_date'];
+
+    protected $casts = ['commissions' => 'array'];
 
 
     //Rellationships

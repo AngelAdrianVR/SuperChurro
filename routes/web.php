@@ -63,6 +63,7 @@ Route::resource('users', UserController::class)->middleware('auth');
 Route::resource('sales', SaleController::class)->middleware('auth');
 Route::resource('settings', SettingController::class)->middleware('auth');
 Route::get('/admin/payrolls', [PayrollController::class, 'adminIndex'])->middleware('auth')->name('payroll-admin.index');
+Route::get('/admin/payrolls/show/{payroll}', [PayrollController::class, 'showUsersPayrolls'])->middleware('auth')->name('payroll-admin.show');
 
 
 //Specific-action routes

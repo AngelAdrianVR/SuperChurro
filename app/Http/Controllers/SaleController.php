@@ -17,8 +17,6 @@ class SaleController extends Controller
     public function index()
     {
         $sales = Sale::all();
- 
-
         return inertia('Sales/Index', compact('sales'));
     }
 
@@ -45,10 +43,10 @@ class SaleController extends Controller
         $cart_products = $cart->products;
 
         $sales = Cart::find(1);
-        $solt_products = [];
+        $solt_products = $cart->products;
 
         for($i=0; $i<count($cart_products); $i++){
-            $solt_products[$i] = $cart_products[$i+1] - $request->remaining[$i];
+            $solt_products[$i+1] = $cart_products[$i+1] - $request->remaining[$i];
         }
         //  return $solt_products;
         // Sale::create()

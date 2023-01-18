@@ -14,7 +14,7 @@ class CartController extends Controller
         $cart_products = Cart::get('products');
         $products = Product::with('unit')->get();
         $requests = ProductRequest::whereDate('created_at', now())->with('user')->latest()->get();
-
+        
         // return $requests;
         return inertia('Cart/Index', compact('cart_products', 'products', 'requests'));
     }

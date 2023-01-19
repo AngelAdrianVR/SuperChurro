@@ -13,7 +13,7 @@
           Semana {{ payroll.week }}: {{ payroll.start_date }} al {{ payroll.end_date }}
         </div>
         <div v-if="!payroll.is_active" class="text-sm">
-          {{ payroll.users.length }} empleados en nómina
+          {{ payroll.users.length }} empleado(s) en nómina
         </div>
         <p v-else class="text-gray-500 text-sm text-center">Nómina en curso</p>
       </div>

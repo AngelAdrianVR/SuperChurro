@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Sale;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SaleController extends Controller
 {
     public function index()
     {
-        $sales = Sale::all();
-        return inertia('Sales/Index', compact('sales'));
+        $products = Product::all();
+        // return $sales;
+        return inertia('Sales/Index', compact('products'));
     }
 
     public function create()
@@ -23,36 +25,39 @@ class SaleController extends Controller
 
     public function store(Request $request)
     {
-        $cart = Cart::first();   
-        $cart_products_ids = collect($cart->products)->keys();
-        // $solt_products = $cart->products; 
+        $sales = [];
+        $new_cart_stock = [];
+        $cart = Cart::first();
 
-        $cart_products_ids->each(function ($product_id) use ($cart, $request) {
-            $cart->products[$product_id] - $request->remaining[$product_id];
-            // revisar la manera en que se guardan los sobrantes desde la vista
-        });
+        foreach ($cart->products as $product_id => $quantity) {
+            $request->validate([
+                "product.$product_id" => "numeric|max:$quantity"
+            ]);
 
-        // for($i=0; $i<count($cart_products); $i++){
-        //     $solt_products[$i+1] = $cart_products[$i+1] - $request->remaining[$i];
-        // }
-        //  return $solt_products;
-        // Sale::create()
-        
-        // for($i=0; $i<count($cart_products); $i++){
-        //     $cart_products[$i+1] = $request->remaining[$i];
-        // }
-    
-        // $cart->products = $cart_products;
-        // $cart->save();
-        
+            $remaining_quantity = $request->product[$product_id];
+            $new_cart_stock[$product_id] = $remaining_quantity;
+            $sales[] = [
+                'quantity' => $cart->products[$product_id] - $request->product[$product_id],
+                'product_id' => $product_id,
+                'price_id' => Product::find($product_id)->currentPrice->id,
+                'created_at' => now(),
+            ];
+        }
+
+        Sale::insert($sales);
+
+        $cart->products = $new_cart_stock;
+        $cart->save();
+
         request()->session()->flash('flash.banner', '¡Se ha creado el corte correctamente!');
-        request()->session()->flash('flash.bannerStyle', 'success'); 
+        request()->session()->flash('flash.bannerStyle', 'success');
         return redirect()->route('carts.index');
     }
 
-    public function show(Sale $sale)
+    public function show($sale_date)
     {
-        //
+        $sale = Sale::whereDate('created_at', $sale_date)->get();
+        dd($sale);
     }
 
     public function edit(Sale $sale)
@@ -68,5 +73,12 @@ class SaleController extends Controller
     public function destroy(Sale $sale)
     {
         //
+    }
+
+    public function getByDate(Request $request)
+    {
+        $sales = Sale::whereDate('created_at', $request->date)->get();
+
+        return response()->json(['sales' => $sales]);
     }
 }

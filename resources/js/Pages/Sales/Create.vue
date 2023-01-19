@@ -51,9 +51,10 @@
         mx-4
       ">
       <form @submit.prevent="store">
+        <InputErrors v-if="form.hasErrors" :errors="form.errors" class="mb-4" />
         <div class="grid grid-cols-2 gap-3">
-          <div v-for="(product, index) in products" :key="product.id" class="relative z-0 mb-2 w-full group">
-            <input v-model="form.remaining[index]" type="number" min="0" name="floating_churro_relleno"
+          <div v-for="product in products" :key="product.id" class="relative z-0 mb-2 w-full group">
+            <input v-model="form.product[product.id]" type="number" min="0" name="floating_churro_relleno"
               autocomplete="off" required class="
               block
               py-2.5
@@ -85,10 +86,7 @@
               peer-placeholder-shown:translate-y-0
               peer-focus:scale-75 peer-focus:-translate-y-6
             ">{{ product.name }}</label>
-            <InputError :message="$page.props?.errors.amount" />
           </div>
-
-
         </div>
 
         <div class="flex justify-center lg:justify-end mt-5">
@@ -103,14 +101,12 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import InputError from "@/Components/InputError.vue";
+import InputErrors from "@/Components/InputErrors.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 export default {
   data() {
     const form = useForm({
-      remaining: [
-
-      ],
+      product: [],
     });
     return {
       form,
@@ -120,7 +116,7 @@ export default {
     AppLayout,
     Link,
     PrimaryButton,
-    InputError,
+    InputErrors,
     SecondaryButton,
   },
   props: {

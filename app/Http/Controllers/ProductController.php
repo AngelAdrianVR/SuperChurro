@@ -44,10 +44,13 @@ class productController extends Controller
             'created_at' => now(),
         ]);
 
-        // Add new product to warehouse
+        // Add new product to warehouse & cart
         $warehouse = Warehouse::first();
+        $cart = Warehouse::first();
         $products = $warehouse->products + [$new_product->id => $request->initial_stock];
+        $cart_products = $cart->products + [$new_product->id => 0];
         $warehouse->update(['products' => $products]);
+        $cart->update(['products' => $cart_products]);
 
         request()->session()->flash('flash.banner', '¡Se ha creado un nuevo producto correctamente!');
         request()->session()->flash('flash.bannerStyle', 'success');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Models\SaleToEmployee;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class SaleController extends Controller
     public function index()
     {
         $products = Product::all();
-        // return $sales;
+
         return inertia('Sales/Index', compact('products'));
     }
 
@@ -78,16 +79,23 @@ class SaleController extends Controller
     public function getByDate(Request $request)
     {
         $middle_date = Carbon::parse($request->date)->addHours(16);
+        
         $shift_1_sales = Sale::whereDate('created_at', $request->date)
             ->whereTime('created_at', '<', $middle_date)
-            ->with('product', 'price')
+            ->with('product')
             ->get();
 
         $shift_2_sales = Sale::whereDate('created_at', $request->date)
         ->whereTime('created_at', '>', $middle_date)
-        ->with('product', 'price')
+        ->with('product')
         ->get();
 
-        return response()->json(compact('shift_1_sales', 'shift_2_sales'));
+        $sales_to_employees = SaleToEmployee::whereDate('created_at', $request->date)
+        ->with('product', 'user')
+        ->get();
+
+        // get employees at $request->date to show in sales histories
+
+        return response()->json(compact('shift_1_sales', 'shift_2_sales', 'sales_to_employees'));
     }
 }

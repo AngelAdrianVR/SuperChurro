@@ -21,6 +21,7 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
+        "@vuepic/vue-datepicker": "^3.6.5",
         "html5-qrcode": "^2.3.4"
     }
 }

@@ -1,7 +1,7 @@
 <template>
     <div class="globe-container">
         <div v-for="current_payroll in payroll.data.users" :key="current_payroll.id"
-            class="globe">
+            class="rounded-md border-2 border-gray-400 px-3 py-2">
             <div class="globe-title pb-2">
                 Semana {{ payroll.data.week }}: {{ payroll.data.start_date }} al {{ payroll.data.end_date }}
             </div>

@@ -62,7 +62,7 @@
         <div
           v-for="cart_product_id in Object.keys(cart_products[0].products)"
           :key="cart_product_id"
-          class="globe hover:bg-gray-200 cursor-pointer"
+          class="globe"
         >
           <div class="globe-title pb-2">
             {{ products.find((product) => product.id == cart_product_id).name }}

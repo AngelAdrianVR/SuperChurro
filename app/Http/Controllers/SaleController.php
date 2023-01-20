@@ -5,106 +5,89 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Sale;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SaleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $sales = Sale::all();
-        return inertia('Sales/Index', compact('sales'));
+        $products = Product::all();
+        // return $sales;
+        return inertia('Sales/Index', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $products = Product::all();
         return inertia('Sales/Create', compact('products'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $cart = Cart::find(1);   
-        $cart_products = $cart->products;
+        $sales = [];
+        $new_cart_stock = [];
+        $cart = Cart::first();
 
-        $sales = Cart::find(1);
-        $solt_products = $cart->products;
+        foreach ($cart->products as $product_id => $quantity) {
+            $request->validate([
+                "product.$product_id" => "numeric|max:$quantity"
+            ]);
 
-        for($i=0; $i<count($cart_products); $i++){
-            $solt_products[$i+1] = $cart_products[$i+1] - $request->remaining[$i];
+            $remaining_quantity = $request->product[$product_id];
+            $new_cart_stock[$product_id] = $remaining_quantity;
+            $sales[] = [
+                'quantity' => $cart->products[$product_id] - $request->product[$product_id],
+                'product_id' => $product_id,
+                'price_id' => Product::find($product_id)->currentPrice->id,
+                'created_at' => now(),
+            ];
         }
-        //  return $solt_products;
-        // Sale::create()
-        
-        for($i=0; $i<count($cart_products); $i++){
-            $cart_products[$i+1] = $request->remaining[$i];
-        }
-    
-        $cart->products = $cart_products;
+
+        Sale::insert($sales);
+
+        $cart->products = $new_cart_stock;
         $cart->save();
-        
+
         request()->session()->flash('flash.banner', '¡Se ha creado el corte correctamente!');
-        request()->session()->flash('flash.bannerStyle', 'success'); 
+        request()->session()->flash('flash.bannerStyle', 'success');
         return redirect()->route('carts.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Sale $sale)
+    public function show($sale_date)
     {
-        //
+        $sale = Sale::whereDate('created_at', $sale_date)->get();
+        dd($sale);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Sale $sale)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Sale $sale)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Sale $sale)
     {
         //
+    }
+
+    public function getByDate(Request $request)
+    {
+        $middle_date = Carbon::parse($request->date)->addHours(16);
+        $shift_1_sales = Sale::whereDate('created_at', $request->date)
+            ->whereTime('created_at', '<', $middle_date)
+            ->with('product', 'price')
+            ->get();
+
+        $shift_2_sales = Sale::whereDate('created_at', $request->date)
+        ->whereTime('created_at', '>', $middle_date)
+        ->with('product', 'price')
+        ->get();
+
+        return response()->json(compact('shift_1_sales', 'shift_2_sales'));
     }
 }

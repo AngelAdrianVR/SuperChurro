@@ -65,7 +65,6 @@ Route::resource('settings', SettingController::class)->middleware('auth');
 Route::get('/admin/payrolls', [PayrollController::class, 'adminIndex'])->middleware('auth')->name('payroll-admin.index');
 Route::get('/admin/payrolls/show/{payroll}', [PayrollController::class, 'showUsersPayrolls'])->middleware('auth')->name('payroll-admin.show');
 
-
 //Specific-action routes
 Route::put('/disable/{user}', [UserController::class, 'disable'])->middleware('auth')->name('user.disable');
 Route::put('/enable/{user}', [UserController::class, 'enable'])->middleware('auth')->name('user.enable');
@@ -84,4 +83,7 @@ Route::resource('warehouse-movements', WarehouseMovementController::class)
     ->middleware('auth')
     ->except(['show, index, destroy, edit, update']);
 
-
+// API
+Route::post('sales/get-by-date', [SaleController::class, 'getByDate'])
+    ->middleware('auth')
+    ->name('sales.get-sales-by-date');

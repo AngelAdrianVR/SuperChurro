@@ -5,15 +5,40 @@
         Historial de ventas
       </h2>
     </template>
+    <div class="mx-3 my-4 lg:w-1/3 lg:mx-auto">
+      <label class="text-gray-500 text-sm">Selecciona la fecha para ver las ventas</label>
+      <Datepicker v-model="date" inline auto-apply :month-change-on-scroll="false" model-type="yyyy-MM-dd"></Datepicker>
+    </div>
 
-  <template>
-
-  <p class="mt-4 mb-2 text-center font-bold"> Enero 2023</p>
-  <div>
-
-  </div>
-   
-  </template>
+    <div v-if="shift_1_sales.length">
+      <div
+        class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+        <h1 class="col-span-full text-center text-sm font-bold">Ventas T/M</h1>
+        <p v-for="sale in shift_1_sales" :key="sale.id">
+          {{ sale.product.name }} x{{ sale.quantity }}
+          <i class="fa-solid fa-arrow-right-long text-green-500"></i>
+          ${{ sale.price.price * sale.quantity }}
+        </p>
+        <strong class="col-span-full text-right">Total: ${{ totalSale().shift_1 }}</strong>
+      </div>
+  
+      <div
+        class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+        <h1 class="col-span-full text-center text-sm font-bold">Ventas T/V</h1>
+        <p v-for="sale in shift_2_sales" :key="sale.id">
+          {{ sale.product.name }} x{{ sale.quantity }}
+          <i class="fa-solid fa-arrow-right-long text-green-500"></i>
+          ${{ sale.price.price * sale.quantity }}
+        </p>
+        <strong class="col-span-full text-right">Total: ${{ totalSale().shift_2 }}</strong>
+      </div>
+      
+      <div class="flex flex-col items-end mt-3">
+        <p class="mx-3 font-bold text-green-600">Total: ${{ totalSale().shift_1 + totalSale().shift_2 }}</p>
+        <p class="mx-3 font-bold text-green-600">Comisión: ${{ totalSale().commissions }}</p>
+      </div>
+    </div>
+    <p v-else class="mt-6 text-sm text-gray-500 text-center">No hay ventas para mostrar</p>
 
   </AppLayout>
 </template>
@@ -22,25 +47,51 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import { Link } from "@inertiajs/inertia-vue3";
-import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
 export default {
   data() {
     return {
-      
-      }
+      date: null,
+      shift_1_sales: [],
+      shift_2_sales: []
+    }
   },
   components: {
     AppLayout,
     SecondaryButton,
     Link,
-    ConfirmationModal,
+    Datepicker
   },
   props: {
-    sales: Array,
-
-  }, 
+    products: Array,
+  },
+  watch: {
+    date(newDate, oldDate) {
+      this.getSales(newDate);
+    },
+  },
   methods: {
-    
-},
+    async getSales(date) {
+      try {
+        const response = await axios.post(route("sales.get-sales-by-date"), {
+          date: date,
+        });
+        this.shift_1_sales = response.data.shift_1_sales;
+        this.shift_2_sales = response.data.shift_2_sales;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    totalSale() {
+      let shift_1 = 0, shift_2 = 0, commissions = 0;
+      this.shift_1_sales.forEach(sale => shift_1 += (sale.quantity * sale.price.price));
+      this.shift_2_sales.forEach(sale => shift_2 += (sale.quantity * sale.price.price));
+      
+      commissions = (shift_1 + shift_2) / (this.shift_1_sales[0].price.price * 100);
+      return {shift_1: shift_1, shift_2: shift_2, commissions: commissions};
+    }
+  },
 };
 </script>

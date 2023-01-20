@@ -14,4 +14,16 @@ class Sale extends Model
         'price_id',
         'product_id',
     ];
+
+    // relationships
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function price()
+    {
+        return $this->belongsTo(Price::class);
+    }
+
 }

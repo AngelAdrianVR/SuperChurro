@@ -77,8 +77,17 @@ class SaleController extends Controller
 
     public function getByDate(Request $request)
     {
-        $sales = Sale::whereDate('created_at', $request->date)->get();
+        $middle_date = Carbon::parse($request->date)->addHours(16);
+        $shift_1_sales = Sale::whereDate('created_at', $request->date)
+            ->whereTime('created_at', '<', $middle_date)
+            ->with('product', 'price')
+            ->get();
 
-        return response()->json(['sales' => $sales]);
+        $shift_2_sales = Sale::whereDate('created_at', $request->date)
+        ->whereTime('created_at', '>', $middle_date)
+        ->with('product', 'price')
+        ->get();
+
+        return response()->json(compact('shift_1_sales', 'shift_2_sales'));
     }
 }

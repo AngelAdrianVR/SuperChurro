@@ -11,14 +11,10 @@ class Loan extends Model
 
     protected $fillable = [
         'amount',
-        'status',
+        'remaining',
+        'authorized_at',
         'description',
         'user_id',
-        'payed_at',
-    ];
-
-    protected $dates = [
-        'payed_at',
     ];
 
     //Rellationships

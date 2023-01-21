@@ -112,4 +112,11 @@ class User extends Authenticatable
 
         return $entry;
     }
+
+    public function getSalaryPerMinute()
+    {
+        $salary_per_minute = $this->employee_properties['base_salary'] / $this->getTimeToWork();
+
+        return round($salary_per_minute, 2);
+    }
 }

@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
             $table->unsignedMediumInteger('amount');
-            $table->unsignedTinyInteger('status')->default(1);
-            $table->date('payed_at')->nullable();
+            $table->unsignedMediumInteger('remaining');
+            $table->timestamp('authorizad_at')->nullable();
             $table->text('description')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();

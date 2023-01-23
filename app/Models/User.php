@@ -30,6 +30,7 @@ class User extends Authenticatable
         'password',
         'is_admin',
         'is_active',
+        'loan_active',
         'phone_number',
         'employee_properties',
     ];

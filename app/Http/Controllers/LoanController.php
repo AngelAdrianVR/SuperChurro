@@ -43,7 +43,10 @@ class LoanController extends Controller
             'description' => 'max:191',
         ]);
 
-        Loan::create($validated + ['user_id'=>auth()->id()]);
+        Loan::create($validated + [
+            'user_id'=>auth()->id(),
+            'remaining' => $request->amount,
+        ]);
         
         request()->session()->flash('flash.banner', '¡Se ha creado tu solicitud correctamente!');
         request()->session()->flash('flash.bannerStyle', 'success');

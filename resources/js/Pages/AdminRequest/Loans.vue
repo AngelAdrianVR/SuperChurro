@@ -21,13 +21,12 @@
           <p><strong>Cantidad Solicitada: </strong> ${{loan.amount}}</p>
         <div class="flex flex-col">
            <p><strong> Notas: </strong>{{ loan.description }} </p>
-            <span v-if="loan.status == 1" class="text-orange-500 font-bold mt-2"><i class="fa-solid fa-hourglass-start mr-2"></i>Revisando...</span>  
-            <span v-if="loan.status == 2" class="text-green-600 font-bold mt-2"><i class="fa-solid fa-check mr-2"></i>Aprobado</span>  
-            <span v-if="loan.status == 3" class="text-red-600 font-bold mt-2"><i class="fa-solid fa-xmark mr-2"></i>Rechazado</span>  
-            <span v-if="loan.status == 4" class="text-blue-600 font-bold mt-2"><i class="fa-solid fa-piggy-bank mr-2"></i>Abonando</span>  
-            <span v-if="loan.status == 5" class="text-indigo-600 font-bold mt-2"><i class="fa-solid fa-handshake mr-2"></i>Pagado</span>  
+            <span v-if="loan.remaining == loan.amount && !loan.authorized_at" class="text-orange-500 font-bold mt-2"><i class="fa-solid fa-hourglass-start mr-2"></i>Revisando...</span>  
+            <span v-else-if="loan.amount <= loan.remaining && loan.authorized_at && loan.remaining != 0" class="text-green-600 font-bold mt-2"><i class="fa-solid fa-check mr-2"></i>Aprobado</span>  
+            <span v-else-if="loan.remaining == 0 && !loan.authorized_at" class="text-red-600 font-bold mt-2"><i class="fa-solid fa-xmark mr-2"></i>Rechazado</span>  
+            <span v-else-if="loan.remaining == 0 && loan.authorized_at" class="text-indigo-600 font-bold mt-2"><i class="fa-solid fa-handshake mr-2"></i>Pagado</span>  
         </div>
-        <div v-if="loan.status == 1" class="flex justify-center items-center mt-1 mb-3 space-x-2">
+        <div v-if="loan.remaining == loan.amount && !loan.authorized_at" class="flex justify-center items-center mt-1 mb-3 space-x-2">
           <PrimaryButton @click="$inertia.put(route('loan.accept',loan.id))" class="bg-green-600">Aprobar</PrimaryButton>
           <PrimaryButton @click="$inertia.put(route('loan.reject',loan.id))" class="!bg-red-600">Rechazar</PrimaryButton>
         </div>

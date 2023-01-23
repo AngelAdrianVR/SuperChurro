@@ -17,6 +17,10 @@ class Loan extends Model
         'user_id',
     ];
 
+    protected $dates = [
+        'authorized_at',
+    ];
+
     //Rellationships
     public function user(){
         return $this->belongsTo(User::class);

@@ -154,6 +154,7 @@ export default {
     const form = useForm({
       amount: null,
       description: "",
+      remaining: 0,
     });
     return {
       form,

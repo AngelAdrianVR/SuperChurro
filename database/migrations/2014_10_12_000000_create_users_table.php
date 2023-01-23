@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('is_active')->default(1);
             $table->boolean('is_admin')->default(0);
+            $table->boolean('loan_active')->default(0);
             $table->string('phone_number')->nullable();
             $table->json('employee_properties')->nullable();
             $table->rememberToken();

@@ -21,7 +21,6 @@ class AdminRequestController extends Controller
     public function loans()
     {
         $loans = LoanResource::collection(Loan::latest()->get());
-
         return inertia('AdminRequest/Loans',compact('loans')); 
     }
 
@@ -58,10 +57,11 @@ class AdminRequestController extends Controller
 
     public function acceptLoan(Loan $loan)
     {
-
-        $loan->status = 2;
+        $loan->user->update(['loan_active' => true]);
+        $loan->authorized_at = now();
         $loan->save();
-        request()->session()->flash('flash.banner', '¡Se ha aceptado el préstamo!');
+        
+          request()->session()->flash('flash.banner', '¡Se ha aceptado el préstamo!');
         request()->session()->flash('flash.bannerStyle', 'success');
 
         return redirect()->route('admin-requests.loans');
@@ -69,8 +69,7 @@ class AdminRequestController extends Controller
 
     public function rejectLoan(Loan $loan)
     {
-
-        $loan->status = 3;
+        $loan->remaining = 0;
         $loan->save();
         request()->session()->flash('flash.banner', 'Se ha rechazado el préstamo');
         request()->session()->flash('flash.bannerStyle', 'success');

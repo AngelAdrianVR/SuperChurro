@@ -7,12 +7,8 @@
     </template>
 
     <div class="flex justify-start">
-      <Link
-        :href="route('users.index')"
-        class="flex items-center mt-2 text-slate-700"
-      >
-        <i
-          class="
+      <Link :href="route('users.index')" class="flex items-center mt-2 text-slate-700">
+      <i class="
             fas
             fa-long-arrow-alt-left
             text-lg
@@ -23,16 +19,14 @@
             h-7
             pl-1
             ml-2
-          "
-        ></i>
-        <span class="ml-1 cursor-default">Atrás</span>
+          "></i>
+      <span class="ml-1 cursor-default">Atrás</span>
       </Link>
     </div>
 
     <!-- component -->
     <!-- This is an example component -->
-    <div
-      class="
+    <div class="
         max-w-2xl
         md:mx-auto
         mt-5
@@ -43,17 +37,10 @@
         bg-white
         mx-4
         my-2
-      "
-    >
+      ">
       <form @submit.prevent="store">
         <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.name"
-            type="text"
-            name="floating_time_requested"
-            autocomplete="off"
-            required
-            class="
+          <input v-model="form.name" type="text" name="floating_time_requested" autocomplete="off" required class="
               block
               py-2.5
               px-0
@@ -65,12 +52,8 @@
               dark:text-white dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
               peer
-            "
-            placeholder=" "
-          />
-          <label
-            for="floating_name"
-            class="
+            " placeholder=" " />
+          <label for="floating_name" class="
               absolute
               text-sm text-gray-500
               dark:text-gray-400
@@ -87,18 +70,11 @@
               peer-placeholder-shown:scale-100
               peer-placeholder-shown:translate-y-0
               peer-focus:scale-75 peer-focus:-translate-y-6
-            "
-            >Nombre*</label
-          >
+            ">Nombre*</label>
           <InputError :message="$page.props?.errors.name" />
         </div>
         <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.email"
-            type="email"
-            name="floating_email"
-            autocomplete="off"
-            class="
+          <input v-model="form.email" type="email" name="floating_email" autocomplete="off" class="
               block
               py-2.5
               px-0
@@ -110,12 +86,8 @@
               dark:text-white dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
               peer
-            "
-            placeholder=" "
-          />
-          <label
-            for="floating_email"
-            class="
+            " placeholder=" " />
+          <label for="floating_email" class="
               absolute
               text-sm text-gray-500
               dark:text-gray-400
@@ -132,18 +104,11 @@
               peer-placeholder-shown:scale-100
               peer-placeholder-shown:translate-y-0
               peer-focus:scale-75 peer-focus:-translate-y-6
-            "
-            >Email</label
-          >
+            ">Email</label>
         </div>
         <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.phone_number"
-            type="phone_number"
-            name="floating_phone_number"
-            required
-            autocomplete="off"
-            class="
+          <input v-model="form.phone_number" type="phone_number" name="floating_phone_number" required
+            autocomplete="off" class="
               block
               py-2.5
               px-0
@@ -155,12 +120,8 @@
               dark:text-white dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
               peer
-            "
-            placeholder=" "
-          />
-          <label
-            for="floating_phone_number"
-            class="
+            " placeholder=" " />
+          <label for="floating_phone_number" class="
               absolute
               text-sm text-gray-500
               dark:text-gray-400
@@ -177,19 +138,12 @@
               peer-placeholder-shown:scale-100
               peer-placeholder-shown:translate-y-0
               peer-focus:scale-75 peer-focus:-translate-y-6
-            "
-            >Número de contacto*</label
-          >
+            ">Número de contacto*</label>
           <InputError :message="$page.props?.errors.phone_number" />
         </div>
         <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.employee_properties.birthdate"
-            type="date"
-            name="floating_birthdate"
-            autocomplete="off"
-            required
-            class="
+          <input v-model="form.employee_properties.birthdate" type="date" name="floating_birthdate" autocomplete="off"
+            required class="
               block
               py-2.5
               px-0
@@ -201,12 +155,8 @@
               dark:text-white dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
               peer
-            "
-            placeholder=" "
-          />
-          <label
-            for="floating_birthdate"
-            class="
+            " placeholder=" " />
+          <label for="floating_birthdate" class="
               absolute
               text-sm text-gray-500
               dark:text-gray-400
@@ -223,19 +173,12 @@
               peer-placeholder-shown:scale-100
               peer-placeholder-shown:translate-y-0
               peer-focus:scale-75 peer-focus:-translate-y-6
-            "
-            >Fecha de nacimiento*</label
-          >
+            ">Fecha de nacimiento*</label>
           <InputError :message="$page.props?.errors.employee_properties?.birthdate" />
         </div>
         <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.employee_properties.base_salary"
-            type="number"
-            name="floating_base_salary"
-            autocomplete="off"
-            required
-            class="
+          <input v-model="form.employee_properties.base_salary" type="number" name="floating_base_salary"
+            autocomplete="off" required class="
               block
               py-2.5
               px-0
@@ -247,12 +190,8 @@
               dark:text-white dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
               peer
-            "
-            placeholder=" "
-          />
-          <label
-            for="floating_base_salary"
-            class="
+            " placeholder=" " />
+          <label for="floating_base_salary" class="
               absolute
               text-sm text-gray-500
               dark:text-gray-400
@@ -269,15 +208,12 @@
               peer-placeholder-shown:scale-100
               peer-placeholder-shown:translate-y-0
               peer-focus:scale-75 peer-focus:-translate-y-6
-            "
-            >Salario base*</label
-          >
+            ">Salario base*</label>
           <InputError :message="$page.props?.errors.employee_properties?.base_salary" />
         </div>
-        
+
         <div>
-        <select
-          class="
+          <select class="
             bg-gray-200
             mb-7
             mr-2
@@ -285,66 +221,60 @@
             border border-gray-300
             text-gray-500
             focus:border-stone-500 focus:text-stone-500
-          "
-          v-model="form.employee_properties.shift"
-        >
-          <option disabled selected class="text-gray-500" value="">
-            -- Seleeciona un turno --
-          </option>
-          <option
-            class="text-gray-500"
-            value="cocina"
-          >
-            Cocina
-          </option>
-          <option
-            class="text-gray-500"
-            value="carrito matutino"
-          >
-            Carrito T/M
-          </option>
-          <option
-            class="text-gray-500"
-            value="carrito vespertino"
-          >
-            Carrito T/V
-          </option>
-        </select>
+          " v-model="form.employee_properties.shift">
+            <option disabled selected class="text-gray-500" value="">
+              -- Seleeciona un turno --
+            </option>
+            <option class="text-gray-500" value="cocina">
+              Cocina
+            </option>
+            <option class="text-gray-500" value="carrito matutino">
+              Carrito T/M
+            </option>
+            <option class="text-gray-500" value="carrito vespertino">
+              Carrito T/V
+            </option>
+          </select>
         </div>
         <label class="mb-6 w-full text-sm text-gray-500">Días de trabajo
-            <div class="grid grid-cols-3 gap-2 mt-3">
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="0" name="sunday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Domingo</span>
-                </label>
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="1" name="monday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Lunes</span>
-                </label>
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="2" name="tuesday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Martes</span>
-                </label>
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="3" name="wednesday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Miércoles</span>
-                </label>
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="4" name="thursday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Jueves</span>
-                </label>
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="5" name="fruday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Viernes</span>
-                </label>
-                <label class="flex items-center col-span-1">
-                    <input  v-model="form.employee_properties.work_days" type="checkbox" value="6" name="saturday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-600">Sábado</span>
-                </label>
-            </div>
-          <label
-            for="floating_work_days"
-            class="
+          <div class="grid grid-cols-3 gap-2 mt-3">
+            <label class="flex items-center col-span-1">
+              <input v-model="form.employee_properties.work_days" type="checkbox" value="0" name="sunday"
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+              <span class="ml-2 text-sm text-gray-600">Domingo</span>
+            </label>
+            <label class="flex items-center col-span-1">
+              <input v-model="form.employee_properties.work_days" type="checkbox" value="1" name="monday"
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+              <span class="ml-2 text-sm text-gray-600">Lunes</span>
+            </label>
+            <label class="flex items-center col-span-1">
+              <input v-model="form.employee_properties.work_days" type="checkbox" value="2" name="tuesday"
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+              <span class="ml-2 text-sm text-gray-600">Martes</span>
+            </label>
+            <label class="flex items-center col-span-1">
+              <input v-model="form.employee_properties.work_days" type="checkbox" value="3" name="wednesday"
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+              <span class="ml-2 text-sm text-gray-600">Miércoles</span>
+            </label>
+            <label class="flex items-center col-span-1">
+              <input v-model="form.employee_properties.work_days" type="checkbox" value="4" name="thursday"
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+              <span class="ml-2 text-sm text-gray-600">Jueves</span>
+            </label>
+            <label class="flex items-center col-span-1">
+              <input v-model="form.employee_properties.work_days" type="checkbox" value="5" name="fruday"
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+              <span class="ml-2 text-sm text-gray-600">Viernes</span>
+            </label>
+            <label class="flex items-center col-span-1">
+              <input v-model="form.employee_properties.work_days" type="checkbox" value="6" name="saturday"
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+              <span class="ml-2 text-sm text-gray-600">Sábado</span>
+            </label>
+          </div>
+          <label for="floating_work_days" class="
               absolute
               text-sm text-gray-500
               dark:text-gray-400
@@ -361,9 +291,7 @@
               peer-placeholder-shown:scale-100
               peer-placeholder-shown:translate-y-0
               peer-focus:scale-75 peer-focus:-translate-y-6
-            "
-            >Días de trabajo*</label
-          >
+            ">Días de trabajo*</label>
           <InputError :message="$page.props?.errors.employee_properties?.work_days" />
         </label>
 
@@ -394,13 +322,13 @@ export default {
       email: "",
       phone_number: "",
       employee_properties: {
-          birthdate: "",
-          base_salary: "",
-          work_days: [],
-          shift: "",
-          vacations: 0,
-          resources: null,
+        birthdate: "",
+        base_salary: "",
+        work_days: [],
+        shift: "",
+        vacations: 0,
       },
+      resources: null,
     });
     return {
       form,

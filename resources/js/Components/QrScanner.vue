@@ -1,10 +1,6 @@
 <template>
-  <div
-    id="reader"
-    width="600px"
-    class="h-40 border border-blue-500 border-dotted my-auto"
-  ></div>
-  
+  <div id="reader" width="600px" class="h-40 border border-blue-500 border-dotted my-auto"></div>
+
 </template>
 <script>
 import { Html5Qrcode } from "html5-qrcode";
@@ -26,8 +22,13 @@ export default {
   // },
   methods: {
     qrCodeSuccessCallback(decodedText, decodedResult) {
+      this.html5QrCode.stop().then((ignore) => {
+        console.log('stopped ', ignore);
+      }).catch((err) => {
+        console.log('stop failed');
+      });
       console.log("Text: ", decodedText);
-      console.log("Result: ", decodedResult);
+      this.$inertia.post(route(decodedText), { code: 'qwertypoiuyt/*23*/' });
     },
   },
   mounted() {
@@ -48,7 +49,12 @@ export default {
               },
               (decodedText, decodedResult) => {
                 console.log("Text: ", decodedText);
-                console.log("Result: ", decodedResult);
+                this.html5QrCode.stop().then((ignore) => {
+                  console.log('stopped', ignore);
+                }).catch((err) => {
+                  console.log('stop failed');
+                });
+                this.$inertia.post(route(decodedText), { code: 'qwertypoiuyt/*23*/' });
               },
               (errorMessage) => {
                 console.log("error message: ", errorMessage);

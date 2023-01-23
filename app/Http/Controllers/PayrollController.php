@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PayrollResource;
 use App\Http\Resources\PayrollUserResource;
 use App\Models\Payroll;
+use App\Models\PayrollUser;
 use App\Models\Sale;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -50,6 +51,41 @@ class PayrollController extends Controller
         //
     }
 
+    public function storeAttendance($code)
+    {
+        if ($code !== config('services.attendance.code')) return;
+
+        $current_payroll = Payroll::firstWhere('is_active', true);
+
+        $payroll_user = PayrollUser::where('payroll_id', $current_payroll->id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if ($payroll_user) {
+            $new_atendance = $payroll_user->attendance;
+
+            // employee already check in ? 
+            if (array_key_exists(today()->dayOfWeek, $payroll_user->attendance)) {
+                // checking out
+                $new_atendance[today()->dayOfWeek]['out'] + now()->toTimeString();
+            } else {
+                // checking in
+                $new_atendance[today()->dayOfWeek]['in'] + now()->toTimeString();
+            }
+            $payroll_user->update(['attendance' => $new_atendance]);
+        } else {
+            // creating payroll for auth user
+            PayrollUser::create([
+                'payroll_id' => $current_payroll->id,
+                'user_id' => auth()->id(),
+                'attendance' => [today()->dayOfWeek => ['in' => now()->toTimeString()]]
+            ]);
+        }
+
+        return to_route('dashboard');
+
+    }
+
     // admin
     public function adminIndex()
     {
@@ -78,7 +114,7 @@ class PayrollController extends Controller
 
         // get commissions of each day of week
         $commissions = [];
-        for ($i=0; $i < 7; $i++) { 
+        for ($i = 0; $i < 7; $i++) {
             $current_date = $active_payroll->start_date->addDays($i);
             $day_commission = Sale::calculateCommissions($current_date->toDateString());
             $commissions[$current_date->dayName] = $day_commission;

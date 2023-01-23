@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedMediumInteger('amount');
             $table->unsignedMediumInteger('remaining');
-            $table->timestamp('authorizad_at')->nullable();
+            $table->timestamp('authorized_at')->nullable();
             $table->text('description')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();

@@ -88,3 +88,7 @@ Route::resource('warehouse-movements', WarehouseMovementController::class)
 Route::post('sales/get-by-date', [SaleController::class, 'getByDate'])
     ->middleware('auth')
     ->name('sales.get-sales-by-date');
+
+Route::post('payroll/store-attendance', [PayrollController::class, 'storeAttendance'])
+    ->middleware('auth')
+    ->name('payroll.store-attendance');

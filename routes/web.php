@@ -58,24 +58,24 @@ Route::resource('product-request', ProductRequestController::class)->middleware(
 Route::resource('sells-to-employees', SaleToEmployeeController::class)->middleware('auth');
 
 // admin routes
-Route::resource('products', ProductController::class)->middleware('auth');
-Route::resource('users', UserController::class)->middleware('auth');
-Route::resource('sales', SaleController::class)->middleware('auth');
-Route::resource('settings', SettingController::class)->middleware('auth');
-Route::get('/admin/payrolls', [PayrollController::class, 'adminIndex'])->middleware('auth')->name('payroll-admin.index');
-Route::get('/admin/payrolls/show/{payroll}', [PayrollController::class, 'showUsersPayrolls'])->middleware('auth')->name('payroll-admin.show');
-Route::get('/admin/payrolls/close', [PayrollController::class, 'closePayroll'])->middleware('auth')->name('payroll-admin.close');
+Route::resource('products', ProductController::class)->middleware(['auth','admin']);
+Route::resource('users', UserController::class)->middleware(['auth','admin']);
+Route::resource('sales', SaleController::class)->middleware(['auth','admin']);
+Route::resource('settings', SettingController::class)->middleware(['auth','admin']);
+Route::get('/admin/payrolls', [PayrollController::class, 'adminIndex'])->middleware(['auth','admin'])->name('payroll-admin.index');
+Route::get('/admin/payrolls/show/{payroll}', [PayrollController::class, 'showUsersPayrolls'])->middleware(['auth','admin'])->name('payroll-admin.show');
+Route::get('/admin/payrolls/close', [PayrollController::class, 'closePayroll'])->middleware(['auth','admin'])->name('payroll-admin.close');
+Route::get('/admin-requests/permits', [AdminRequestController::class, 'permits'])->middleware(['auth','admin'])->name('admin-requests.permits');
+Route::get('/admin-requests/loans', [AdminRequestController::class, 'loans'])->middleware(['auth','admin'])->name('admin-requests.loans');
+Route::put('/accept/work-permit/{work_permit}', [AdminRequestController::class, 'acceptWorkPermit'])->middleware(['auth','admin'])->name('work-permit.accept');
+Route::put('/reject/work-permit/{work_permit}', [AdminRequestController::class, 'rejectWorkPermit'])->middleware(['auth','admin'])->name('work-permit.reject');
+Route::put('/accept/loans/{loan}', [AdminRequestController::class, 'acceptLoan'])->middleware(['auth','admin'])->name('loan.accept');
+Route::put('/reject/loans/{loan}', [AdminRequestController::class, 'rejectLoan'])->middleware(['auth','admin'])->name('loan.reject');
 
 //Specific-action routes
 Route::put('/disable/{user}', [UserController::class, 'disable'])->middleware('auth')->name('user.disable');
 Route::put('/enable/{user}', [UserController::class, 'enable'])->middleware('auth')->name('user.enable');
 Route::put('/reset-pass/{user}', [UserController::class, 'resetPass'])->middleware('auth')->name('user.reset-pass');
-Route::get('/admin-requests/permits', [AdminRequestController::class, 'permits'])->middleware('auth')->name('admin-requests.permits');
-Route::get('/admin-requests/loans', [AdminRequestController::class, 'loans'])->middleware('auth')->name('admin-requests.loans');
-Route::put('/accept/work-permit/{work_permit}', [AdminRequestController::class, 'acceptWorkPermit'])->middleware('auth')->name('work-permit.accept');
-Route::put('/reject/work-permit/{work_permit}', [AdminRequestController::class, 'rejectWorkPermit'])->middleware('auth')->name('work-permit.reject');
-Route::put('/accept/loans/{loan}', [AdminRequestController::class, 'acceptLoan'])->middleware('auth')->name('loan.accept');
-Route::put('/reject/loans/{loan}', [AdminRequestController::class, 'rejectLoan'])->middleware('auth')->name('loan.reject');
 
 Route::get('warehouses-movements/show-product-record/{product}', [WarehouseMovementController::class, 'showProductRecord'])
     ->middleware('auth')

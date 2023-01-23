@@ -17,6 +17,8 @@ Si ya tienes un préstamo activo, no podrás solicitar otro.</p>
   </div>
 </div>
 
+    <div v-if="$page.props.user.loan_active" class="text-red-500 text-sm text-center mt-2"> Actualmente tienes un préstamo activo. </div>
+
     <div class="flex justify-end">
       <Link :href="route('loans.create')">
       <SecondaryButton :disabled="$page.props.user.loan_active" class="mr-7 my-5">Solicitar Préstamo</SecondaryButton>
@@ -31,9 +33,10 @@ Si ya tienes un préstamo activo, no podrás solicitar otro.</p>
           <i v-if="loan.status == 1" class="fa-solid fa-trash text-red-600"></i>
           </button>
         </div>
-          <p>Cantidad Solicitada: ${{loan.amount}}</p>
+          <p><strong>Cantidad Solicitada: </strong>${{loan.amount}}</p>
         <div class="flex flex-col">
-           <p>Notas: {{ loan.description }} </p>
+           <p><strong> Notas: </strong>{{ loan.description }} </p>
+           <p><strong>Saldo restante: </strong>{{ loan.remaining }} </p>
             <span v-if="loan.remaining == loan.amount && !loan.authorized_at" class="text-orange-500 font-bold mt-2"><i class="fa-solid fa-hourglass-start mr-2"></i>Revisando...</span>  
             <span v-else-if="loan.amount <= loan.remaining && loan.authorized_at && loan.remaining != 0" class="text-green-600 font-bold mt-2"><i class="fa-solid fa-check mr-2"></i>Aprobado</span>  
             <span v-else-if="loan.remaining == 0 && !loan.authorized_at" class="text-red-600 font-bold mt-2"><i class="fa-solid fa-xmark mr-2"></i>Rechazado</span>  

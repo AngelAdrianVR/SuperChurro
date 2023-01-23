@@ -83,11 +83,15 @@ class productController extends Controller
         ]);
 
        $product->update($validated);
-        Price::create([
-            'price' => $request->price,
-            'product_id' => $product->id,
-            'createdated_at' => now(),
-        ]);
+
+       if((Price::where('product_id', $product->id)->latest()->first())->price != $request->price){
+
+           Price::create([
+               'price' => $request->price,
+               'product_id' => $product->id,
+               'created_at' => now(),
+           ]);
+       }
 
         request()->session()->flash('flash.banner', '¡Se ha actualizado correctamente!');
         request()->session()->flash('flash.bannerStyle', 'success');

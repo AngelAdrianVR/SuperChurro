@@ -33,7 +33,14 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        $checked_in = auth()->user()->hasCheckedInToday();
+        $checked_out = auth()->user()->hasCheckedOutToday();
+        $loan = auth()->user()->loans()->where('remaining', '>', 0)->whereNotNull('authorized_at')->first();
+        $leaves = auth()->user()->workPermits()->whereDate('date', '>=', today())->with('permissionType')->get();
+
+        return auth()->user()->is_admin
+            ? Inertia::render('AdminDashboard')
+            : Inertia::render('Dashboard', compact('checked_in', 'checked_out', 'loan', 'leaves'));
     })->name('dashboard');
 });
 
@@ -47,7 +54,6 @@ Route::middleware([
     })->name('qr-scanner');
 });
 
-// how to protect pages from not admin useres? (custom middleware)
 Route::resource('payrolls', PayrollController::class)->middleware('auth');
 Route::resource('work-permits', WorkPermitController::class)->middleware('auth');
 Route::resource('barters', BarterController::class)->middleware('auth');
@@ -88,3 +94,15 @@ Route::resource('warehouse-movements', WarehouseMovementController::class)
 Route::post('sales/get-by-date', [SaleController::class, 'getByDate'])
     ->middleware('auth')
     ->name('sales.get-sales-by-date');
+
+Route::post('payroll/store-attendance', [PayrollController::class, 'storeAttendance'])
+    ->middleware('auth')
+    ->name('payroll.store-attendance');
+
+Route::post('/users/update-with-resources/{user}', [UserController::class, 'updateWithResources'])
+    ->middleware('auth')
+    ->name('users.update-with-resources');
+
+Route::post('/users/delete-file', [UserController::class, 'deleteFile'])
+    ->middleware('auth')
+    ->name('users.delete-file');

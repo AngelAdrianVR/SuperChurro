@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PayrollResource;
 use App\Http\Resources\PayrollUserResource;
 use App\Models\Payroll;
+use App\Models\PayrollUser;
 use App\Models\Sale;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -50,6 +51,16 @@ class PayrollController extends Controller
         //
     }
 
+    public function storeAttendance(Request $request)
+    {
+        if ($request->code !== config('services.attendance.code'))
+            abort(404);
+    
+        auth()->user()->checkAttendance();
+
+        return to_route('dashboard');
+    }
+
     // admin
     public function adminIndex()
     {
@@ -78,7 +89,7 @@ class PayrollController extends Controller
 
         // get commissions of each day of week
         $commissions = [];
-        for ($i=0; $i < 7; $i++) { 
+        for ($i = 0; $i < 7; $i++) {
             $current_date = $active_payroll->start_date->addDays($i);
             $day_commission = Sale::calculateCommissions($current_date->toDateString());
             $commissions[$current_date->dayName] = $day_commission;

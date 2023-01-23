@@ -16,7 +16,9 @@ return new class extends Migration
         Schema::create('sale_to_employees', function (Blueprint $table) {
             $table->id();
 
-            $table->json('products');
+            $table->unsignedMediumInteger('quantity');
+            $table->unsignedFloat('price');
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
             $table->timestamps();

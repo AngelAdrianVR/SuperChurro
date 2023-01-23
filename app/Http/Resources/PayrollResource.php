@@ -12,6 +12,7 @@ class PayrollResource extends JsonResource
         return [
             'id' => $this->id,
             'week' => $this->week,
+            'week_commissions' => $this->commissions,
             'start_date' => $this->start_date->isoFormat('DD/MMM/YYYY'),
             'end_date' => $this->start_date->addDays(6)->isoFormat('DD/MMM/YYYY'),
             'users' => UserPayrollResource::collection($this->whenLoaded('users')),

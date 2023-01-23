@@ -24,7 +24,7 @@
       </Link>
     </div>
     <div class="globe-container flex-col">
-      <div v-for="movement in product.movements" :key="movement" class="globe hover:bg-gray-200 cursor-pointer">
+      <div v-for="movement in product.movements" :key="movement" class="globe">
         <p class="globe-title !justify-between pb-2 text-gray-500">
           <div>
             <i class="fa-solid fa-user mr-1"></i>

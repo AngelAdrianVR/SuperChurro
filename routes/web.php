@@ -64,6 +64,7 @@ Route::resource('sales', SaleController::class)->middleware('auth');
 Route::resource('settings', SettingController::class)->middleware('auth');
 Route::get('/admin/payrolls', [PayrollController::class, 'adminIndex'])->middleware('auth')->name('payroll-admin.index');
 Route::get('/admin/payrolls/show/{payroll}', [PayrollController::class, 'showUsersPayrolls'])->middleware('auth')->name('payroll-admin.show');
+Route::get('/admin/payrolls/close', [PayrollController::class, 'closePayroll'])->middleware('auth')->name('payroll-admin.close');
 
 //Specific-action routes
 Route::put('/disable/{user}', [UserController::class, 'disable'])->middleware('auth')->name('user.disable');

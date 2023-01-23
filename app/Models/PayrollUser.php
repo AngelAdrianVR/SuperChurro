@@ -180,6 +180,35 @@ class PayrollUser extends Pivot
 
         if ($current_payroll->is_active) return null;
 
-        return collect($current_payroll->commissions['amounts'])->sum();
+        return collect($current_payroll->commissions)->sum();
+    }
+
+    public function getDiscounts()
+    {
+        $user = User::find($this->user_id);
+        $discounts = [];
+
+        // minutes late
+        $minutes_late = $this->weekAttendanceArray()['late'];
+        if($minutes_late) {
+            $discounts [] = [
+                'amount' => $minutes_late * $user->getSalaryPerMinute(),
+                'description' => "$minutes_late minutos tarde en la semana"
+            ];  
+        }
+
+        // loans
+        $loan = $user->loans()->whereNotNull('authorized_at')->where('remaining', '>', 0)->first();
+        if($loan) {
+            $pay = $loan->amount / 2;
+            $discounts [] = [
+                'amount' => $pay,
+                'description' => "Abono de préstamo autorizado"
+            ];
+            
+            $loan->decrement('remaining', $pay);
+        }
+
+        return $discounts;
     }
 }

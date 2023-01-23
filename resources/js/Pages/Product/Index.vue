@@ -13,48 +13,47 @@
     </div>
 
     <div class="globe-container flex-col">
-        <div v-for="product in products.data"
-          :key="product.id"
-           class="globe hover:bg-gray-200 cursor-pointer relative z-0">
-        <Link
-          :href="route('products.show', product.id)">
-          <div class="globe-title !justify-between pb-2">
-            <span class="text-gray-500"
-              ><i class="fa-solid fa-box mr-1"></i>
-              {{ product.name }}</span
-            >
-          </div>
-          <div class="flex flex-col">
-            <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Stock mínimo: {{ product.low_stock }} </span> 
-            <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Unidad de medida: {{ product.unit.name }} </span> 
-            <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Precio actual: ${{ product.price.price }} </span> 
-          </div>
+      <div v-for="product in products.data" :key="product.id"
+        class="globe hover:bg-gray-200 cursor-pointer relative z-0">
+        <Link :href="route('products.show', product.id)">
+        <div class="globe-title !justify-between pb-2">
+          <span class="text-gray-500"><i class="fa-solid fa-box mr-1"></i>
+            {{ product.name }}</span>
+        </div>
+        <div class="flex flex-col">
+          <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Stock mínimo: {{ product.low_stock }} </span>
+          <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Unidad de medida: {{ product.unit.name }} </span>
+          <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Precio actual: ${{ product.price.price }} </span>
+        </div>
         </Link>
         <button class="absolute bottom-1 right-2 z-10" @click="delete_confirm = true; item_to_delete = product;">
           <i class="fa-solid fa-trash text-red-600"></i>
-          </button>
-        </div>
-      </div>
-
-      <ConfirmationModal :show="delete_confirm" @close="delete_confirm = false">
-    <template #title>
-      <div>¿Deseas continuar?</div>
-    </template>
-    <template #content>
-      <div>
-        Estás a punto de eliminar una solicitud de préstamo. Una vez realizado ya no se podrá
-        recuperar y la solicitud quedará cancelada.
-      </div>
-    </template>
-    <template #footer>
-      <div class="flex justify-end">
-        <button @click="this.delete()" class="px-2 py-1 font-semibold border rounded border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition duration-200 mr-2">Eliminar</button>
-        <button class="px-2 py-1 font-semibold border rounded border-gray-500 text-gray-500 hover:bg-gray-100 transition duration-200" @click="delete_confirm = false">
-          Cancelar
         </button>
       </div>
-    </template>
-  </ConfirmationModal>
+    </div>
+
+    <ConfirmationModal :show="delete_confirm" @close="delete_confirm = false">
+      <template #title>
+        <div>¿Deseas continuar?</div>
+      </template>
+      <template #content>
+        <div>
+          Estás a punto de eliminar una solicitud de préstamo. Una vez realizado ya no se podrá
+          recuperar y la solicitud quedará cancelada.
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end">
+          <button @click="this.delete()"
+            class="px-2 py-1 font-semibold border rounded border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition duration-200 mr-2">Eliminar</button>
+          <button
+            class="px-2 py-1 font-semibold border rounded border-gray-500 text-gray-500 hover:bg-gray-100 transition duration-200"
+            @click="delete_confirm = false">
+            Cancelar
+          </button>
+        </div>
+      </template>
+    </ConfirmationModal>
 
   </AppLayout>
 </template>
@@ -73,10 +72,10 @@ export default {
 
     });
     return {
-        form,
-        delete_confirm: false,
-        item_to_delete: {},
-      }
+      form,
+      delete_confirm: false,
+      item_to_delete: {},
+    }
   },
   components: {
     AppLayout,
@@ -90,8 +89,8 @@ export default {
     products: Object,
   },
   methods: {
-    update(){
-        this.form.put(route('products.update'));
+    update() {
+      this.form.put(route('products.update'));
     },
 
     delete() {
@@ -99,8 +98,8 @@ export default {
         this.route("products.destroy", this.item_to_delete)
       );
       this.delete_confirm = false;
+    },
+
   },
-   
-},
 };
 </script>

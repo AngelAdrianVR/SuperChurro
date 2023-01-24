@@ -20,7 +20,6 @@
             <Link :href="route('qr-scanner')">
             <SecondaryButton>Salida</SecondaryButton>
             </Link>
-          <SecondaryButton @click="$inertia.post(route('payroll.store-attendance'), { code: 'qwertypoiuyt/*23*/' })">Test</SecondaryButton>
           </div>
           <div v-else class="flex items-center justify-between">
             <div>

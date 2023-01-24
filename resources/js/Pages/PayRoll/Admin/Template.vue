@@ -2,9 +2,10 @@
     <div class="grid grid-cols-2 gap-1">
         <div v-for="current_payroll in payroll.data.users" :key="current_payroll.id"
             class="rounded-md border-2 border-gray-400 px-3 py-2">
-            <div class="globe-title pb-2">
+            <div class="globe-title">
                 Semana {{ payroll.data.week }}: {{ payroll.data.start_date }} al {{ payroll.data.end_date }}
             </div>
+            <p class="text-sm">Direccón del local</p>
             <div class="text-sm mb-2 bg-sky-200 px-1 py-px rounded-sm">
                 <i class="fa-solid fa-user mr-1"></i> {{ current_payroll.user.name }}
             </div>

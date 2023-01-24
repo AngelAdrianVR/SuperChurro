@@ -41,7 +41,7 @@
                 </div>
                 <div></div>
                 <p class="text-xs text-gray-500">
-                  Turno: {{ user.employee_properties?.shifts }} | Ingresó el:
+                  Turno: {{ user.employee_properties?.shift }} | Ingresó el:
                   {{ user.created_at }}
                 </p>
                 <p class="text-xs text-gray-500">

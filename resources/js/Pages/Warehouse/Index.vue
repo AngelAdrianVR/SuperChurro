@@ -4,6 +4,17 @@
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">Cocina</h2>
     </template>
 
+    <div>
+      <p class="text-sky-500 text-left ml-3 my-3 font-semibold">Empleado(s) en cocina</p>
+      <div class="grid grid-cols-2 lg:grid-cols-4">
+        <p v-for="employee in employees" :key="employee.id" class="mx-3">
+          <i class="fa-solid fa-user text-gray-500"></i>
+          {{ employee.name }}
+        </p>
+        <p v-if="Array.isArray(employees)" class="text-gray-500 text-xs text-center col-span-full">No hay empleados en cocina</p>
+      </div>
+    </div>
+
     <div class="flex justify-end">
       <Link :href="route('warehouse-movements.create')">
         <SecondaryButton class="mt-5 mr-2">Registrar Entrada/Salida</SecondaryButton>
@@ -44,6 +55,7 @@ export default {
   props: {
     warehouse: Object,
     products: Array,
+    employees: Object,
   },
   methods: {},
 };

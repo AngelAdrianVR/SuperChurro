@@ -17,18 +17,20 @@
               <i class="fa-regular fa-clock text-lg text-green-600 mr-2"></i>
               <span class="text-green-600">Entrada registrada.</span>
             </div>
-            <Link :href="route('qr-scanner')">
+            <!-- <Link :href="route('qr-scanner')">
             <SecondaryButton>Salida</SecondaryButton>
-            </Link>
+          </Link> -->
+            <SecondaryButton @click="getPosition">Salida</SecondaryButton>
           </div>
           <div v-else class="flex items-center justify-between">
             <div>
               <i class="fa-regular fa-clock text-lg mr-2"></i>
               No has registrado entrada hoy
             </div>
-            <Link :href="route('qr-scanner')">
+            <!-- <Link :href="route('qr-scanner')">
             <SecondaryButton>Entrada</SecondaryButton>
-          </Link>
+            </Link> -->
+            <SecondaryButton @click="getPosition">Entrada</SecondaryButton>
           </div>
         </div>
         <!-- ------------Permutas------------- -->
@@ -45,8 +47,10 @@
           <div v-for="leave in leaves" :key="leave.id" class="flex justify-between items-center text-xs">
             <span><i class="fa-regular fa-calendar-days"></i>{{ leave.date.split('T')[0] }}</span>
             <span>{{ leave.permission_type.name }}</span>
-            <span v-if="leave.status === 0" class="text-orange-600 font-bold"><i class="fa-solid fa-hourglass-start"></i>Revisando.</span>
-            <span v-else-if="leave.status === 1" class="text-green-600 font-bold"><i class="fa-solid fa-check"></i>Aprobado.</span>
+            <span v-if="leave.status === 0" class="text-orange-600 font-bold"><i
+                class="fa-solid fa-hourglass-start"></i>Revisando.</span>
+            <span v-else-if="leave.status === 1" class="text-green-600 font-bold"><i
+                class="fa-solid fa-check"></i>Aprobado.</span>
             <span v-else class="text-red-600 font-bold"><i class="fa-solid fa-xmark"></i>Rechazado.</span>
           </div>
           <p v-if="!leaves.length" class="text-center text-gray-500 text-xs">No hay información para mostrar.</p>
@@ -57,8 +61,10 @@
           <div v-if="loan" class="flex justify-between items-center text-xs">
             <span><i class="fa-regular fa-calendar-days"></i>{{ loan.created_at.split('T')[0] }}</span>
             <span>${{ loan.amount }} solicitado</span>
-            <span v-if="!loan.authorized_at" class="text-orange-600 font-bold"><i class="fa-solid fa-hourglass-start"></i>Revisando.</span>
-            <span v-else-if="loan.remaining" class="text-green-600 font-bold"><i class="fa-solid fa-check"></i>Aprobado.</span>
+            <span v-if="!loan.authorized_at" class="text-orange-600 font-bold"><i
+                class="fa-solid fa-hourglass-start"></i>Revisando.</span>
+            <span v-else-if="loan.remaining" class="text-green-600 font-bold"><i
+                class="fa-solid fa-check"></i>Aprobado.</span>
             <span v-else class="text-red-600 font-bold"><i class="fa-solid fa-xmark"></i>Rechazado.</span>
           </div>
           <p v-else class="text-center text-gray-500 text-xs">No hay información para mostrar.</p>
@@ -77,13 +83,76 @@ import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
   data() {
-    return {};
+    return {
+      geolocation_options: {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      },
+      valid_areas: [
+        {
+          label: "Plaza patria Este",
+          latitudes: [20.71278, 20.71165],
+          longitudes: [-103.37849, -103.37691]
+        },
+        {
+          label: "Plaza patria Oeste",
+          latitudes: [20.71165, 20.71235],
+          longitudes: [-103.38029, -103.37870]
+        },
+        {
+          label: "Casa",
+          latitudes: [20.76441, 20.76641],
+          longitudes: [-103.42651, -103.40651]
+        }
+      ],
+    };
   },
   components: {
     AppLayout,
     PrimaryButton,
     SecondaryButton,
     Link,
+  },
+  methods: {
+    getPosition() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(this.analyzePosition, this.error, this.geolocation_options);
+      } else {
+        alert('error', 'Geolocación no soportada por navegador, inténtalo en uno diferente');
+      }
+    },
+    error(e) {
+      alert('ERROR(' + e.code + '): ' + e.message);
+    },
+    analyzePosition(current_position) {
+      const validated_area = this.valid_areas.find(
+        valid_area => this.isCurrentPositionInsideArea(valid_area, current_position
+        ));
+
+      if (validated_area !== undefined) {
+        alert(validated_area.label);
+        this.$inertia.post(route('payroll.store-attendance'));
+      } else {
+        alert('Ubicación no válida para registrar asistencia.' +
+          current_position.coords.latitude + ', ' + current_position.coords.longitude);
+      }
+    },
+    isCurrentPositionInsideArea(valid_area, current_position) {
+      var current_latitude = current_position.coords.latitude;
+      var current_longitude = current_position.coords.longitude;
+
+      if (
+        this.between(current_latitude, valid_area.latitudes) &&
+        this.between(current_longitude, valid_area.longitudes)
+      )
+        return valid_area;
+      else
+        return 0;
+    },
+    between(x, range) {
+      return x >= range[0] && x <= range[1];
+    },
   },
   props: {
     checked_in: Boolean,

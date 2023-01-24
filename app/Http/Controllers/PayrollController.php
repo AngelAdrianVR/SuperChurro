@@ -51,11 +51,8 @@ class PayrollController extends Controller
         //
     }
 
-    public function storeAttendance(Request $request)
+    public function storeAttendance()
     {
-        if ($request->code !== config('services.attendance.code'))
-            abort(404);
-    
         auth()->user()->checkAttendance();
 
         return to_route('dashboard');

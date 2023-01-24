@@ -327,6 +327,7 @@ export default {
         work_days: [],
         shift: "",
         vacations: 0,
+        vacations_updated_date: new Date().toISOString().split('T')[0],
       },
       resources: null,
     });

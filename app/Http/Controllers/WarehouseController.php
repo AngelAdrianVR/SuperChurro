@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\User;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 
@@ -12,10 +13,11 @@ class WarehouseController extends Controller
     {
         $warehouse = Warehouse::first();
         $products = Product::with('unit')->get();
+        $employees = User::all()->filter(
+            fn($user) => $user->hasCheckedInToday() && $user->employee_properties['shift'] === 'cocina'
+        );
 
-        // return $products;
-
-        return inertia('Warehouse/Index', compact('warehouse', 'products'));
+        return inertia('Warehouse/Index', compact('warehouse', 'products', 'employees'));
     }
 
     public function create()

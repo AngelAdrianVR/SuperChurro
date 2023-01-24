@@ -29,7 +29,6 @@ class UserController extends Controller
     {
 
         $validated = $request->validate([
-
             'name'=> 'required|max:30',
             'email'=> 'email',
             'phone_number'=> 'required|numeric|digits:10',
@@ -38,7 +37,7 @@ class UserController extends Controller
             'employee_properties.shift'=> 'required',
             'employee_properties.work_days'=> 'required',
             'employee_properties.vacations'=> 'max:30',
-
+            'employee_properties.vacations_updated_date'=> 'string',
         ]);
 
         $user = User::create($validated + [
@@ -77,6 +76,7 @@ class UserController extends Controller
             'employee_properties.shift' => 'required',
             'employee_properties.work_days' => 'required',
             'employee_properties.vacations'=> 'max:30',
+            'employee_properties.vacations_updated_date'=> 'min:1',
         ]);
 
         $user->update($validated);
@@ -99,6 +99,7 @@ class UserController extends Controller
             'employee_properties.shift' => 'required',
             'employee_properties.work_days' => 'required',
             'employee_properties.vacations'=> 'max:30',
+            'employee_properties.vacations_updated_date'=> 'min:1',
         ]);
 
         $user->update($validated);

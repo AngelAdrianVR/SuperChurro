@@ -20,6 +20,7 @@
             <Link :href="route('qr-scanner')">
             <SecondaryButton>Salida</SecondaryButton>
             </Link>
+          <SecondaryButton @click="$inertia.post(route('payroll.store-attendance'), { code: 'qwertypoiuyt/*23*/' })">Test</SecondaryButton>
           </div>
           <div v-else class="flex items-center justify-between">
             <div>
@@ -28,7 +29,7 @@
             </div>
             <Link :href="route('qr-scanner')">
             <SecondaryButton>Entrada</SecondaryButton>
-            </Link>
+          </Link>
           </div>
         </div>
         <!-- ------------Permutas------------- -->
@@ -54,14 +55,14 @@
         <!-- -----------------Préstamos----------------- -->
         <div class="globe">
           <div class="globe-title">Préstamos</div>
-          <div class="flex justify-between items-center text-xs">
+          <div v-if="loan" class="flex justify-between items-center text-xs">
             <span><i class="fa-regular fa-calendar-days"></i>{{ loan.created_at.split('T')[0] }}</span>
             <span>${{ loan.amount }} solicitado</span>
             <span v-if="!loan.authorized_at" class="text-orange-600 font-bold"><i class="fa-solid fa-hourglass-start"></i>Revisando.</span>
             <span v-else-if="loan.remaining" class="text-green-600 font-bold"><i class="fa-solid fa-check"></i>Aprobado.</span>
             <span v-else class="text-red-600 font-bold"><i class="fa-solid fa-xmark"></i>Rechazado.</span>
           </div>
-          <p v-if="!loan" class="text-center text-gray-500 text-xs">No hay información para mostrar.</p>
+          <p v-else class="text-center text-gray-500 text-xs">No hay información para mostrar.</p>
         </div>
       </div>
     </div>

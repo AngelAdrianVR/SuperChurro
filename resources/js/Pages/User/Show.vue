@@ -452,6 +452,7 @@ export default {
         work_days: this.user.employee_properties.work_days,
         shift: this.user.employee_properties.shift,
         vacations: 0,
+        vacations_updated_date: this.user.employee_properties.vacations_updated_date
       },
       resources: [],
     });

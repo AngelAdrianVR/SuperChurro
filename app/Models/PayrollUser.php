@@ -192,7 +192,7 @@ class PayrollUser extends Pivot
         $minutes_late = $this->weekAttendanceArray()['late'];
         if($minutes_late) {
             $discounts [] = [
-                'amount' => $minutes_late * $user->getSalaryPerMinute(),
+                'amount' => round($minutes_late * $user->getSalaryPerMinute(), 1),
                 'description' => "$minutes_late minutos tarde en la semana"
             ];  
         }
@@ -202,11 +202,11 @@ class PayrollUser extends Pivot
         if($loan) {
             $pay = $loan->amount / 2;
             $discounts [] = [
-                'amount' => $pay,
+                'amount' => round($pay, 2),
                 'description' => "Abono de préstamo autorizado"
             ];
             
-            $loan->decrement('remaining', $pay);
+            $loan->decrement('remaining', round($pay, 2));
         }
 
         return $discounts;

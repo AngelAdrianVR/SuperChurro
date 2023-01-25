@@ -33,7 +33,7 @@ class SaleToEmployeeController extends Controller
 
         // add aditional info to each sale before creating
         foreach ($validated['items'] as $sale) {
-            $sale['price'] = Product::find($sale['product_id'])->currentPrice->price;
+            $sale['price'] = Product::find($sale['product_id'])->currentEmployeePrice->price;
             $sale['user_id'] = auth()->id();
 
             // create sells

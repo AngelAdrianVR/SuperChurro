@@ -30,6 +30,7 @@ class SaleController extends Controller
         $new_cart_stock = [];
         $cart = Cart::first();
 
+        // store sales
         foreach ($cart->products as $product_id => $quantity) {
             $request->validate([
                 "product.$product_id" => "numeric|max:$quantity"
@@ -76,6 +77,7 @@ class SaleController extends Controller
         //
     }
 
+    // API
     public function getByDate(Request $request)
     {
         $middle_date = Carbon::parse($request->date)->addHours(16);

@@ -9,7 +9,7 @@ class Price extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['price', 'product_id'];
+    protected $fillable = ['price', 'product_id', 'is_employee_price'];
 
     // relationships
     public function product()

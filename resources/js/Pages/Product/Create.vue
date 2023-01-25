@@ -224,6 +224,51 @@
             >Precio</label
           >
         </div>
+        <div class="relative z-0 mb-6 w-full group">
+          <input
+            v-model="form.employee_price"
+            type="number"
+            step="0.1"
+            name="floating_price"
+            autocomplete="off"
+            class="
+              block
+              py-2.5
+              px-0
+              w-full
+              text-sm text-gray-900
+              bg-transparent
+              border-0 border-b-2 border-gray-300
+              appearance-none
+              dark:text-white dark:border-gray-600 dark:focus:border-stone-500
+              focus:outline-none focus:ring-0 focus:border-stone-600
+              peer
+            "
+            placeholder=" "
+          />
+          <label
+            for="floating_low_stock"
+            class="
+              absolute
+              text-sm text-gray-500
+              dark:text-gray-400
+              duration-300
+              transform
+              -translate-y-6
+              scale-75
+              top-3
+              -z-10
+              origin-[0]
+              peer-focus:left-0
+              peer-focus:text-stone-600
+              peer-focus:dark:text-stone-500
+              peer-placeholder-shown:scale-100
+              peer-placeholder-shown:translate-y-0
+              peer-focus:scale-75 peer-focus:-translate-y-6
+            "
+            >Precio a empleados</label
+          >
+        </div>
         <select
           class="select mb-5"
           required
@@ -262,6 +307,7 @@ export default {
       low_stock: null,
       unit_id: null,
       price: null,
+      employee_price: null,
       initial_stock: null,
     });
     return {

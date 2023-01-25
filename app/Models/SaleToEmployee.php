@@ -34,9 +34,6 @@ class SaleToEmployee extends Model
         $sales = self::whereDate('created_at', $date)
             ->get();
         
-        $percentage_off = 50;
-        $discount_factor = 1 - ($percentage_off / 100);
-
-        return $sales->sum(fn ($sale) => $sale->quantity * $sale->price * $discount_factor);
+        return $sales->sum('price');
     }
 }

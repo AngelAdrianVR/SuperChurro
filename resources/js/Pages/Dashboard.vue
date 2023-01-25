@@ -91,14 +91,14 @@ export default {
       },
       valid_areas: [
         {
-          label: "Plaza patria Este",
-          latitudes: [20.71278, 20.71165],
-          longitudes: [-103.37849, -103.37691]
+          label: "Audicarr",
+          latitudes: [20.71203, 20.71208],
+          longitudes: [-103.37882, -103.37863]
         },
         {
-          label: "Plaza patria Oeste",
-          latitudes: [20.71165, 20.71235],
-          longitudes: [-103.38029, -103.37870]
+          label: "Carrito",
+          latitudes: [20.71246, 20.71258],
+          longitudes: [-103.37795, -103.37776]
         },
         {
           label: "Casa",

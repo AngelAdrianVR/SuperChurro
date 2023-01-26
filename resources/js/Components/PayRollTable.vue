@@ -7,7 +7,7 @@
         <div class="rounded-t mb-0 px-4 py-3 border-0">
           <div class="flex flex-wrap items-center">
             <div class="relative w-full px-4 max-w-full flex-grow flex-1 ">
-              <h3 class="font-semibold text-lg text-white"><i class="fa-solid fa-user mr-1"></i> {{ payroll.user.name }}</h3>
+              <h3 class="font-semibold text-lg text-white"><i class="fa-solid fa-user mr-1"></i> {{ payroll?.user.name }}</h3>
             </div>
           </div>
         </div>
@@ -31,7 +31,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="(attendance, index) in payroll.week_attendance.payroll" :key="index">
+              <tr v-for="(attendance, index) in payroll?.week_attendance.payroll" :key="index">
                 <th
                   class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 text-left flex items-center">
                   <span class="ml-3 font-bold text-white"> {{ attendance.day }} </span>

@@ -51,8 +51,7 @@ const menues = [
     label: "Inicio",
     route_name: "dashboard",
     is_active: route().current("dashboard"),
-    is_a: route().current("dashboard"),
-    admin_can_see: true, 
+    admin_can_see: true,
   },
   {
     label: "Nóminas",

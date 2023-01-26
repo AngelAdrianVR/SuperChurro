@@ -20,10 +20,7 @@
         <Link :href="route('users.show', user.id)">
             <div class="flex">
               <div class="relative h-16 w-16 mr-2">
-                <img
-                  src="https://tailwindcomponents.com/storage/avatars/njkIbPhyZCftc4g9XbMWwVsa7aGVPajYLRXhEeoo.jpg"
-                  class="w-16 h-16 object-cover rounded-2xl"
-                />
+                <i class="fa-solid fa-circle-user text-6xl" :class="user.is_active ? 'text-green-400' : 'text-red-400'"></i>
               </div>
               <section class="flex flex-col flex-1">
                 <div class="flex justify-between">

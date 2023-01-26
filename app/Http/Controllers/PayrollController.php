@@ -51,11 +51,8 @@ class PayrollController extends Controller
         //
     }
 
-    public function storeAttendance(Request $request)
+    public function storeAttendance()
     {
-        if ($request->code !== config('services.attendance.code'))
-            abort(404);
-    
         auth()->user()->checkAttendance();
 
         return to_route('dashboard');
@@ -66,7 +63,6 @@ class PayrollController extends Controller
     {
         $payrolls = PayrollResource::collection(Payroll::with('users')->latest()->get());
 
-        // return $payrolls;
         return inertia('PayRoll/Admin/Index', compact('payrolls'));
     }
 

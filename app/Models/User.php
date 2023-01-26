@@ -142,6 +142,8 @@ class User extends Authenticatable implements HasMedia
 
     public function hasCheckedOutToday()
     {
+        if (!$this->hasCheckedInToday()) return false;
+
         $current_payroll_id = Payroll::firstWhere('is_active', true)->id;
 
         $payroll_user = PayrollUser::firstOrNew([
@@ -160,6 +162,8 @@ class User extends Authenticatable implements HasMedia
             ->where('user_id', $this->id)
             ->first();
 
+        $today_attendance = ['in' => now()->toTimeString(), 'out' => '--:--:--'];
+
         // isn't the first attendance in current payroll?
         if ($payroll_user) {
             $new_atendance = $payroll_user->attendance;
@@ -169,7 +173,7 @@ class User extends Authenticatable implements HasMedia
                 $new_atendance[today()->dayOfWeek]['out'] = now()->toTimeString();
             } else {
                 // checking in
-                $new_atendance[today()->dayOfWeek]['in'] = now()->toTimeString();
+                $new_atendance[today()->dayOfWeek] = $today_attendance;
             }
 
             $payroll_user->update(['attendance' => $new_atendance]);
@@ -177,13 +181,12 @@ class User extends Authenticatable implements HasMedia
             // creating payroll for auth user
             $this->payrolls()
                 ->attach($current_payroll->id, [
-                    'attendance' => [today()->dayOfWeek => ['in' => now()->toTimeString(), 'out' => '--:--:--']]
+                    'attendance' => [today()->dayOfWeek => $today_attendance]
                 ]);
 
             // updating vacations (weekly)
             $this->updateVacations();
         }
-
     }
 
     public function updateVacations()

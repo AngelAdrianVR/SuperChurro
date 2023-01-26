@@ -40,7 +40,7 @@
           <span class="bg-sky-200"><i class="fa-solid fa-user mr-1"></i> {{ sale.user.name }}:</span>
           {{ sale.product.name }} x{{ sale.quantity }}
           <i class="fa-solid fa-arrow-right-long text-green-500"></i>
-          ${{ sale.price * sale.quantity * 0.5 }}
+          ${{ sale.price * sale.quantity }}
         </p>
         <p class="font-bold col-span-full text-right">Total: ${{ totalSale().to_employees }}</p>
       </div>
@@ -103,7 +103,7 @@ export default {
       let shift_1 = 0, shift_2 = 0, to_employees = 0, commissions;
       this.shift_1_sales.forEach(sale => shift_1 += (sale.quantity * sale.price));
       this.shift_2_sales.forEach(sale => shift_2 += (sale.quantity * sale.price));
-      this.sales_to_employees.forEach(sale => to_employees += (sale.quantity * sale.price * 0.5));
+      this.sales_to_employees.forEach(sale => to_employees += (sale.quantity * sale.price));
       
       // this.shift_1_sales[0]: churro price at the moment of sale
       const churros_sold = ((shift_1 + shift_2 + to_employees) / (this.shift_1_sales[0].price)) + 5;

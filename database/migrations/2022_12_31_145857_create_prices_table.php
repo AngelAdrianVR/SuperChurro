@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedFloat('price');
+            $table->boolean('is_employee_price')->default(false);
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
 
             $table->timestamps();

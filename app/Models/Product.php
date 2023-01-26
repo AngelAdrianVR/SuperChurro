@@ -18,7 +18,12 @@ class Product extends Model
     // relationships
     public function prices() 
     {
-        return $this->hasMany(Price::class);
+        return $this->hasMany(Price::class)->where('is_employee_price', 0);
+    }
+
+    public function employeePrices() 
+    {
+        return $this->hasMany(Price::class)->where('is_employee_price', 1);
     }
 
     public function unit() 
@@ -33,7 +38,12 @@ class Product extends Model
 
     public function currentPrice()
     {
-        return $this->hasOne(Price::class)->latestOfMany();
+        return $this->hasOne(Price::class)->where('is_employee_price', 0)->latest();
+    }
+
+    public function currentEmployeePrice()
+    {
+        return $this->hasOne(Price::class)->where('is_employee_price', 1)->latest();
     }
 
 }

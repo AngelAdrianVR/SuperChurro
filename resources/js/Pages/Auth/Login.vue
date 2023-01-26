@@ -43,7 +43,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="id" value="Número de empleado" />
+                <InputLabel for="id" value="Número de empleado" class="text-gray-300" />
                 <TextInput
                     id="id"
                     v-model="form.id"
@@ -56,7 +56,7 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Contraseña" />
+                <InputLabel for="password" value="Contraseña" class="text-gray-300" />
                 <TextInput
                     id="password"
                     v-model="form.password"
@@ -71,7 +71,7 @@ const submit = () => {
             <div class="block mt-4">
                 <label class="flex items-center">
                     <Checkbox v-model:checked="form.remember" name="remember" />
-                    <span class="ml-2 text-sm text-gray-600">Recordarme</span>
+                    <span class="ml-2 text-sm text-gray-300">Recordarme</span>
                 </label>
             </div>
 

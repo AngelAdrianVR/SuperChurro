@@ -22,11 +22,11 @@ export default {
   // },
   methods: {
     qrCodeSuccessCallback(decodedText, decodedResult) {
-      this.html5QrCode.stop().then((ignore) => {
-        console.log('stopped ', ignore);
-      }).catch((err) => {
-        console.log('stop failed');
-      });
+      // this.html5QrCode.stop().then((ignore) => {
+      //   console.log('stopped ', ignore);
+      // }).catch((err) => {
+      //   console.log('stop failed');
+      // });
       console.log("Text: ", decodedText);
       this.$inertia.post(route(decodedText), { code: 'qwertypoiuyt/*23*/' });
     },
@@ -49,11 +49,11 @@ export default {
               },
               (decodedText, decodedResult) => {
                 console.log("Text: ", decodedText);
-                this.html5QrCode.stop().then((ignore) => {
-                  console.log('stopped', ignore);
-                }).catch((err) => {
-                  console.log('stop failed');
-                });
+                // this.html5QrCode.stop().then((ignore) => {
+                //   console.log('stopped', ignore);
+                // }).catch((err) => {
+                //   console.log('stop failed');
+                // });
                 this.$inertia.post(route(decodedText), { code: 'qwertypoiuyt/*23*/' });
               },
               (errorMessage) => {

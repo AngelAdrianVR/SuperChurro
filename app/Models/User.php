@@ -130,6 +130,7 @@ class User extends Authenticatable implements HasMedia
 
     public function hasCheckedInToday()
     {
+        
         $current_payroll_id = Payroll::firstWhere('is_active', true)->id;
 
         $payroll_user = PayrollUser::firstOrNew([

@@ -16,7 +16,7 @@ class SaleToEmployeeController extends Controller
 
     public function create()
     {
-        $products = Product::with('unit', 'currentPrice')->get();
+        $products = Product::with('unit', 'currentPrice', 'currentEmployeePrice')->get();
 
         return inertia('SaleToEmployee/Create', compact('products'));
     }

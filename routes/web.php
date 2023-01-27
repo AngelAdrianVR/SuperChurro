@@ -44,15 +44,15 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/qr-scanner', function () {
-        return Inertia::render('ScannerPage');
-    })->name('qr-scanner');
-});
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified',
+// ])->group(function () {
+//     Route::get('/qr-scanner', function () {
+//         return Inertia::render('ScannerPage');
+//     })->name('qr-scanner');
+// });
 
 Route::resource('payrolls', PayrollController::class)->middleware('auth');
 Route::resource('work-permits', WorkPermitController::class)->middleware('auth');

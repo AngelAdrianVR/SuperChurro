@@ -9,7 +9,7 @@
             <select @change="syncItem" v-model="selection" class="select w-2/3 lg:w-3/4" required>
                 <option value="x">-- Seleccionar producto --</option>
                 <option v-for="product in products" :key="product.id" :value="product.id">
-                    {{ product.name }}
+                    {{ product.name }} {{ show_price ? '($' + product.current_employee_price.price + '/unidad)' : '' }}
                 </option>
             </select>
             <p v-if="error_validation" class="text-red-400 text-xs">Favor de seleccionar el producto</p>
@@ -79,6 +79,10 @@ export default {
             type: Object,
             default: null,
         },
+        show_price: {
+            type: Boolean,
+            default: false
+        }
     },
     mounted() {
         if (this.init_state != null) {

@@ -38,7 +38,7 @@
       ">
       <form @submit.prevent="submit">
         <div>
-          <ProductInput :products="products" v-for="(item, index) in form.items" :key="item.id" :id="item.id"
+          <ProductInput :products="products" show_price v-for="(item, index) in form.items" :key="item.id" :id="item.id"
             @deleteItem="deleteItem(index)" @syncItem="syncItems(index, $event)" class="mb-5" />
         </div>
         <p v-if="!form.items.length" class="text-sm text-gray-600"> Click al botón de "+" para empezar a agregar

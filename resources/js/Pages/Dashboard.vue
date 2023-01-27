@@ -17,9 +17,6 @@
               <i class="fa-regular fa-clock text-lg text-green-600 mr-2"></i>
               <span class="text-green-600">Entrada registrada.</span>
             </div>
-            <!-- <Link :href="route('qr-scanner')">
-            <SecondaryButton>Salida</SecondaryButton>
-          </Link> -->
             <SecondaryButton @click="getPosition">Salida</SecondaryButton>
           </div>
           <div v-else class="flex items-center justify-between">
@@ -27,9 +24,6 @@
               <i class="fa-regular fa-clock text-lg mr-2"></i>
               No has registrado entrada hoy
             </div>
-            <!-- <Link :href="route('qr-scanner')">
-            <SecondaryButton>Entrada</SecondaryButton>
-            </Link> -->
             <SecondaryButton @click="getPosition">Entrada</SecondaryButton>
           </div>
         </div>
@@ -134,7 +128,7 @@ export default {
         alert(validated_area.label);
         this.$inertia.post(route('payroll.store-attendance'));
       } else {
-        alert('Ubicación no válida para registrar asistencia.' +
+        alert('Ubicación no válida para registrar entrada / salida.' +
           current_position.coords.latitude + ', ' + current_position.coords.longitude);
       }
     },

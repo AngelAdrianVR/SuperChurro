@@ -76,7 +76,7 @@ class PayrollUser extends Pivot
             'payroll' => collect($current_attendance),
             'attendances' => $attendances,
             'vacations' => $vacations,
-            'extras' => $user->employee_properties['shift'] === "carrito vespertino" ? $extras : 0,
+            'extras' => ($user->employee_properties['shift'] === "carrito vespertino" || $extras_per_day >= 300) ? $extras : 0,
             'late' => $late,
         ];
     }

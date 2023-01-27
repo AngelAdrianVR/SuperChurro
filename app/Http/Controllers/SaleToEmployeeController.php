@@ -26,6 +26,7 @@ class SaleToEmployeeController extends Controller
         $validated = $request->validate([
             'items.*.quantity' => 'required|numeric|min:1',
             'items.*.product_id' => 'required|numeric|min:1',
+            'notes' => 'max:255'
         ]);
 
         $cart = Cart::first();
@@ -33,7 +34,13 @@ class SaleToEmployeeController extends Controller
 
         // add aditional info to each sale before creating
         foreach ($validated['items'] as $sale) {
-            $sale['price'] = Product::find($sale['product_id'])->currentEmployeePrice->price;
+            if(boolval($request->is_sell_to_employee)) {
+                $sale['price'] = Product::find($sale['product_id'])->currentEmployeePrice->price;
+                $sale['notes'] = $request->notes;
+            } else {
+                $sale['price'] = 0;
+            }
+
             $sale['user_id'] = auth()->id();
 
             // create sells
@@ -47,7 +54,7 @@ class SaleToEmployeeController extends Controller
         $cart->update(['products' => $updated_cart_stock]);
 
 
-        request()->session()->flash('flash.banner', 'Se registró la venta a ' . auth()->user()->name);
+        request()->session()->flash('flash.banner', 'Se registró la venta/cortesía');
         request()->session()->flash('flash.bannerStyle', 'success');
 
         return to_route('carts.index');

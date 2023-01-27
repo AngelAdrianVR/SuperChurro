@@ -35,12 +35,13 @@
 
       <div
         class="mt-3 mx-3 text-xs lg:grid lg:grid-cols-2 gap-1 bg-white shadow-md rounded-md px-2 py-1">
-        <h1 class="col-span-full text-center text-sm font-bold">Ventas a empleados</h1>
+        <h1 class="col-span-full text-center text-sm font-bold">Ventas a empleados / cortesías</h1>
         <p v-for="sale in sales_to_employees" :key="sale.id">
           <span class="bg-sky-200"><i class="fa-solid fa-user mr-1"></i> {{ sale.user.name }}:</span>
           {{ sale.product.name }} x{{ sale.quantity }}
           <i class="fa-solid fa-arrow-right-long text-green-500"></i>
           ${{ sale.price * sale.quantity }}
+          {{ sale.notes ? '(Cortesías: ' + sale.notes + ')' : ''}}
         </p>
         <p class="font-bold col-span-full text-right">Total: ${{ totalSale().to_employees }}</p>
       </div>

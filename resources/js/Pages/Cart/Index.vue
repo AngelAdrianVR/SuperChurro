@@ -6,7 +6,7 @@
 
     <div class="flex justify-center items-center">
       <Link :href="route('sells-to-employees.create')"
-        ><SecondaryButton class="mt-5 mr-2">Venta a empleado</SecondaryButton></Link
+        ><SecondaryButton class="mt-5 mr-2">Venta a empleado / Cortesías</SecondaryButton></Link
       >
       <Link :href="route('product-request.create')"
         ><SecondaryButton class="mt-5 ml-2">Solicitar mercancía</SecondaryButton></Link

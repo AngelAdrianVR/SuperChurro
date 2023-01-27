@@ -1,8 +1,8 @@
 <template>
-  <AppLayout title="Venta a empleado">
+  <AppLayout title="Venta a empleado / cortesias">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Venta a empleado
+        Venta a empleado / cortesias
       </h2>
     </template>
 
@@ -38,6 +38,26 @@
       ">
       <form @submit.prevent="submit">
         <div>
+          <div class="flex items-center mb-4">
+            <div class="flex items-center mr-3">
+              <input v-model="form.is_sell_to_employee" id="sell-option-1" type="radio" name="sell_type" value="1"
+                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300" aria-labelledby="sell-option-1"
+                aria-describedby="sell-option-1" checked="">
+              <label for="sell-option-1" class="text-sm font-medium text-gray-900 ml-2 block">
+                Venta a empleado
+              </label>
+            </div>
+            <div class="flex items-center">
+              <input v-model="form.is_sell_to_employee" id="sell-option-2" type="radio" name="sell_type" value="0"
+                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300" aria-labelledby="sell-option-2"
+                aria-describedby="sell-option-2">
+              <label for="sell-option-2" class="text-sm font-medium text-gray-900 ml-2 block">
+                Cortesías
+              </label>
+            </div>
+          </div>
+        </div>
+        <div>
           <ProductInput :products="products" show_price v-for="(item, index) in form.items" :key="item.id" :id="item.id"
             @deleteItem="deleteItem(index)" @syncItem="syncItems(index, $event)" class="mb-5" />
         </div>
@@ -48,6 +68,40 @@
             <i class="fa-solid fa-circle-plus text-2xl text-blue-400"></i>
           </button>
         </div>
+        <div v-if="form.is_sell_to_employee == 0" class="relative z-0 mb-6 w-full group">
+          <input v-model="form.notes" type="text" name="floating_description" autocomplete="off" class="
+              block
+              py-2.5
+              px-0
+              w-full
+              text-sm text-gray-900
+              bg-transparent
+              border-0 border-b-2 border-gray-300
+              appearance-none
+              dark:text-white dark:border-gray-600 dark:focus:border-stone-500
+              focus:outline-none focus:ring-0 focus:border-stone-600
+              peer
+            " placeholder=" " />
+          <label for="floating_description" class="
+              absolute
+              text-sm text-gray-500
+              dark:text-gray-400
+              duration-300
+              transform
+              -translate-y-6
+              scale-75
+              top-3
+              -z-10
+              origin-[0]
+              peer-focus:left-0
+              peer-focus:text-stone-600
+              peer-focus:dark:text-stone-500
+              peer-placeholder-shown:scale-100
+              peer-placeholder-shown:translate-y-0
+              peer-focus:scale-75 peer-focus:-translate-y-6
+            ">Notas o comentarios (para quién(es) son las cortesías)</label>
+        </div>
+        
         <PrimaryButton :disabled="form.processing">Solicitar</PrimaryButton>
       </form>
     </div>
@@ -70,6 +124,8 @@ export default {
           quantity: null,
         }
       ],
+      is_sell_to_employee: 1,
+      notes: null,
     })
     return {
       next_item_id: 2,

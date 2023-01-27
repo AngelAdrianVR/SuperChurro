@@ -18,6 +18,7 @@ return new class extends Migration
 
             $table->unsignedMediumInteger('quantity');
             $table->unsignedFloat('price');
+            $table->string('notes')->nullable();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 

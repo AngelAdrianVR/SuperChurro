@@ -13,6 +13,7 @@ class SaleToEmployee extends Model
     protected $fillable = [
         'quantity',
         'product_id',
+        'notes',
         'price',
         'user_id',
     ];

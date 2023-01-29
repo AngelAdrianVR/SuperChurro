@@ -21,6 +21,7 @@ class SaleController extends Controller
     public function create()
     {
         $products = Product::all();
+
         return inertia('Sales/Create', compact('products'));
     }
 

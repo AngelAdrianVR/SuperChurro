@@ -62,7 +62,7 @@ class PayrollController extends Controller
     public function adminIndex()
     {
         $payrolls = PayrollResource::collection(Payroll::with('users')->latest()->get());
-
+        // return $payrolls;
         return inertia('PayRoll/Admin/Index', compact('payrolls'));
     }
 
@@ -91,9 +91,12 @@ class PayrollController extends Controller
             $commissions[$current_date->dayName] = $day_commission;
         }
 
-        // store discounts for each user payroll
+        // store discounts & attendance info for each user payroll
         $active_payroll->users->each(function ($user_payroll) {
-            $user_payroll->pivot->update(['discounts' => $user_payroll->pivot->getDiscounts()]);
+            $user_payroll->pivot->update([
+                'discounts' => $user_payroll->pivot->getDiscounts(),
+                'attendance' => $user_payroll->pivot->weekAttendanceArray()
+            ]);
         });
 
         // store commissions & close payroll

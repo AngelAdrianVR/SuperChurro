@@ -211,7 +211,7 @@
             ">Salario base*</label>
           <InputError :message="$page.props?.errors.employee_properties?.base_salary" />
         </div>
-        <label class="mb-3 w-full text-sm text-gray-500">Días de trabajo
+        <label class="mb-3 w-full text-sm text-gray-500">Días de trabajo</label>
           <div class="">
             <select class="
             bg-gray-200
@@ -223,7 +223,7 @@
             focus:border-stone-500 focus:text-stone-500
           " v-model="selected_day">
               <option disabled selected class="text-gray-500" value="">
-                -- Seleeciona un turno --
+                -- Selecciona un turno --
               </option>
               <option v-for="(week_day, index) in week_days" :key="index" class="text-gray-500" :value="index">
                 {{ week_day }}
@@ -265,7 +265,6 @@
               peer-focus:scale-75 peer-focus:-translate-y-6
             ">Días de trabajo*</label>
           <InputError :message="$page.props?.errors.employee_properties?.work_days" />
-        </label>
 
         <label class="text-gray-600 my-4"> Documentos del empleado
           <FileUploader @input="form.resources = $event.target.files" />
@@ -298,7 +297,6 @@ export default {
         birthdate: "",
         base_salary: "",
         work_days: [],
-        shift: "",
         vacations: 0,
         vacations_updated_date: new Date().toISOString().split('T')[0],
       },

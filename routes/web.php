@@ -61,12 +61,12 @@ Route::resource('loans', LoanController::class)->middleware('auth');
 Route::resource('carts', CartController::class)->middleware('auth');
 Route::resource('warehouses', WarehouseController::class)->middleware('auth');
 Route::resource('product-request', ProductRequestController::class)->middleware('auth');
-Route::resource('sells-to-employees', SaleToEmployeeController::class)->middleware('auth');
+Route::resource('sales-to-employees', SaleToEmployeeController::class)->middleware('auth');
 
 // admin routes
 Route::resource('products', ProductController::class)->middleware(['auth','admin']);
 Route::resource('users', UserController::class)->middleware(['auth','admin']);
-Route::resource('sales', SaleController::class)->middleware(['auth','admin']);
+Route::resource('sales', SaleController::class)->middleware(['auth']);
 Route::resource('settings', SettingController::class)->middleware(['auth','admin']);
 Route::get('/admin/payrolls', [PayrollController::class, 'adminIndex'])->middleware(['auth','admin'])->name('payroll-admin.index');
 Route::get('/admin/payrolls/show/{payroll}', [PayrollController::class, 'showUsersPayrolls'])->middleware(['auth','admin'])->name('payroll-admin.show');

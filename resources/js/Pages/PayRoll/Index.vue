@@ -3,7 +3,6 @@
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Nóminas</h2>
         </template>
-
         <div class="mt-5 text-bold text-lg text-gray-700">
             <p class="my-2 ml-5">Detalle de nómina</p>
             <PayRollTable :payroll="payroll_selected" />
@@ -46,8 +45,8 @@
 </template>
 
 <script>
-import AppLayout from '@/Layouts/AppLayout.vue'
-import PayRollTable from '@/Components/PayRollTable.vue'
+import AppLayout from '@/Layouts/AppLayout.vue';
+import PayRollTable from '@/Components/PayRollTable.vue';
 
 export default {
     data() {

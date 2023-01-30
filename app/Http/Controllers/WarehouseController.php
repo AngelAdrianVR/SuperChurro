@@ -14,7 +14,7 @@ class WarehouseController extends Controller
         $warehouse = Warehouse::first();
         $products = Product::with('unit')->get();
         $employees = User::all()->filter(
-            fn($user) => $user->hasCheckedInToday() && $user->employee_properties['shift'] === 'cocina'
+            fn($user) => $user->hasCheckedInToday() && $user->shiftOn(today()->dayOfWeek) === 'cocina'
         );
 
         return inertia('Warehouse/Index', compact('warehouse', 'products', 'employees'));

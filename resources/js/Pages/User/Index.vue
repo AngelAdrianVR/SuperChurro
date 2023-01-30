@@ -24,7 +24,7 @@
               </div>
               <section class="flex flex-col flex-1">
                 <div class="flex justify-between">
-                  <h1 class="text-xs font-bold">{{ user.name }}</h1>
+                  <h1 class="text-xs font-bold">ID: {{ user.id }} | {{ user.name }}</h1>
                   <span
                     v-if="user.is_active"
                     class="bg-green-100 text-green-700 text-xs px-2 py-px rounded-lg"

@@ -16,7 +16,7 @@ class CartController extends Controller
         $products = Product::with('unit')->get();
         $requests = ProductRequest::whereDate('created_at', now())->with('user')->latest()->get();
         $employees = User::all()->filter(
-            fn($user) => $user->hasCheckedInToday() && $user->employee_properties['shift'] !== 'cocina'
+            fn($user) => $user->hasCheckedInToday() && $user->shiftOn(today()->dayOfWeek) !== 'cocina'
         );
         
         return inertia('Cart/Index', compact('cart_products', 'products', 'requests', 'employees'));

@@ -155,7 +155,7 @@ export default {
       this.form.items[index] = product_obj;
     },
     submit() {
-      this.form.post(route('sells-to-employees.store'));
+      this.form.post(route('sales-to-employees.store'));
     },
   },
 };

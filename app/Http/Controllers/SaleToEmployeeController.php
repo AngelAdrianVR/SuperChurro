@@ -43,7 +43,7 @@ class SaleToEmployeeController extends Controller
 
             $sale['user_id'] = auth()->id();
 
-            // create sells
+            // create sales
             SaleToEmployee::create($sale);
 
             // substract quantity sold to cart stock

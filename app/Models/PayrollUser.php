@@ -27,36 +27,53 @@ class PayrollUser extends Pivot
     // methods
     public function weekAttendanceArray()
     {
-        $user = User::find($this->user_id);
-        $current_attendance = $this->attendance;
         $current_payroll = Payroll::find($this->payroll_id);
-        $attendances = count($user->employee_properties['work_days']);
+        $current_attendance = $this->attendance;
+
+        // return raw attendance if payroll is closed
+        if (!$current_payroll->is_active) {
+            return $current_attendance;
+        }
+
+        $user = User::find($this->user_id);
+        $attendances = 7;
+        $days_as_double = 0;
+        $double_commission_on = [];
         $vacations = 0;
         $extras = 0; // minutes
         $late = 0; // minutes
 
         for ($i = 0; $i < 7; $i++) {
+            $current_day_in_loop = $current_payroll->start_date->addDays($i);
             if (!array_key_exists($i, $current_attendance)) {
                 // check if this day is off, applied leave or holyday
-                $current_attendance[$i] = $this->typeOfAbsent($current_payroll->start_date->addDays($i));
+                $current_attendance[$i] = $this->typeOfAbsent($current_day_in_loop);
 
-                if ($current_attendance[$i]['in'] === 'Vacaciones') $vacations++;
-                else $attendances--;
+                // add vacations or sub attendances
+                if ($current_attendance[$i]['in'] !== 'Vacaciones') $attendances--;
+                else $vacations++;
+
             } else if ($current_attendance[$i]['out'] !== '--:--:--') {
+                // add aditional day salary (full day worked)
+                if ($user->shiftOn($current_day_in_loop->dayOfWeek)) {
+                    $days_as_double++;
+                    $double_commission_on[] = $i;
+                }
+
                 // calculate extras
                 $extras_per_day = Carbon::parse($current_attendance[$i]['out'])
-                    ->diffInMinutes($user->getEntryTime()) - $user->getTimeToWork();
+                    ->diffInMinutes($user->getEntryTime()[$i]) - $user->getTimeToWork()[$i];
                 if ($extras_per_day < 0) $extras_per_day = 0;
                 $extras += $extras_per_day;
 
                 // late
                 // serch for "permiso de llegada tarde" for this day
-                $late_entry_permit = WorkPermit::whereDate('date', $current_payroll->start_date->addDays($i))
+                $late_entry_permit = WorkPermit::whereDate('date', $current_day_in_loop)
                     ->where('user_id', $this->user_id)
                     ->where('permission_type_id', 1)
                     ->where('status', WorkPermit::STATUS_APPROVED)
                     ->first();
-                $late_per_day = $user->getEntryTime()
+                $late_per_day = $user->getEntryTime()[$i]
                     ->diffInMinutes(Carbon::parse($current_attendance[$i]['in']), false);
 
                 if ($late_entry_permit) $late_per_day -= $late_entry_permit->time_requested;
@@ -75,8 +92,10 @@ class PayrollUser extends Pivot
         return [
             'payroll' => collect($current_attendance),
             'attendances' => $attendances,
+            'days_as_double' => $days_as_double,
+            'double_commission_on' => $double_commission_on,
             'vacations' => $vacations,
-            'extras' => ($user->employee_properties['shift'] === "carrito vespertino" || $extras_per_day >= 300) ? $extras : 0,
+            'extras' => $extras,
             'late' => $late,
         ];
     }
@@ -103,7 +122,7 @@ class PayrollUser extends Pivot
         $user = User::find($this->user_id);
         $work_days = collect($user->employee_properties['work_days']);
 
-        return $work_days->doesntContain($day_of_week);
+        return $work_days->doesntContain('day', $day_of_week);
     }
 
     private function isLeave($date)
@@ -153,8 +172,10 @@ class PayrollUser extends Pivot
 
     public function baseSalary()
     {
+        $week_attendance = $this->weekAttendanceArray();
         $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
-        return $this->weekAttendanceArray()['attendances'] * $base_salary;
+
+        return ($week_attendance['attendances'] + $week_attendance['days_as_double']) * $base_salary;
     }
 
     public function salaryForExtras()
@@ -187,25 +208,27 @@ class PayrollUser extends Pivot
     {
         $user = User::find($this->user_id);
         $discounts = [];
+        $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
+        $pesos_per_minute =  $base_salary / 360;
 
         // minutes late
         $minutes_late = $this->weekAttendanceArray()['late'];
-        if($minutes_late) {
-            $discounts [] = [
-                'amount' => round($minutes_late * $user->getSalaryPerMinute(), 1),
+        if ($minutes_late) {
+            $discounts[] = [
+                'amount' => round($minutes_late * $pesos_per_minute, 1),
                 'description' => "$minutes_late minutos tarde en la semana"
-            ];  
+            ];
         }
 
         // loans
         $loan = $user->loans()->whereNotNull('authorized_at')->where('remaining', '>', 0)->first();
-        if($loan) {
+        if ($loan) {
             $pay = $loan->amount / 2;
-            $discounts [] = [
+            $discounts[] = [
                 'amount' => round($pay, 2),
                 'description' => "Abono de préstamo autorizado"
             ];
-            
+
             $loan->decrement('remaining', round($pay, 2));
         }
 

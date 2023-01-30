@@ -101,32 +101,42 @@ class User extends Authenticatable implements HasMedia
     // methods
     public function getTimeToWork()
     {
-        if ($this->employee_properties['shift'] === 'carrito vespertino') {
-            $time_to_work = 360; // minutes (6 hours)
-        } else {
-            $time_to_work = 300; // minutes (5 hours)
+        $time_to_work_array = [];
+
+        foreach ($this->employee_properties['work_days'] as $work_day) {
+            if ($work_day['shift'] === 'carrito vespertino') {
+                $time_to_work = 360; // minutes (6 hours)
+            } else {
+                $time_to_work = 300; // minutes (5 hours)
+            }
+            $time_to_work_array[] = $time_to_work;
         }
 
-        return $time_to_work;
+        return $time_to_work_array;
     }
 
     public function getEntryTime()
     {
-        if ($this->employee_properties['shift'] === 'carrito vespertino') {
-            $entry = Carbon::parse('15:00:00');
-        } else {
-            $entry = Carbon::parse('10:00:00');
+        $entry_array = [];
+
+        foreach ($this->employee_properties['work_days'] as $work_day) {
+            if ($work_day['shift'] === 'carrito vespertino') {
+                $entry = Carbon::parse('15:00:00');
+            } else {
+                $entry = Carbon::parse('10:00:00');
+            }
+            $entry_array[] = $entry;
         }
 
-        return $entry;
+        return $entry_array;
     }
 
-    public function getSalaryPerMinute()
-    {
-        $salary_per_minute = $this->employee_properties['base_salary'] / $this->getTimeToWork();
+    // public function getSalaryPerMinute()
+    // {
+    //     $salary_per_minute = $this->employee_properties['base_salary'] / $this->getTimeToWork();
 
-        return round($salary_per_minute, 2);
-    }
+    //     return round($salary_per_minute, 2);
+    // }
 
     public function hasCheckedInToday()
     {
@@ -188,6 +198,13 @@ class User extends Authenticatable implements HasMedia
             // updating vacations (weekly)
             $this->updateVacations();
         }
+    }
+
+    public function shiftOn($day_of_week)
+    {
+        $work_days = collect($this->employee_properties['work_days']);
+
+        return $work_days->firstWhere('day', $day_of_week)['shift'];
     }
 
     public function updateVacations()

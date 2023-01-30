@@ -85,14 +85,14 @@ export default {
       },
       valid_areas: [
         {
-          label: "Audicarr",
-          latitudes: [20.71203, 20.71208],
+          label: "Audycarr",
+          latitudes: [20.71196, 20.71208],
           longitudes: [-103.37882, -103.37863]
         },
         {
           label: "Carrito",
-          latitudes: [20.71246, 20.71258],
-          longitudes: [-103.37795, -103.37776]
+          latitudes: [20.71244, 20.71268],
+          longitudes: [-103.37807, -103.37766]
         },
         {
           label: "Casa",

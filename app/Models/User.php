@@ -200,6 +200,13 @@ class User extends Authenticatable implements HasMedia
         }
     }
 
+    public function shiftOn($day_of_week)
+    {
+        $work_days = collect($this->employee_properties['work_days']);
+
+        return $work_days->firstWhere('day', $day_of_week)['shift'];
+    }
+
     public function updateVacations()
     {
         $years_as_employee = $this->created_at->diffInYears();

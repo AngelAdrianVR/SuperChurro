@@ -65,7 +65,6 @@
           <div class="flex flex-col text-left">
             <p>
               Permuta para el {{ barter.date }} -
-              {{ $page.props.user.employee_properties?.shift }}
             </p>
             <small class="text-gray-500">Publicado el {{ barter.created_at }}</small>
             <small class="text-gray-500">Publicado por {{ barter.transmitter.name }}</small>

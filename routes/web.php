@@ -14,7 +14,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseMovementController;
 use App\Http\Controllers\WorkPermitController;
+use App\Models\CashRegister;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -64,19 +66,19 @@ Route::resource('product-request', ProductRequestController::class)->middleware(
 Route::resource('sales-to-employees', SaleToEmployeeController::class)->middleware('auth');
 
 // admin routes
-Route::resource('products', ProductController::class)->middleware(['auth','admin']);
-Route::resource('users', UserController::class)->middleware(['auth','admin']);
+Route::resource('products', ProductController::class)->middleware(['auth', 'admin']);
+Route::resource('users', UserController::class)->middleware(['auth', 'admin']);
 Route::resource('sales', SaleController::class)->middleware(['auth']);
-Route::resource('settings', SettingController::class)->middleware(['auth','admin']);
-Route::get('/admin/payrolls', [PayrollController::class, 'adminIndex'])->middleware(['auth','admin'])->name('payroll-admin.index');
-Route::get('/admin/payrolls/show/{payroll}', [PayrollController::class, 'showUsersPayrolls'])->middleware(['auth','admin'])->name('payroll-admin.show');
-Route::get('/admin/payrolls/close', [PayrollController::class, 'closePayroll'])->middleware(['auth','admin'])->name('payroll-admin.close');
-Route::get('/admin-requests/permits', [AdminRequestController::class, 'permits'])->middleware(['auth','admin'])->name('admin-requests.permits');
-Route::get('/admin-requests/loans', [AdminRequestController::class, 'loans'])->middleware(['auth','admin'])->name('admin-requests.loans');
-Route::put('/accept/work-permit/{work_permit}', [AdminRequestController::class, 'acceptWorkPermit'])->middleware(['auth','admin'])->name('work-permit.accept');
-Route::put('/reject/work-permit/{work_permit}', [AdminRequestController::class, 'rejectWorkPermit'])->middleware(['auth','admin'])->name('work-permit.reject');
-Route::put('/accept/loans/{loan}', [AdminRequestController::class, 'acceptLoan'])->middleware(['auth','admin'])->name('loan.accept');
-Route::put('/reject/loans/{loan}', [AdminRequestController::class, 'rejectLoan'])->middleware(['auth','admin'])->name('loan.reject');
+Route::resource('settings', SettingController::class)->middleware(['auth', 'admin']);
+Route::get('/admin/payrolls', [PayrollController::class, 'adminIndex'])->middleware(['auth', 'admin'])->name('payroll-admin.index');
+Route::get('/admin/payrolls/show/{payroll}', [PayrollController::class, 'showUsersPayrolls'])->middleware(['auth', 'admin'])->name('payroll-admin.show');
+Route::get('/admin/payrolls/close', [PayrollController::class, 'closePayroll'])->middleware(['auth', 'admin'])->name('payroll-admin.close');
+Route::get('/admin-requests/permits', [AdminRequestController::class, 'permits'])->middleware(['auth', 'admin'])->name('admin-requests.permits');
+Route::get('/admin-requests/loans', [AdminRequestController::class, 'loans'])->middleware(['auth', 'admin'])->name('admin-requests.loans');
+Route::put('/accept/work-permit/{work_permit}', [AdminRequestController::class, 'acceptWorkPermit'])->middleware(['auth', 'admin'])->name('work-permit.accept');
+Route::put('/reject/work-permit/{work_permit}', [AdminRequestController::class, 'rejectWorkPermit'])->middleware(['auth', 'admin'])->name('work-permit.reject');
+Route::put('/accept/loans/{loan}', [AdminRequestController::class, 'acceptLoan'])->middleware(['auth', 'admin'])->name('loan.accept');
+Route::put('/reject/loans/{loan}', [AdminRequestController::class, 'rejectLoan'])->middleware(['auth', 'admin'])->name('loan.reject');
 
 //Specific-action routes
 Route::put('/disable/{user}', [UserController::class, 'disable'])->middleware('auth')->name('user.disable');
@@ -106,3 +108,14 @@ Route::post('/users/update-with-resources/{user}', [UserController::class, 'upda
 Route::post('/users/delete-file', [UserController::class, 'deleteFile'])
     ->middleware('auth')
     ->name('users.delete-file');
+
+Route::post('/cash-register', function (Request $request) {
+    CashRegister::create([
+        'cash' => $request->cash,
+        'date' => $request->date
+    ]);
+
+    return response()->json(['status' => 'ok']);
+})
+    ->middleware('auth')
+    ->name('cash-register.store');

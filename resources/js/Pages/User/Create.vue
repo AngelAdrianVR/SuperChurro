@@ -56,7 +56,7 @@
           <label for="floating_name" class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -90,7 +90,7 @@
           <label for="floating_email" class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -124,7 +124,7 @@
           <label for="floating_phone_number" class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -159,7 +159,7 @@
           <label for="floating_birthdate" class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -194,7 +194,7 @@
           <label for="floating_base_salary" class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -249,7 +249,7 @@
           <label for="floating_work_days" class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6

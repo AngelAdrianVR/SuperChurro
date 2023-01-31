@@ -10,9 +10,8 @@
       <Datepicker v-model="date" inline auto-apply :month-change-on-scroll="false" model-type="yyyy-MM-dd"></Datepicker>
     </div>
 
-    <div v-if="shift_1_sales.length">
-      <div
-        class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+    <div v-if="shift_1_sales.length || shift_2_sales.length">
+      <div class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
         <h1 class="col-span-full text-center text-sm font-bold">Ventas T/M</h1>
         <p v-for="sale in shift_1_sales" :key="sale.id">
           {{ sale.product.name }} x{{ sale.quantity }}
@@ -21,9 +20,8 @@
         </p>
         <strong class="col-span-full text-right">Total: ${{ totalSale().shift_1 }}</strong>
       </div>
-  
-      <div
-        class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+
+      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
         <h1 class="col-span-full text-center text-sm font-bold">Ventas T/V</h1>
         <p v-for="sale in shift_2_sales" :key="sale.id">
           {{ sale.product.name }} x{{ sale.quantity }}
@@ -33,26 +31,65 @@
         <strong class="col-span-full text-right">Total: ${{ totalSale().shift_2 }}</strong>
       </div>
 
-      <div
-        class="mt-3 mx-3 text-xs lg:grid lg:grid-cols-2 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+      <div class="mt-3 mx-3 text-xs lg:grid lg:grid-cols-2 gap-1 bg-white shadow-md rounded-md px-2 py-1">
         <h1 class="col-span-full text-center text-sm font-bold">Ventas a empleados / cortesías</h1>
         <p v-for="sale in sales_to_employees" :key="sale.id">
           <span class="bg-sky-200"><i class="fa-solid fa-user mr-1"></i> {{ sale.user.name }}:</span>
           {{ sale.product.name }} x{{ sale.quantity }}
           <i class="fa-solid fa-arrow-right-long text-green-500"></i>
           ${{ sale.price * sale.quantity }}
-          {{ sale.notes ? '(Cortesías: ' + sale.notes + ')' : ''}}
+          {{ sale.notes ? '(Cortesías: ' + sale.notes + ')' : '' }}
         </p>
         <p class="font-bold col-span-full text-right">Total: ${{ totalSale().to_employees }}</p>
       </div>
-      
-      <div class="flex flex-col items-end mt-3">
-        <p class="mx-3 font-bold text-green-600">Total: ${{ totalSale().shift_1 + totalSale().shift_2 + totalSale().to_employees }}</p>
-        <p class="mx-3 font-bold text-green-600">Comisión: ${{ totalSale().commissions }}</p>
+
+      <div class="flex justify-between mt-3">
+        <div v-if="!stored_cash.length" class="relative z-0 w-1/2 group mx-4">
+          <input v-model="cash" type="text" name="floating_cash" autocomplete="off" required class="
+              block
+              py-2.5
+              px-0
+              w-full
+              text-sm text-gray-900
+              bg-transparent
+              border-0 border-b-2 border-gray-300
+              appearance-none
+              dark:text-white dark:border-gray-600 dark:focus:border-stone-500
+              focus:outline-none focus:ring-0 focus:border-stone-600
+              peer
+            " placeholder=" " />
+          <label for="floating_cash" class="
+              absolute
+              text-sm text-gray-500
+              dark:text-gray-700
+              duration-300
+              transform
+              -translate-y-6
+              scale-75
+              top-3
+              -z-10
+              origin-[0]
+              peer-focus:left-0
+              peer-focus:text-stone-600
+              peer-focus:dark:text-stone-500
+              peer-placeholder-shown:scale-100
+              peer-placeholder-shown:translate-y-0
+              peer-focus:scale-75 peer-focus:-translate-y-6
+            ">Cantidad total en caja</label>
+            <SecondaryButton @click="storeCash" class="ml-3 my-2" :disabled="!cash">Guardar</SecondaryButton>
+        </div>
+        <div class="flex flex-col items-end">
+          <p class="mx-3 font-bold text-green-600">Total: ${{
+            totalSale().shift_1 + totalSale().shift_2 +
+              totalSale().to_employees
+          }}</p>
+          <p class="mx-3 font-bold text-green-600">registrado en caja: ${{ stored_cash[0].cash }}</p>
+          <p v-if="stored_cash.length" v-html="saleDiff()"></p>
+          <p class="mx-3 font-bold text-green-600">Comisión: ${{ totalSale().commissions }}</p>
+        </div>
       </div>
     </div>
     <p v-else class="mt-6 text-sm text-gray-500 text-center">No hay ventas para mostrar</p>
-
   </AppLayout>
 </template>
 
@@ -70,6 +107,8 @@ export default {
       shift_1_sales: [],
       shift_2_sales: [],
       sales_to_employees: [],
+      stored_cash: null,
+      cash: null,
     }
   },
   components: {
@@ -96,6 +135,7 @@ export default {
         this.shift_1_sales = response.data.shift_1_sales;
         this.shift_2_sales = response.data.shift_2_sales;
         this.sales_to_employees = response.data.sales_to_employees;
+        this.stored_cash = response.data.stored_cash;
       } catch (error) {
         console.log(error);
       }
@@ -105,13 +145,36 @@ export default {
       this.shift_1_sales.forEach(sale => shift_1 += (sale.quantity * sale.price));
       this.shift_2_sales.forEach(sale => shift_2 += (sale.quantity * sale.price));
       this.sales_to_employees.forEach(sale => to_employees += (sale.quantity * sale.price));
-      
+
       // this.shift_1_sales[0]: churro price at the moment of sale
       const churros_sold = ((shift_1 + shift_2 + to_employees) / (this.shift_1_sales[0].price)) + 5;
-      commissions = Math.floor(churros_sold/100) * 10;
+      commissions = Math.floor(churros_sold / 100) * 10;
 
-      return {shift_1: shift_1, shift_2: shift_2, to_employees: to_employees, commissions: commissions};
-    }
+      return { shift_1: shift_1, shift_2: shift_2, to_employees: to_employees, commissions: commissions };
+    },
+    saleDiff() {
+      const total_sale = this.totalSale();
+      const total = total_sale.shift_1 
+      + total_sale.shift_2 
+      + total_sale.to_employees;
+
+      const diff = this.stored_cash[0].cash - total;
+
+      return diff > 0 
+      ? '<span class="text-green-600 font-bold">Diferencia + $' + diff + '</span>'
+      : '<span class="text-red-600">Diferencia - $' + diff + '</span>';
+    },
+    async storeCash() {
+      try {
+        const response = await axios.post(route("cash-register.store"), {
+          cash: this.cash,
+          date: this.date
+        });
+        this.getSales(this.date);
+      } catch (error) {
+        console.log(error);
+      }
+    },  
   },
 };
 </script>

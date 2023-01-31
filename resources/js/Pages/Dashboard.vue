@@ -86,8 +86,8 @@ export default {
       valid_areas: [
         {
           label: "Audycarr",
-          latitudes: [20.71196, 20.71208],
-          longitudes: [-103.37882, -103.37863]
+          latitudes: [20.71190, 20.71212],
+          longitudes: [-103.37888, -103.37857]
         },
         {
           label: "Carrito",

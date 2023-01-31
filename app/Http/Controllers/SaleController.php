@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\CashRegister;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleToEmployee;
@@ -97,8 +98,10 @@ class SaleController extends Controller
         ->with('product', 'user')
         ->get();
 
+        $stored_cash = CashRegister::whereDate('date', $request->date)->get();
+
         // get employees at $request->date to show in sales histories
 
-        return response()->json(compact('shift_1_sales', 'shift_2_sales', 'sales_to_employees'));
+        return response()->json(compact('shift_1_sales', 'shift_2_sales', 'sales_to_employees', 'stored_cash'));
     }
 }

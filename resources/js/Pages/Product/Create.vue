@@ -72,7 +72,7 @@
             class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -117,7 +117,7 @@
             class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -161,7 +161,7 @@
             class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -206,7 +206,7 @@
             class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -251,7 +251,7 @@
             class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6

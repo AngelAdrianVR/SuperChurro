@@ -84,7 +84,7 @@
           <label for="floating_name" class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -118,7 +118,7 @@
           <label for="floating_email" class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -152,7 +152,7 @@
           <label for="floating_phone_number" class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -187,7 +187,7 @@
           <label for="floating_birthdate" class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -222,7 +222,7 @@
           <label for="floating_base_salary" class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6
@@ -238,29 +238,6 @@
               peer-focus:scale-75 peer-focus:-translate-y-6
             ">Salario base*</label>
           <InputError :message="$page.props?.errors.employee_properties?.base_salary" />
-        </div>
-
-        <div>
-          <select class="
-              bg-gray-200
-              mb-7
-              mr-2
-              rounded-lg
-              border border-gray-300
-              text-gray-500
-              focus:border-stone-500 focus:text-stone-500
-            " v-model="form.employee_properties.shift">
-            <option disabled selected class="text-gray-500" value="">
-              -- Seleeciona un turno --
-            </option>
-            <option class="text-gray-500" value="cocina">Cocina</option>
-            <option class="text-gray-500" value="carrito matutino">
-              Carrito T/M
-            </option>
-            <option class="text-gray-500" value="carrito vespertino">
-              Carrito T/V
-            </option>
-          </select>
         </div>
         <label class="mb-3 w-full text-sm text-gray-500">Días de trabajo</label>
         <div class="">
@@ -304,7 +281,7 @@
         <label for="floating_work_days" class="
               absolute
               text-sm text-gray-500
-              dark:text-gray-400
+              dark:text-gray-700
               duration-300
               transform
               -translate-y-6

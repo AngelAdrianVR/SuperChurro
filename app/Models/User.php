@@ -151,6 +151,19 @@ class User extends Authenticatable implements HasMedia
         return array_key_exists(today()->dayOfWeek, $payroll_user->attendance);
     }
 
+    public function hasCheckedInOn($day_of_week)
+    {
+        
+        $current_payroll_id = Payroll::firstWhere('is_active', true)->id;
+
+        $payroll_user = PayrollUser::firstOrNew([
+            'payroll_id' => $current_payroll_id,
+            'user_id' => $this->id
+        ], ['attendance' => []]);
+
+        return array_key_exists($day_of_week, $payroll_user->attendance);
+    }
+
     public function hasCheckedOutToday()
     {
         if (!$this->hasCheckedInToday()) return false;
@@ -203,8 +216,9 @@ class User extends Authenticatable implements HasMedia
     public function shiftOn($day_of_week)
     {
         $work_days = collect($this->employee_properties['work_days']);
+        $work_day = $work_days->firstWhere('day', $day_of_week);
 
-        return $work_days->firstWhere('day', $day_of_week)['shift'];
+        return $work_day ? $work_day['shift'] : null;
     }
 
     public function updateVacations()

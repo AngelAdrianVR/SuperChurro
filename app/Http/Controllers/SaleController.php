@@ -43,7 +43,7 @@ class SaleController extends Controller
             $sales[] = [
                 'quantity' => $cart->products[$product_id] - $request->product[$product_id],
                 'product_id' => $product_id,
-                'price' => Product::find($product_id)->currentPrice->id,
+                'price' => Product::find($product_id)->currentPrice->price,
                 'created_at' => now(),
             ];
         }

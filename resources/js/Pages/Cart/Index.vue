@@ -97,7 +97,8 @@ export default {
   methods: {
     timeFormatter(timestamp) {
       const date_n_time = timestamp.split("T");
-      return " a las " + date_n_time[1].split(".")[0];
+      // return " a las " + date_n_time[1].split(".")[0];
+      return timestamp;
     },
   },
 };

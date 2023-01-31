@@ -14,6 +14,7 @@
       <div v-for="loan in loans.data" :key="loan.id" class="globe relative">
         <div class="globe-title !justify-between">
           <p>Solicitado el: {{loan.created_at}}</p>
+          <p> <i class="fa-solid fa-user text-gray-500"></i> {{loan.user.name}}</p>
           <button class="absolute bottom-1 right-2" @click="delete_confirm = true; item_to_delete = loan;">
           <i v-if="loan.status == 1" class="fa-solid fa-trash text-red-600"></i>
           </button>

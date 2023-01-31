@@ -20,7 +20,7 @@ class AdminRequestController extends Controller
 
     public function loans()
     {
-        $loans = LoanResource::collection(Loan::latest()->get());
+        $loans = LoanResource::collection(Loan::with('user')->latest()->get());
         return inertia('AdminRequest/Loans',compact('loans')); 
     }
 

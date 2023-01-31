@@ -20,7 +20,7 @@ class PayrollUserResource extends JsonResource
             'vacation_premium' => $this->pivot->vacationPremium(),
             'base_salary' => number_format($this->pivot->baseSalary()),
             'is_active' => $this->is_active,
-            'commissions' => round($this->pivot->commissions()),
+            'commissions' => $this->pivot->commissions(),
             'salary_for_extras' => round($this->pivot->salaryForExtras()), 
             'user' => UserResource::make(User::find($this->pivot->user_id))
         ];

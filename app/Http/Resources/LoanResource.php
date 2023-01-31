@@ -19,7 +19,7 @@ class LoanResource extends JsonResource
             'amount' => number_format($this->amount),
             'created_at' => $this->created_at->isoFormat('DD MMM YYYY'),
             'description' => $this-> description,
-            'user_id' => $this-> user_id,
+            'user' => UserResource::make($this->whenLoaded('user')),
             'remaining' => number_format($this->remaining),
             'authorized_at' => $this->authorized_at?->isoFormat('DD MMM YYYY'),
         ];

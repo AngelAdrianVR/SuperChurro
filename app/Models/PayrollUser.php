@@ -62,7 +62,9 @@ class PayrollUser extends Pivot
 
                 // calculate extras
                 $extras_per_day = Carbon::parse($current_attendance[$i]['out'])
-                    ->diffInMinutes($user->getEntryTime()[$i]) - $user->getTimeToWork()[$i];
+                    ->diffInMinutes($user->getEntryTime()[$i])
+                     - $user->getTimeToWork()[$i]
+                     - 15; // tolerance
                 if ($extras_per_day < 0) $extras_per_day = 0;
                 $extras += $extras_per_day;
 
@@ -77,6 +79,7 @@ class PayrollUser extends Pivot
                     ->diffInMinutes(Carbon::parse($current_attendance[$i]['in']), false);
 
                 if ($late_entry_permit) $late_per_day -= $late_entry_permit->time_requested;
+                else $late_per_day - 15; // tolerance
 
                 if ($late_per_day < 0) $late_per_day = 0;
                 $late += $late_per_day;
@@ -97,6 +100,7 @@ class PayrollUser extends Pivot
             'vacations' => $vacations,
             'extras' => $extras,
             'late' => $late,
+            'base_salary' => $user->employee_properties['base_salary'],
         ];
     }
 
@@ -163,7 +167,7 @@ class PayrollUser extends Pivot
     {
         $total = $this->baseSalary() +
             $this->vacationPremium() +
-            $this->commissions() +
+            collect($this->commissions())->sum() +
             $this->salaryForExtras() -
             collect($this->discounts)->sum('amount');
 
@@ -172,8 +176,16 @@ class PayrollUser extends Pivot
 
     public function baseSalary()
     {
-        $week_attendance = $this->weekAttendanceArray();
-        $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
+        $current_payroll = Payroll::find($this->payroll_id);
+
+        if ($current_payroll->is_active) {
+            // process data
+            $week_attendance = $this->weekAttendanceArray();
+        } else {
+            // get stored data
+            $week_attendance = $this->attendance;
+        }
+        $base_salary = $week_attendance['base_salary'];
 
         return ($week_attendance['attendances'] + $week_attendance['days_as_double']) * $base_salary;
     }
@@ -198,10 +210,26 @@ class PayrollUser extends Pivot
     public function commissions()
     {
         $current_payroll = Payroll::find($this->payroll_id);
+        $user = User::find($this->user_id);
+        $user_commissions = [];
 
         if ($current_payroll->is_active) return null;
 
-        return collect($current_payroll->commissions)->sum();
+        for ($i = 0; $i < 7; $i++) {
+            $current_day_in_loop = $current_payroll->start_date->addDays($i);
+            $current_shift = $user->shiftOn($current_day_in_loop->dayOfWeek);
+
+            if ($user->hasCheckedInOn($current_day_in_loop->dayOfWeek)) {
+                if ($current_shift === 'carrito 2 turnos') 
+                    $user_commissions[] = $current_payroll->commissions[$current_day_in_loop->dayName] * 2;
+                else 
+                    $user_commissions[] = $current_payroll->commissions[$current_day_in_loop->dayName];
+            } else {
+                $user_commissions[] = 0;
+            }
+        }
+
+        return $user_commissions;
     }
 
     public function getDiscounts()

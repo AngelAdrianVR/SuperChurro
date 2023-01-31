@@ -83,7 +83,7 @@
             totalSale().shift_1 + totalSale().shift_2 +
               totalSale().to_employees
           }}</p>
-          <p class="mx-3 font-bold text-green-600">registrado en caja: ${{ stored_cash[0].cash }}</p>
+          <p v-if="stored_cash.length" class="mx-3 font-bold text-green-600">registrado en caja: ${{ stored_cash[0].cash }}</p>
           <p v-if="stored_cash.length" v-html="saleDiff()"></p>
           <p class="mx-3 font-bold text-green-600">Comisión: ${{ totalSale().commissions }}</p>
         </div>

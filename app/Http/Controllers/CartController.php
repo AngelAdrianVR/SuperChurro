@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\CartRemovedProduct;
 use App\Models\Product;
 use App\Models\ProductRequest;
 use App\Models\User;
+use App\Models\Warehouse;
+use App\Models\WarehouseMovement;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -16,39 +19,55 @@ class CartController extends Controller
         $products = Product::with('unit')->get();
         $requests = ProductRequest::whereDate('created_at', now())->with('user')->latest()->get();
         $employees = User::all()->filter(
-            fn($user) => $user->hasCheckedInToday() && $user->shiftOn(today()->dayOfWeek) !== 'cocina'
+            fn ($user) => $user->hasCheckedInToday() && $user->shiftOn(today()->dayOfWeek) !== 'cocina'
         );
-        
+
         return inertia('Cart/Index', compact('cart_products', 'products', 'requests', 'employees'));
     }
 
-    public function create()
+    public function removeProducts(Request $request)
     {
-        //
-    }
+        $items = $request->validate([
+            'items.*.quantity' => 'required|numeric|min:1',
+            'items.*.product_id' => 'required|numeric|min:1',
+        ]);
 
-    public function store(Request $request)
-    {
-        //
-    }
+        // create request
+        CartRemovedProduct::create([
+            'products' => $items['items'],
+            'concept' => $request->concept,
+            'user_id' => auth()->id(),
+            'cart_id' => 1,
+        ]);
 
-    public function show(Cart $cart)
-    {
-        //
-    }
+        $warehouse = Warehouse::find(1);
+        $current_products = $warehouse->products;
+        
+        $cart = Cart::find(1);
+        $current_products_cart = $cart->products;
+        foreach ($request->items as $item) {
+            // update warehouse stock if it is back to the warehouse
+            if ($request->concept === 'Devolver a cocina') {
+                WarehouseMovement::create([
+                    'quantity' => $item['quantity'],
+                    'product_id' => $item['product_id'],
+                    'movement_concept_id' => 3,
+                    'notes' => 'Mercancía solicitada para carrito 1',
+                    'user_id' => auth()->id(),
+                    'warehouse_id' => 1
+                ]);
 
-    public function edit(Cart $cart)
-    {
-        //
-    }
+                $current_products[$item['product_id']] += $item['quantity'];
+            }
+            $current_products_cart[$item['product_id']] -= $item['quantity'];
+        }
 
-    public function update(Request $request, Cart $cart)
-    {
-        //
-    }
+        $warehouse->update(['products' => $current_products]);
+        $cart->update(['products' => $current_products_cart]);
 
-    public function destroy(Cart $cart)
-    {
-        //
+        request()->session()->flash('flash.banner', 'Producto(s) removido(s) con correctamente');
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return to_route('carts.index');
     }
 }

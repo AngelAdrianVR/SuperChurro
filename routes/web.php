@@ -46,24 +46,16 @@ Route::middleware([
     })->name('dashboard');
 });
 
-// Route::middleware([
-//     'auth:sanctum',
-//     config('jetstream.auth_session'),
-//     'verified',
-// ])->group(function () {
-//     Route::get('/qr-scanner', function () {
-//         return Inertia::render('ScannerPage');
-//     })->name('qr-scanner');
-// });
-
 Route::resource('payrolls', PayrollController::class)->middleware('auth');
 Route::resource('work-permits', WorkPermitController::class)->middleware('auth');
 Route::resource('barters', BarterController::class)->middleware('auth');
 Route::resource('loans', LoanController::class)->middleware('auth');
-Route::resource('carts', CartController::class)->middleware('auth');
 Route::resource('warehouses', WarehouseController::class)->middleware('auth');
 Route::resource('product-request', ProductRequestController::class)->middleware('auth');
 Route::resource('sales-to-employees', SaleToEmployeeController::class)->middleware('auth');
+
+Route::get('carts', [CartController::class, 'index'])->middleware('auth')->name('carts.index');
+Route::post('cart/remove-products', [CartController::class, 'removeProducts'])->middleware('auth')->name('cart.remove-products');
 
 // admin routes
 Route::resource('products', ProductController::class)->middleware(['auth', 'admin']);

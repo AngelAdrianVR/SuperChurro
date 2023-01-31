@@ -17,6 +17,9 @@
       <Link :href="route('sales.create')">
       <SecondaryButton class="mt-2">Hacer corte</SecondaryButton>
       </Link>
+      <Link :href="route('cart.remove-products')">
+      <SecondaryButton class="mt-2">Remover mercancía</SecondaryButton>
+      </Link>
     </div>
 
     <div>
@@ -97,8 +100,7 @@ export default {
   methods: {
     timeFormatter(timestamp) {
       const date_n_time = timestamp.split("T");
-      // return " a las " + date_n_time[1].split(".")[0];
-      return timestamp;
+      return " a las " + date_n_time[1].split(".")[0];
     },
   },
 };

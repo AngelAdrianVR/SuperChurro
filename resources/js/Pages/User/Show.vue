@@ -39,7 +39,7 @@
           <PrimaryButton class="m-2 shadow-md">Cálculos</PrimaryButton>
         </template>
         <template #content>
-          <DropdownLink href="#">
+          <DropdownLink :href="route('chrismas-bonus.show',user.id)">
             Aguinaldo
           </DropdownLink>
           <DropdownLink href="#">

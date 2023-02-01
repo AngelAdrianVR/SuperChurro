@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -151,5 +152,21 @@ class UserController extends Controller
         User::find($request->user_id)->deleteMedia($request->file_id);
 
         return response()->json(['success' => 'success'], 200);
+    }
+    
+    public function showUsersCrhismasBonus(User $user)
+    {
+        $current_year = now()->year;
+        $initial_date = Carbon::createMidnightDate($current_year, 1, 1);
+        $worked_days = $initial_date->diffInDays(now()->addDays(15)); 
+        $work_days_per_week = count($user->employee_properties['work_days']);
+        $base_salary = $user->employee_properties['base_salary'];
+        $month_salary = $work_days_per_week * $base_salary * 4; 
+        $daily_salary = $month_salary / 30;
+        $bonus_days = ($worked_days * 15) / 365;
+        $chrismas_bonus = number_format($bonus_days * $daily_salary);
+
+        // return $chrismas_bonus;
+        return inertia('User/Calculations/ChrismasBonusTemplate', compact('user', 'chrismas_bonus'));
     }
 }

@@ -16,11 +16,13 @@ class PayrollUser extends Pivot
 
     protected $fillable = [
         'attendance',
+        'additional',
         'discounts',
     ];
 
     protected $casts = [
         'attendance' => 'array',
+        'additional' => 'array',
         'discounts' => 'array',
     ];
 
@@ -100,7 +102,6 @@ class PayrollUser extends Pivot
             'vacations' => $vacations,
             'extras' => $extras,
             'late' => $late,
-            'base_salary' => $user->employee_properties['base_salary'],
         ];
     }
 
@@ -165,49 +166,76 @@ class PayrollUser extends Pivot
 
     public function paid()
     {
-        $total = $this->baseSalary() +
-            $this->vacationPremium() +
-            collect($this->commissions())->sum() +
-            $this->salaryForExtras() -
-            collect($this->discounts)->sum('amount');
+        $total = $this->baseSalary() 
+            + $this->vacationPremium()
+            + collect($this->commissions())->sum()
+            + $this->salaryForExtras()
+            - collect($this->discounts)->sum('amount');
 
         return round($total);
     }
 
     public function baseSalary()
     {
-        $current_payroll = Payroll::find($this->payroll_id);
-
-        if ($current_payroll->is_active) {
-            // process data
-            $week_attendance = $this->weekAttendanceArray();
-        } else {
+        // propoerty "additional" is not null when payroll is closed
+        if ($this->addittional) {
             // get stored data
             $week_attendance = $this->attendance;
+            $base_salary = $this->additional['base_salary'];
+        } else {
+            // process data
+            $week_attendance = $this->weekAttendanceArray();
+            $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
         }
-        $base_salary = $week_attendance['base_salary'];
 
         return ($week_attendance['attendances'] + $week_attendance['days_as_double']) * $base_salary;
     }
 
     public function salaryForExtras()
     {
-        $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
-        $pesos_per_minute =  $base_salary / 360;
-        $extras = $this->weekAttendanceArray()['extras'] * $pesos_per_minute;
+        if ($this->addittional) {
+            // get stored data
+            $extras = $this->attendance['extras'];
+            $base_salary = $this->additional['base_salary'];
+        } else {
+            // process data
+            $extras = $this->weekAttendanceArray()['extras'];
+            $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
+        }
 
-        return $extras;
+        $pesos_per_minute =  $base_salary / 360;
+        $salary_for_extras = $extras * $pesos_per_minute;
+
+        return $salary_for_extras;
     }
 
     public function vacationPremium()
     {
-        $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
-        $vacation_days = $this->weekAttendanceArray()['vacations'];
+        if ($this->addittional) {
+            // get stored data
+            $vacation_days = $this->attendance['vacations'];
+            $base_salary = $this->additional['base_salary'];
+        } else {
+            // process data
+            $vacation_days = $this->weekAttendanceArray()['vacations'];
+            $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
+        }
 
         return 0.25 * $base_salary * $vacation_days;
     }
 
     public function commissions()
+    {
+        if ($this->addittional) {
+            // get stored data
+            return $this->additional['commissions'];
+        } else {
+            // process data
+            return $this->getCommissions();
+        }
+    }
+
+    public function getCommissions()
     {
         $current_payroll = Payroll::find($this->payroll_id);
         $user = User::find($this->user_id);

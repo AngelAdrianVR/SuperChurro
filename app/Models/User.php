@@ -74,7 +74,7 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->belongsToMany(Payroll::class)
             ->using(PayrollUser::class)
-            ->withPivot(['attendance', 'discounts'])
+            ->withPivot(['attendance', 'discounts', 'additional'])
             ->withTimestamps();
     }
 

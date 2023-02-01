@@ -7,6 +7,7 @@ use App\Models\CashRegister;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleToEmployee;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -60,8 +61,7 @@ class SaleController extends Controller
 
     public function show($sale_date)
     {
-        $sale = Sale::whereDate('created_at', $sale_date)->get();
-        dd($sale);
+        //
     }
 
     public function edit(Sale $sale)
@@ -101,7 +101,10 @@ class SaleController extends Controller
         $stored_cash = CashRegister::whereDate('date', $request->date)->get();
 
         // get employees at $request->date to show in sales histories
+        $employees = User::where('id', '!=', 1)->get()->where(function($user) use ($request){
+            return $user->hasAttendanceOn($request->date);
+        });
 
-        return response()->json(compact('shift_1_sales', 'shift_2_sales', 'sales_to_employees', 'stored_cash'));
+        return response()->json(compact('shift_1_sales', 'shift_2_sales', 'sales_to_employees', 'stored_cash', 'employees'));
     }
 }

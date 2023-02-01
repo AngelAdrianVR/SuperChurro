@@ -12,6 +12,14 @@
 
     <div v-if="shift_1_sales.length || shift_2_sales.length">
       <div class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+        <h1 class="col-span-full text-center text-sm font-bold">Empleados activos este día</h1>
+        <p v-for="(employee, index) in employees" :key="index">
+          <i class="fa-solid fa-user text-gray-500"></i>
+          {{ employee.name }}
+        </p>      
+      </div>
+
+      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
         <h1 class="col-span-full text-center text-sm font-bold">Ventas T/M</h1>
         <p v-for="sale in shift_1_sales" :key="sale.id">
           {{ sale.product.name }} x{{ sale.quantity }}
@@ -109,6 +117,7 @@ export default {
       sales_to_employees: [],
       stored_cash: null,
       cash: null,
+      employees: [],
     }
   },
   components: {
@@ -134,6 +143,7 @@ export default {
         });
         this.shift_1_sales = response.data.shift_1_sales;
         this.shift_2_sales = response.data.shift_2_sales;
+        this.employees = response.data.employees;
         this.sales_to_employees = response.data.sales_to_employees;
         this.stored_cash = response.data.stored_cash;
       } catch (error) {

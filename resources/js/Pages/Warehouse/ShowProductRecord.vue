@@ -30,7 +30,7 @@
             <i class="fa-solid fa-user mr-1"></i>
             {{ movement.user.name }}
           </div>
-          <small class="text-gray-400">{{ dateTimeFormatter(movement.created_at) }}</small>
+          <!-- <small class="text-gray-400">{{ dateTimeFormatter(movement.created_at) }}</small> -->
         </p>
         <p class="font-bold">
           <i class="fa-solid fa-tag mr-1"></i>

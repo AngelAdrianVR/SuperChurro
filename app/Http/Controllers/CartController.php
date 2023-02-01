@@ -25,6 +25,14 @@ class CartController extends Controller
         return inertia('Cart/Index', compact('cart_products', 'products', 'requests', 'employees'));
     }
 
+    public function createRemovedProducts()
+    {
+        $products = Product::all();
+        $cart_stock = Cart::first()->products;
+
+        return inertia('Cart/RemoveProducts', compact('products', 'cart_stock'));
+    }
+
     public function removeProducts(Request $request)
     {
         $items = $request->validate([
@@ -47,12 +55,12 @@ class CartController extends Controller
         $current_products_cart = $cart->products;
         foreach ($request->items as $item) {
             // update warehouse stock if it is back to the warehouse
-            if ($request->concept === 'Devolver a cocina') {
+            if ($request->concept == 'Devolución a cocina') {
                 WarehouseMovement::create([
                     'quantity' => $item['quantity'],
                     'product_id' => $item['product_id'],
-                    'movement_concept_id' => 3,
-                    'notes' => 'Mercancía solicitada para carrito 1',
+                    'movement_concept_id' => 8,
+                    'notes' => 'Mercancía devuelta desde carrito 1',
                     'user_id' => auth()->id(),
                     'warehouse_id' => 1
                 ]);

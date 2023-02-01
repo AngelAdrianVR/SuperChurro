@@ -45,7 +45,7 @@
     <template #content>
       <div>
         Estás a punto de eliminar una solicitud de permiso. Una vez realizado ya no se podrá
-        recuperar y la oslicitud queda´ra cancelada.
+        recuperar y la oslicitud quedará cancelada.
       </div>
     </template>
     <template #footer>

@@ -97,8 +97,9 @@
         </div>
 
         <div class="relative z-0 mb-6 w-full group">
-          <input
+          <textarea
             v-model="form.notes"
+            rows="1"
             type="text"
             name="floating_description"
             autocomplete="off"

@@ -44,6 +44,11 @@ const admin_menues = [
     route_name: "payroll-admin.index",
     is_active: route().current("payroll-admin.*"),
   },
+    {
+    label: "Avisos",
+    route_name: "notices.index",
+    is_active: route().current("notices" + ".*"),
+     },
 ];
 
 const menues = [
@@ -89,6 +94,7 @@ const menues = [
     is_active: route().current("carts" + ".*"),
     admin_can_see: true,
   },
+
 ];
 
 const showingNavigationDropdown = ref(false);

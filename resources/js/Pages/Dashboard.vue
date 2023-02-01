@@ -63,8 +63,25 @@
           </div>
           <p v-else class="text-center text-gray-500 text-xs">No hay información para mostrar.</p>
         </div>
+<!-- -----------------Avisos----------------- -->
+    <h1 class="font-bold text-lg text-blue-500 text-center mt-3">AVISOS</h1>
+    <p class="text-blue-400 text-center mx-auto -mt-4"> (Se eliminarán automáticamente al siguiente día)</p>
+
+    <div  v-if="notices.length">
+      <div v-for="notice in notices" :key="notice.id" class="globe">
+          <div class="globe-title">{{notice.title}}</div>
+          <div class="flex justify-between items-center text-xs">
+            <p>{{ notice.content }}</p>
+          </div>
       </div>
     </div>
+          <p v-else class="text-center text-gray-500 text-xs">No hay avisos para mostrar.</p>
+
+
+      </div>
+    </div>
+
+
 
   </AppLayout>
 </template>
@@ -152,6 +169,7 @@ export default {
     checked_in: Boolean,
     checked_out: Boolean,
     leaves: Array,
+    notices: Array,
     loan: Object
   },
 };

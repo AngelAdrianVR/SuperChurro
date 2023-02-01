@@ -1,8 +1,8 @@
 <template>
-  <AppLayout title="Solicitar mercancía">
+  <AppLayout title="Remover productos">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Solicitud de mercancía
+        Remover producto(s)
       </h2>
     </template>
 
@@ -38,6 +38,22 @@
       ">
       <p v-if="validation_message" class="text-red-400 text-xs mb-2" v-html="validation_message"></p>
       <form @submit.prevent="store">
+        <InputLabel value="Concepto" />
+        <select class="
+            mb-3
+            mr-2
+            rounded-lg
+            border
+            text-gray-500
+            focus:border-stone-500 focus:text-stone-500
+          " v-model="form.concept">
+          <option disabled selected class="text-gray-500" value="">
+            -- Selecciona concepto --
+          </option>
+          <option v-for="(concept, index) in concepts" :key="index" class="text-gray-500" :value="concept">
+            {{ concept }}
+          </option>
+        </select>
         <div>
           <ProductInput :products="products" v-for="(item, index) in form.items" :key="item.id" :id="item.id"
             @deleteItem="deleteItem(index)" @syncItem="syncItems(index, $event)" class="mb-5" />
@@ -49,19 +65,22 @@
             <i class="fa-solid fa-circle-plus text-2xl text-blue-400"></i>
           </button>
         </div>
-        <PrimaryButton :disabled="form.processing">Solicitar</PrimaryButton>
+        <PrimaryButton :disabled="form.processing">Remover de carrito</PrimaryButton>
       </form>
     </div>
   </AppLayout>
 </template>
 
 <script>
+
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import ProductInput from "@/Components/ProductInput.vue";
 import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
+
 export default {
   data() {
     const form = useForm({
@@ -72,11 +91,16 @@ export default {
           quantity: null,
         }
       ],
+      concept: "",
     })
     return {
       validation_message: "",
       next_item_id: 2,
       form,
+      concepts: [
+        'Producto en mal estado',
+        'Devolución a cocina'
+      ],
     };
   },
   components: {
@@ -86,10 +110,11 @@ export default {
     InputError,
     SecondaryButton,
     ProductInput,
+    InputLabel,
   },
   props: {
     products: Array,
-    warehouse_stock: Object,
+    cart_stock: Object,
   },
   methods: {
     addNewItem() {
@@ -105,17 +130,17 @@ export default {
     },
     store() {
       this.quantityValidated();
-      if(this.validation_message == "") {
-        this.form.post(this.route("product-request.store"));
+      if (this.validation_message == "") {
+        this.form.post(this.route("cart.store-removed-products"));
       }
     },
     quantityValidated() {
       this.validation_message = "";
       this.form.items.forEach(product => {
-        const available_quantity = this.warehouse_stock[product.product_id];
+        const available_quantity = this.cart_stock[product.product_id];
         if (available_quantity < product.quantity) {
           this.validation_message += `- Sólo hay disponible <strong>${available_quantity}</strong> unidades del producto <strong>` +
-            this.products.find(item => item.id == product.product_id).name + '</strong> en cocina</br>';
+            this.products.find(item => item.id == product.product_id).name + '</strong> en carrito</br>';
         }
       });
     },

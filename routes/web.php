@@ -55,7 +55,8 @@ Route::resource('product-request', ProductRequestController::class)->middleware(
 Route::resource('sales-to-employees', SaleToEmployeeController::class)->middleware('auth');
 
 Route::get('carts', [CartController::class, 'index'])->middleware('auth')->name('carts.index');
-Route::post('cart/remove-products', [CartController::class, 'removeProducts'])->middleware('auth')->name('cart.remove-products');
+Route::get('cart/remove-products', [CartController::class, 'createRemovedProducts'])->middleware('auth')->name('cart.remove-products');
+Route::post('cart/remove-products', [CartController::class, 'removeProducts'])->middleware('auth')->name('cart.store-removed-products');
 
 // admin routes
 Route::resource('products', ProductController::class)->middleware(['auth', 'admin']);

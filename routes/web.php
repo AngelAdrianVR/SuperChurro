@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminRequestController;
 use App\Http\Controllers\BarterController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\LoanController;
+use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductRequestController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseMovementController;
 use App\Http\Controllers\WorkPermitController;
 use App\Models\CashRegister;
+use App\Models\Notice;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,10 +41,11 @@ Route::middleware([
         $checked_out = auth()->user()->hasCheckedOutToday();
         $loan = auth()->user()->loans()->where('remaining', '>', 0)->whereNotNull('authorized_at')->first();
         $leaves = auth()->user()->workPermits()->whereDate('date', '>=', today())->with('permissionType')->get();
+        $notices = Notice::all();
 
         return auth()->user()->is_admin
             ? Inertia::render('AdminDashboard')
-            : Inertia::render('Dashboard', compact('checked_in', 'checked_out', 'loan', 'leaves'));
+            : Inertia::render('Dashboard', compact('checked_in', 'checked_out', 'loan', 'leaves', 'notices'));
     })->name('dashboard');
 });
 
@@ -72,6 +75,7 @@ Route::put('/accept/work-permit/{work_permit}', [AdminRequestController::class, 
 Route::put('/reject/work-permit/{work_permit}', [AdminRequestController::class, 'rejectWorkPermit'])->middleware(['auth', 'admin'])->name('work-permit.reject');
 Route::put('/accept/loans/{loan}', [AdminRequestController::class, 'acceptLoan'])->middleware(['auth', 'admin'])->name('loan.accept');
 Route::put('/reject/loans/{loan}', [AdminRequestController::class, 'rejectLoan'])->middleware(['auth', 'admin'])->name('loan.reject');
+Route::resource('notices', NoticeController::class)->middleware(['auth', 'admin']);
 
 //Specific-action routes
 Route::put('/disable/{user}', [UserController::class, 'disable'])->middleware('auth')->name('user.disable');

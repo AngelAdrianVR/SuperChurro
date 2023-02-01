@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\MovementConcept;
 use App\Models\Product;
+use App\Models\ProductRequest;
 use App\Models\Warehouse;
 use App\Models\WarehouseMovement;
 use Illuminate\Http\Request;
@@ -25,6 +27,7 @@ class WarehouseMovementController extends Controller
 
     public function store(Request $request)
     {
+        // return $request;
         $request->validate([
             'items.*.quantity' => 'required|numeric|min:1',
             'items.*.product_id' => 'required|numeric|min:1',
@@ -32,10 +35,26 @@ class WarehouseMovementController extends Controller
             'notes' => 'max:191',
         ]);
 
+        $items = $request->validate([
+            'items.*.quantity' => 'required|numeric|min:1',
+            'items.*.product_id' => 'required|numeric|min:1',
+        ]);
+
+        // create request
+        ProductRequest::create([
+            'products' => $items['items'],
+            'user_id' => auth()->id(),
+            'cart_id' => 1,
+        ]);
+
         $adition_data = ['user_id' => auth()->id(), 'warehouse_id' => 1];
 
         $warehouse = Warehouse::find(1);
         $current_products = $warehouse->products;
+
+        $cart = Cart::find(1);
+        $current_products_cart = $cart->products;
+
 
         // create movements
         foreach ($request->items as $item) {
@@ -51,9 +70,15 @@ class WarehouseMovementController extends Controller
                 $current_products[$item['product_id']] += $item['quantity'];
             else
                 $current_products[$item['product_id']] -= $item['quantity'];
+
+                // update stock in cart
+            if($request->movement_concept_id == 3)
+                $current_products_cart[$item['product_id']] += $item['quantity'];
+                    
         }
 
         $warehouse->update(['products' => $current_products]);
+        $cart->update(['products' => $current_products_cart]);
 
         request()->session()->flash('flash.banner', 'Se ha generado los movimientos correctamente');
         request()->session()->flash('flash.bannerStyle', 'success');

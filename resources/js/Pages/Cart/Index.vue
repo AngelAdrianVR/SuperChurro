@@ -8,9 +8,9 @@
       <Link :href="route('sales-to-employees.create')">
       <SecondaryButton class="mt-5 mr-2">Venta a empleado / Cortesías</SecondaryButton>
       </Link>
-      <Link :href="route('product-request.create')">
+      <!-- <Link :href="route('product-request.create')">
       <SecondaryButton class="mt-5 ml-2">Solicitar mercancía</SecondaryButton>
-      </Link>
+      </Link> -->
     </div>
 
     <div class="flex justify-center">
@@ -18,7 +18,7 @@
       <SecondaryButton class="mt-2">Hacer corte</SecondaryButton>
       </Link>
       <Link :href="route('cart.remove-products')">
-      <SecondaryButton class="mt-2">Remover mercancía</SecondaryButton>
+      <SecondaryButton class="mt-2 mx-2">Remover mercancía</SecondaryButton>
       </Link>
     </div>
 

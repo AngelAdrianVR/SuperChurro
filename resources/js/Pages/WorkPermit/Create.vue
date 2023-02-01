@@ -6,15 +6,32 @@
       </h2>
     </template>
 
-     <div class=" bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
-  <div class="flex">
-    <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
-    <div>
-      <p class="font-bold">Vacaciones disponibles</p>
-      <p class="text-sm">Tienes <strong>{{$page.props.user.employee_properties?.vacations}}</strong> días de vacaciones</p>
+    <div
+      class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
+      role="alert"
+    >
+      <div class="flex">
+        <div class="py-1">
+          <svg
+            class="fill-current h-6 w-6 text-teal-500 mr-4"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"
+            />
+          </svg>
+        </div>
+        <div>
+          <p class="font-bold">Vacaciones disponibles</p>
+          <p class="text-sm">
+            Tienes
+            <strong>{{ $page.props.user.employee_properties?.vacations }}</strong> días de
+            vacaciones
+          </p>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
     <div class="flex justify-start">
       <Link
@@ -22,38 +39,16 @@
         class="flex items-center mt-2 text-slate-700"
       >
         <i
-          class="
-            fas
-            fa-long-arrow-alt-left
-            text-lg
-            active:bg-gray-300
-            bg-opacity-100
-            rounded-full
-            w-7
-            h-7
-            pl-1
-            ml-2
-          "
+          class="fas fa-long-arrow-alt-left text-lg active:bg-gray-300 bg-opacity-100 rounded-full w-7 h-7 pl-1 ml-2"
         ></i>
         <span class="ml-1 cursor-default">Atrás</span>
       </Link>
     </div>
 
-   
     <!-- component -->
     <!-- This is an example component -->
     <div
-      class="
-        max-w-2xl
-        md:mx-auto
-        mt-5
-        shadow-md shadow-gray-500/70
-        rounded-lg
-        px-5
-        py-8
-        bg-white
-        mx-4
-      "
+      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 py-8 bg-white mx-4"
     >
       <form @submit.prevent="store">
         <select
@@ -61,13 +56,11 @@
             is_full_day = permission_types.find(
               (item) => item.id === form.permission_type_id
             )?.is_full_day;
-             vacation_id = permission_types.find(
+            vacation_id = permission_types.find(
               (item) => item.id === form.permission_type_id
-            )?.id
+            )?.id;
           "
-          class="
-           select mb-5
-          "
+          class="select mb-5"
           required
           v-model="form.permission_type_id"
         >
@@ -89,42 +82,13 @@
             type="date"
             name="floating_date"
             autocomplete="off"
-            class="
-              block
-              py-2.5
-              px-0
-              w-full
-              text-sm text-gray-900
-              bg-transparent
-              border-0 border-b-2 border-gray-300
-              appearance-none
-              dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-              focus:outline-none focus:ring-0 focus:border-stone-600
-              peer
-            "
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
             placeholder=" "
             required
           />
           <label
             for="floating_date"
-            class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            "
+            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >Fecha de permiso</label
           >
           <InputError :message="$page.props?.errors.date" />
@@ -136,94 +100,48 @@
             step="0.1"
             name="floating_time_requested"
             autocomplete="off"
-            class="
-              block
-              py-2.5
-              px-0
-              w-full
-              text-sm text-gray-900
-              bg-transparent
-              border-0 border-b-2 border-gray-300
-              appearance-none
-              dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-              focus:outline-none focus:ring-0 focus:border-stone-600
-              peer
-            "
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
             placeholder=" "
           />
           <label
             for="floating_time_requested"
-            class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            "
+            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >Tiempo requerido en minutos</label
           >
           <InputError :message="$page.props?.errors.time_requested" />
         </div>
         <div class="relative z-0 mb-6 w-full group">
-          <input
+          <textarea
             v-model="form.description"
+            rows="1"
             type="text"
             name="floating_description"
             autocomplete="off"
-            class="
-              block
-              py-2.5
-              px-0
-              w-full
-              text-sm text-gray-900
-              bg-transparent
-              border-0 border-b-2 border-gray-300
-              appearance-none
-              dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-              focus:outline-none focus:ring-0 focus:border-stone-600
-              peer
-            "
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
             placeholder=" "
           />
           <label
             for="floating_description"
-            class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            "
+            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >Notas o comentarios</label
           >
         </div>
         <div class="flex justify-center lg:justify-end">
-        <!-- the button is configured to disabled when vacations == 0 and type of permit is vacations. ID of vacation = 3. change taking Id from database -->
-          <PrimaryButton :disabled="form.processing || vacation_id == 3 && $page.props.user.employee_properties?.vacations < 1 ">Programar</PrimaryButton>
+          <!-- the button is configured to disabled when vacations == 0 and type of permit is vacations. ID of vacation = 3. change taking Id from database -->
+          <PrimaryButton
+            :disabled="
+              form.processing ||
+              (vacation_id == 3 && $page.props.user.employee_properties?.vacations < 1)
+            "
+            >Programar</PrimaryButton
+          >
         </div>
-          <p v-if="vacation_id == 3 && $page.props.user.employee_properties?.vacations < 1 " class="mt-2 text-center text-sm text-red-600">Necesitas tener al menos 1 día de vacaciones.</p>
+        <p
+          v-if="vacation_id == 3 && $page.props.user.employee_properties?.vacations < 1"
+          class="mt-2 text-center text-sm text-red-600"
+        >
+          Necesitas tener al menos 1 día de vacaciones.
+        </p>
       </form>
     </div>
   </AppLayout>

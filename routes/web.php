@@ -75,6 +75,8 @@ Route::put('/reject/work-permit/{work_permit}', [AdminRequestController::class, 
 Route::put('/accept/loans/{loan}', [AdminRequestController::class, 'acceptLoan'])->middleware(['auth', 'admin'])->name('loan.accept');
 Route::put('/reject/loans/{loan}', [AdminRequestController::class, 'rejectLoan'])->middleware(['auth', 'admin'])->name('loan.reject');
 Route::resource('notices', NoticeController::class)->middleware(['auth', 'admin']);
+Route::get('/admin/christmas-bonus/show/{user}', [UserController::class, 'showUsersCrhismasBonus'])->middleware(['auth', 'admin'])->name('chrismas-bonus.show');
+
 
 //Specific-action routes
 Route::put('/disable/{user}', [UserController::class, 'disable'])->middleware('auth')->name('user.disable');

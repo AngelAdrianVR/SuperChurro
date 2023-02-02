@@ -172,7 +172,7 @@ class UserController extends Controller
 
     public function showUserSettlement(User $user)
     {
-       
+
         $current_year = now()->year;
         $initial_date = Carbon::createMidnightDate($current_year, 1, 1);
         $worked_days = $initial_date->diffInDays(now()); 
@@ -191,12 +191,11 @@ class UserController extends Controller
 
     public function showUserVacationBonus(User $user)
     {
-       
-        
+
         $years_as_employee = $user->created_at->diffInYears();
         $employee_properties = $user->employee_properties;
         $days_per_year = 0;
-        
+
         if ($years_as_employee == 0) {
             $days_per_year = 12;
         } elseif ($years_as_employee == 1) {
@@ -218,7 +217,7 @@ class UserController extends Controller
         } elseif ($years_as_employee >= 26) {
             $days_per_year = 32;
         }
-        
+
         $base_salary = $user->employee_properties['base_salary'];
         $vacation_bonus =  number_format(($days_per_year - $user->employee_properties['vacations']) * $base_salary * 0.25);
 

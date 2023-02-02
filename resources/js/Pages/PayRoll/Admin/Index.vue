@@ -59,6 +59,7 @@
 </template>
 
 <script>
+
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import PayRollTable from "@/Components/PayRollTable.vue";

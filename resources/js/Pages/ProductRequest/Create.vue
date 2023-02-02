@@ -108,10 +108,10 @@ export default {
       this.form.items.forEach((product) => {
         const available_quantity = this.warehouse_stock[product.product_id];
         if (available_quantity < product.quantity) {
-          this.validation_message +=
-            `- Sólo hay disponible <strong>${available_quantity}</strong> unidades del producto <strong>` +
-            this.products.find((item) => item.id == product.product_id).name +
-            "</strong></br>";
+
+          this.validation_message += `- Sólo hay disponible <strong>${available_quantity}</strong> unidades del producto <strong>` +
+            this.products.find(item => item.id == product.product_id).name + '</strong> en cocina</br>';
+
         }
       });
     },

@@ -74,7 +74,7 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->belongsToMany(Payroll::class)
             ->using(PayrollUser::class)
-            ->withPivot(['attendance', 'discounts'])
+            ->withPivot(['attendance', 'discounts', 'additional'])
             ->withTimestamps();
     }
 
@@ -139,8 +139,8 @@ class User extends Authenticatable implements HasMedia
     // }
 
     public function hasCheckedInToday()
-    {
-        
+    { //Remove this method and just keep hasCheckeInOn ***
+
         $current_payroll_id = Payroll::firstWhere('is_active', true)->id;
 
         $payroll_user = PayrollUser::firstOrNew([
@@ -153,7 +153,7 @@ class User extends Authenticatable implements HasMedia
 
     public function hasCheckedInOn($day_of_week)
     {
-        
+
         $current_payroll_id = Payroll::firstWhere('is_active', true)->id;
 
         $payroll_user = PayrollUser::firstOrNew([
@@ -162,6 +162,32 @@ class User extends Authenticatable implements HasMedia
         ], ['attendance' => []]);
 
         return array_key_exists($day_of_week, $payroll_user->attendance);
+    }
+
+    public function hasAttendanceOn($date)
+    {
+        $carbon_date = Carbon::parse($date);
+
+        //find payroll active on date given
+        $user_payroll = $this->payrolls
+            ->firstWhere(function ($payroll) use ($carbon_date) {
+                if ($carbon_date->dayOfWeek == 0) //sunday (new week in payroll)
+                    return $payroll->week == $carbon_date->addDays(1)->weekOfYear;
+                else
+                    return $payroll->week == $carbon_date->weekOfYear;
+            });
+
+        // try to parse time to Carbon
+        try {
+            if ($user_payroll->is_active) {
+                Carbon::parse($user_payroll->pivot->attendance[$carbon_date->dayOfWeek]['in']);
+            } else {
+                Carbon::parse($user_payroll->pivot->attendance['payroll'][$carbon_date->dayOfWeek]['in']);
+            }
+            return true;
+        } catch (\Throwable $th) {
+            return false;
+        }
     }
 
     public function hasCheckedOutToday()

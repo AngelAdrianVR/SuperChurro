@@ -5,7 +5,8 @@
             <div class="globe-title">
                 Semana {{ payroll.data.week }}: {{ payroll.data.start_date }} al {{ payroll.data.end_date }}
             </div>
-            <p style="font-size: 8px;">Av. Manuel Ávila Camacho 1950, Interior de plaza patria, Isla comercial en frente de
+            <p style="font-size: 8px;">Av. Manuel Ávila Camacho 1950, Interior de plaza patria, Isla comercial en frente
+                de
                 negocio comercial conocido como "ALDO CONTI", en el área común, Col. Jacarandas, Zapopan Jalisco.
             </p>
             <div class="mb-2 bg-sky-200 px-1 py-px rounded-sm">
@@ -16,9 +17,9 @@
                         class="text-red-400 fa-solid fa-dollar mr-1"></i>{{ discount.amount }} ({{
                             discount.description
                         }})</span>
-                <span v-for="day in Object.keys(payroll.data.week_commissions)" :key="day">
+                <span v-for="(commission, index) in current_payroll.additional.commissions" :key="index">
                     +<i class="text-green-700 fa-solid fa-dollar mr-1"></i>
-                    {{ payroll.data.week_commissions[day] }} comisión {{ day }}
+                    {{ commission }} comisión {{ week_days[index] }}
                 </span>
                 <span v-if="current_payroll.vacation_premium">+<i class="text-green-700 fa-solid fa-dollar mr-1"></i>{{
                     current_payroll.vacation_premium
@@ -60,6 +61,19 @@
 </template>
 <script>
 export default {
+    data() {
+        return {
+            week_days: [
+                'Domingo',
+                'Lunes',
+                'Martes',
+                'Miércoles',
+                'Jueves',
+                'Viernes',
+                'Sábado'
+            ]
+        };
+    },
     props: {
         payroll: Object,
     },

@@ -44,7 +44,7 @@
           class="globe hover:bg-gray-200 cursor-pointer">
         <div class="globe-title !justify-between pb-2">
           <span class="text-gray-500"><i class="fa-solid fa-user mr-1"></i> {{ request.user.name }}</span>
-          <small class="text-gray-400">{{ timeFormatter(request.created_at) }}</small>
+          <!-- <small class="text-gray-400">{{ timeFormatter(request.created_at) }}</small> -->
         </div>
         <div class="flex justify-between items-center">
           <span> {{ request.products.length }} producto(s) - (click para ver)</span>

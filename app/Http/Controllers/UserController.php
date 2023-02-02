@@ -166,7 +166,59 @@ class UserController extends Controller
         $bonus_days = ($worked_days * 15) / 365;
         $chrismas_bonus = number_format($bonus_days * $daily_salary);
 
-        // return $chrismas_bonus;
         return inertia('User/Calculations/ChrismasBonusTemplate', compact('user', 'chrismas_bonus'));
+    }
+
+    public function showUserSettlement(User $user)
+    {
+
+        $current_year = now()->year;
+        $initial_date = Carbon::createMidnightDate($current_year, 1, 1);
+        $worked_days = $initial_date->diffInDays(now()); 
+        $work_days_per_week = count($user->employee_properties['work_days']);
+        $base_salary = $user->employee_properties['base_salary'];
+        $month_salary = $work_days_per_week * $base_salary * 4; 
+        $daily_salary = $month_salary / 30;
+        $bonus_days = ($worked_days * 15) / 365;
+        $chrismas_bonus = number_format($bonus_days * $daily_salary);
+        $proporcional_vacations = number_format($user->employee_properties['vacations'] * $base_salary);
+        $vacation_bonus =  number_format($user->employee_properties['vacations'] * $base_salary * 0.25);
+        $settlement = number_format($proporcional_vacations + $vacation_bonus + $chrismas_bonus);
+
+        return inertia('User/Calculations/SettlementTemplate', compact('user', 'chrismas_bonus','month_salary', 'proporcional_vacations', 'vacation_bonus', 'settlement' ));
+    }
+
+    public function showUserVacationBonus(User $user)
+    {
+        $years_as_employee = $user->created_at->diffInYears();
+        $employee_properties = $user->employee_properties;
+        $days_per_year = 0;
+
+        if ($years_as_employee == 0) {
+            $days_per_year = 12;
+        } elseif ($years_as_employee == 1) {
+            $days_per_year = 14;
+        } elseif ($years_as_employee == 2) {
+            $days_per_year = 16;
+        } elseif ($years_as_employee == 3) {
+            $days_per_year = 18;
+        } elseif ($years_as_employee == 4) {
+            $days_per_year = 20;
+        } elseif ($years_as_employee >= 6 && $years_as_employee < 11) {
+            $days_per_year = 22;
+        } elseif ($years_as_employee >= 11 && $years_as_employee < 16) {
+            $days_per_year = 24;
+        } elseif ($years_as_employee >= 16 && $years_as_employee < 21) {
+            $days_per_year = 26;
+        } elseif ($years_as_employee >= 21 && $years_as_employee < 26) {
+            $days_per_year = 28;
+        } elseif ($years_as_employee >= 26) {
+            $days_per_year = 32;
+        }
+
+        $base_salary = $user->employee_properties['base_salary'];
+        $vacation_bonus =  number_format(($days_per_year - $user->employee_properties['vacations']) * $base_salary * 0.25);
+
+        return inertia('User/Calculations/VacationBonusTemplate', compact('user','vacation_bonus','days_per_year'));
     }
 }

@@ -166,6 +166,7 @@ class UserController extends Controller
         $bonus_days = ($worked_days * 15) / 365;
         $chrismas_bonus = number_format($bonus_days * $daily_salary);
 
+
         return inertia('User/Calculations/ChrismasBonusTemplate', compact('user', 'chrismas_bonus'));
     }
 
@@ -190,6 +191,7 @@ class UserController extends Controller
 
     public function showUserVacationBonus(User $user)
     {
+
         $years_as_employee = $user->created_at->diffInYears();
         $employee_properties = $user->employee_properties;
         $days_per_year = 0;

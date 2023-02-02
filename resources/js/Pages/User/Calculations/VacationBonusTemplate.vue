@@ -1,4 +1,5 @@
 <template>
+
     <div class="grid grid-cols-2 gap-1">
       <div class="rounded-md border-2 border-gray-400 px-3 py-2 leading-none text-xs">
         <div class="globe-title">
@@ -53,3 +54,4 @@
     }
   };
   </script>
+

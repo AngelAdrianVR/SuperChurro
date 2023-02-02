@@ -114,7 +114,7 @@
         </div>
 
         <div class="flex justify-center lg:justify-end">
-          <PrimaryButton :disabled="form.processing">Solicitar</PrimaryButton>
+          <PrimaryButton :disabled="form.processing">Registrar</PrimaryButton>
         </div>
       </form>
     </div>

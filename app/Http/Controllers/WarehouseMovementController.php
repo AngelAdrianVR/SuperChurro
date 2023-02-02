@@ -39,14 +39,7 @@ class WarehouseMovementController extends Controller
             'items.*.quantity' => 'required|numeric|min:1',
             'items.*.product_id' => 'required|numeric|min:1',
         ]);
-
-        // create request
-        ProductRequest::create([
-            'products' => $items['items'],
-            'user_id' => auth()->id(),
-            'cart_id' => 1,
-        ]);
-
+        
         $adition_data = ['user_id' => auth()->id(), 'warehouse_id' => 1];
 
         $warehouse = Warehouse::find(1);
@@ -75,6 +68,15 @@ class WarehouseMovementController extends Controller
             if($request->movement_concept_id == 3)
                 $current_products_cart[$item['product_id']] += $item['quantity'];
                     
+        }
+
+        if($request->movement_concept_id == 3){
+            // create request
+            ProductRequest::create([
+                'products' => $items['items'],
+                'user_id' => auth()->id(),
+                'cart_id' => 1,
+            ]);     
         }
 
         $warehouse->update(['products' => $current_products]);

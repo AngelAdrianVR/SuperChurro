@@ -57,7 +57,7 @@ class PayrollUser extends Pivot
 
             } else if ($current_attendance[$i]['out'] !== '--:--:--') {
                 // add aditional day salary (full day worked)
-                if ($user->shiftOn($current_day_in_loop->dayOfWeek)) {
+                if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos') {
                     $days_as_double++;
                     $double_commission_on[] = $i;
                 }
@@ -178,7 +178,7 @@ class PayrollUser extends Pivot
     public function baseSalary()
     {
         // propoerty "additional" is not null when payroll is closed
-        if ($this->addittional) {
+        if ($this->additional) {
             // get stored data
             $week_attendance = $this->attendance;
             $base_salary = $this->additional['base_salary'];
@@ -193,7 +193,7 @@ class PayrollUser extends Pivot
 
     public function salaryForExtras()
     {
-        if ($this->addittional) {
+        if ($this->additional) {
             // get stored data
             $extras = $this->attendance['extras'];
             $base_salary = $this->additional['base_salary'];
@@ -211,7 +211,7 @@ class PayrollUser extends Pivot
 
     public function vacationPremium()
     {
-        if ($this->addittional) {
+        if ($this->additional) {
             // get stored data
             $vacation_days = $this->attendance['vacations'];
             $base_salary = $this->additional['base_salary'];
@@ -226,12 +226,12 @@ class PayrollUser extends Pivot
 
     public function commissions()
     {
-        if ($this->addittional) {
+        if ($this->additional) {
             // get stored data
             return $this->additional['commissions'];
         } else {
             // process data
-            return $this->getCommissions();
+            return array_fill(0, 7, 0);
         }
     }
 
@@ -240,8 +240,6 @@ class PayrollUser extends Pivot
         $current_payroll = Payroll::find($this->payroll_id);
         $user = User::find($this->user_id);
         $user_commissions = [];
-
-        if ($current_payroll->is_active) return null;
 
         for ($i = 0; $i < 7; $i++) {
             $current_day_in_loop = $current_payroll->start_date->addDays($i);

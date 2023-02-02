@@ -91,6 +91,11 @@ class PayrollController extends Controller
             $commissions[$current_date->dayName] = $day_commission;
         }
 
+        // store commissions
+        $active_payroll->update([
+            'commissions' => $commissions,
+        ]);
+
         // store discounts, additional & attendance info for each user payroll
         $active_payroll->users->each(function ($user_payroll) {
             $user_payroll->pivot->update([
@@ -103,10 +108,9 @@ class PayrollController extends Controller
             ]);
         });
 
-        // store commissions & close payroll
+        // close payroll
         $active_payroll->update([
             'is_active' => false,
-            'commissions' => $commissions,
         ]);
     }
 }

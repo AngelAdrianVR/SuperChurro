@@ -14,7 +14,7 @@
       </div>
       <div class="flex flex-col space-y-2 mb-4">
         <p><strong> Fecha de Ingreso: </strong>{{ user.created_at.split('T')[0] }}</p>
-        <p><strong> Fin de Ejercicio: </strong>{{ today.getDate() + '-' + today.getMonth() + '-' + today.getFullYear() }}</p>
+        <p><strong> Fin de Ejercicio: </strong>{{ '31-Diciembre -' + today.getFullYear() }}</p>
         <p><strong> Salario diario integrado: </strong>${{ user.employee_properties.base_salary  }}</p>
         <p><strong> Aguinaldo correspondiente: </strong>${{ chrismas_bonus  }}</p>
         

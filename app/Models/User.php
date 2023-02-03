@@ -74,7 +74,7 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->belongsToMany(Payroll::class)
             ->using(PayrollUser::class)
-            ->withPivot(['attendance', 'discounts', 'additional'])
+            ->withPivot(['id', 'attendance', 'discounts', 'additional'])
             ->withTimestamps();
     }
 
@@ -109,7 +109,7 @@ class User extends Authenticatable implements HasMedia
             } else {
                 $time_to_work = 300; // minutes (5 hours)
             }
-            $time_to_work_array[] = $time_to_work;
+            $time_to_work_array[$work_day['day']] = $time_to_work;
         }
 
         return $time_to_work_array;
@@ -125,7 +125,7 @@ class User extends Authenticatable implements HasMedia
             } else {
                 $entry = Carbon::parse('10:00:00');
             }
-            $entry_array[] = $entry;
+            $entry_array[$work_day['day']] = $entry;
         }
 
         return $entry_array;

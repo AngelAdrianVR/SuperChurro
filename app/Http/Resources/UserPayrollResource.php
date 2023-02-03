@@ -11,6 +11,7 @@ class UserPayrollResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'payroll_user_id' => $this->pivot->id,
             'week_attendance' => $this->pivot->weekAttendanceArray(),
             'discounts' => $this->pivot->discounts,
             'additional' => $this->pivot->additional,

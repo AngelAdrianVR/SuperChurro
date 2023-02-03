@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PayrollResource;
 use App\Http\Resources\PayrollUserResource;
+use App\Http\Resources\PayrollUserResource2;
 use App\Models\Payroll;
 use App\Models\PayrollUser;
 use App\Models\Sale;
@@ -71,6 +72,13 @@ class PayrollController extends Controller
         $payroll = PayrollResource::make(Payroll::with('users')->find($payroll_id));
 
         return inertia('PayRoll/Admin/Template', compact('payroll'));
+    }
+
+    public function showUserPayroll($payroll_user_id) // refactor (open same template of showUsersPayrolls method)
+    {
+        $payroll_user = PayrollUserResource2::make(PayrollUser::with('payroll', 'user')->find($payroll_user_id));
+
+        return inertia('PayRoll/Admin/Template2', compact('payroll_user'));
     }
 
     public function closePayroll()

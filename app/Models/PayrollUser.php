@@ -26,6 +26,17 @@ class PayrollUser extends Pivot
         'discounts' => 'array',
     ];
 
+    // relationships
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function payroll()
+    {
+        return $this->belongsTo(Payroll::class);
+    }
+
     // methods
     public function weekAttendanceArray()
     {
@@ -54,7 +65,6 @@ class PayrollUser extends Pivot
                 // add vacations or sub attendances
                 if ($current_attendance[$i]['in'] !== 'Vacaciones') $attendances--;
                 else $vacations++;
-
             } else if ($current_attendance[$i]['out'] !== '--:--:--') {
                 // add aditional day salary (full day worked)
                 if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos') {
@@ -65,8 +75,8 @@ class PayrollUser extends Pivot
                 // calculate extras
                 $extras_per_day = Carbon::parse($current_attendance[$i]['out'])
                     ->diffInMinutes($user->getEntryTime()[$i])
-                     - $user->getTimeToWork()[$i]
-                     - 15; // tolerance
+                    - $user->getTimeToWork()[$i]
+                    - 15; // tolerance
                 if ($extras_per_day < 0) $extras_per_day = 0;
                 $extras += $extras_per_day;
 
@@ -166,7 +176,7 @@ class PayrollUser extends Pivot
 
     public function paid()
     {
-        $total = $this->baseSalary() 
+        $total = $this->baseSalary()
             + $this->vacationPremium()
             + collect($this->commissions())->sum()
             + $this->salaryForExtras()
@@ -231,14 +241,21 @@ class PayrollUser extends Pivot
             return $this->additional['commissions'];
         } else {
             // process data
-            return array_fill(0, 7, 0);
+            $commissions = []; //refactor (repeated in closePayroll method)
+            for ($i = 0; $i < 7; $i++) {
+                $current_date = $this->payroll->start_date->addDays($i);
+                $day_commission = Sale::calculateCommissions($current_date->toDateString());
+                $commissions[$current_date->dayName] = $day_commission;
+            }
+            return $this->getCommissions($commissions);
         }
     }
 
-    public function getCommissions()
+    public function getCommissions(Array $commissions = [])
     {
         $current_payroll = Payroll::find($this->payroll_id);
         $user = User::find($this->user_id);
+        $payroll_commissions = $commissions ?? $current_payroll->commissions;
         $user_commissions = [];
 
         for ($i = 0; $i < 7; $i++) {
@@ -246,10 +263,10 @@ class PayrollUser extends Pivot
             $current_shift = $user->shiftOn($current_day_in_loop->dayOfWeek);
 
             if ($user->hasCheckedInOn($current_day_in_loop->dayOfWeek)) {
-                if ($current_shift === 'carrito 2 turnos') 
-                    $user_commissions[] = $current_payroll->commissions[$current_day_in_loop->dayName] * 2;
-                else 
-                    $user_commissions[] = $current_payroll->commissions[$current_day_in_loop->dayName];
+                if ($current_shift === 'carrito 2 turnos')
+                    $user_commissions[] = $payroll_commissions[$current_day_in_loop->dayName] * 2;
+                else
+                    $user_commissions[] = $payroll_commissions[$current_day_in_loop->dayName];
             } else {
                 $user_commissions[] = 0;
             }

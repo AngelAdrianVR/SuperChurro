@@ -6,8 +6,12 @@
   bg-cyan-900 text-white">
         <div class="rounded-t mb-0 px-4 py-3 border-0">
           <div class="flex flex-wrap items-center">
-            <div class="relative w-full px-4 max-w-full flex-grow flex-1 ">
+            <div class="relative w-full px-4 max-w-full flex-grow flex-1 flex justify-between">
               <h3 class="font-semibold text-lg text-white"><i class="fa-solid fa-user mr-1"></i> {{ payroll?.user.name }}</h3>
+              {{ payroll.pivot }}
+              <Link :href="route('payroll-admin.show', payroll.payroll_user_id)">
+                <PrimaryButton v-if="$page.props.user.is_admin">Ver nómina</PrimaryButton>
+              </Link>
             </div>
           </div>
         </div>
@@ -58,12 +62,18 @@
 
 
 <script>
+
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import { Link } from '@inertiajs/inertia-vue3';
+
 export default {
   data() {
     return {
     };
   },
   components: {
+    PrimaryButton,
+    Link,
   },
   props: {
     payroll: Object,

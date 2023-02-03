@@ -22,7 +22,7 @@
     <div class="mt-5 text-bold text-lg text-gray-700">
       <div class="flex justify-between items-center">
         <p class="my-2 ml-5">Asistencias de empleados</p>
-        <Link v-if="!payroll_selected.is_active" :href="route('payroll-admin.show', payroll_selected.id)">
+        <Link v-if="!payroll_selected.is_active" :href="route('payroll-admin.show-all', payroll_selected.id)">
         <SecondaryButton class="mr-7 mt-4"><i class="fa-solid fa-print mr-1"></i> Imprimir nóminas</SecondaryButton>
         </Link>
         <SecondaryButton @click="show_confirmation = true" v-else class="mr-7 mt-4">Cerrar nómina</SecondaryButton>

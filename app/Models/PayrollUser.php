@@ -55,6 +55,7 @@ class PayrollUser extends Pivot
         $vacations = 0;
         $extras = 0; // minutes
         $late = 0; // minutes
+        $tolerance = 15;
 
         for ($i = 0; $i < 7; $i++) {
             $current_day_in_loop = $current_payroll->start_date->addDays($i);
@@ -70,13 +71,15 @@ class PayrollUser extends Pivot
                 if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos') {
                     $days_as_double++;
                     $double_commission_on[] = $i;
+                }else if ($user->shiftOn($current_day_in_loop->dayOfWeek) !== 'carrito vespertino') {
+                    $tolerance = 135;
                 }
-
+                
                 // calculate extras
                 $extras_per_day = Carbon::parse($current_attendance[$i]['out'])
                     ->diffInMinutes($user->getEntryTime()[$i])
                     - $user->getTimeToWork()[$i]
-                    - 15; // tolerance
+                    - $tolerance;
                 if ($extras_per_day < 0) $extras_per_day = 0;
                 $extras += $extras_per_day;
 

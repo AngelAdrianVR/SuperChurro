@@ -106,8 +106,10 @@ class User extends Authenticatable implements HasMedia
         foreach ($this->employee_properties['work_days'] as $work_day) {
             if ($work_day['shift'] === 'carrito vespertino') {
                 $time_to_work = 360; // minutes (6 hours)
+            } else if ($work_day['shift'] === 'carrito 2 turnos') {
+                $time_to_work = 660; // minutes (11 hours)
             } else {
-                $time_to_work = 300; // minutes (5 hours)
+                $time_to_work =300; // minutes (5 hours)
             }
             $time_to_work_array[$work_day['day']] = $time_to_work;
         }

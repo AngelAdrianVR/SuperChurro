@@ -92,10 +92,10 @@ class PayrollUser extends Pivot
                     ->first();
                 $late_per_day = $user->getEntryTime()[$i]
                     ->diffInMinutes(Carbon::parse($current_attendance[$i]['in']), false);
-
+                    
                 if ($late_entry_permit) $late_per_day -= $late_entry_permit->time_requested;
-                else $late_per_day - 15; // tolerance
-
+                else $late_per_day -= 15;
+                    
                 if ($late_per_day < 0) $late_per_day = 0;
                 $late += $late_per_day;
             }

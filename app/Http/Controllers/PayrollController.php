@@ -99,25 +99,21 @@ class PayrollController extends Controller
             $commissions[$current_date->dayName] = $day_commission;
         }
 
-        // store commissions
-        $active_payroll->update([
-            'commissions' => $commissions,
-        ]);
-
         // store discounts, additional & attendance info for each user payroll
-        $active_payroll->users->each(function ($user_payroll) {
+        $active_payroll->users->each(function ($user_payroll) use ($commissions) {
             $user_payroll->pivot->update([
                 'discounts' => $user_payroll->pivot->getDiscounts(),
                 'attendance' => $user_payroll->pivot->weekAttendanceArray(),
                 'additional' => [
                     'base_salary' => User::find($user_payroll->pivot->user_id)->employee_properties['base_salary'],
-                    'commissions' => $user_payroll->pivot->getCommissions()
+                    'commissions' => $user_payroll->pivot->getCommissions($commissions)
                 ]
             ]);
         });
 
-        // close payroll
+        // store commissions & close payroll
         $active_payroll->update([
+            'commissions' => $commissions,
             'is_active' => false,
         ]);
     }

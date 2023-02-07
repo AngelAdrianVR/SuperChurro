@@ -6,9 +6,11 @@ use App\Models\Cart;
 use App\Models\CartRemovedProduct;
 use App\Models\Product;
 use App\Models\ProductRequest;
+use App\Models\Sale;
 use App\Models\User;
 use App\Models\Warehouse;
 use App\Models\WarehouseMovement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -22,7 +24,24 @@ class CartController extends Controller
             fn ($user) => $user->hasCheckedInToday() && $user->shiftOn(today()->dayOfWeek) !== 'cocina'
         );
 
-        return inertia('Cart/Index', compact('cart_products', 'products', 'requests', 'employees'));
+        $middle_date = Carbon::parse(today())->addHours(17);
+        $sales = [];
+
+        $shift_1_sales = Sale::whereDate('created_at', today())
+            ->whereTime('created_at', '<', $middle_date)
+            ->with('product')
+            ->get();
+
+        if ($shift_1_sales->count()) $sales[] = "Corte del primer turno realizado";
+        
+        $shift_2_sales = Sale::whereDate('created_at', today())
+        ->whereTime('created_at', '>', $middle_date)
+        ->with('product')
+        ->get();
+
+        if ($shift_2_sales->count()) $sales[] = "Corte del segundo turno realizado";
+
+        return inertia('Cart/Index', compact('cart_products', 'products', 'requests', 'employees', 'sales'));
     }
 
     public function createRemovedProducts()

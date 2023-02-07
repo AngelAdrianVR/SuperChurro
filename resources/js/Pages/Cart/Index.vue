@@ -36,6 +36,21 @@
 
     <div>
       <p class="text-sky-500 text-left ml-3 my-3 font-semibold">
+        Cortes
+      </p>
+
+      <div class="globe-container flex-col">
+        <div v-for="sale in sales" :key="sale.id" class="globe">
+          {{sale}}
+        </div>
+        <p v-if="!sales.length" class="text-center text-xs text-gray-500 col-span-full">
+          No hay cortes aún
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <p class="text-sky-500 text-left ml-3 my-3 font-semibold">
         Solicitudes de mercancía (Hoy)
       </p>
 
@@ -96,6 +111,7 @@ export default {
     requests: Array,
     cart_products: Object,
     employees: Object,
+    sales: Array,
   },
   methods: {
     timeFormatter(timestamp) {

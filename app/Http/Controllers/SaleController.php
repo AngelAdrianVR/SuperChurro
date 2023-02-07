@@ -82,6 +82,7 @@ class SaleController extends Controller
     // API
     public function getByDate(Request $request)
     {
+        // refactor (used in cartController too)
         $middle_date = Carbon::parse($request->date)->addHours(16);
         
         $shift_1_sales = Sale::whereDate('created_at', $request->date)

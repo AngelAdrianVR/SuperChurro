@@ -41,7 +41,10 @@
 
       <div class="globe-container flex-col">
         <div v-for="sale in sales" :key="sale.id" class="globe">
-          {{sale}}
+          <p class="text-sm flex justify-between">
+            {{ sale }}
+            <i class="fa-solid fa-circle-check text-lg text-green-600"></i>
+          </p>
         </div>
         <p v-if="!sales.length" class="text-center text-xs text-gray-500 col-span-full">
           No hay cortes aún

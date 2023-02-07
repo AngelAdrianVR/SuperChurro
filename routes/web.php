@@ -120,3 +120,12 @@ Route::post('/cash-register', function (Request $request) {
 })
     ->middleware('auth')
     ->name('cash-register.store');
+
+Route::post('/cash-register/update', function (Request $request) {
+    CashRegister::where('date', $request->date)
+        ->update(['cash' => $request->cash]);
+
+    return response()->json(['status' => 'ok']);
+})
+    ->middleware('auth')
+    ->name('cash-register.update');

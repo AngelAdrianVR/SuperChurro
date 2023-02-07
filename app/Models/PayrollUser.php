@@ -80,13 +80,12 @@ class PayrollUser extends Pivot
                 // calculate extras
                 $extras_per_day = Carbon::parse($current_attendance[$i]['out'])
                     ->diffInMinutes($user->getEntryTime()[$i])
-                    - $user->getTimeToWork()[$i]
-                    - $tolerance;
-                if ($extras_per_day < 0) $extras_per_day = 0;
+                    - $user->getTimeToWork()[$i];
+
+                if (($extras_per_day - $tolerance) <= 0) $extras_per_day = 0;
                 $extras += $extras_per_day;
 
-                // late
-                // serch for "permiso de llegada tarde" for this day
+                // late: serch for "permiso de llegada tarde" for this day
                 $late_entry_permit = WorkPermit::whereDate('date', $current_day_in_loop)
                     ->where('user_id', $this->user_id)
                     ->where('permission_type_id', 1)
@@ -96,9 +95,9 @@ class PayrollUser extends Pivot
                     ->diffInMinutes(Carbon::parse($current_attendance[$i]['in']), false);
 
                 if ($late_entry_permit) $late_per_day -= $late_entry_permit->time_requested;
-                else $late_per_day -= 15;
+                // else $late_per_day -= 15;
 
-                if ($late_per_day < 0) $late_per_day = 0;
+                if (($late_per_day - 15) <= 0) $late_per_day = 0;
                 $late += $late_per_day;
             }
 
@@ -210,14 +209,12 @@ class PayrollUser extends Pivot
         if ($this->additional) {
             // get stored data
             $extras = $this->attendance['extras'];
-            $base_salary = $this->additional['base_salary'];
         } else {
             // process data
             $extras = $this->weekAttendanceArray()['extras'];
-            $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
         }
 
-        $pesos_per_minute =  $base_salary / 360;
+        $pesos_per_minute =  1;
         $salary_for_extras = $extras * $pesos_per_minute;
 
         return $salary_for_extras;

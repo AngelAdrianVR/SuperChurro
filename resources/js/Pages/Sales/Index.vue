@@ -16,7 +16,7 @@
         <p v-for="(employee, index) in employees" :key="index">
           <i class="fa-solid fa-user text-gray-500"></i>
           {{ employee.name }}
-        </p>      
+        </p>
       </div>
 
       <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
@@ -84,14 +84,51 @@
               peer-placeholder-shown:translate-y-0
               peer-focus:scale-75 peer-focus:-translate-y-6
             ">Cantidad total en caja</label>
-            <SecondaryButton @click="storeCash" class="ml-3 my-2" :disabled="!cash">Guardar</SecondaryButton>
+          <SecondaryButton @click="storeCash" class="ml-3 my-2" :disabled="!cash">Guardar</SecondaryButton>
+        </div>
+        <div v-if="edit_stored_cash" class="relative z-0 w-1/2 group mx-4">
+          <input v-model="cash" type="text" name="floating_cash" autocomplete="off" required class="
+              block
+              py-2.5
+              px-0
+              w-full
+              text-sm text-gray-900
+              bg-transparent
+              border-0 border-b-2 border-gray-300
+              appearance-none
+              dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
+              focus:outline-none focus:ring-0 focus:border-stone-600
+              peer
+            " placeholder=" " />
+          <label for="floating_cash" class="
+              absolute
+              text-sm text-gray-500
+              dark:text-gray-700
+              duration-300
+              transform
+              -translate-y-6
+              scale-75
+              top-3
+              -z-10
+              origin-[0]
+              peer-focus:left-0
+              peer-focus:text-stone-600
+              peer-focus:dark:text-stone-500
+              peer-placeholder-shown:scale-100
+              peer-placeholder-shown:translate-y-0
+              peer-focus:scale-75 peer-focus:-translate-y-6
+            ">Cantidad total en caja</label>
+          <SecondaryButton @click="updateCash" class="ml-3 my-2" :disabled="!cash">Actualizar</SecondaryButton>
         </div>
         <div class="flex flex-col items-end">
           <p class="mx-3 font-bold text-green-600">Total: ${{
             totalSale().shift_1 + totalSale().shift_2 +
               totalSale().to_employees
           }}</p>
-          <p v-if="stored_cash.length" class="mx-3 font-bold text-green-600">registrado en caja: ${{ stored_cash[0].cash }}</p>
+          <div v-if="stored_cash.length" class="flex justify-between items-center cursor-pointer pl-2">
+            <i @click="edit_stored_cash = true" class="fa-solid fa-pencil text-blue-500"></i>
+            <p class="mx-3 font-bold text-green-600">registrado en caja: ${{ stored_cash[0].cash }}</p>
+          </div>
           <p v-if="stored_cash.length" v-html="saleDiff()"></p>
           <p class="mx-3 font-bold text-green-600">Comisión: ${{ totalSale().commissions }}</p>
         </div>
@@ -118,6 +155,7 @@ export default {
       stored_cash: null,
       cash: null,
       employees: [],
+      edit_stored_cash: false,
     }
   },
   components: {
@@ -164,15 +202,15 @@ export default {
     },
     saleDiff() {
       const total_sale = this.totalSale();
-      const total = total_sale.shift_1 
-      + total_sale.shift_2 
-      + total_sale.to_employees;
+      const total = total_sale.shift_1
+        + total_sale.shift_2
+        + total_sale.to_employees;
 
       const diff = this.stored_cash[0].cash - total;
 
-      return diff > 0 
-      ? '<span class="text-green-600 font-bold">Diferencia + $' + diff + '</span>'
-      : '<span class="text-red-600">Diferencia $' + diff + '</span>';
+      return diff > 0
+        ? '<span class="text-green-600 font-bold">Diferencia + $' + diff + '</span>'
+        : '<span class="text-red-600">Diferencia $' + diff + '</span>';
     },
     async storeCash() {
       try {
@@ -184,7 +222,19 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },  
+    },
+    async updateCash() {
+      try {
+        const response = await axios.post(route("cash-register.update"), {
+          cash: this.cash,
+          date: this.date
+        });
+        this.getSales(this.date);
+        this.edit_stored_cash = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>

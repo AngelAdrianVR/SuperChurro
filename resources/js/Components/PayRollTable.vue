@@ -7,10 +7,11 @@
         <div class="rounded-t mb-0 px-4 py-3 border-0">
           <div class="flex flex-wrap items-center">
             <div class="relative w-full px-4 max-w-full flex-grow flex-1 flex justify-between">
-              <h3 class="font-semibold text-lg text-white"><i class="fa-solid fa-user mr-1"></i> {{ payroll?.user.name }}</h3>
-              {{ payroll.pivot }}
-              <Link :href="route('payroll-admin.show', payroll.payroll_user_id)">
-                <PrimaryButton v-if="$page.props.user.is_admin">Ver nómina</PrimaryButton>
+              <h3 class="font-semibold text-lg text-white"><i class="fa-solid fa-user mr-1"></i> {{
+                payroll?.user.name
+              }}</h3>
+              <Link v-if="$page.props.user.is_admin" :href="route('payroll-admin.show', payroll.payroll_user_id)">
+              <PrimaryButton>Ver nómina</PrimaryButton>
               </Link>
             </div>
           </div>
@@ -28,9 +29,6 @@
                 <th
                   class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
                   Salida</th>
-                <!-- <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
-                  Tiempo Extra</th> -->
               </tr>
             </thead>
 
@@ -46,11 +44,6 @@
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                   {{ attendance.out }}
                 </td>
-                <!-- <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-                  <div class="flex">
-                    25 minutos
-                  </div>
-                </td> -->
               </tr>
             </tbody>
           </table>

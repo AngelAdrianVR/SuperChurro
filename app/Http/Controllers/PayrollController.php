@@ -85,7 +85,7 @@ class PayrollController extends Controller
     {
         $active_payroll = Payroll::where('is_active', true)->first();
 
-        // create new payroll
+        //create new payroll
         Payroll::create([
             'week' => $active_payroll->start_date->addDays(8)->weekOfYear,
             'start_date' => $active_payroll->start_date->addDays(7)->toDateString(),
@@ -107,8 +107,12 @@ class PayrollController extends Controller
                 'additional' => [
                     'base_salary' => User::find($user_payroll->pivot->user_id)->employee_properties['base_salary'],
                     'commissions' => $user_payroll->pivot->getCommissions($commissions)
-                ]
-            ]);
+                    ]
+                ]);
+
+            // decrement loan's amount if exists an active one
+            $loan = $user_payroll->activeLoan?->first();
+            $loan?->decrement('remaining', round($loan?->amount / 2, 2));
         });
 
         // store commissions & close payroll

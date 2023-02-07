@@ -64,17 +64,19 @@ class PayrollUser extends Pivot
                 $current_attendance[$i] = $this->typeOfAbsent($current_day_in_loop);
 
                 // add vacations or sub attendances
-                if ($current_attendance[$i]['in'] !== 'Vacaciones') $attendances--;
-                else $vacations++;
+                if ($current_attendance[$i]['in'] !== 'Vacaciones' && $current_attendance[$i]['in'] !== 'Día feriado') $attendances--;
+                else if ($current_attendance[$i]['in'] !== 'Vacaciones') $vacations++;
+
+                // 
             } else if ($current_attendance[$i]['out'] !== '--:--:--') {
                 // add aditional day salary (full day worked)
-                if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos') {
+                if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos' || $this->isHoliday($current_day_in_loop)) {
                     $days_as_double++;
                     $double_commission_on[] = $i;
-                }else if ($user->shiftOn($current_day_in_loop->dayOfWeek) !== 'carrito vespertino') {
+                } else if ($user->shiftOn($current_day_in_loop->dayOfWeek) !== 'carrito vespertino') {
                     $tolerance = 135;
                 }
-                
+
                 // calculate extras
                 $extras_per_day = Carbon::parse($current_attendance[$i]['out'])
                     ->diffInMinutes($user->getEntryTime()[$i])
@@ -92,10 +94,10 @@ class PayrollUser extends Pivot
                     ->first();
                 $late_per_day = $user->getEntryTime()[$i]
                     ->diffInMinutes(Carbon::parse($current_attendance[$i]['in']), false);
-                    
+
                 if ($late_entry_permit) $late_per_day -= $late_entry_permit->time_requested;
                 else $late_per_day -= 15;
-                    
+
                 if ($late_per_day < 0) $late_per_day = 0;
                 $late += $late_per_day;
             }
@@ -167,10 +169,9 @@ class PayrollUser extends Pivot
         return $is_there_an_approved_vacation;
     }
 
-    private function isHoliday($date)
+    private function isHoliday(Carbon $date)
     {
         $is_holiday = Holiday::where('date', $date->isoFormat('DD-MM'))
-            ->whereMonth('date', $date)
             ->get()
             ->count();
 
@@ -183,7 +184,7 @@ class PayrollUser extends Pivot
             + $this->vacationPremium()
             + collect($this->commissions())->sum()
             + $this->salaryForExtras()
-            - collect($this->discounts)->sum('amount');
+            - collect($this->discounts())->sum('amount');
 
         return round($total);
     }
@@ -254,7 +255,7 @@ class PayrollUser extends Pivot
         }
     }
 
-    public function getCommissions(Array $commissions = [])
+    public function getCommissions(array $commissions = [])
     {
         $current_payroll = Payroll::find($this->payroll_id);
         $user = User::find($this->user_id);
@@ -278,6 +279,17 @@ class PayrollUser extends Pivot
         return $user_commissions;
     }
 
+    public function discounts()
+    {
+        if ($this->additional) {
+            // get stored data
+            return $this->discounts;
+        } else {
+            // process data
+            return $this->getDiscounts();
+        }
+    }
+
     public function getDiscounts()
     {
         $user = User::find($this->user_id);
@@ -295,15 +307,13 @@ class PayrollUser extends Pivot
         }
 
         // loans
-        $loan = $user->loans()->whereNotNull('authorized_at')->where('remaining', '>', 0)->first();
+        $loan = $user->activeLoan->first();
         if ($loan) {
             $pay = $loan->amount / 2;
             $discounts[] = [
                 'amount' => round($pay, 2),
                 'description' => "Abono de préstamo autorizado"
             ];
-
-            $loan->decrement('remaining', round($pay, 2));
         }
 
         return $discounts;

@@ -83,6 +83,11 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Loan::class);
     }
 
+    public function activeLoan()
+    {
+        return $this->loans()->whereNotNull('authorized_at')->where('remaining', '>', 0);
+    }
+
     public function workPermits()
     {
         return $this->hasMany(WorkPermit::class);

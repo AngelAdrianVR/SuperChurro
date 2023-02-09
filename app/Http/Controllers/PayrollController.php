@@ -22,36 +22,6 @@ class PayrollController extends Controller
         return Inertia::render('PayRoll/Index', compact('payrolls'));
     }
 
-    public function create()
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-    public function show(Payroll $payroll)
-    {
-        //
-    }
-
-    public function edit(Payroll $payroll)
-    {
-        //
-    }
-
-    public function update(Request $request, Payroll $payroll)
-    {
-        //
-    }
-
-    public function destroy(Payroll $payroll)
-    {
-        //
-    }
-
     public function storeAttendance()
     {
         auth()->user()->checkAttendance();

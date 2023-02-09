@@ -258,29 +258,29 @@ class User extends Authenticatable implements HasMedia
     {
         $years_as_employee = $this->created_at->diffInYears();
         $employee_properties = $this->employee_properties;
-        $days_per_year = 0;
+        $days_per_year = 6;
 
-        if ($years_as_employee == 0) {
-            $days_per_year = 12;
-        } elseif ($years_as_employee == 1) {
-            $days_per_year = 14;
-        } elseif ($years_as_employee == 2) {
-            $days_per_year = 16;
-        } elseif ($years_as_employee == 3) {
-            $days_per_year = 18;
-        } elseif ($years_as_employee == 4) {
-            $days_per_year = 20;
-        } elseif ($years_as_employee >= 6 && $years_as_employee < 11) {
-            $days_per_year = 22;
-        } elseif ($years_as_employee >= 11 && $years_as_employee < 16) {
-            $days_per_year = 24;
-        } elseif ($years_as_employee >= 16 && $years_as_employee < 21) {
-            $days_per_year = 26;
-        } elseif ($years_as_employee >= 21 && $years_as_employee < 26) {
-            $days_per_year = 28;
-        } elseif ($years_as_employee >= 26) {
-            $days_per_year = 32;
-        }
+        // if ($years_as_employee == 0) {
+        //     $days_per_year = 12;
+        // } elseif ($years_as_employee == 1) {
+        //     $days_per_year = 14;
+        // } elseif ($years_as_employee == 2) {
+        //     $days_per_year = 16;
+        // } elseif ($years_as_employee == 3) {
+        //     $days_per_year = 18;
+        // } elseif ($years_as_employee == 4) {
+        //     $days_per_year = 20;
+        // } elseif ($years_as_employee >= 6 && $years_as_employee < 11) {
+        //     $days_per_year = 22;
+        // } elseif ($years_as_employee >= 11 && $years_as_employee < 16) {
+        //     $days_per_year = 24;
+        // } elseif ($years_as_employee >= 16 && $years_as_employee < 21) {
+        //     $days_per_year = 26;
+        // } elseif ($years_as_employee >= 21 && $years_as_employee < 26) {
+        //     $days_per_year = 28;
+        // } elseif ($years_as_employee >= 26) {
+        //     $days_per_year = 32;
+        // }
 
         $days_per_week = $days_per_year / 52;
         $employee_properties['vacations'] += round($days_per_week, 3);

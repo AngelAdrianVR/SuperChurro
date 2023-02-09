@@ -98,7 +98,7 @@ export default {
     return {
       geolocation_options: {
         enableHighAccuracy: true,
-        timeout: 5000,
+        timeout: 8000,
         maximumAge: 0
       },
       valid_areas: [

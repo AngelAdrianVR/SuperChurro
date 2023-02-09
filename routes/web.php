@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminRequestController;
 use App\Http\Controllers\BarterController;
+use App\Http\Controllers\BonusController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\NoticeController;
@@ -66,6 +67,7 @@ Route::resource('products', ProductController::class)->middleware(['auth', 'admi
 Route::resource('users', UserController::class)->middleware(['auth', 'admin']);
 Route::resource('sales', SaleController::class)->middleware(['auth']);
 Route::resource('settings', SettingController::class)->middleware(['auth', 'admin']);
+Route::resource('bonuses', BonusController::class)->middleware(['auth', 'admin']);
 Route::get('/admin/payrolls', [PayrollController::class, 'adminIndex'])->middleware(['auth', 'admin'])->name('payroll-admin.index');
 Route::get('/admin/payrolls/show-all/{payroll}', [PayrollController::class, 'showUsersPayrolls'])->middleware(['auth', 'admin'])->name('payroll-admin.show-all');
 Route::get('/admin/payrolls/show/{payrollUser}', [PayrollController::class, 'showUserPayroll'])->middleware(['auth', 'admin'])->name('payroll-admin.show');
@@ -129,3 +131,7 @@ Route::post('/cash-register/update', function (Request $request) {
 })
     ->middleware('auth')
     ->name('cash-register.update');
+
+Route::put('bonus/toggle-status/{bonus}', [BonusController::class, 'toggleStatus'])
+    ->middleware(['auth', 'admin'])
+    ->name('bonuses.toggle-status');

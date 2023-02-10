@@ -137,6 +137,17 @@
           >
           <InputError :message="$page.props?.errors.employee_properties?.base_salary" />
         </div>
+
+        <div class="mb-3">
+          <label class="w-full text-sm text-gray-500 block">Bonos</label>
+          <div class="grid grid-cols-2 lg:grid-cols-3 gap-1">
+            <label v-for="bonus in bonuses" :key="bonus.id">
+              <input v-model="form.employee_properties.bonuses" type="checkbox" :value="bonus.id" class="rounded border-gray-300 text-sky-600 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50" />
+              <span class="ml-1 text-xs text-gray-600">{{ bonus.name }}</span>
+            </label>
+          </div>
+        </div>
+
         <label class="mb-3 w-full text-sm text-gray-500">Días de trabajo</label>
         <div class="">
           <select
@@ -289,6 +300,7 @@ export default {
         work_days: this.user.employee_properties.work_days,
         vacations: 0,
         vacations_updated_date: this.user.employee_properties.vacations_updated_date,
+        bonuses: this.user.employee_properties.bonuses ?? [],
       },
       resources: [],
     });
@@ -326,6 +338,7 @@ export default {
   props: {
     user: Object,
     media: Array,
+    bonuses: Array,
   },
   methods: {
     update() {

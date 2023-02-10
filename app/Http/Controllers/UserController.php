@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Models\Bonus;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -23,7 +24,9 @@ class UserController extends Controller
 
     public function create()
     {
-        return inertia('User/Create');
+        $bonuses = Bonus::all();
+
+        return inertia('User/Create', compact('bonuses'));
     }
 
     public function store(Request $request)
@@ -38,10 +41,10 @@ class UserController extends Controller
             'employee_properties.work_days'=> 'required',
             'employee_properties.vacations'=> 'max:30',
             'employee_properties.vacations_updated_date'=> 'string',
+            'employee_properties.bonuses'=> 'nullable',
         ]);
 
         $user = User::create($validated + [
-            'employee_properties.vacations_updated_date' => now(),
             'password' => bcrypt('123'),
 
         ]);
@@ -57,7 +60,9 @@ class UserController extends Controller
     public function show(User $user)
     {
         $media = $user->getMedia()->all();
-        return inertia('User/Show', compact('user', 'media'));
+        $bonuses = Bonus::all();
+
+        return inertia('User/Show', compact('user', 'media', 'bonuses'));
     }
 
     public function edit(User $user)
@@ -76,6 +81,7 @@ class UserController extends Controller
             'employee_properties.work_days' => 'required',
             'employee_properties.vacations'=> 'max:30',
             'employee_properties.vacations_updated_date'=> 'min:1',
+            'employee_properties.bonuses'=> 'nullable',
         ]);
 
         $user->update($validated);

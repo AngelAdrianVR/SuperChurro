@@ -288,4 +288,19 @@ class User extends Authenticatable implements HasMedia
             Carbon::parse($employee_properties['vacations_updated_date'])->addDays(7)->toDateString();
         $this->update(['employee_properties' => $employee_properties]);
     }
+
+    public function getBonuses()
+    {
+        $bonuses_ids = $this->employee_properties['bonuses'];
+        $detailed_bonuses = [];
+
+        foreach($bonuses_ids as $id) {
+            $current_bonus = Bonus::find($id);
+            if($current_bonus->is_active) {
+                $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $current_bonus->amount];
+            }
+        }
+
+        return $detailed_bonuses;
+    }
 }

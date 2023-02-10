@@ -183,6 +183,7 @@ class PayrollUser extends Pivot
             + $this->vacationPremium()
             + collect($this->commissions())->sum()
             + $this->salaryForExtras()
+            + collect($this->bonuses())->sum('amount')
             - collect($this->discounts())->sum('amount');
 
         return round($total);
@@ -249,6 +250,19 @@ class PayrollUser extends Pivot
                 $commissions[$current_date->dayName] = $day_commission;
             }
             return $this->getCommissions($commissions);
+        }
+    }
+
+    public function bonuses()
+    {
+        if ($this->additional) {
+            // get stored data
+            return array_key_exists('bonuses', $this->additional)
+                ? $this->additional['bonuses']
+                : [];
+        } else {
+            // process data
+            return $this->user->getBonuses();
         }
     }
 

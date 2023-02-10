@@ -76,7 +76,8 @@ class PayrollController extends Controller
                 'attendance' => $user_payroll->pivot->weekAttendanceArray(),
                 'additional' => [
                     'base_salary' => User::find($user_payroll->pivot->user_id)->employee_properties['base_salary'],
-                    'commissions' => $user_payroll->pivot->getCommissions($commissions)
+                    'commissions' => $user_payroll->pivot->getCommissions($commissions),
+                    'bonuses' => $user_payroll->getBonuses()
                     ]
                 ]);
 

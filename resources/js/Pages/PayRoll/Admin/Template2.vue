@@ -22,13 +22,17 @@
                     +<i class="text-green-700 fa-solid fa-dollar mr-1"></i>
                     {{ commission }} comisión {{ week_days[index] }}
                 </span>
-                <span v-if="payroll_user.data.vacation_premium">+<i class="text-green-700 fa-solid fa-dollar mr-1"></i>{{
-                    payroll_user.data.vacation_premium
-                }} prima
+                <span v-for="(bonus, index) in payroll_user.data.bonuses" :key="index">
+                    +<i class="text-green-700 fa-solid fa-dollar mr-1"></i>
+                    {{ bonus.amount }} {{ bonus.name }}
+                </span>
+                <span v-if="payroll_user.data.vacation_premium">+<i
+                        class="text-green-700 fa-solid fa-dollar mr-1"></i>{{
+                            payroll_user.data.vacation_premium
+                        }} prima
                     vacacional</span>
                 <span>+<i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{ payroll_user.data.base_salary }}
-                    salario
-                    base</span>
+                    salario base semana</span>
                 <span v-if="payroll_user.data.salary_for_extras">+<i
                         class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{
                             payroll_user.data.salary_for_extras

@@ -291,7 +291,9 @@ class User extends Authenticatable implements HasMedia
 
     public function getBonuses()
     {
-        $bonuses_ids = $this->employee_properties['bonuses'];
+        $bonuses_ids = array_key_exists('bonuses', $this->employee_properties)
+        ? $this->employee_properties['bonuses'] 
+        : [];
         $detailed_bonuses = [];
 
         foreach($bonuses_ids as $id) {

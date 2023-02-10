@@ -100,6 +100,10 @@ Route::post('sales/get-by-date', [SaleController::class, 'getByDate'])
     ->middleware('auth')
     ->name('sales.get-sales-by-date');
 
+Route::post('sales/get-month-sale', [SaleController::class, 'getMonthSale'])
+    ->middleware('auth')
+    ->name('sales.get-month-sale');
+
 Route::post('payroll/store-attendance', [PayrollController::class, 'storeAttendance'])
     ->middleware('auth')
     ->name('payroll.store-attendance');

@@ -5,13 +5,18 @@
         Historial de ventas
       </h2>
     </template>
+
     <div class="mx-3 my-4 lg:w-1/3 lg:mx-auto">
       <label class="text-gray-500 text-sm">Selecciona la fecha para ver las ventas</label>
       <Datepicker v-model="date" inline auto-apply :month-change-on-scroll="false" model-type="yyyy-MM-dd"></Datepicker>
     </div>
 
+    <!-- <div class="flex justify-end my-3 mx-3">
+      <PrimaryButton @click="getMonthSale" :disabled="!date">Ver resumen de todo el mes</PrimaryButton>
+    </div> -->
+    
     <div v-if="shift_1_sales.length || shift_2_sales.length">
-      <div class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+      <div v-if="!showing_monthly_sales" class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
         <h1 class="col-span-full text-center text-sm font-bold">Empleados activos este día</h1>
         <p v-for="(employee, index) in employees" :key="index">
           <i class="fa-solid fa-user text-gray-500"></i>
@@ -42,7 +47,7 @@
       <div class="mt-3 mx-3 text-xs lg:grid lg:grid-cols-2 gap-1 bg-white shadow-md rounded-md px-2 py-1">
         <h1 class="col-span-full text-center text-sm font-bold">Ventas a empleados / cortesías</h1>
         <p v-for="sale in sales_to_employees" :key="sale.id">
-          <span class="bg-sky-200"><i class="fa-solid fa-user mr-1"></i> {{ sale.user.name }}:</span>
+          <span class="bg-sky-200"><i class="fa-solid fa-user mr-1"></i> {{ sale.user?.name }}:</span>
           {{ sale.product.name }} x{{ sale.quantity }}
           <i class="fa-solid fa-arrow-right-long text-green-500"></i>
           ${{ sale.price * sale.quantity }}
@@ -141,6 +146,7 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -156,11 +162,13 @@ export default {
       cash: null,
       employees: [],
       edit_stored_cash: false,
+      showing_monthly_sales: false,
     }
   },
   components: {
     AppLayout,
     SecondaryButton,
+    PrimaryButton,
     Link,
     Datepicker
   },
@@ -184,6 +192,22 @@ export default {
         this.employees = response.data.employees;
         this.sales_to_employees = response.data.sales_to_employees;
         this.stored_cash = response.data.stored_cash;
+        this.showing_monthly_sales = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getMonthSale() {
+      try {
+        const response = await axios.post(route("sales.get-month-sale"), {
+          date: this.date,
+        });
+        this.shift_1_sales = response.data.shift_1_sales;
+        this.shift_2_sales = response.data.shift_2_sales;
+        this.employees = response.data.employees;
+        this.sales_to_employees = response.data.sales_to_employees;
+        this.stored_cash = response.data.stored_cash;
+        this.showing_monthly_sales = true;
       } catch (error) {
         console.log(error);
       }
@@ -235,6 +259,14 @@ export default {
         console.log(error);
       }
     },
+    // orderByProduct(sales) {
+    //   const _array = Object.values(sales);
+    //   const sales_ordered = _array.map(sale => {
+    //     let _sale = Object.values(sale);
+    //     _sale.reduce((accumulator, currentValue) => currentValue.quantity + accumulator.quantity);
+    //   });
+    //   console.log(sales_ordered);
+    // }
   },
 };
 </script>

@@ -108,4 +108,33 @@ class SaleController extends Controller
 
         return response()->json(compact('shift_1_sales', 'shift_2_sales', 'sales_to_employees', 'stored_cash', 'employees'));
     }
+
+    public function getMonthSale(Request $request)
+    {
+        // refactor (used in cartController too)
+        $middle_date = Carbon::parse($request->date)->addHours(16);
+        $month = Carbon::parse($request->date)->month;
+        
+        $shift_1_sales = Sale::whereMonth('created_at', $month)
+            ->whereTime('created_at', '<', $middle_date)
+            ->with('product')
+            ->get()->groupBy(function($data) {
+                return $data->product->id;
+            });
+
+        $shift_2_sales = Sale::whereMonth('created_at', $month)
+        ->whereTime('created_at', '>', $middle_date)
+        ->with('product')
+        ->get();
+
+        $sales_to_employees = SaleToEmployee::whereMonth('created_at', $month)
+        ->with('product', 'user')
+        ->get();
+
+        $stored_cash = CashRegister::whereMonth('date', $month)->get();
+
+        $employees = [];
+
+        return response()->json(compact('shift_1_sales', 'shift_2_sales', 'sales_to_employees', 'stored_cash', 'employees'));
+    }
 }

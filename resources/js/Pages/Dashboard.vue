@@ -116,7 +116,12 @@ export default {
           label: "Casa",
           latitudes: [20.76441, 20.76641],
           longitudes: [-103.42651, -103.40651]
-        }
+        },
+        // {
+        //   label: "LocalHost test",
+        //   latitudes: [20.16441, 20.96641],
+        //   longitudes: [-103.92651, -103.10651]
+        // }
       ],
     };
   },

@@ -1,5 +1,4 @@
 <template>
-  <!-- component -->
   <section class="relative py-2 bg-blueGray-50">
     <div class="w-full px-4">
       <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded 
@@ -29,6 +28,9 @@
                 <th
                   class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
                   Salida</th>
+                <th v-if="$page.props.user.is_admin" class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
+                  Editar
+                </th>
               </tr>
             </thead>
 
@@ -39,10 +41,20 @@
                   <span class="ml-3 font-bold text-white"> {{ attendance.day }} </span>
                 </th>
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-                  {{ attendance.in }}
+                  <input v-if="day_in_edition === index" v-model="form.payroll[index].in" type="text"
+                    class="bg-transparent text-sm rounded-md">
+                  <p v-else>{{ attendance.in }}</p>
                 </td>
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-                  {{ attendance.out }}
+                  <input v-if="day_in_edition === index" v-model="form.payroll[index].out" type="text"
+                    class="bg-transparent text-sm rounded-md">
+                  <p v-else>{{ attendance.out }}</p>
+                </td>
+                <td v-if="$page.props.user.is_admin" class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+                  <button v-if="day_in_edition === index" @click="update()" class="text-lg text-green-400 ml-5"><i
+                      class="fa-regular fa-circle-check"></i></button>
+                  <button v-else @click="edit(index)" class="text-lg text-blue-400 ml-5"><i
+                      class="fa-solid fa-pencil"></i></button>
                 </td>
               </tr>
             </tbody>
@@ -57,11 +69,18 @@
 <script>
 
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Link } from '@inertiajs/inertia-vue3';
+import { Inertia } from '@inertiajs/inertia';
+import { Link, useForm } from '@inertiajs/inertia-vue3';
 
 export default {
   data() {
+    const form = useForm({
+      payroll: [],
+    });
+
     return {
+      form,
+      day_in_edition: null,
     };
   },
   components: {
@@ -71,5 +90,16 @@ export default {
   props: {
     payroll: Object,
   },
+  methods: {
+    edit(day) {
+      this.form.payroll = this.payroll.week_attendance.payroll;
+      this.day_in_edition = day;
+    },
+    update() {
+      // this.form.payroll = this.payroll.week_attendance.payroll;
+      Inertia.post(route('payroll-admin.update'), {attendance: this.form.payroll[this.day_in_edition], day: this.day_in_edition});
+      this.day_in_edition = null;
+    }
+  }
 }
 </script>

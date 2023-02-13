@@ -219,7 +219,7 @@ class User extends Authenticatable implements HasMedia
             ->where('user_id', $this->id)
             ->first();
 
-        $today_attendance = ['in' => now()->toTimeString(), 'out' => '--:--:--'];
+        $today_attendance = ['in' => now()->toTimeString(), 'out' => '--:--:--', 'day' => today()->dayOfWeek];
 
         // isn't the first attendance in current payroll?
         if ($payroll_user) {

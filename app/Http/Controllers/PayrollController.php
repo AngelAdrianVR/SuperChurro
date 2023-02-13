@@ -92,4 +92,9 @@ class PayrollController extends Controller
             'is_active' => false,
         ]);
     }
+
+    public function updatePayroll(Request $request)
+    {
+        dd($request->all());
+    }
 }

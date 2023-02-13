@@ -95,6 +95,28 @@ class PayrollController extends Controller
 
     public function updatePayroll(Request $request)
     {
-        dd($request->all());
+        $payroll_user = PayrollUser::find($request->payroll_user_id);
+        $is_absent = true;
+
+        $attendance = $payroll_user->attendance;
+        foreach($attendance as $key => $record) {
+            if($record['day'] == $request->day) {
+                $attendance[$key]['in'] = $request->attendance['in']; 
+                $attendance[$key]['out'] = $request->attendance['out']; 
+                $is_absent = false;
+                break;
+            }
+        }
+
+        // it was an absent: create new attendance day
+        if ($is_absent) {
+            $attendance[$request->day] = [
+                'in' => $request->attendance['in'],
+                'out' => $request->attendance['out'],
+                'day' => $request->day,
+            ];
+        }
+        
+        $payroll_user->update(['attendance' => $attendance]);
     }
 }

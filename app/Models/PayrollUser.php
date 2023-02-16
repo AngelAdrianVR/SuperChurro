@@ -55,7 +55,7 @@ class PayrollUser extends Pivot
         $vacations = 0;
         $extras = 0; // minutes
         $late = 0; // minutes
-        $tolerance = 10;
+        $tolerance = 15;
 
         for ($i = 0; $i < 7; $i++) {
             $current_day_in_loop = $current_payroll->start_date->addDays($i);
@@ -97,7 +97,7 @@ class PayrollUser extends Pivot
                 if ($late_entry_permit) $late_per_day -= $late_entry_permit->time_requested;
                 // else $late_per_day -= 15;
 
-                if (($late_per_day - 15) <= 0) $late_per_day = 0;
+                if (($late_per_day - 10) <= 0) $late_per_day = 0;
                 $late += $late_per_day;
             }
 

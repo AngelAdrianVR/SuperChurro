@@ -55,7 +55,7 @@ class PayrollUser extends Pivot
         $vacations = 0;
         $extras = 0; // minutes
         $late = 0; // minutes
-        $tolerance = 15;
+        $tolerance = 10;
 
         for ($i = 0; $i < 7; $i++) {
             $current_day_in_loop = $current_payroll->start_date->addDays($i);

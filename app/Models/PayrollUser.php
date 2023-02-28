@@ -64,8 +64,8 @@ class PayrollUser extends Pivot
                 $current_attendance[$i] = $this->typeOfAbsent($current_day_in_loop);
 
                 // add vacations or sub attendances
-                if ($current_attendance[$i]['in'] !== 'Vacaciones' && $current_attendance[$i]['in'] !== 'Día feriado') $attendances--;
-                else if ($current_attendance[$i]['in'] !== 'Vacaciones') $vacations++;
+                if ($current_attendance[$i]['in'] !== 'Día feriado') $attendances--;
+                if ($current_attendance[$i]['in'] == 'Vacaciones') $vacations++;
 
                 // 
             } else if ($current_attendance[$i]['out'] !== '--:--:--') {
@@ -202,7 +202,7 @@ class PayrollUser extends Pivot
             $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
         }
 
-        return ($week_attendance['attendances'] + $week_attendance['days_as_double']) * $base_salary;
+        return ($week_attendance['attendances'] + $week_attendance['days_as_double'] + $week_attendance['vacations']) * $base_salary;
     }
 
     public function salaryForExtras()

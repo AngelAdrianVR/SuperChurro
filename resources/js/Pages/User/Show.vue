@@ -298,7 +298,7 @@ export default {
         birthdate: this.user.employee_properties.birthdate,
         base_salary: this.user.employee_properties.base_salary,
         work_days: this.user.employee_properties.work_days,
-        vacations: 0,
+        vacations: this.user.employee_properties.vacations,
         vacations_updated_date: this.user.employee_properties.vacations_updated_date,
         bonuses: this.user.employee_properties.bonuses ?? [],
       },

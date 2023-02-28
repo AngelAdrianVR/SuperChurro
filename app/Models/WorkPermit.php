@@ -23,9 +23,9 @@ class WorkPermit extends Model
     ];
 
     // constants
-    const STATUS_IN_CHECKING = 0,
-        STATUS_APPROVED = 1,
-        STATUS_REJECTED = 2;
+    const STATUS_IN_CHECKING = 1,
+    STATUS_APPROVED = 2,
+    STATUS_REJECTED = 3;
 
     //Relationships
     public function user(){

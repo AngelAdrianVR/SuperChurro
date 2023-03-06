@@ -11,12 +11,17 @@
       <Datepicker v-model="date" inline auto-apply :month-change-on-scroll="false" model-type="yyyy-MM-dd"></Datepicker>
     </div>
 
-    <!-- <div class="flex justify-end my-3 mx-3">
-      <PrimaryButton @click="getMonthSale" :disabled="!date">Ver resumen de todo el mes</PrimaryButton>
-    </div> -->
-    
     <div v-if="shift_1_sales.length || shift_2_sales.length">
-      <div v-if="!showing_monthly_sales" class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+      <div class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+        <h1 class="col-span-full text-center text-sm font-bold">Venta mensual acumulada</h1>
+        <p>
+          Ventas: ${{ numberFormat(totalMonthSale().month_sales + totalMonthSale().to_employees) }} <br>
+          <span>registrado en caja: ${{ numberFormat(month_stored_cash) }}</span> <br>
+          <span v-html="monthSaleDiff()"></span>
+        </p>
+      </div>
+
+      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
         <h1 class="col-span-full text-center text-sm font-bold">Empleados activos este día</h1>
         <p v-for="(employee, index) in employees" :key="index">
           <i class="fa-solid fa-user text-gray-500"></i>
@@ -59,76 +64,76 @@
       <div class="flex justify-between mt-3">
         <div v-if="!stored_cash.length" class="relative z-0 w-1/2 group mx-4">
           <input v-model="cash" type="text" name="floating_cash" autocomplete="off" required class="
-              block
-              py-2.5
-              px-0
-              w-full
-              text-sm text-gray-900
-              bg-transparent
-              border-0 border-b-2 border-gray-300
-              appearance-none
-              dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-              focus:outline-none focus:ring-0 focus:border-stone-600
-              peer
-            " placeholder=" " />
+                block
+                py-2.5
+                px-0
+                w-full
+                text-sm text-gray-900
+                bg-transparent
+                border-0 border-b-2 border-gray-300
+                appearance-none
+                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
+                focus:outline-none focus:ring-0 focus:border-stone-600
+                peer
+              " placeholder=" " />
           <label for="floating_cash" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">Cantidad total en caja</label>
+                absolute
+                text-sm text-gray-500
+                dark:text-gray-700
+                duration-300
+                transform
+                -translate-y-6
+                scale-75
+                top-3
+                -z-10
+                origin-[0]
+                peer-focus:left-0
+                peer-focus:text-stone-600
+                peer-focus:dark:text-stone-500
+                peer-placeholder-shown:scale-100
+                peer-placeholder-shown:translate-y-0
+                peer-focus:scale-75 peer-focus:-translate-y-6
+              ">Cantidad total en caja</label>
           <SecondaryButton @click="storeCash" class="ml-3 my-2" :disabled="!cash">Guardar</SecondaryButton>
         </div>
         <div v-if="edit_stored_cash" class="relative z-0 w-1/2 group mx-4">
           <input v-model="cash" type="text" name="floating_cash" autocomplete="off" required class="
-              block
-              py-2.5
-              px-0
-              w-full
-              text-sm text-gray-900
-              bg-transparent
-              border-0 border-b-2 border-gray-300
-              appearance-none
-              dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-              focus:outline-none focus:ring-0 focus:border-stone-600
-              peer
-            " placeholder=" " />
+                block
+                py-2.5
+                px-0
+                w-full
+                text-sm text-gray-900
+                bg-transparent
+                border-0 border-b-2 border-gray-300
+                appearance-none
+                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
+                focus:outline-none focus:ring-0 focus:border-stone-600
+                peer
+              " placeholder=" " />
           <label for="floating_cash" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">Cantidad total en caja</label>
+                absolute
+                text-sm text-gray-500
+                dark:text-gray-700
+                duration-300
+                transform
+                -translate-y-6
+                scale-75
+                top-3
+                -z-10
+                origin-[0]
+                peer-focus:left-0
+                peer-focus:text-stone-600
+                peer-focus:dark:text-stone-500
+                peer-placeholder-shown:scale-100
+                peer-placeholder-shown:translate-y-0
+                peer-focus:scale-75 peer-focus:-translate-y-6
+              ">Cantidad total en caja</label>
           <SecondaryButton @click="updateCash" class="ml-3 my-2" :disabled="!cash">Actualizar</SecondaryButton>
         </div>
         <div class="flex flex-col items-end">
           <p class="mx-3 font-bold text-green-600">Total: ${{
             totalSale().shift_1 + totalSale().shift_2 +
-              totalSale().to_employees
+            totalSale().to_employees
           }}</p>
           <div v-if="stored_cash.length" class="flex justify-between items-center cursor-pointer pl-2">
             <i @click="edit_stored_cash = true" class="fa-solid fa-pencil text-blue-500"></i>
@@ -156,13 +161,14 @@ export default {
     return {
       date: null,
       shift_1_sales: [],
+      month_sales: [],
       shift_2_sales: [],
       sales_to_employees: [],
       stored_cash: null,
+      month_stored_cash: null,
       cash: null,
       employees: [],
       edit_stored_cash: false,
-      showing_monthly_sales: false,
     }
   },
   components: {
@@ -179,6 +185,7 @@ export default {
   watch: {
     date(newDate, oldDate) {
       this.getSales(newDate);
+      this.getMonthSale(newDate);
     },
   },
   methods: {
@@ -197,17 +204,14 @@ export default {
         console.log(error);
       }
     },
-    async getMonthSale() {
+    async getMonthSale(date) {
       try {
         const response = await axios.post(route("sales.get-month-sale"), {
-          date: this.date,
+          date: date,
         });
-        this.shift_1_sales = response.data.shift_1_sales;
-        this.shift_2_sales = response.data.shift_2_sales;
-        this.employees = response.data.employees;
-        this.sales_to_employees = response.data.sales_to_employees;
-        this.stored_cash = response.data.stored_cash;
-        this.showing_monthly_sales = true;
+        this.month_sales = response.data.month_sales;
+        this.month_sales_to_employees = response.data.month_sales_to_employees;
+        this.month_stored_cash = response.data.month_stored_cash;
       } catch (error) {
         console.log(error);
       }
@@ -224,6 +228,17 @@ export default {
 
       return { shift_1: shift_1, shift_2: shift_2, to_employees: to_employees, commissions: commissions };
     },
+    totalMonthSale() {
+      let month_sales = 0, to_employees = 0, commissions;
+      this.month_sales.forEach(sale => month_sales += (sale.quantity * sale.price));
+      this.sales_to_employees.forEach(sale => to_employees += (sale.quantity * sale.price));
+
+      // this.shift_1_sales[0]: churro price at the moment of sale
+      const churros_sold = ((month_sales + to_employees) / (this.shift_1_sales[0].price)) + 5;
+      commissions = Math.floor(churros_sold / 100) * 10;
+
+      return { month_sales: month_sales, to_employees: to_employees, commissions: commissions };
+    },
     saleDiff() {
       const total_sale = this.totalSale();
       const total = total_sale.shift_1
@@ -231,6 +246,17 @@ export default {
         + total_sale.to_employees;
 
       const diff = this.stored_cash[0].cash - total;
+
+      return diff > 0
+        ? '<span class="text-green-600 font-bold">Diferencia + $' + diff + '</span>'
+        : '<span class="text-red-600">Diferencia $' + diff + '</span>';
+    },
+    monthSaleDiff() {
+      const total_sale = this.totalMonthSale();
+      const total = total_sale.month_sales
+        + total_sale.to_employees;
+
+      const diff = this.numberFormat(this.month_stored_cash - total);
 
       return diff > 0
         ? '<span class="text-green-600 font-bold">Diferencia + $' + diff + '</span>'
@@ -259,14 +285,11 @@ export default {
         console.log(error);
       }
     },
-    // orderByProduct(sales) {
-    //   const _array = Object.values(sales);
-    //   const sales_ordered = _array.map(sale => {
-    //     let _sale = Object.values(sale);
-    //     _sale.reduce((accumulator, currentValue) => currentValue.quantity + accumulator.quantity);
-    //   });
-    //   console.log(sales_ordered);
-    // }
+    numberFormat(number) {
+      const exp = /(\d)(?=(\d{3})+(?!\d))/g;
+      const rep = '$1,';
+      return number.toString().replace(exp, rep);
+    }
   },
 };
 </script>

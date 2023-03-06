@@ -115,26 +115,16 @@ class SaleController extends Controller
         $middle_date = Carbon::parse($request->date)->addHours(16);
         $month = Carbon::parse($request->date)->month;
         
-        $shift_1_sales = Sale::whereMonth('created_at', $month)
-            ->whereTime('created_at', '<', $middle_date)
+        $month_sales = Sale::whereMonth('created_at', $month)
             ->with('product')
-            ->get()->groupBy(function($data) {
-                return $data->product->id;
-            });
-
-        $shift_2_sales = Sale::whereMonth('created_at', $month)
-        ->whereTime('created_at', '>', $middle_date)
-        ->with('product')
-        ->get();
-
-        $sales_to_employees = SaleToEmployee::whereMonth('created_at', $month)
+            ->get();
+            
+        $month_sales_to_employees = SaleToEmployee::whereMonth('created_at', $month)
         ->with('product', 'user')
         ->get();
 
-        $stored_cash = CashRegister::whereMonth('date', $month)->get();
+        $month_stored_cash = CashRegister::whereMonth('date', $month)->get()->sum('cash');
 
-        $employees = [];
-
-        return response()->json(compact('shift_1_sales', 'shift_2_sales', 'sales_to_employees', 'stored_cash', 'employees'));
+        return response()->json(compact('month_sales', 'month_sales_to_employees', 'month_stored_cash'));
     }
 }

@@ -187,10 +187,10 @@ class UserController extends Controller
         $month_salary = $work_days_per_week * $base_salary * 4; 
         $daily_salary = $month_salary / 30;
         $bonus_days = ($worked_days * 15) / 365;
-        $chrismas_bonus = number_format($bonus_days * $daily_salary);
-        $proporcional_vacations = number_format($user->employee_properties['vacations'] * $base_salary);
-        $vacation_bonus =  number_format($user->employee_properties['vacations'] * $base_salary * 0.25);
-        $settlement = number_format($proporcional_vacations + $vacation_bonus + $chrismas_bonus);
+        $chrismas_bonus = round($bonus_days * $daily_salary);
+        $proporcional_vacations = $user->employee_properties['vacations'] * $base_salary;
+        $vacation_bonus =  $user->employee_properties['vacations'] * $base_salary * 0.25;
+        $settlement = round($proporcional_vacations + $vacation_bonus + $chrismas_bonus);
 
         return inertia('User/Calculations/SettlementTemplate', compact('user', 'chrismas_bonus','month_salary', 'proporcional_vacations', 'vacation_bonus', 'settlement' ));
     }

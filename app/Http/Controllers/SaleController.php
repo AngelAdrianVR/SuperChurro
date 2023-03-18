@@ -71,7 +71,7 @@ class SaleController extends Controller
 
     public function update(Request $request, Sale $sale)
     {
-        //
+        $sale->update(['quantity' => $request->quantity]);
     }
 
     public function destroy(Sale $sale)

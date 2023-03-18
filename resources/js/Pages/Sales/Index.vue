@@ -35,6 +35,7 @@
           {{ sale.product.name }} x{{ sale.quantity }}
           <i class="fa-solid fa-arrow-right-long text-green-500"></i>
           ${{ sale.price * sale.quantity }}
+          <i @click="editSale(sale)" class="fa-solid fa-pencil text-blue-400 text-xs cursor-pointer ml-1"></i>
         </p>
         <strong class="col-span-full text-right">Total: ${{ totalSale().shift_1 }}</strong>
       </div>
@@ -45,6 +46,7 @@
           {{ sale.product.name }} x{{ sale.quantity }}
           <i class="fa-solid fa-arrow-right-long text-green-500"></i>
           ${{ sale.price * sale.quantity }}
+          <i @click="editSale(sale)" class="fa-solid fa-pencil text-blue-400 text-xs cursor-pointer ml-1"></i>
         </p>
         <strong class="col-span-full text-right">Total: ${{ totalSale().shift_2 }}</strong>
       </div>
@@ -145,6 +147,51 @@
       </div>
     </div>
     <p v-else class="mt-6 text-sm text-gray-500 text-center">No hay ventas para mostrar</p>
+
+    <DialogModal :show="show_edit_sale_modal" @close="show_edit_sale_modal = false">
+      <template #title>
+        Editar venta <span class="text-sky-600 font-bold">{{ edit_sale.product.name }}</span>
+      </template>
+      <template #content>
+          <div class="relative z-0 mb-6 w-full group">
+            <input v-model="form.quantity" type="number" name="floating_time_requested" autocomplete="off" required class="
+                block
+                py-2.5
+                px-0
+                w-full
+                text-sm text-gray-900
+                bg-transparent
+                border-0 border-b-2 border-gray-300
+                appearance-none
+                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
+                focus:outline-none focus:ring-0 focus:border-stone-600
+                peer
+              " placeholder=" " />
+            <label for="floating_name" class="
+                absolute
+                text-sm text-gray-500
+                dark:text-gray-700
+                duration-300
+                transform
+                -translate-y-6
+                scale-75
+                top-3
+                -z-10
+                origin-[0]
+                peer-focus:left-0
+                peer-focus:text-stone-600
+                peer-focus:dark:text-stone-500
+                peer-placeholder-shown:scale-100
+                peer-placeholder-shown:translate-y-0
+                peer-focus:scale-75 peer-focus:-translate-y-6
+              ">Cantidad *</label>
+          </div>
+      </template>
+      <template #footer>
+        <SecondaryButton @click="show_edit_sale_modal = false">Cancelar</SecondaryButton>
+        <PrimaryButton @click="updateSale" class="ml-2" :disabled="form.processing">Guardar</PrimaryButton>
+      </template>
+    </DialogModal>
   </AppLayout>
 </template>
 
@@ -152,12 +199,16 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { Link } from "@inertiajs/inertia-vue3";
+import DialogModal from "@/Components/DialogModal.vue";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
+import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
   data() {
+    const form = useForm({
+      quantity: null,
+    });
     return {
       date: null,
       shift_1_sales: [],
@@ -169,6 +220,9 @@ export default {
       cash: null,
       employees: [],
       edit_stored_cash: false,
+      show_edit_sale_modal: false,
+      edit_sale: null,
+      form,
     }
   },
   components: {
@@ -176,7 +230,8 @@ export default {
     SecondaryButton,
     PrimaryButton,
     Link,
-    Datepicker
+    Datepicker,
+    DialogModal,
   },
   props: {
     products: Array,
@@ -289,6 +344,23 @@ export default {
       const exp = /(\d)(?=(\d{3})+(?!\d))/g;
       const rep = '$1,';
       return number.toString().replace(exp, rep);
+    }, 
+    editSale(sale) {
+      this.edit_sale = sale;
+      this.form.quantity = sale.quantity;
+      this.show_edit_sale_modal = true;
+    },
+    updateSale() {
+      this.form.put(route('sales.update', this.edit_sale.id), {
+        onSuccess: () => {
+          this.show_edit_sale_modal = false;
+          let sale = this.shift_1_sales.find(item => this.edit_sale.id === item.id);
+          if (!sale)
+            sale = this.shift_2_sales.find(item => this.edit_sale.id === item.id);
+          
+          sale.quantity = this.form.quantity;
+        },
+      });
     }
   },
 };

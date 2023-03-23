@@ -71,7 +71,11 @@ class PayrollUser extends Pivot
             } else if ($current_attendance[$i]['out'] !== '--:--:--') {
                 // add aditional day salary (full day worked)
                 if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos' || $this->isHoliday($current_day_in_loop)) {
-                    $days_as_double++;
+                    if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos' && $this->isHoliday($current_day_in_loop)) {
+                        $days_as_double += 3;
+                    } else {
+                        $days_as_double++;
+                    }
                     $double_commission_on[] = $i;
                 } else if ($user->shiftOn($current_day_in_loop->dayOfWeek) !== 'carrito vespertino') {
                     $tolerance = 135;

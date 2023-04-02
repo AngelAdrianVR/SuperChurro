@@ -54,6 +54,11 @@ const admin_menues = [
     route_name: "bonuses.index",
     is_active: route().current("bonuses.*"),
   },
+  {
+    label: "Egresos",
+    route_name: "outcomes.index",
+    is_active: route().current("outcomes.*"),
+  },
 ];
 
 const menues = [

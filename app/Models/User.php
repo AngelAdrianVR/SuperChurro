@@ -103,6 +103,11 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Barter::class, 'receptor_user_id');
     }
 
+    public function outcomes()
+    {
+        return $this->hasMany(Outcome::class);
+    }
+
     // methods
     public function getTimeToWork()
     {

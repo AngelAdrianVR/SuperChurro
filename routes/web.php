@@ -85,6 +85,7 @@ Route::resource('notices', NoticeController::class)->middleware(['auth', 'admin'
 Route::get('/admin/christmas-bonus/show/{user}', [UserController::class, 'showUsersCrhismasBonus'])->middleware(['auth', 'admin'])->name('chrismas-bonus.show');
 Route::get('/admin/settlement/show/{user}', [UserController::class, 'showUserSettlement'])->middleware(['auth', 'admin'])->name('settlement.show');
 Route::get('/admin/vacation_bonus/show/{user}', [UserController::class, 'showUserVacationBonus'])->middleware(['auth', 'admin'])->name('vacation-bonus.show');
+Route::get('/product-request-history', [ProductRequestController::class, 'history'])->middleware(['auth', 'admin'])->name('product-request.history');
 
 //Specific-action routes
 Route::put('/disable/{user}', [UserController::class, 'disable'])->middleware('auth')->name('user.disable');

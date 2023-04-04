@@ -54,7 +54,10 @@
 
     <div>
       <p class="text-sky-500 text-left ml-3 my-3 font-semibold">
-        Solicitudes de mercancía (Hoy)
+        Solicitudes de mercancía (Hoy) 
+        <Link :href="route('product-request.history')">
+        <SecondaryButton v-if="$page.props.user.is_admin">Ver historial</SecondaryButton>
+        </Link>
       </p>
 
       <div class="globe-container flex-col">

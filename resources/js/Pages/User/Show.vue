@@ -199,11 +199,11 @@
           </div>
           <div>
             <span
-              v-for="item in form.employee_properties.work_days"
+              v-for="(item, index) in form.employee_properties.work_days"
               :key="item.day"
               class="bg-sky-100 px-1 py-px rounded-md mr-3 text-xs"
             >
-              {{ week_days[item.day] }} - {{ item.shift }}
+              {{ week_days[item.day] }} - {{ item.shift }} <button type="button" @click="deleteWorkDay(index)">x</button>
             </span>
           </div>
         </div>
@@ -368,6 +368,9 @@ export default {
     },
     cleanWorkDays() {
       this.form.employee_properties.work_days = [];
+    },
+    deleteWorkDay(index) {
+      this.form.employee_properties.work_days.splice(index, 1);
     },
   },
 };

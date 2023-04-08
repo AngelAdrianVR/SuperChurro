@@ -43,12 +43,17 @@
         </p>
       </div>
 
+      <div class="flex justify-end">
+      <Pagination :pagination="requests" />
+    </div>
+
   </AppLayout>
 </template>
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/inertia-vue3";
+import Pagination from "@/Components/Pagination.vue";
 
 export default {
   data() {
@@ -59,6 +64,7 @@ export default {
   components: {
     AppLayout,
     Link,
+    Pagination,
   },
   props: {
     requests: Array,

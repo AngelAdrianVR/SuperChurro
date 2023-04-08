@@ -252,8 +252,8 @@
             </div>
             <SecondaryButton @click="addWorkDay" class="mb-4">Agregar día</SecondaryButton>
             <div>
-              <span v-for="item in form.employee_properties.work_days" :key="item.day" class="bg-sky-100 px-1 py-px rounded-md mr-3 text-xs">
-                {{ week_days[item.day] }} - {{ item.shift }}
+              <span v-for="(item,index) in form.employee_properties.work_days" :key="item.day" class="bg-sky-100 px-1 py-px rounded-md mr-3 text-xs">
+                {{ week_days[item.day] }} - {{ item.shift }} <button type="button" @click="deleteWorkDay(index)">x</button>
               </span>
             </div>
           </div>
@@ -354,6 +354,9 @@ export default {
     },
     addWorkDay() {
       this.form.employee_properties.work_days.push({day: this.selected_day, shift: this.selected_shift});
+    },
+    deleteWorkDay(index) {
+      this.form.employee_properties.work_days.splice(index);
     },
   },
 };

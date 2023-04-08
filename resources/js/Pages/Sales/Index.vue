@@ -290,11 +290,11 @@ export default {
       this.sales_to_employees.forEach(sale => to_employees += (sale.quantity * sale.price));
 
       // this.shift_1_sales[0]: churro price at the moment of sale
-      if (this.shift_1_sales) {
-        churros_sold = ((month_sales + to_employees) / (this.shift_1_sales[0].price)) + 5;
+      if (this.shift_1_sales.length) {
+        churros_sold = ((month_sales + to_employees) / (this.shift_1_sales[0]?.price)) + 5;
       }
       else {
-        churros_sold = ((month_sales + to_employees) / (this.shift_2_sales[0].price)) + 5;
+        churros_sold = ((month_sales + to_employees) / (this.shift_2_sales[0]?.price)) + 5;
       }
 
       commissions = Math.floor(churros_sold / 100) * 10;

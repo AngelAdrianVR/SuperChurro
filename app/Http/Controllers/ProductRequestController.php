@@ -95,7 +95,7 @@ class ProductRequestController extends Controller
 
     public function history()
     {
-        $requests = ProductRequestHistoryResource::collection(ProductRequest::with('user')->latest()->get());
+        $requests = ProductRequestHistoryResource::collection(ProductRequest::with('user')->latest()->paginate(30));
         // return $requests;
         return inertia('ProductRequest/History', compact('requests'));
     }

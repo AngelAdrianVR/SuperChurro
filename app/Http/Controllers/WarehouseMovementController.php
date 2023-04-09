@@ -90,16 +90,18 @@ class WarehouseMovementController extends Controller
 
     public function showProductRecord($product_id)
     {
-        $product = Product::with(['movements' => ['user', 'concept'], 'unit'])
-            ->find($product_id);
+        $product = Product::with('unit')
+                ->find($product_id);   
+
+        $movements = WarehouseMovement::with('user', 'concept')->where('product_id', $product_id)->latest()->paginate(30);
 
             // $item->load(array('tags' => function($query) {
             // $query->orderBy('tag.name');
             // }));
 
-        // return $product;
+        // return $movements;
 
-        return inertia('Warehouse/ShowProductRecord', compact('product'));
+        return inertia('Warehouse/ShowProductRecord', compact('product','movements'));
     }
 
     public function edit(WarehouseMovement $warehouseMovement)

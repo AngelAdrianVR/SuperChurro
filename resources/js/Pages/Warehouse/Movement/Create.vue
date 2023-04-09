@@ -129,6 +129,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ProductInput from "@/Components/ProductInput.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 
+
 export default {
   data() {
     const form = useForm({
@@ -155,7 +156,7 @@ export default {
     InputLabel,
     ProductInput,
     PrimaryButton,
-  },
+    },
   props: {
     products: Array,
     movement_concepts: Array,

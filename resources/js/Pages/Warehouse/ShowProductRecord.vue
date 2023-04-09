@@ -24,7 +24,7 @@
       </Link>
     </div>
     <div class="globe-container flex-col">
-      <div v-for="movement in product.movements" :key="movement" class="globe">
+      <div v-for="movement in movements.data" :key="movement" class="globe">
         <p class="globe-title !justify-between pb-2 text-gray-500">
           <div>
             <i class="fa-solid fa-user mr-1"></i>
@@ -47,16 +47,18 @@
           <span>{{ movement.quantity }} {{ product.unit.name }}</span>
         </div>
       </div>
-      <p v-if="product.movements.length === 0" class="text-sm text-gray-500 text-center my-3">
+      <p v-if="movements.data.length === 0" class="text-sm text-gray-500 text-center my-3">
         No hay ningún movimiento registrado para este producto.
       </p>
     </div>
+    <MovementPagination :pagination="movements" />
   </AppLayout>
 </template>
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/inertia-vue3";
+import MovementPagination from "@/Components/MovementPagination.vue";
 
 export default {
   data() {
@@ -67,9 +69,11 @@ export default {
   components: {
     AppLayout,
     Link,
+    MovementPagination,
   },
   props: {
     product: Object,
+    movements: Object,
   },
   methods: {
     dateTimeFormatter(timestamp) {

@@ -69,7 +69,7 @@ Route::resource('users', UserController::class)->middleware(['auth', 'admin']);
 Route::resource('sales', SaleController::class)->middleware(['auth']);
 Route::resource('settings', SettingController::class)->middleware(['auth', 'admin']);
 Route::resource('bonuses', BonusController::class)->middleware(['auth', 'admin']);
-Route::resource('outcomes', OutcomeController::class)->middleware(['auth', 'admin']);
+Route::resource('outcomes', OutcomeController::class)->middleware(['auth', 'victor']);
 Route::get('/admin/payrolls', [PayrollController::class, 'adminIndex'])->middleware(['auth', 'admin'])->name('payroll-admin.index');
 Route::get('/admin/payrolls/show-all/{payroll}', [PayrollController::class, 'showUsersPayrolls'])->middleware(['auth', 'admin'])->name('payroll-admin.show-all');
 Route::get('/admin/payrolls/show/{payrollUser}', [PayrollController::class, 'showUserPayroll'])->middleware(['auth', 'admin'])->name('payroll-admin.show');

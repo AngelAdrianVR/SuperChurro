@@ -317,7 +317,7 @@ export default {
         "Viernes",
         "Sábado",
       ],
-      shifts: ["cocina", "carrito matutino", "carrito vespertino", "carrito 2 turnos"],
+      shifts: ["cocina", "carrito matutino", "carrito vespertino", "carrito 2 turnos", "Don Victor"],
       selected_day: 0,
       selected_shift: "carrito 2 turnos",
     };

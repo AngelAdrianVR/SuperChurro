@@ -104,6 +104,12 @@ const menues = [
     is_active: route().current("carts" + ".*"),
     admin_can_see: true,
   },
+  {
+    label: "Egresos",
+    route_name: "outcomes.index",
+    is_active: route().current("outcomes.*"),
+    admin_can_see: false,
+  },
 
 ];
 

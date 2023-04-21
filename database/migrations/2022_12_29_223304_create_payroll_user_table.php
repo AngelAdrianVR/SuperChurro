@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->json('attendance')->nullable();
             $table->json('additional')->nullable();
+            $table->json('extras')->nullable();
             $table->json('discounts')->nullable();
             $table->timestamps();
         });

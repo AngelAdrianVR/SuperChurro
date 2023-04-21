@@ -119,4 +119,21 @@ class PayrollController extends Controller
         
         $payroll_user->update(['attendance' => $attendance]);
     }
+
+    public function storeExtras(Request $request)
+    {
+        $payroll_user = PayrollUser::find($request->payroll_user_id);
+
+        $additional = $payroll_user->additional;
+        
+        $extras = ['time' => $request->time, 'pay' => $request->pay];
+
+        if($additional['extras'])
+            $additional['extras'] += [$request->week_day => $extras];
+        else
+            $additional['extras'] = [$request->week_day => $extras];
+
+        $payroll_user->update(['additional' => $additional]);
+
+    }
 }

@@ -7,14 +7,9 @@
     </template>
 
     <div class="flex justify-start">
-      <Link
-        :href="route('outcomes.index')"
-        class="flex items-center mt-2 text-slate-700"
-      >
-        <i
-          class="fas fa-long-arrow-alt-left text-lg active:bg-gray-300 bg-opacity-100 rounded-full w-7 h-7 pl-1 ml-2"
-        ></i>
-        <span class="ml-1 cursor-default">Atrás</span>
+      <Link :href="route('outcomes.index')" class="flex items-center mt-2 text-slate-700">
+      <i class="fas fa-long-arrow-alt-left text-lg active:bg-gray-300 bg-opacity-100 rounded-full w-7 h-7 pl-1 ml-2"></i>
+      <span class="ml-1 cursor-default">Atrás</span>
       </Link>
     </div>
 
@@ -33,8 +28,8 @@
       <p v-if="validation_message" class="text-red-400 text-xs mb-2" v-html="validation_message"></p>
       <form @submit.prevent="store">
         <div>
-          <OutcomeInput v-for="(item, index) in form.items" :key="item.id" :id="item.id"
-            @deleteItem="deleteItem(index)" @syncItem="syncItems(index, $event)" class="mb-5" />
+          <OutcomeInput v-for="(item, index) in form.items" :key="item.id" :id="item.id" @deleteItem="deleteItem(index)"
+            @syncItem="syncItems(index, $event)" class="mb-5" />
         </div>
         <p v-if="!form.items.length" class="text-sm text-gray-600"> Click al botón de "+" para empezar a agregar
           productos </p>
@@ -43,9 +38,8 @@
             <i class="fa-solid fa-circle-plus text-2xl text-blue-400"></i>
           </button>
         </div>
-               <div class="relative z-0 mb-6 w-full group">
-            <textarea v-model="form.notes" min="1" name="floating_description"
-                autocomplete="off" class="
+        <div class="relative z-0 mb-6 w-full group">
+          <textarea v-model="form.notes" min="1" name="floating_description" autocomplete="off" class="
               block
               py-2.5
               px-0
@@ -58,7 +52,7 @@
               focus:outline-none focus:ring-0 focus:border-stone-600
               peer
             " placeholder=" " />
-            <label for="floating_description" class="
+          <label for="floating_description" class="
               absolute
               text-sm text-gray-500
               dark:text-gray-700
@@ -81,7 +75,7 @@
       </form>
     </div>
 
-   
+
   </AppLayout>
 </template>
 
@@ -107,9 +101,9 @@ export default {
       notes: "",
     })
     return {
-    validation_message: "",
-    next_item_id: 2,
-    form,
+      validation_message: "",
+      next_item_id: 2,
+      form,
     }
   },
   components: {
@@ -136,10 +130,10 @@ export default {
       this.form.items[index] = concept_obj;
     },
     store() {
-    //   this.quantityValidated();
-    //   if (this.validation_message == "") {
-        this.form.post(this.route("outcomes.store"));
-    //   }
+      //   this.quantityValidated();
+      //   if (this.validation_message == "") {
+      this.form.post(this.route("outcomes.store"));
+      //   }
     },
     // quantityValidated() {
     //   this.validation_message = "";

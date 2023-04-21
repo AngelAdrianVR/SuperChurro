@@ -16,7 +16,10 @@ class DonVictor
      */
     public function handle(Request $request, Closure $next)
     {
+        if (auth()->user()->is_admin) 
+            return  $next($request);
 
+        // if user isn't admin, search for at least one don Victor shift
         foreach (auth()->user()->employee_properties['work_days'] as $work_day) {
            if($work_day['shift'] == 'Don Victor'){
             return $next($request);

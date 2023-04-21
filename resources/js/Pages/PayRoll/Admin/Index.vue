@@ -27,7 +27,8 @@
         </Link>
         <SecondaryButton @click="show_confirmation = true" v-else class="mr-7 mt-4">Cerrar nómina</SecondaryButton>
       </div>
-      <PayRollTable v-for="(payroll, index) in payroll_selected.users" :key="index" :payroll="payroll" />
+      <PayRollTable v-for="(payroll, index) in payroll_selected.users" :key="index" :payroll="payroll"
+        @extraTime="createExtraTime($event)" />
     </div>
 
     <ConfirmationModal :show="show_confirmation" @close="show_confirmation = false">
@@ -54,6 +55,118 @@
         </div>
       </template>
     </ConfirmationModal>
+    <DialogModal :show="show_dialog" @close="show_dialog = false">
+      <template #title>
+        Tiempo extra para <span class="text-sky-600 font-bold">{{ add_extra_time_info.payroll_user.user.name }}</span> | dia: {{ week_days[add_extra_time_info.day] }}
+      </template>
+      <template #content>
+        <div class="relative z-0 mb-6 w-full group">
+          <div class="grid grid-cols-2 gap-2">
+            <input v-model="form.hours" type="number" name="floating_hour" autocomplete="off" required class="
+                  block
+                  py-2.5
+                  px-0
+                  w-full
+                  text-sm text-gray-900
+                  bg-transparent
+                  border-0 border-b-2 border-gray-300
+                  appearance-none
+                  dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
+                  focus:outline-none focus:ring-0 focus:border-stone-600
+                  peer
+                " placeholder=" " />
+            <label for="floating_hour" class="
+                  absolute
+                  text-sm text-gray-500
+                  dark:text-gray-700
+                  duration-300
+                  transform
+                  -translate-y-6
+                  scale-75
+                  top-3
+                  -z-10
+                  origin-[0]
+                  peer-focus:left-0
+                  peer-focus:text-stone-600
+                  peer-focus:dark:text-stone-500
+                  peer-placeholder-shown:scale-100
+                  peer-placeholder-shown:translate-y-0
+                  peer-focus:scale-75 peer-focus:-translate-y-6
+                ">Horas *</label>
+            <input v-model="form.minutes" type="number" name="floating_minutes" autocomplete="off" required class="
+                block
+                py-2.5
+                px-0
+                w-full
+                text-sm text-gray-900
+                bg-transparent
+                border-0 border-b-2 border-gray-300
+                appearance-none
+                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
+                focus:outline-none focus:ring-0 focus:border-stone-600
+                peer
+              " placeholder=" " />
+            <label for="floating_minutes" class="
+                absolute
+                right-0
+                text-sm text-gray-500
+                dark:text-gray-700
+                duration-300
+                transform
+                -translate-y-6
+                scale-75
+                top-3
+                -z-10
+                origin-[0]
+                peer-focus:right-0
+                peer-focus:text-stone-600
+                peer-focus:dark:text-stone-500
+                peer-placeholder-shown:scale-100
+                peer-placeholder-shown:translate-y-0
+                peer-focus:scale-75 peer-focus:-translate-y-6
+              ">Minutos *</label>
+          </div>
+        </div>
+        <div class="relative z-0 mb-6 w-full group">
+          <input v-model="form.pay" type="number" name="floating_description" autocomplete="off" class="
+                block
+                py-2.5
+                px-0
+                w-full
+                text-sm text-gray-900
+                bg-transparent
+                border-0 border-b-2 border-gray-300
+                appearance-none
+                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
+                focus:outline-none focus:ring-0 focus:border-stone-600
+                peer
+              " placeholder=" " />
+          <label for="floating_description" class="
+                absolute
+                text-sm text-gray-500
+                dark:text-gray-700
+                duration-300
+                transform
+                -translate-y-6
+                scale-75
+                top-3
+                -z-10
+                origin-[0]
+                peer-focus:left-0
+                peer-focus:text-stone-600
+                peer-focus:dark:text-stone-500
+                peer-placeholder-shown:scale-100
+                peer-placeholder-shown:translate-y-0
+                peer-focus:scale-75 peer-focus:-translate-y-6
+              ">Pago ($)*</label>
+          <!-- <InputError :message="$page.props?.errors.desciption" /> -->
+        </div>
+      </template>
+      <template #footer>
+        <SecondaryButton @click="show_dialog = false">Cancelar</SecondaryButton>
+        <PrimaryButton @click="storeExtraTime" class="ml-2" :disabled="form.processing">Guardar</PrimaryButton>
+      </template>
+    </DialogModal>
 
   </AppLayout>
 </template>
@@ -61,16 +174,28 @@
 <script>
 
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link } from "@inertiajs/inertia-vue3";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
 import PayRollTable from "@/Components/PayRollTable.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import DialogModal from "@/Components/DialogModal.vue";
+import axios from "axios";
 
 export default {
   data() {
+    const form = useForm({
+      time: null,
+      pay: null
+    });
+
     return {
       payroll_selected: this.payrolls.data[0],
       show_confirmation: false,
+      show_dialog: false,
+      add_extra_time_info: null,
+      form,
+      week_days: ['Domingo', 'Lunes','Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
     }
   },
   components: {
@@ -79,12 +204,31 @@ export default {
     Link,
     SecondaryButton,
     ConfirmationModal,
+    DialogModal,
+    PrimaryButton,
   },
   props: {
     payrolls: Object,
   },
   methods: {
+    createExtraTime(payroll_user_info) {
+      this.add_extra_time_info = payroll_user_info;
+      this.show_dialog = true;
+    },
+    async storeExtraTime() {
+      try {
+        const response = await axios.post(route('payroll.store-extras'), {
+          payroll_user_id: this.add_extra_time_info.payroll_user.payroll_user_id,
+          week_day: this.add_extra_time_info.day,
+          time: this.form.hours * 60 + this.form.minutes,
+          pay: this.form.pay
+        });
 
+        this.show_dialog = false;
+      } catch (error) {
+        console.log(error);
+      }
+    }
   },
 };
 </script>

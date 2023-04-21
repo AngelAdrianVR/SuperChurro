@@ -28,8 +28,9 @@
                 <th
                   class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
                   Salida</th>
-                <th v-if="$page.props.user.is_admin && payroll.is_active" class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
-                  Editar
+                <th v-if="$page.props.user.is_admin && payroll.is_active"
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
+                  Acciones
                 </th>
               </tr>
             </thead>
@@ -50,11 +51,15 @@
                     class="bg-transparent text-sm rounded-md">
                   <p v-else>{{ attendance.out }}</p>
                 </td>
-                <td v-if="$page.props.user.is_admin && payroll.is_active" class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+                <td v-if="$page.props.user.is_admin && payroll.is_active"
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                   <button v-if="day_in_edition === index" @click="update()" class="text-lg text-green-400 ml-5"><i
                       class="fa-regular fa-circle-check"></i></button>
                   <button v-else @click="edit(index)" class="text-lg text-blue-400 ml-5"><i
                       class="fa-solid fa-pencil"></i></button>
+                  <button v-if="day_in_edition !== index" @click="addExtraTime(index)" class="text-lg text-sky-400 ml-5">
+                    <i class="fa-solid fa-clock"></i>
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -94,6 +99,9 @@ export default {
     edit(day) {
       this.form.payroll = this.payroll.week_attendance.payroll;
       this.day_in_edition = day;
+    },
+    addExtraTime(index) {
+      this.$emit('extraTime', {payroll_user: this.payroll, day: index});
     },
     update() {
       // this.form.payroll = this.payroll.week_attendance.payroll;

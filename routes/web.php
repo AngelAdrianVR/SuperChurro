@@ -112,6 +112,10 @@ Route::post('payroll/store-attendance', [PayrollController::class, 'storeAttenda
     ->middleware('auth')
     ->name('payroll.store-attendance');
 
+Route::post('payroll/store-extras', [PayrollController::class, 'storeExtras'])
+    ->middleware('auth')
+    ->name('payroll.store-extras');
+
 Route::post('/users/update-with-resources/{user}', [UserController::class, 'updateWithResources'])
     ->middleware('auth')
     ->name('users.update-with-resources');

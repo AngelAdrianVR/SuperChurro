@@ -14,6 +14,7 @@ class PayrollUserResource2 extends JsonResource
             'id' => $this->id,
             'week_attendance' => $this->weekAttendanceArray(),
             'discounts' => $this->discounts(),
+            'extras' => $this->extras,
             'paid' => number_format($this->paid(), 2),
             'vacation_premium' => $this->vacationPremium(),
             'base_salary' => number_format($this->baseSalary()),

@@ -15,6 +15,7 @@ class UserPayrollResource extends JsonResource
             'week_attendance' => $this->pivot->weekAttendanceArray(),
             'discounts' => $this->pivot->discounts(),
             'additional' => $this->pivot->additional,
+            'extras' => $this->pivot->extras,
             'paid' => number_format($this->pivot->paid(), 2),
             'vacation_premium' => $this->pivot->vacationPremium(),
             'base_salary' => number_format($this->pivot->baseSalary()),

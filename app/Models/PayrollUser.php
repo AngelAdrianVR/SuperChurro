@@ -17,12 +17,14 @@ class PayrollUser extends Pivot
     protected $fillable = [
         'attendance',
         'additional',
+        'extras',
         'discounts',
     ];
 
     protected $casts = [
         'attendance' => 'array',
         'additional' => 'array',
+        'extras' => 'array',
         'discounts' => 'array',
     ];
 

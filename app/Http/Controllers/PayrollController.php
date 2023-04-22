@@ -78,8 +78,8 @@ class PayrollController extends Controller
                     'base_salary' => User::find($user_payroll->pivot->user_id)->employee_properties['base_salary'],
                     'commissions' => $user_payroll->pivot->getCommissions($commissions),
                     'bonuses' => $user_payroll->getBonuses()
-                    ]
-                ]);
+                ]
+            ]);
 
             // decrement loan's amount if exists an active one
             $loan = $user_payroll->activeLoan?->first();
@@ -99,10 +99,10 @@ class PayrollController extends Controller
         $is_absent = true;
 
         $attendance = $payroll_user->attendance;
-        foreach($attendance as $key => $record) {
-            if($record['day'] == $request->day) {
-                $attendance[$key]['in'] = $request->attendance['in']; 
-                $attendance[$key]['out'] = $request->attendance['out']; 
+        foreach ($attendance as $key => $record) {
+            if ($record['day'] == $request->day) {
+                $attendance[$key]['in'] = $request->attendance['in'];
+                $attendance[$key]['out'] = $request->attendance['out'];
                 $is_absent = false;
                 break;
             }
@@ -116,7 +116,7 @@ class PayrollController extends Controller
                 'day' => $request->day,
             ];
         }
-        
+
         $payroll_user->update(['attendance' => $attendance]);
     }
 
@@ -124,16 +124,16 @@ class PayrollController extends Controller
     {
         $payroll_user = PayrollUser::find($request->payroll_user_id);
 
-        $additional = $payroll_user->additional;
-        
-        $extras = ['time' => $request->time, 'pay' => $request->pay];
+        $extras = $payroll_user->extras;
 
-        if($additional['extras'])
-            $additional['extras'] += [$request->week_day => $extras];
+        $add_extras = ['time' => $request->time, 'pay' => $request->pay];
+
+        if ($extras)
+            $extras[$request->week_day] = $add_extras;
         else
-            $additional['extras'] = [$request->week_day => $extras];
+            $extras[$request->week_day] = $add_extras;
 
-        $payroll_user->update(['additional' => $additional]);
-
+        $payroll_user->extras = $extras;
+        $payroll_user->save();
     }
 }

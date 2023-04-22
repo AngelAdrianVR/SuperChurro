@@ -28,13 +28,15 @@
                 <th
                   class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
                   Salida</th>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
+                  Extras</th>
                 <th v-if="$page.props.user.is_admin && payroll.is_active"
                   class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
                   Acciones
                 </th>
               </tr>
             </thead>
-
             <tbody>
               <tr v-for="(attendance, index) in payroll?.week_attendance.payroll" :key="index">
                 <th
@@ -50,6 +52,11 @@
                   <input v-if="day_in_edition === index" v-model="form.payroll[index].out" type="text"
                     class="bg-transparent text-sm rounded-md">
                   <p v-else>{{ attendance.out }}</p>
+                </td>
+                <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+                  <span v-if="payroll.extras" class="ml-3 font-bold text-white">
+                     {{ payroll.extras[index] ? payroll.extras[index]?.time + ' minutos ($' + payroll.extras[index]?.pay + ')' : '--' }} 
+                  </span>
                 </td>
                 <td v-if="$page.props.user.is_admin && payroll.is_active"
                   class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
@@ -101,7 +108,7 @@ export default {
       this.day_in_edition = day;
     },
     addExtraTime(index) {
-      this.$emit('extraTime', {payroll_user: this.payroll, day: index});
+      this.$emit('extraTime', { payroll_user: this.payroll, day: index });
     },
     update() {
       // this.form.payroll = this.payroll.week_attendance.payroll;

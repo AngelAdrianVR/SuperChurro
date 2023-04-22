@@ -26,7 +26,7 @@ class Payroll extends Model
     {
         return $this->belongsToMany(User::class)
             ->using(PayrollUser::class)
-            ->withPivot(['id', 'attendance', 'discounts', 'additional'])
+            ->withPivot(['id', 'attendance', 'discounts', 'additional', 'extras'])
             ->withTimestamps();
     }
 }

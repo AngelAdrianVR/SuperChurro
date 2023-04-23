@@ -57,7 +57,8 @@
     </ConfirmationModal>
     <DialogModal :show="show_dialog" @close="show_dialog = false">
       <template #title>
-        Tiempo extra para <span class="text-sky-600 font-bold">{{ add_extra_time_info.payroll_user.user.name }}</span> | dia: {{ week_days[add_extra_time_info.day] }}
+        Tiempo extra para <span class="text-sky-600 font-bold">{{ add_extra_time_info.payroll_user.user.name }}</span> |
+        dia: {{ week_days[add_extra_time_info.day] }}
       </template>
       <template #content>
         <div class="relative z-0 mb-6 w-full group">
@@ -195,7 +196,7 @@ export default {
       show_dialog: false,
       add_extra_time_info: null,
       form,
-      week_days: ['Domingo', 'Lunes','Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+      week_days: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
     }
   },
   components: {
@@ -224,7 +225,11 @@ export default {
           pay: this.form.pay
         });
 
-        this.show_dialog = false;
+        // pendent load in real time extra time stored
+        // this.payrolls.data[0].users.find(
+        //   user => user.payroll_user_id == this.add_extra_time_info.payroll_user.payroll_user_id
+        // )?.extras = [];
+          this.show_dialog = false;
       } catch (error) {
         console.log(error);
       }

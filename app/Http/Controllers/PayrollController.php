@@ -122,18 +122,19 @@ class PayrollController extends Controller
 
     public function storeExtras(Request $request)
     {
+        $week_days = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
         $payroll_user = PayrollUser::find($request->payroll_user_id);
-
         $extras = $payroll_user->extras;
-
         $add_extras = ['time' => $request->time, 'pay' => $request->pay];
 
         if ($extras)
-            $extras[$request->week_day] = $add_extras;
+            $extras[$week_days[$request->week_day]] = $add_extras;
         else
-            $extras[$request->week_day] = $add_extras;
+            $extras[$week_days[$request->week_day]] = $add_extras;
 
         $payroll_user->extras = $extras;
         $payroll_user->save();
+
+        // return response()->json(['extras' => $extras]);
     }
 }

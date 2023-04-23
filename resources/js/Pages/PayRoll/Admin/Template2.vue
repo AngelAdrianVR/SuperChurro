@@ -22,22 +22,24 @@
                     +<i class="text-green-700 fa-solid fa-dollar mr-1"></i>
                     {{ commission }} comisión {{ week_days[index] }}
                 </span>
+                <span v-if="payroll_user.data.vacation_premium">+<i class="text-green-700 fa-solid fa-dollar mr-1"></i>{{
+                    payroll_user.data.vacation_premium
+                }} prima
+                    vacacional
+                </span>
                 <span v-for="(bonus, index) in payroll_user.data.bonuses" :key="index">
                     +<i class="text-green-700 fa-solid fa-dollar mr-1"></i>
                     {{ bonus.amount }} {{ bonus.name }}
                 </span>
-                <span v-if="payroll_user.data.vacation_premium">+<i
-                        class="text-green-700 fa-solid fa-dollar mr-1"></i>{{
-                            payroll_user.data.vacation_premium
-                        }} prima
-                    vacacional</span>
+                <span v-if="payroll_user.data.extras">+<i class="text-green-700 fa-solid fa-dollar mr-1"></i>
+                {{ payroll_user.data.total_extras.total_pay }} ({{ payroll_user.data.total_extras.total_time }} minutos extra) </span>
                 <span>+<i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{ payroll_user.data.base_salary }}
                     salario base semana</span>
                 <span v-if="payroll_user.data.salary_for_extras">+<i
                         class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{
                             payroll_user.data.salary_for_extras
                         }}
-                    tiempo extra</span>
+                    minutos adicionales a hra. de salida</span>
                 <span class="font-bold underline"><i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{
                     payroll_user.data.paid
                 }}
@@ -64,6 +66,7 @@
         </div>
     </div>
 </template>
+
 <script>
 export default {
     data() {

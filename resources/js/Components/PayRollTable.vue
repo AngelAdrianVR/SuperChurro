@@ -55,8 +55,9 @@
                 </td>
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                   <span v-if="payroll.extras" class="ml-3 font-bold text-white">
-                     {{ payroll.extras[index] ? payroll.extras[index]?.time + ' minutos ($' + payroll.extras[index]?.pay + ')' : '--' }} 
+                     {{ payroll.extras[week_days[index]] ? payroll.extras[week_days[index]]?.time + ' minutos ($' + payroll.extras[week_days[index]]?.pay + ')' : '--' }} 
                   </span>
+                  <span v-else>--</span>
                 </td>
                 <td v-if="$page.props.user.is_admin && payroll.is_active"
                   class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
@@ -93,6 +94,7 @@ export default {
     return {
       form,
       day_in_edition: null,
+      week_days: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado']
     };
   },
   components: {

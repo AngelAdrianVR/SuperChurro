@@ -189,6 +189,7 @@ class PayrollUser extends Pivot
             + $this->vacationPremium()
             + collect($this->commissions())->sum()
             + $this->salaryForExtras()
+            + $this->extraTime()['total_pay']
             + collect($this->bonuses())->sum('amount')
             - collect($this->discounts())->sum('amount');
 
@@ -225,6 +226,22 @@ class PayrollUser extends Pivot
         $salary_for_extras = $extras * $pesos_per_minute;
 
         return $salary_for_extras;
+    }
+
+    public function extraTime()
+    {
+        $total_pay = 0;
+        $total_time = 0;
+        // extra time
+        if ($this->extras) {
+            // get stored data
+            foreach ($this->extras as $extra) {
+                $total_pay += $extra['pay'];
+                $total_time += $extra['time'];
+            }
+        }
+
+        return compact('total_pay', 'total_time');
     }
 
     public function vacationPremium()

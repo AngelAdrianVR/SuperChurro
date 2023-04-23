@@ -25,6 +25,8 @@
                     +<i class="text-green-700 fa-solid fa-dollar mr-1"></i>
                     {{ bonus.amount }} {{ bonus.name }}
                 </span>
+                <span v-if="current_payroll.extras">+<i class="text-green-700 fa-solid fa-dollar mr-1"></i>
+                {{ current_payroll.total_extras }} hrs. extra </span>
                 <span v-if="current_payroll.vacation_premium">+<i class="text-green-700 fa-solid fa-dollar mr-1"></i>{{
                     current_payroll.vacation_premium
                 }} prima
@@ -36,7 +38,7 @@
                         class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{
                             current_payroll.salary_for_extras
                         }}
-                    tiempo extra</span>
+                    minutos adicionales a hra. de salida</span>
                 <span class="font-bold underline"><i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{
                     current_payroll.paid
                 }}

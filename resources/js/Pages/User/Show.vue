@@ -245,6 +245,7 @@
         <p class="mb-3 text-gray-600 underline underline-offset-4 font-bold">
           Vacaciones disponibles:
           {{ $page.props.user.employee_properties.vacations }}
+          <PrimaryButton class="ml-4" :disabled="form.processing">Pagar Vacaciones</PrimaryButton>
         </p>
         <div class="flex justify-center lg:justify-end">
           <PrimaryButton :disabled="form.processing">Actualizar</PrimaryButton>

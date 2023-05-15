@@ -124,6 +124,10 @@ Route::post('/users/delete-file', [UserController::class, 'deleteFile'])
     ->middleware('auth')
     ->name('users.delete-file');
 
+Route::post('/users/pay-vacations', [UserController::class, 'payVacations'])
+    ->middleware('auth')
+    ->name('users.pay-vacations');
+
 Route::post('/cash-register', function (Request $request) {
     CashRegister::create([
         'cash' => $request->cash,

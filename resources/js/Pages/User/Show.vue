@@ -245,32 +245,53 @@
         <p class="mb-3 text-gray-600 underline underline-offset-4 font-bold">
           Vacaciones disponibles:
           {{ $page.props.user.employee_properties.vacations }}
-          <PrimaryButton class="ml-4" :disabled="form.processing">Pagar Vacaciones</PrimaryButton>
         </p>
         <div class="flex justify-center lg:justify-end">
           <PrimaryButton :disabled="form.processing">Actualizar</PrimaryButton>
         </div>
       </form>
+        <PrimaryButton @click.stop="show_confirmation = true; confirmation_for_pay_vacations = true;" class="ml-4" :disabled="form.processing">Pagar Vacaciones</PrimaryButton>
+        <p v-if="vacations_error_message" class="text-red-500 text-sm my-2 "> {{ vacations_error_message }} </p>
     </div>
 
     <ConfirmationModal :show="show_confirmation" @close="show_confirmation = false">
-      <template #title> Elimina recurso </template>
+      <template #title> 
+        <p v-if="confirmation_for_pay_vacations"> Pagar vacaciones en nomina actual </p>
+        <p v-else> Elimina recurso </p>
+      </template>
       <template #content>
-        Estas a punto de eliminar un recurso subido anteriormente. ¿Deseas continuar?
+        <p v-if="confirmation_for_pay_vacations"> Se van a descontar los dias de vacaciones acumulados y se va a reflejar el pago en la nomina actual. ¿Deseas continuar?</p>
+        <p v-else> Estas a punto de eliminar un recurso subido anteriormente. ¿Deseas continuar? </p>
       </template>
       <template #footer>
-        <button
-          class="px-2 py-1 font-semibold border rounded border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition duration-200 mr-2"
-          @click="deleteFile"
-        >
-          Si, eliminar
-        </button>
-        <button
-          class="px-2 py-1 font-semibold border rounded border-gray-500 text-gray-500 hover:bg-gray-100 transition duration-200"
-          @click="show_confirmation = false"
-        >
-          Cancelar
-        </button>
+        <div v-if="confirmation_for_pay_vacations">
+          <button
+            class="px-2 py-1 font-semibold border rounded border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition duration-200 mr-2"
+            @click="payVacations"
+          >
+            Si, continuar
+          </button>
+          <button
+            class="px-2 py-1 font-semibold border rounded border-gray-500 text-gray-500 hover:bg-gray-100 transition duration-200"
+            @click="show_confirmation = false; confirmation_for_pay_vacations = false"
+          >
+            Cancelar
+          </button>
+        </div>
+        <div v-else>
+          <button
+            class="px-2 py-1 font-semibold border rounded border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition duration-200 mr-2"
+            @click="deleteFile"
+          >
+            Si, eliminar
+          </button>
+          <button
+            class="px-2 py-1 font-semibold border rounded border-gray-500 text-gray-500 hover:bg-gray-100 transition duration-200"
+            @click="show_confirmation = false"
+          >
+            Cancelar
+          </button>
+        </div>
       </template>
     </ConfirmationModal>
   </AppLayout>
@@ -288,6 +309,7 @@ import { Link, useForm } from "@inertiajs/inertia-vue3";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import { Inertia } from "@inertiajs/inertia";
 
 export default {
   data() {
@@ -309,6 +331,7 @@ export default {
       form,
       show_confirmation: false,
       file_to_delete: null,
+      confirmation_for_pay_vacations: false,
       week_days: [
         "Domingo",
         "Lunes",
@@ -321,6 +344,7 @@ export default {
       shifts: ["cocina", "carrito matutino", "carrito vespertino", "carrito 2 turnos", "Don Victor"],
       selected_day: 0,
       selected_shift: "carrito 2 turnos",
+      vacations_error_message: null,
     };
   },
   components: {
@@ -373,6 +397,23 @@ export default {
     deleteWorkDay(index) {
       this.form.employee_properties.work_days.splice(index, 1);
     },
+    async payVacations() {
+      try {
+        const response = await axios.post(route('users.pay-vacations'), {
+          vacation_days: this.form.employee_properties.vacations,
+          user_id: this.user.id
+        });
+
+        if (response.status == 200) {
+          Inertia.get(route('users.index'));
+        }
+      } catch (error) {
+        this.vacations_error_message = error.response.data.message;
+        console.log("err: ",error)
+      } finally {
+        this.show_confirmation = false;
+      }
+    }
   },
 };
 </script>

@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Models\Bonus;
+use App\Models\Payroll;
+use App\Models\PayrollUser;
 use App\Models\User;
 use Carbon\Carbon;
+use GuzzleHttp\Psr7\Message;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -228,5 +231,23 @@ class UserController extends Controller
         $vacation_bonus =  number_format(($days_per_year - $user->employee_properties['vacations']) * $base_salary * 0.25);
 
         return inertia('User/Calculations/VacationBonusTemplate', compact('user','vacation_bonus','days_per_year'));
+    }
+
+    public function payVacations(Request $request)
+    {
+        $request->validate([
+            'vacation_days' => 'required|numeric|min:1'
+        ]);
+
+        $payroll_user = PayrollUser::where('user_id', $request->user_id)->latest()->first();
+        $extras = $payroll_user->extras ?? [];
+        $extras['vacations'] = $request->vacation_days;
+        $payroll_user->update(['extras' => $extras]);
+        $user = User::find($request->user_id);
+        $employee_properties = $user->employee_properties;
+        $employee_properties['vacations'] = 0;
+        $user->update(compact('employee_properties'));
+
+        return response()->json(['message' => 'Vacaciones agregadas a nomina']);
     }
 }

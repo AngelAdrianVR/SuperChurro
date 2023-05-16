@@ -49,20 +49,23 @@ class OutcomeController extends Controller
     public function show(Outcome $outcome)
     {
         $outcomes = Outcome::where('created_at', $outcome->created_at)->get();
-        // return $outcomes;
         return inertia('Outcome/Show', compact('outcomes'));
     }
 
     
     public function edit(Outcome $outcome)
     {
-        //
+
     }
 
     
     public function update(Request $request, Outcome $outcome)
     {
-        //
+        $outcome->update([
+            'concept' => $request->concept,
+            'quantity' => $request->quantity,
+            'cost' => $request->cost
+        ]);
     }
 
    

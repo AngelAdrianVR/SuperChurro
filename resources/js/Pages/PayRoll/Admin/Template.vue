@@ -47,9 +47,12 @@
                     current_payroll.week_attendance.attendances
                 }}
                     Asistencias</span>
-                <span><i class="text-yellow-400 fa-solid fa-umbrella-beach mr-1"></i>{{
+                <span><i class="text-yellow-400 fa-solid fa-umbrella-beach mr-1"></i>${{
                     current_payroll.week_attendance.vacations
                 }} Vacaciones</span>
+                <span><i class="text-red-400 fa-solid fa-umbrella-beach mr-1"></i>${{
+                    current_payroll.vacations_not_taken ? current_payroll.vacations_not_taken : '0'
+                }} Vacaciones no tomadas</span>
             </div>
             <small style="font-size: 7px;">
                 RECIBI DE LA EMPRESA "PURO CHURRO" LA CANTIDAD SEÑALADA MISMA QUE CUBRE LAS PERCEPCIONES

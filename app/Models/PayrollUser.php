@@ -191,7 +191,8 @@ class PayrollUser extends Pivot
             + $this->salaryForExtras()
             + $this->extraTime()['total_pay']
             + collect($this->bonuses())->sum('amount')
-            - collect($this->discounts())->sum('amount');
+            - collect($this->discounts())->sum('amount')
+            + $this->payVacations();
 
         return round($total);
     }
@@ -233,13 +234,15 @@ class PayrollUser extends Pivot
         $total_pay = 0;
         $total_time = 0;
         // extra time
-        if ($this->extras) {
+        if (($this->extras && !isset($this->extras['vacations']))) {
             // get stored data
             foreach ($this->extras as $extra) {
                 $total_pay += $extra['pay'];
                 $total_time += $extra['time'];
             }
         }
+        
+        
 
         return compact('total_pay', 'total_time');
     }
@@ -351,5 +354,15 @@ class PayrollUser extends Pivot
         }
 
         return $discounts;
+    }
+
+    public function payVacations(){
+        $user = User::find($this->user_id);
+
+        if(isset($this->extras['vacations'])){
+            return $this->extras['vacations'] * $user->employee_properties['base_salary'];
+        }else{
+            return 0;
+        }
     }
 }

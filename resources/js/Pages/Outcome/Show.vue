@@ -144,7 +144,7 @@
           </div>
       </template>
       <template #footer>
-        <SecondaryButton @click="show_edit_sale_modal = false">Cancelar</SecondaryButton>
+        <SecondaryButton @click="show_edit_outcome_modal = false">Cancelar</SecondaryButton>
         <PrimaryButton @click="updateOutcome" class="ml-2" :disabled="form.processing">Guardar</PrimaryButton>
       </template>
     </DialogModal>

@@ -101,15 +101,19 @@ class PayrollController extends Controller
         $attendance = $payroll_user->attendance;
         foreach ($attendance as $key => $record) {
             if ($record['day'] == $request->day) {
-                $attendance[$key]['in'] = $request->attendance['in'];
-                $attendance[$key]['out'] = $request->attendance['out'];
-                $is_absent = false;
-                break;
+                if ($request->attendance['in'] && strtolower($request->attendance['in']) != 'falta') {
+                    $attendance[$key]['in'] = $request->attendance['in'];
+                    $attendance[$key]['out'] = $request->attendance['out'];
+                    $is_absent = false;
+                    break;
+                } else {
+                    unset($attendance[$key]);
+                    $is_absent = false;
+                }
             }
         }
-
         // it was an absent: create new attendance day
-        if ($is_absent) {
+        if ($is_absent && $request->attendance['in'] && strtolower($request->attendance['in']) != 'falta') {
             $attendance[$request->day] = [
                 'in' => $request->attendance['in'],
                 'out' => $request->attendance['out'],

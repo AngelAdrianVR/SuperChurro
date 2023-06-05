@@ -28,7 +28,6 @@
       </div>
 
         <div class="text-center font-bold mb-4">
-          <p> {{ selected_year }}-{{ selected_month }}</p>
           <label v-if="!total_outcome">Egresos totales: ${{ total_outcomes_money }} </label>
           <label v-else>Egresos totales: ${{ total_outcome }} </label>
         </div>

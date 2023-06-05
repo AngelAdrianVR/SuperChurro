@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PayrollResource;
 use App\Http\Resources\PayrollUserResource;
 use App\Http\Resources\PayrollUserResource2;
+use App\Models\Outcome;
 use App\Models\Payroll;
 use App\Models\PayrollUser;
 use App\Models\Sale;
@@ -90,6 +91,20 @@ class PayrollController extends Controller
         $active_payroll->update([
             'commissions' => $commissions,
             'is_active' => false,
+        ]);
+
+        // calculate total salary
+        $total_salaries = $active_payroll->users->reduce(function ($carry, $item) {
+            return $carry + $item->pivot->paid();
+        });
+        
+        // create outcome for all salaries
+        Outcome::create([
+            'concept' => 'Salarios',
+            'quantity' => 1,
+            'cost' => $total_salaries,
+            'notes' => 'Generado automaticamente al cerrar las nominas',
+            'user_id' => auth()->id(),
         ]);
     }
 

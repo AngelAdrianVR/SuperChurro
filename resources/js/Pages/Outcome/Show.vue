@@ -18,7 +18,7 @@
     <div
       class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 pt-4 pb-5 bg-white mx-4"
     >
-      <h1 class="text-sky-500 font-bold mb-2">Productos comprados</h1>
+      <h1 class="text-sky-500 font-bold mb-2">Egreasos registrados</h1>
       <ul>
         <li
           v-for="outcome in outcomes"

@@ -332,7 +332,7 @@ class PayrollUser extends Pivot
         $user = User::find($this->user_id);
         $discounts = [];
         $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
-        $pesos_per_minute =  $base_salary / 360;
+        $pesos_per_minute =  1;
 
         // minutes late
         $minutes_late = $this->weekAttendanceArray()['late'];

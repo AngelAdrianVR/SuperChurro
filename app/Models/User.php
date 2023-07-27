@@ -303,8 +303,21 @@ class User extends Authenticatable implements HasMedia
 
         foreach($bonuses_ids as $id) {
             $current_bonus = Bonus::find($id);
+
             if($current_bonus->is_active) {
-                $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $current_bonus->amount];
+                if ($id === 7) { //punctuality
+                    if ($this->payrolls->last()['late'] == 0) { //give punctuality bonus
+                        $factor = 0; //factor to multiply punctuality amount
+                        foreach ($this->employee_properties['work_days'] as $work_day) {
+                            if ($work_day['shift'] == "carrito 2 turnos") $factor += 2;
+                            else $factor ++;
+                        }
+                        $amount = $factor * $current_bonus->amount;
+                        $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $amount];
+                    }
+                } else {
+                    $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $current_bonus->amount];
+                }
             }
         }
 

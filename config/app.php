@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'America/Mexico_city',
+    'timezone' => 'America/Mexico_City',
 
     /*
     |--------------------------------------------------------------------------

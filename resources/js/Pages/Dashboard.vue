@@ -41,11 +41,11 @@
           <div v-for="leave in leaves" :key="leave.id" class="flex justify-between items-center text-xs">
             <span><i class="fa-regular fa-calendar-days"></i>{{ leave.date.split('T')[0] }}</span>
             <span>{{ leave.permission_type.name }}</span>
-            <span v-if="leave.status === 0" class="text-orange-600 font-bold"><i
-                class="fa-solid fa-hourglass-start"></i>Revisando.</span>
-            <span v-else-if="leave.status === 1" class="text-green-600 font-bold"><i
-                class="fa-solid fa-check"></i>Aprobado.</span>
-            <span v-else class="text-red-600 font-bold"><i class="fa-solid fa-xmark"></i>Rechazado.</span>
+            <span v-if="leave.status === 1" class="ml-2 text-orange-600 font-bold"><i
+                class="fa-solid fa-hourglass-start"></i> Revisando.</span>
+            <span v-else-if="leave.status === 2" class="ml-2 text-green-600 font-bold"><i
+                class="fa-solid fa-check"></i> Aprobado.</span>
+            <span v-else class="ml-2 text-red-600 font-bold"><i class="fa-solid fa-xmark"></i> Rechazado.</span>
           </div>
           <p v-if="!leaves.length" class="text-center text-gray-500 text-xs">No hay información para mostrar.</p>
         </div>
@@ -55,16 +55,34 @@
           <div v-if="loan" class="flex justify-between items-center text-xs">
             <span><i class="fa-regular fa-calendar-days"></i>{{ loan.created_at.split('T')[0] }}</span>
             <span>${{ loan.amount }} solicitado</span>
-            <span v-if="!loan.authorized_at" class="text-orange-600 font-bold"><i
-                class="fa-solid fa-hourglass-start"></i>Revisando.</span>
-            <span v-else-if="loan.remaining" class="text-green-600 font-bold"><i
-                class="fa-solid fa-check"></i>Aprobado.</span>
-            <span v-else class="text-red-600 font-bold"><i class="fa-solid fa-xmark"></i>Rechazado.</span>
+            <span v-if="!loan.authorized_at" class="ml-2 text-orange-600 font-bold"><i
+                class="fa-solid fa-hourglass-start"></i> Revisando.</span>
+            <span v-else-if="loan.remaining" class="ml-2 text-green-600 font-bold"><i
+                class="fa-solid fa-check"></i> Aprobado.</span>
+            <span v-else class="ml-2 text-red-600 font-bold"><i class="fa-solid fa-xmark"></i> Rechazado.</span>
           </div>
           <p v-else class="text-center text-gray-500 text-xs">No hay información para mostrar.</p>
         </div>
+<!-- -----------------Avisos----------------- -->
+    <div class="lg:col-span-3">
+        <h1 class="font-bold text-lg text-red-500 text-center mt-3">AVISOS</h1>
+    </div>
+
+    <div class="bg-gray-400/50 py-4" v-if="notices.length">
+      <div v-for="notice in notices" :key="notice.id" class="globe my-2">
+          <div class="globe-title">{{notice.title}}</div>
+          <div class="flex justify-between items-center text-xs">
+            <p class="text-center">{{ notice.content }}</p>
+          </div>
       </div>
     </div>
+          <p v-else class="text-center text-gray-500 text-xs">No hay avisos para mostrar.</p>
+
+
+      </div>
+    </div>
+
+
 
   </AppLayout>
 </template>
@@ -80,7 +98,7 @@ export default {
     return {
       geolocation_options: {
         enableHighAccuracy: true,
-        timeout: 5000,
+        timeout: 8000,
         maximumAge: 0
       },
       valid_areas: [
@@ -98,7 +116,12 @@ export default {
           label: "Casa",
           latitudes: [20.76441, 20.76641],
           longitudes: [-103.42651, -103.40651]
-        }
+        },
+        // {
+        //   label: "LocalHost test",
+        //   latitudes: [20.16441, 20.96641],
+        //   longitudes: [-103.92651, -103.10651]
+        // }
       ],
     };
   },
@@ -152,6 +175,7 @@ export default {
     checked_in: Boolean,
     checked_out: Boolean,
     leaves: Array,
+    notices: Array,
     loan: Object
   },
 };

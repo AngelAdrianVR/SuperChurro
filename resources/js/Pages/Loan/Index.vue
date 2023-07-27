@@ -17,11 +17,11 @@ Si ya tienes un préstamo activo, no podrás solicitar otro.</p>
   </div>
 </div>
 
-    <div v-if="$page.props.user.loan_active" class="text-red-500 text-sm text-center mt-2"> Actualmente tienes un préstamo activo. </div>
+    <div v-if="user_has_active_loan.length" class="text-red-500 text-sm text-center mt-2"> Actualmente tienes un préstamo activo. </div>
 
     <div class="flex justify-end">
       <Link :href="route('loans.create')">
-      <SecondaryButton :disabled="$page.props.user.loan_active" class="mr-7 my-5">Solicitar Préstamo</SecondaryButton>
+      <SecondaryButton :disabled="user_has_active_loan.length" class="mr-7 my-5">Solicitar Préstamo</SecondaryButton>
       </Link>
     </div>
 
@@ -91,6 +91,7 @@ export default {
   },
   props: {
     loans: Object,
+    user_has_active_loan: Array,
   },
   methods: {
        delete() {

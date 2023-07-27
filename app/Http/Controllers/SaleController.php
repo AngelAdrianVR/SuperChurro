@@ -7,6 +7,7 @@ use App\Models\CashRegister;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleToEmployee;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -43,7 +44,7 @@ class SaleController extends Controller
             $sales[] = [
                 'quantity' => $cart->products[$product_id] - $request->product[$product_id],
                 'product_id' => $product_id,
-                'price' => Product::find($product_id)->currentPrice->id,
+                'price' => Product::find($product_id)->currentPrice->price,
                 'created_at' => now(),
             ];
         }
@@ -60,8 +61,7 @@ class SaleController extends Controller
 
     public function show($sale_date)
     {
-        $sale = Sale::whereDate('created_at', $sale_date)->get();
-        dd($sale);
+        //
     }
 
     public function edit(Sale $sale)
@@ -71,7 +71,7 @@ class SaleController extends Controller
 
     public function update(Request $request, Sale $sale)
     {
-        //
+        $sale->update(['quantity' => $request->quantity]);
     }
 
     public function destroy(Sale $sale)
@@ -82,6 +82,7 @@ class SaleController extends Controller
     // API
     public function getByDate(Request $request)
     {
+        // refactor (used in cartController too)
         $middle_date = Carbon::parse($request->date)->addHours(16);
         
         $shift_1_sales = Sale::whereDate('created_at', $request->date)
@@ -101,7 +102,29 @@ class SaleController extends Controller
         $stored_cash = CashRegister::whereDate('date', $request->date)->get();
 
         // get employees at $request->date to show in sales histories
+        $employees = User::where('id', '!=', 1)->get()->where(function($user) use ($request){
+            return $user->hasAttendanceOn($request->date);
+        });
 
-        return response()->json(compact('shift_1_sales', 'shift_2_sales', 'sales_to_employees', 'stored_cash'));
+        return response()->json(compact('shift_1_sales', 'shift_2_sales', 'sales_to_employees', 'stored_cash', 'employees'));
+    }
+
+    public function getMonthSale(Request $request)
+    {
+        // refactor (used in cartController too)
+        $middle_date = Carbon::parse($request->date)->addHours(16);
+        $month = Carbon::parse($request->date)->month;
+        
+        $month_sales = Sale::whereMonth('created_at', $month)
+            ->with('product')
+            ->get();
+            
+        $month_sales_to_employees = SaleToEmployee::whereMonth('created_at', $month)
+        ->with('product', 'user')
+        ->get();
+
+        $month_stored_cash = CashRegister::whereMonth('date', $month)->get()->sum('cash');
+
+        return response()->json(compact('month_sales', 'month_sales_to_employees', 'month_stored_cash'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductRequestHistoryResource;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\ProductRequest;
@@ -74,37 +75,28 @@ class ProductRequestController extends Controller
         return inertia('ProductRequest/Show', compact('product_request', 'products'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ProductRequest  $productRequest
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(ProductRequest $productRequest)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ProductRequest  $productRequest
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, ProductRequest $productRequest)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ProductRequest  $productRequest
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(ProductRequest $productRequest)
     {
         //
+    }
+
+    public function history()
+    {
+        $requests = ProductRequestHistoryResource::collection(ProductRequest::with('user')->latest()->paginate(30));
+        // return $requests;
+        return inertia('ProductRequest/History', compact('requests'));
     }
 }

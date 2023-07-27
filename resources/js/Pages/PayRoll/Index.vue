@@ -19,16 +19,25 @@
                     <span v-for="(discount, index) in payroll.discounts" :key="index">-<i
                             class="text-red-400 fa-solid fa-dollar mr-1"></i>{{ discount.amount }} ({{
                                 discount.description
-                            }})</span>
+                            }})
+                    </span>
+                    <span v-for="(bonus, index) in payroll.bonuses" :key="index">
+                        +<i class="text-green-700 fa-solid fa-dollar mr-1"></i>
+                        {{ bonus.amount }} {{ bonus.name }}
+                    </span>
                     <span v-if="payroll.vacation_premium">+<i class="text-green-700 fa-solid fa-dollar mr-1"></i>{{
                         payroll.vacation_premium
                     }} prima
                         vacacional</span>
-                    <span>+<i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{ payroll.base_salary }} salario
-                        base</span>
-                    <span>+<i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{ payroll.commissions }}
-                        comisiones</span>
-                    <span v-if="payroll.salary_for_extras">+<i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{ payroll.salary_for_extras }}
+                    <span>+<i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{ payroll.base_salary }}
+                        salario
+                        base semana</span>
+                    <span v-for="(commission, index) in payroll.commissions" :key="index">
+                        +<i class="text-green-700 fa-solid fa-dollar mr-1"></i>
+                        {{ commission }} comisión {{ week_days[index] }}
+                    </span>
+                    <span v-if="payroll.salary_for_extras">+<i
+                            class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{ payroll.salary_for_extras }}
                         tiempo extra</span>
                     <span><i class="text-green-700 fa-regular fa-dollar-sign mr-1"></i>{{ payroll.paid }} total</span>
                     <span><i class="text-green-400 fa-solid fa-check mr-1"></i>{{ payroll.week_attendance.attendances }}
@@ -51,6 +60,15 @@ import PayRollTable from '@/Components/PayRollTable.vue';
 export default {
     data() {
         return {
+            week_days: [
+                'Domingo',
+                'Lunes',
+                'Martes',
+                'Miércoles',
+                'Jueves',
+                'Viernes',
+                'Sábado'
+            ],
             payroll_selected: this.payrolls.data[0]
         };
     },

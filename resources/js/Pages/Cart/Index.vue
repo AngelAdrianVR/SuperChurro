@@ -17,6 +17,9 @@
       <Link :href="route('sales.create')">
       <SecondaryButton class="mt-2">Hacer corte</SecondaryButton>
       </Link>
+      <Link :href="route('cart.remove-products')">
+      <SecondaryButton class="mt-2 mx-2">Remover mercancía</SecondaryButton>
+      </Link>
     </div>
 
     <div>
@@ -33,7 +36,28 @@
 
     <div>
       <p class="text-sky-500 text-left ml-3 my-3 font-semibold">
-        Solicitudes de mercancía (Hoy)
+        Cortes
+      </p>
+
+      <div class="globe-container flex-col">
+        <div v-for="sale in sales" :key="sale.id" class="globe">
+          <p class="text-sm flex justify-between">
+            {{ sale }}
+            <i class="fa-solid fa-circle-check text-lg text-green-600"></i>
+          </p>
+        </div>
+        <p v-if="!sales.length" class="text-center text-xs text-gray-500 col-span-full">
+          No hay cortes aún
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <p class="text-sky-500 text-left ml-3 my-3 font-semibold">
+        Solicitudes de mercancía (Hoy) 
+        <Link :href="route('product-request.history')">
+        <SecondaryButton v-if="$page.props.user.is_admin">Ver historial</SecondaryButton>
+        </Link>
       </p>
 
       <div class="globe-container flex-col">
@@ -41,7 +65,7 @@
           class="globe hover:bg-gray-200 cursor-pointer">
         <div class="globe-title !justify-between pb-2">
           <span class="text-gray-500"><i class="fa-solid fa-user mr-1"></i> {{ request.user.name }}</span>
-          <small class="text-gray-400">{{ timeFormatter(request.created_at) }}</small>
+          <!-- <small class="text-gray-400">{{ timeFormatter(request.created_at) }}</small> -->
         </div>
         <div class="flex justify-between items-center">
           <span> {{ request.products.length }} producto(s) - (click para ver)</span>
@@ -93,6 +117,7 @@ export default {
     requests: Array,
     cart_products: Object,
     employees: Object,
+    sales: Array,
   },
   methods: {
     timeFormatter(timestamp) {

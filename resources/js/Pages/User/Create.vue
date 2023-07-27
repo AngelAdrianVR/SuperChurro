@@ -49,7 +49,7 @@
               bg-transparent
               border-0 border-b-2 border-gray-300
               appearance-none
-              dark:text-white dark:border-gray-600 dark:focus:border-stone-500
+              dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
               peer
             " placeholder=" " />
@@ -83,7 +83,7 @@
               bg-transparent
               border-0 border-b-2 border-gray-300
               appearance-none
-              dark:text-white dark:border-gray-600 dark:focus:border-stone-500
+              dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
               peer
             " placeholder=" " />
@@ -117,7 +117,7 @@
               bg-transparent
               border-0 border-b-2 border-gray-300
               appearance-none
-              dark:text-white dark:border-gray-600 dark:focus:border-stone-500
+              dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
               peer
             " placeholder=" " />
@@ -152,7 +152,7 @@
               bg-transparent
               border-0 border-b-2 border-gray-300
               appearance-none
-              dark:text-white dark:border-gray-600 dark:focus:border-stone-500
+              dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
               peer
             " placeholder=" " />
@@ -187,7 +187,7 @@
               bg-transparent
               border-0 border-b-2 border-gray-300
               appearance-none
-              dark:text-white dark:border-gray-600 dark:focus:border-stone-500
+              dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
               peer
             " placeholder=" " />
@@ -211,7 +211,18 @@
             ">Salario base*</label>
           <InputError :message="$page.props?.errors.employee_properties?.base_salary" />
         </div>
-        <label class="mb-3 w-full text-sm text-gray-500">Días de trabajo</label>
+
+        <div class="mb-3">
+          <label class="w-full text-sm text-gray-500 block">Bonos</label>
+          <div class="grid grid-cols-2 lg:grid-cols-3 gap-1">
+            <label v-for="bonus in bonuses" :key="bonus.id">
+              <input v-model="form.employee_properties.bonuses" type="checkbox" :value="bonus.id" class="rounded border-gray-300 text-sky-600 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50" />
+              <span class="ml-1 text-xs text-gray-600">{{ bonus.name }}</span>
+            </label>
+          </div>
+        </div>
+
+        <label class="block mt-3 w-full text-sm text-gray-500">Días de trabajo</label>
           <div class="">
             <select class="
             bg-gray-200
@@ -232,7 +243,7 @@
             <div class="flex flex-col mb-4">
               <div v-for="(shift, index) in shifts" :key="index" class="flex items-center mr-3">
                 <input v-model="selected_shift" :id="'shift-option-'+index" type="radio" name="shift" :value="shift"
-                  class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300" :aria-labelledby="'shift-option-'+index"
+                  class="h-4 w-4 border-gray-300 text-sky-600 focus:ring-2 focus:ring-sky-300" :aria-labelledby="'shift-option-'+index"
                   :aria-describedby="'shift-option-'+index" checked="">
                 <label :for="'shift-option-'+index" class="text-sm font-medium text-gray-900 ml-2 block">
                   {{ shift }}
@@ -241,8 +252,8 @@
             </div>
             <SecondaryButton @click="addWorkDay" class="mb-4">Agregar día</SecondaryButton>
             <div>
-              <span v-for="item in form.employee_properties.work_days" :key="item.day" class="bg-sky-100 px-1 py-px rounded-md mr-3 text-xs">
-                {{ week_days[item.day] }} - {{ item.shift }}
+              <span v-for="(item,index) in form.employee_properties.work_days" :key="item.day" class="bg-sky-100 px-1 py-px rounded-md mr-3 text-xs">
+                {{ week_days[item.day] }} - {{ item.shift }} <button type="button" @click="deleteUser(index)">x</button>
               </span>
             </div>
           </div>
@@ -299,6 +310,7 @@ export default {
         work_days: [],
         vacations: 0,
         vacations_updated_date: new Date().toISOString().split('T')[0],
+        bonuses: []
       },
       resources: null,
     });
@@ -317,7 +329,8 @@ export default {
         'cocina',
         'carrito matutino',
         'carrito vespertino',
-        'carrito 2 turnos'
+        'carrito 2 turnos',
+        'Don Victor'
       ],
       selected_day: 0,
       selected_shift: 'carrito 2 turnos',
@@ -334,7 +347,7 @@ export default {
     SecondaryButton,
   },
   props: {
-
+    bonuses: Array,
   },
   methods: {
     store() {
@@ -342,6 +355,9 @@ export default {
     },
     addWorkDay() {
       this.form.employee_properties.work_days.push({day: this.selected_day, shift: this.selected_shift});
+    },
+    deleteWorkDay(index) {
+      this.form.employee_properties.work_days.splice(index);
     },
   },
 };

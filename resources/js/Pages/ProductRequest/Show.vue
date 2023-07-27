@@ -6,7 +6,7 @@
             </h2>
         </template>
 
-        <div class="flex justify-start">
+        <div class="flex justify-between">
             <Link :href="route('carts.index')" class="flex items-center mt-2 text-slate-700">
             <i class="
             fas
@@ -20,8 +20,25 @@
             pl-1
             ml-2
           "></i>
-            <span class="ml-1 cursor-default">Atrás</span>
+            <span class="ml-1 cursor-default">Carrito</span>
             </Link>
+            <div>
+            <Link :href="route('product-request.history')" class="flex items-center mt-2 text-slate-700">
+            <i class="
+            fas
+            fa-long-arrow-alt-left
+            text-lg
+            active:bg-gray-300
+            bg-opacity-100
+            rounded-full
+            w-7
+            h-7
+            pl-1
+            ml-2
+          "></i>
+          <span class="mr-2 cursor-default">Historial</span>
+            </Link>
+            </div>
         </div>
 
         <div class="
@@ -51,6 +68,7 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
@@ -62,6 +80,7 @@ export default {
     components: {
         AppLayout,
         Link,
+        SecondaryButton,
     },
     props: {
         product_request: Object,

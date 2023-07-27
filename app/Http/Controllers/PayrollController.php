@@ -18,7 +18,7 @@ class PayrollController extends Controller
 
     public function index()
     {
-        $payrolls = PayrollUserResource::collection(auth()->user()->payrolls()->orderBy('id', 'desc')->get());
+        $payrolls = PayrollUserResource::collection(auth()->user()->payrolls()->orderBy('id', 'desc')->get()->take(8));
 
         return Inertia::render('PayRoll/Index', compact('payrolls'));
     }

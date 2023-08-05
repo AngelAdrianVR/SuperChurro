@@ -57,7 +57,7 @@ class PayrollUser extends Pivot
         $vacations = 0;
         $extras = 0; // minutes
         $late = 0; // minutes
-        $tolerance = 15;
+        $tolerance = 0;
 
         for ($i = 0; $i < 7; $i++) {
             $current_day_in_loop = $current_payroll->start_date->addDays($i);
@@ -85,7 +85,7 @@ class PayrollUser extends Pivot
 
                 // calculate extras
                 $extras_per_day = Carbon::parse($current_attendance[$i]['out'])
-                    ->diffInMinutes($user->getEntryTime()[$i])
+                    ->diffInMinutes($current_attendance[$i]['in'])
                     - $user->getTimeToWork()[$i];
 
                 if (($extras_per_day - $tolerance) <= 0) $extras_per_day = 0;

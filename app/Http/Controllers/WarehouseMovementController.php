@@ -93,8 +93,9 @@ class WarehouseMovementController extends Controller
         $product = Product::with('unit')
                 ->find($product_id);   
 
-        $movements = WarehouseMovement::with('user', 'concept')->where('product_id', $product_id)->latest()->paginate(30);
-
+                
+                $movements = WarehouseMovement::with('user', 'concept')->where('product_id', $product_id)->latest()->paginate(30);
+                
             // $item->load(array('tags' => function($query) {
             // $query->orderBy('tag.name');
             // }));

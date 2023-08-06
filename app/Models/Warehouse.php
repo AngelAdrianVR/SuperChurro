@@ -19,4 +19,10 @@ class Warehouse extends Model
     protected $casts = [
         'products' => 'array',
     ];
+
+
+    // public function movements()
+    // {
+    //     return $this->hasMany(WarehouseMovement::class);
+    // }
 }

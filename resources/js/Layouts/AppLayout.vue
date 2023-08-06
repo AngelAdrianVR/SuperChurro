@@ -252,7 +252,7 @@ const logout = () => {
                 <Dropdown v-if="$page.props.user.is_admin" align="right" width="48">
                   <template #trigger>
                     <button class="text-white hover:border hover:rounded-full w-8 h-8">
-                      <i class="fa-solid fa-user-gear"></i>
+                      <i class="fa-solid fa-user-gear text-gray-600"></i>
                     </button>
                   </template>
                   <template #content>

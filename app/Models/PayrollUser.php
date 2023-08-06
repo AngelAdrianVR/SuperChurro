@@ -57,7 +57,7 @@ class PayrollUser extends Pivot
         $vacations = 0;
         $extras = 0; // minutes
         $late = 0; // minutes
-        $tolerance = 15;
+        $tolerance = 0;
 
         for ($i = 0; $i < 7; $i++) {
             $current_day_in_loop = $current_payroll->start_date->addDays($i);
@@ -85,7 +85,7 @@ class PayrollUser extends Pivot
 
                 // calculate extras
                 $extras_per_day = Carbon::parse($current_attendance[$i]['out'])
-                    ->diffInMinutes($user->getEntryTime()[$i])
+                    ->diffInMinutes($current_attendance[$i]['in'])
                     - $user->getTimeToWork()[$i];
 
                 if (($extras_per_day - $tolerance) <= 0) $extras_per_day = 0;
@@ -191,7 +191,8 @@ class PayrollUser extends Pivot
             + $this->salaryForExtras()
             + $this->extraTime()['total_pay']
             + collect($this->bonuses())->sum('amount')
-            - collect($this->discounts())->sum('amount');
+            - collect($this->discounts())->sum('amount')
+            + $this->payVacations();
 
         return round($total);
     }
@@ -233,13 +234,15 @@ class PayrollUser extends Pivot
         $total_pay = 0;
         $total_time = 0;
         // extra time
-        if ($this->extras) {
+        if (($this->extras && !isset($this->extras['vacations']))) {
             // get stored data
             foreach ($this->extras as $extra) {
                 $total_pay += $extra['pay'];
                 $total_time += $extra['time'];
             }
         }
+        
+        
 
         return compact('total_pay', 'total_time');
     }
@@ -329,7 +332,7 @@ class PayrollUser extends Pivot
         $user = User::find($this->user_id);
         $discounts = [];
         $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
-        $pesos_per_minute =  $base_salary / 360;
+        $pesos_per_minute =  1;
 
         // minutes late
         $minutes_late = $this->weekAttendanceArray()['late'];
@@ -351,5 +354,15 @@ class PayrollUser extends Pivot
         }
 
         return $discounts;
+    }
+
+    public function payVacations(){
+        $user = User::find($this->user_id);
+
+        if(isset($this->extras['vacations'])){
+            return $this->extras['vacations'] * $user->employee_properties['base_salary'];
+        }else{
+            return 0;
+        }
     }
 }

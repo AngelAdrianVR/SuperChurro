@@ -28,13 +28,12 @@
       </div>
 
         <div class="text-center font-bold mb-4">
+          
           <label v-if="!total_outcome">Egresos totales: ${{ total_outcomes_money }} </label>
           <label v-else>Egresos totales: ${{ total_outcome }} </label>
         </div>
 
-    
-
-    <div v-if="true">
+    <div>
       <div class="globe-container flex-col">
         <Link :href="route('outcomes.show', outcome)" v-for="outcome in filtered_outcomes" :key="outcome.id"
           class="globe hover:bg-gray-200 cursor-pointer">
@@ -51,6 +50,7 @@
       </div>
     </div>
 
+    <!-- <Pagination :pagination="filtered_outcomes" /> -->
   </AppLayout>
 </template>
 
@@ -59,6 +59,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
+import Pagination from "@/Components/Pagination.vue";
 import axios from 'axios';
 
 
@@ -105,6 +106,7 @@ export default {
     SecondaryButton,
     PrimaryButton,
     Link,
+    Pagination
   },
   props: {
     outcomes: Object,

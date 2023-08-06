@@ -119,7 +119,7 @@ class User extends Authenticatable implements HasMedia
             } else if ($work_day['shift'] === 'carrito 2 turnos') {
                 $time_to_work = 660; // minutes (11 hours)
             } else {
-                $time_to_work =300; // minutes (5 hours)
+                $time_to_work = 300; // minutes (5 hours)
             }
             $time_to_work_array[$work_day['day']] = $time_to_work;
         }
@@ -297,14 +297,36 @@ class User extends Authenticatable implements HasMedia
     public function getBonuses()
     {
         $bonuses_ids = array_key_exists('bonuses', $this->employee_properties)
-        ? $this->employee_properties['bonuses'] 
-        : [];
+            ? $this->employee_properties['bonuses']
+            : [];
         $detailed_bonuses = [];
 
-        foreach($bonuses_ids as $id) {
+        foreach ($bonuses_ids as $id) {
             $current_bonus = Bonus::find($id);
-            if($current_bonus->is_active) {
-                $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $current_bonus->amount];
+
+            if ($current_bonus->is_active) {
+                if ($id === 7) { //punctuality
+                    $last_payroll_user = PayrollUser::where('user_id', $this->id)->latest()->first();
+                    // propoerty "additional" is not null when payroll is closed
+                    if ($last_payroll_user->additional) {
+                        // get stored data
+                        $minutes_late = $last_payroll_user->attendance['late'];
+                    } else {
+                        // process data
+                        $minutes_late = $last_payroll_user->weekAttendanceArray()['late'];
+                    }
+                    if ($minutes_late == 0) { //give punctuality bonus
+                        $factor = 0; //factor to multiply punctuality amount
+                        foreach ($this->employee_properties['work_days'] as $work_day) {
+                            if ($work_day['shift'] == "carrito 2 turnos") $factor += 2;
+                            else $factor++;
+                        }
+                        $amount = $factor * $current_bonus->amount;
+                        $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $amount];
+                    }
+                } else {
+                    $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $current_bonus->amount];
+                }
             }
         }
 

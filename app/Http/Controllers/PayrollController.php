@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PayrollResource;
 use App\Http\Resources\PayrollUserResource;
 use App\Http\Resources\PayrollUserResource2;
+use App\Models\Outcome;
 use App\Models\Payroll;
 use App\Models\PayrollUser;
 use App\Models\Sale;
@@ -17,7 +18,7 @@ class PayrollController extends Controller
 
     public function index()
     {
-        $payrolls = PayrollUserResource::collection(auth()->user()->payrolls()->orderBy('id', 'desc')->get());
+        $payrolls = PayrollUserResource::collection(auth()->user()->payrolls()->orderBy('id', 'desc')->get()->take(8));
 
         return Inertia::render('PayRoll/Index', compact('payrolls'));
     }
@@ -32,7 +33,7 @@ class PayrollController extends Controller
     // admin
     public function adminIndex()
     {
-        $payrolls = PayrollResource::collection(Payroll::with('users')->latest()->get());
+        $payrolls = PayrollResource::collection(Payroll::with('users')->latest()->get()->take(8));
 
         return inertia('PayRoll/Admin/Index', compact('payrolls'));
     }
@@ -91,6 +92,20 @@ class PayrollController extends Controller
             'commissions' => $commissions,
             'is_active' => false,
         ]);
+
+        // calculate total salary
+        $total_salaries = $active_payroll->users->reduce(function ($carry, $item) {
+            return $carry + $item->pivot->paid();
+        });
+        
+        // create outcome for all salaries
+        Outcome::create([
+            'concept' => 'Salarios',
+            'quantity' => 1,
+            'cost' => $total_salaries,
+            'notes' => 'Generado automaticamente al cerrar las nominas',
+            'user_id' => auth()->id(),
+        ]);
     }
 
     public function updatePayroll(Request $request)
@@ -101,15 +116,19 @@ class PayrollController extends Controller
         $attendance = $payroll_user->attendance;
         foreach ($attendance as $key => $record) {
             if ($record['day'] == $request->day) {
-                $attendance[$key]['in'] = $request->attendance['in'];
-                $attendance[$key]['out'] = $request->attendance['out'];
-                $is_absent = false;
-                break;
+                if ($request->attendance['in'] && strtolower($request->attendance['in']) != 'falta') {
+                    $attendance[$key]['in'] = $request->attendance['in'];
+                    $attendance[$key]['out'] = $request->attendance['out'];
+                    $is_absent = false;
+                    break;
+                } else {
+                    unset($attendance[$key]);
+                    $is_absent = false;
+                }
             }
         }
-
         // it was an absent: create new attendance day
-        if ($is_absent) {
+        if ($is_absent && $request->attendance['in'] && strtolower($request->attendance['in']) != 'falta') {
             $attendance[$request->day] = [
                 'in' => $request->attendance['in'],
                 'out' => $request->attendance['out'],

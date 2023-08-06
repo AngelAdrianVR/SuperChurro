@@ -21,7 +21,8 @@ class PayrollUserResource2 extends JsonResource
             'base_salary' => number_format($this->baseSalary()),
             'commissions' => $this->commissions(),
             'bonuses' => $this->bonuses(),
-            'salary_for_extras' => round($this->salaryForExtras()), 
+            'salary_for_extras' => number_format(round($this->salaryForExtras())), 
+            'vacations_not_taken' => number_format(round($this->PayVacations())),
             'user' => UserResource::make(User::find($this->user_id)),
             'payroll' => PayrollResource::make(Payroll::find($this->payroll_id))
         ];

@@ -11,8 +11,11 @@ class OutcomeController extends Controller
     public function index()
     {
         $total_outcomes_money = 0;
-        $outcomes = Outcome::with('user')->latest()->paginate(30)->groupBy('created_at');
+        $outcomes = Outcome::with('user')->latest()->get()->groupBy(function($data) {
+            return $data->created_at->toDateString();
+        });
 
+        // return $outcomes;
         foreach ($outcomes as $outcome) {
             $total_outcomes_money += $outcome->sum(function ($outcome) {
                 return $outcome->cost * $outcome->quantity;
@@ -21,7 +24,6 @@ class OutcomeController extends Controller
 
         $total_outcomes_money = number_format($total_outcomes_money, 2);
         
-        // return $outcomes;    
         return inertia('Outcome/Index', compact('outcomes', 'total_outcomes_money'));
     }
 
@@ -58,21 +60,25 @@ class OutcomeController extends Controller
 
     public function show(Outcome $outcome)
     {
-        $outcomes = Outcome::where('created_at', $outcome->created_at)->get();
-        // return $outcomes;
+        $outcomes = Outcome::whereDate('created_at', $outcome->created_at)->get();
+
         return inertia('Outcome/Show', compact('outcomes'));
     }
 
 
     public function edit(Outcome $outcome)
     {
-        //
+
     }
 
 
     public function update(Request $request, Outcome $outcome)
     {
-        //
+        $outcome->update([
+            'concept' => $request->concept,
+            'quantity' => $request->quantity,
+            'cost' => $request->cost
+        ]);
     }
 
 
@@ -88,7 +94,10 @@ class OutcomeController extends Controller
            return $query->whereYear('created_at', $request->year);
         })->when($request->month, function ($query) use($request){
             return $query->whereMonth('created_at', $request->month);
-         })->with('user')->latest()->paginate(30)->groupBy('created_at');
+         })->with('user')->latest()->get()->groupBy(function($data) {
+            return $data->created_at->toDateString();
+        });
+
 
          foreach ($outcomes as $outcome) {
             $total_outcomes_money += $outcome->sum(function ($outcome) {

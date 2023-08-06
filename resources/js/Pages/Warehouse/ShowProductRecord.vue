@@ -1,16 +1,16 @@
 <template>
   <AppLayout title="Historial de movimientos">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Historial de "{{ product.name }}"
       </h2>
     </template>
 
     <div class="flex justify-start">
-      <Link :href="route('warehouses.index')" class="flex items-center mt-2 text-slate-700">
+      <Link :href="route('warehouses.index')" class="flex items-center mt-2 text-secondary">
       <i class="
             fas
-            fa-long-arrow-alt-left
+            fa-solid fa-angle-left
             text-lg
             active:bg-gray-300
             bg-opacity-100
@@ -18,11 +18,13 @@
             w-7
             h-7
             pl-1
-            ml-2
+            lg:ml-8
           "></i>
       <span class="ml-1 cursor-default">Atrás</span>
       </Link>
     </div>
+
+
     <div class="globe-container flex-col">
       <div v-for="movement in movements.data" :key="movement" class="globe">
         <p class="globe-title !justify-between pb-2 text-gray-500">

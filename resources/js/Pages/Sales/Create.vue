@@ -22,10 +22,10 @@
     </div>
 
     <div class="flex">
-      <Link :href="route('carts.index')" class="flex items-center mt-2 text-slate-700">
+      <Link :href="route('carts.index')" class="flex items-center mt-2 text-secondary">
       <i class="
             fas
-            fa-long-arrow-alt-left
+            fa-solid fa-angle-left
             text-lg
             active:bg-gray-300
             bg-opacity-100

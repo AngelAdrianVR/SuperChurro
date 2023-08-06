@@ -141,25 +141,21 @@ const logout = () => {
 
     <div class="min-h-screen bg-gray-200">
       <nav class="
-          bg-gradient-to-tl
-          from-stone-500
-          to-stone-800
-          border-b-2 border-gray-600
-          shadow-md shadow-gray-500/100
+          bg-transparent
         ">
         <!-- Primary Navigation Menu -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
           <div class="flex justify-between h-16">
             <div class="flex">
               <!-- Logo -->
-              <div class="shrink-0 flex items-center">
+              <div class="shrink-0 flex items-center pt-8">
                 <Link :href="route('dashboard')">
                 <ApplicationMark class="block h-9 w-auto" />
                 </Link>
               </div>
 
               <!-- Navigation Links -->
-              <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+              <div class="hidden space-x-3 sm:-my-px sm:ml-10 sm:flex justify-end">
                 <template v-for="(menu, index) in menues" :key="index">
                   <NavLink v-if="menu.admin_can_see || !$page.props.user.is_admin" :href="route(menu.route_name)"
                     :active="menu.is_active">
@@ -348,10 +344,9 @@ const logout = () => {
                   justify-center
                   p-2
                   rounded-md
-                  text-gray-300
-                  hover:text-gray-500 hover:bg-gray-100
-                  focus:outline-none focus:bg-gray-100 focus:text-gray-500
-                  transition
+                  text-gray-500
+                  focus:outline-none focus:ring focus:ring-[#883339] focus:text-gray-500
+                  transition ease-in-out delay-150
                 " @click="showingNavigationDropdown = !showingNavigationDropdown">
                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                   <path :class="{
@@ -382,8 +377,8 @@ const logout = () => {
             </template>
 
             <!-- admin menu -->
-            <div v-if="$page.props.user.is_admin" class="pt-2 pb-1 border-t border-gray-200">
-              <p class="text-gray-200 text-xs text-center">
+            <div v-if="$page.props.user.is_admin" class="pt-2 pb-1 border-t border-[#883339]">
+              <p class="text-gray-400 text-xs text-center">
                 <i class="fa-solid fa-user-gear mr-2"></i>
                 Opciones de administrador
               </p>
@@ -395,7 +390,7 @@ const logout = () => {
           </div>
 
           <!-- Responsive Settings Options -->
-          <div class="pt-4 pb-1 border-t border-gray-200">
+          <div class="pt-4 pb-1 border-t border-[#883339]">
             <div class="flex items-center px-4">
               <div v-if="$page.props.jetstream.managesProfilePhotos" class="shrink-0 mr-3">
                 <img class="h-10 w-10 rounded-full object-cover" :src="$page.props.user.profile_photo_url"
@@ -403,7 +398,7 @@ const logout = () => {
               </div>
 
               <div>
-                <div class="font-medium text-base text-gray-200">
+                <div class="font-medium text-base text-gray-400">
                   {{ $page.props.user.name }}
                 </div>
                 <div class="font-medium text-sm text-gray-400">
@@ -476,7 +471,7 @@ const logout = () => {
       </nav>
 
       <!-- Page Heading -->
-      <header v-if="$slots.header" class="bg-gray-300 shadow-md shadow-gray-400 rounded-b-xl">
+      <header v-if="$slots.header" class="bg-transparent rounded-b-xl">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <slot name="header" />
         </div>

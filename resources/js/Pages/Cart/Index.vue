@@ -23,7 +23,7 @@
     </div>
 
     <div>
-      <p class="text-sky-500 text-left ml-3 my-3 font-semibold">Empleados en carrito</p>
+      <p class="text-secondary text-left ml-3 my-3 font-semibold">Empleados en carrito</p>
       <div class="grid grid-cols-2 lg:grid-cols-4">
         <p v-for="employee in employees" :key="employee.id" class="mx-3">
           <i class="fa-solid fa-user text-gray-500"></i>

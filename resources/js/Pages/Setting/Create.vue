@@ -9,12 +9,12 @@
     <div class="flex justify-start">
       <Link
         :href="route('settings.index')"
-        class="flex items-center mt-2 text-slate-700"
+        class="flex items-center mt-2 text-secondary"
       >
         <i
           class="
             fas
-            fa-long-arrow-alt-left
+            fa-solid fa-angle-left
             text-lg
             active:bg-gray-300
             bg-opacity-100

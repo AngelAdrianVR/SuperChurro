@@ -28,4 +28,11 @@ class WarehouseMovement extends Model
     {
         return $this->belongsTo(MovementConcept::class, 'movement_concept_id');
     }
+
+    // public function warehouse()
+    // {
+    //     return $this->belongsTo(Warehouse::class);
+    // }
+
+    
 }

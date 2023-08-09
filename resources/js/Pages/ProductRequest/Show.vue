@@ -7,10 +7,10 @@
         </template>
 
         <div class="flex justify-between">
-            <Link :href="route('carts.index')" class="flex items-center mt-2 text-slate-700">
+            <Link :href="route('carts.index')" class="flex items-center mt-2 text-secondary">
             <i class="
             fas
-            fa-long-arrow-alt-left
+            fa-solid fa-angle-left
             text-lg
             active:bg-gray-300
             bg-opacity-100
@@ -23,10 +23,10 @@
             <span class="ml-1 cursor-default">Carrito</span>
             </Link>
             <div>
-            <Link :href="route('product-request.history')" class="flex items-center mt-2 text-slate-700">
+            <Link :href="route('product-request.history')" class="flex items-center mt-2 text-secondary">
             <i class="
             fas
-            fa-long-arrow-alt-left
+            fa-solid fa-angle-left
             text-lg
             active:bg-gray-300
             bg-opacity-100

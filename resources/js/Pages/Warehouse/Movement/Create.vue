@@ -9,10 +9,10 @@
     <div class="flex justify-start">
       <Link
         :href="route('warehouses.index')"
-        class="flex items-center mt-2 text-slate-700"
+        class="flex items-center mt-2 text-secondary"
       >
         <i
-          class="fas fa-long-arrow-alt-left text-lg active:bg-gray-300 bg-opacity-100 rounded-full w-7 h-7 pl-1 ml-2"
+          class="fa-solid fa-angle-left text-lg hover:bg-gray-300 bg-opacity-100 rounded-full w-7 h-7 pl-1 ml-5"
         ></i>
         <span class="ml-1 cursor-default">Atrás</span>
       </Link>
@@ -32,7 +32,7 @@
                 type="radio"
                 name="countries"
                 value="1"
-                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
+                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-[#ABD196] text-[#ABD196]"
                 aria-labelledby="country-option-1"
                 aria-describedby="country-option-1"
                 checked=""
@@ -51,7 +51,7 @@
                 type="radio"
                 name="countries"
                 value="0"
-                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
+                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-[#D20917] text-[#D20917]"
                 aria-labelledby="country-option-2"
                 aria-describedby="country-option-2"
               />
@@ -92,7 +92,7 @@
         </p>
         <div class="mt-2 mb-6 text-center">
           <button type="button" @click="addNewItem">
-            <i class="fa-solid fa-circle-plus text-2xl text-blue-400"></i>
+            <i class="fa-solid fa-circle-plus text-2xl text-[#ABD196]"></i>
           </button>
         </div>
 

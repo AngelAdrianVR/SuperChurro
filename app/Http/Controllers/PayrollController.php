@@ -33,7 +33,7 @@ class PayrollController extends Controller
     // admin
     public function adminIndex()
     {
-        $payrolls = PayrollResource::collection(Payroll::with('users')->latest()->get()->take(8));
+        $payrolls = PayrollResource::collection(Payroll::with('users')->latest()->get()->take(4));
 
         return inertia('PayRoll/Admin/Index', compact('payrolls'));
     }

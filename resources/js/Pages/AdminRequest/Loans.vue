@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Solicitudes">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Solicitudes de Empleados
       </h2>
     </template>
@@ -12,9 +12,8 @@
 
     <div v-if="loans.data.length" class="globe-container">
       <div v-for="loan in loans.data" :key="loan.id" class="globe relative">
-        <div class="globe-title !justify-between">
-          <p>Solicitado el: {{loan.created_at}}</p>
-          <p> <i class="fa-solid fa-user text-gray-500"></i> {{loan.user.name}}</p>
+        <div class="globe-title !justify-center">
+          <i class="fa-regular fa-circle-user mr-2"></i><p class="text-primary">{{loan.user.name}}</p>
           <button class="absolute bottom-1 right-2" @click="delete_confirm = true; item_to_delete = loan;">
           <i v-if="loan.status == 1" class="fa-solid fa-trash text-red-600"></i>
           </button>
@@ -28,6 +27,7 @@
             <span v-else-if="loan.remaining == 0 && !loan.authorized_at" class="text-red-600 font-bold mt-2"><i class="fa-solid fa-xmark mr-2"></i>Rechazado</span>  
             <span v-else-if="loan.remaining == 0 && loan.authorized_at" class="text-indigo-600 font-bold mt-2"><i class="fa-solid fa-handshake mr-2"></i>Pagado</span>  
         </div>
+        <p class="text-xs text-gray-500 mt-3">Solicitado el: {{loan.created_at}}</p>
         <div v-if="loan.remaining == loan.amount && !loan.authorized_at" class="flex justify-center items-center mt-1 mb-3 space-x-2">
           <PrimaryButton @click="$inertia.put(route('loan.accept',loan.id))" class="bg-green-600">Aprobar</PrimaryButton>
           <PrimaryButton @click="$inertia.put(route('loan.reject',loan.id))" class="!bg-red-600">Rechazar</PrimaryButton>
@@ -40,6 +40,8 @@
           <p>No hay información para mostrar.</p>
     </div>
 
+    <!-- <Pagination :pagination="loans" /> -->
+
   </AppLayout>
 </template>
 
@@ -50,6 +52,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import Tabs from "@/Components/Tabs.vue";
+import Pagination from "@/Components/Pagination.vue";
 export default {
   data() {
     return {
@@ -72,6 +75,7 @@ export default {
     ConfirmationModal,
     Tabs,
     PrimaryButton,
+    Pagination
   },
   props: {
     loans: Object,

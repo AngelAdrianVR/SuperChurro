@@ -32,15 +32,15 @@
       </div>
 
       <div
-        class="md:grid grid-cols-2 my-7 border border-gray-300 p-4 rounded-lg"
+        class="md:grid grid-cols-2 my-7 border border-gray-300 p-4 rounded-lg text-center"
       >
         <div class="">
           <p class="text-gray-700 text-center ml-3 my-3 font-semibold">
             Colaboradores en carrito
           </p>
-          <div class="grid grid-cols-2 lg:grid-cols-4">
-            <p v-for="employee in employees" :key="employee.id" class="mx-3">
-              <i class="fa-solid fa-user text-gray-700"></i>
+          <div class="">
+            <p v-for="employee in employees" :key="employee.id" class="mx-3 my-2">
+              <i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
               <span class="text-primary">{{ employee.name }}</span>
             </p>
             <p
@@ -151,13 +151,13 @@
                 products.find((product) => product.id == cart_product_id).name
               }}
             </div>
-            <div class="flex justify-between items-center">
-              <span
+            <div class="flex justify-center items-center">
+              <p
                 >{{ cart_products[0].products[cart_product_id] }}
                 {{
                   products.find((product) => product.id == cart_product_id).unit
                     .name
-                }}</span
+                }}</p
               >
             </div>
           </div>

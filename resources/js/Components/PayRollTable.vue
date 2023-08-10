@@ -2,7 +2,7 @@
   <section class="relative py-2 bg-blueGray-50">
     <div class="w-full px-4">
       <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded 
-  bg-cyan-900 text-white">
+  bg-secondary-gray text-white">
         <div class="rounded-t mb-0 px-4 py-3 border-0">
           <div class="flex flex-wrap items-center">
             <div class="relative w-full px-4 max-w-full flex-grow flex-1 flex justify-between">
@@ -10,7 +10,7 @@
                 payroll?.user.name
               }}</h3>
               <Link v-if="$page.props.user.is_admin" :href="route('payroll-admin.show', payroll.payroll_user_id)">
-              <PrimaryButton>Ver nómina</PrimaryButton>
+              <SecondaryButton>Ver nómina</SecondaryButton>
               </Link>
             </div>
           </div>
@@ -20,19 +20,19 @@
             <thead>
               <tr>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-[#686868] text-wite border-stone-800">
                   Día</th>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-[#686868] text-wite border-stone-800">
                   Entrada</th>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-[#686868] text-wite border-stone-800">
                   Salida</th>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-[#686868] text-wite border-stone-800">
                   Extras</th>
                 <th v-if="$page.props.user.is_admin && payroll.is_active"
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-cyan-800 text-cyan-300 border-cyan-700">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-[#686868] text-wite border-stone-800">
                   Acciones
                 </th>
               </tr>
@@ -82,6 +82,8 @@
 <script>
 
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import ThirthButton from '@/Components/ThirthButton.vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 
@@ -100,6 +102,8 @@ export default {
   components: {
     PrimaryButton,
     Link,
+    SecondaryButton,
+    ThirthButton
   },
   props: {
     payroll: Object,

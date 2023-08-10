@@ -1,14 +1,14 @@
 <template>
   <AppLayout title="Administración de poductos">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Administración de poductos
       </h2>
     </template>
 
     <div class="flex justify-end">
       <Link :href="route('products.create')">
-      <SecondaryButton class="mr-7 my-5">Nuevo producto</SecondaryButton>
+      <SecondaryButton class="mr-7 my-5">Agregar <i class="fa-solid fa-plus ml-2"></i></SecondaryButton>
       </Link>
     </div>
 
@@ -17,14 +17,14 @@
         class="globe hover:bg-gray-200 cursor-pointer relative z-0">
         <Link :href="route('products.show', product.id)">
         <div class="globe-title !justify-between pb-2">
-          <span class="text-gray-500"><i class="fa-solid fa-box mr-1"></i>
-            {{ product.name }}</span>
+          <p class="text-gray-700"><i class="fa-solid fa-box mr-1"></i>
+            {{ product.name }}</p>
         </div>
         <div class="flex flex-col">
-          <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Stock mínimo: {{ product.low_stock }} </span>
-          <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Unidad de medida: {{ product.unit.name }} </span>
-          <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Precio actual: ${{ product.price.price }} </span>
-          <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Precio a empleados: ${{ product.employee_price.price }} </span>
+          <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Stock mínimo: {{ product.low_stock }} </span>
+          <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Unidad de medida: {{ product.unit?.name }} </span>
+          <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Precio actual: ${{ product.price.price }} </span>
+          <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Precio a empleados: ${{ product.employee_price.price }} </span>
         </div>
         </Link>
         <!-- <button class="absolute bottom-1 right-2 z-10" @click="delete_confirm = true; item_to_delete = product;">

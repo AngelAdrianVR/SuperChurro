@@ -38,11 +38,11 @@
           </figure>
             <Link :href="route('warehouse-movements.show-product-record', product_id)">
               <div class="globe-title !justify-center pb-2">
-                {{ products.find(product => product.id == product_id ).name }}
+                {{ products.find(product => product.id == product_id )?.name }}
               </div>
               <div class="flex justify-center items-center" 
               :class="warehouse.products[product_id] <= products.find(product => product.id == product_id ).low_stock ? 'text-red-500' : 'text-green-500' ">
-                <span>{{ warehouse.products[product_id] }} {{ products.find(product => product.id == product_id ).unit.name }}</span>
+                <span>{{ warehouse.products[product_id] }} {{ products.find(product => product.id == product_id ).unit?.name }}</span>
               </div>
             </Link>
           </div>

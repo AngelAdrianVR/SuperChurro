@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Historial de ventas">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Historial de ventas
       </h2>
     </template>
@@ -12,7 +12,7 @@
     </div>
 
     <div v-if="shift_1_sales.length || shift_2_sales.length">
-      <div class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+      <div class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-primary-gray shadow-md rounded-md px-2 py-1">
         <h1 class="col-span-full text-center text-sm font-bold">Venta mensual acumulada</h1>
         <p>
           Ventas: ${{ numberFormat(totalMonthSale().month_sales + totalMonthSale().to_employees) }} <br>
@@ -21,7 +21,7 @@
         </p>
       </div>
 
-      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-primary-gray shadow-md rounded-md px-2 py-1">
         <h1 class="col-span-full text-center text-sm font-bold">Empleados activos este día</h1>
         <p v-for="(employee, index) in employees" :key="index">
           <i class="fa-solid fa-user text-gray-500"></i>
@@ -29,11 +29,11 @@
         </p>
       </div>
 
-      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-primary-gray shadow-md rounded-md px-2 py-1">
         <h1 class="col-span-full text-center text-sm font-bold">Ventas T/M</h1>
         <p v-for="sale in shift_1_sales" :key="sale.id">
           {{ sale.product.name }} x{{ sale.quantity }}
-          <i class="fa-solid fa-arrow-right-long text-green-500"></i>
+          <i class="fa-solid fa-arrow-right-long text-[#8cbe71]"></i>
           ${{ sale.price * sale.quantity }}
           <i @click="editSale(sale)" class="fa-solid fa-pencil text-blue-400 text-xs cursor-pointer ml-1"></i>
         </p>
@@ -44,7 +44,7 @@
         <h1 class="col-span-full text-center text-sm font-bold">Ventas T/V</h1>
         <p v-for="sale in shift_2_sales" :key="sale.id">
           {{ sale.product.name }} x{{ sale.quantity }}
-          <i class="fa-solid fa-arrow-right-long text-green-500"></i>
+          <i class="fa-solid fa-arrow-right-long text-[#8cbe71]"></i>
           ${{ sale.price * sale.quantity }}
           <i @click="editSale(sale)" class="fa-solid fa-pencil text-blue-400 text-xs cursor-pointer ml-1"></i>
         </p>
@@ -56,7 +56,7 @@
         <p v-for="sale in sales_to_employees" :key="sale.id">
           <span class="bg-sky-200"><i class="fa-solid fa-user mr-1"></i> {{ sale.user?.name }}:</span>
           {{ sale.product.name }} x{{ sale.quantity }}
-          <i class="fa-solid fa-arrow-right-long text-green-500"></i>
+          <i class="fa-solid fa-arrow-right-long text-[#8cbe71]"></i>
           ${{ sale.price * sale.quantity }}
           {{ sale.notes ? '(Cortesías: ' + sale.notes + ')' : '' }}
         </p>
@@ -75,7 +75,7 @@
                 border-0 border-b-2 border-gray-300
                 appearance-none
                 dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                focus:outline-none focus:ring-0 focus:border-stone-600
+                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
                 peer
               " placeholder=" " />
           <label for="floating_cash" class="
@@ -109,7 +109,7 @@
                 border-0 border-b-2 border-gray-300
                 appearance-none
                 dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                focus:outline-none focus:ring-0 focus:border-stone-600
+                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
                 peer
               " placeholder=" " />
           <label for="floating_cash" class="
@@ -164,7 +164,7 @@
                 border-0 border-b-2 border-gray-300
                 appearance-none
                 dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                focus:outline-none focus:ring-0 focus:border-stone-600
+                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
                 peer
               " placeholder=" " />
             <label for="floating_name" class="

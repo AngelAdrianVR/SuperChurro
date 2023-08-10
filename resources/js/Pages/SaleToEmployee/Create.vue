@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Venta a empleado / cortesias">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Venta a empleado / cortesias
       </h2>
     </template>
@@ -16,7 +16,7 @@
     </div>
 
     <div
-      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-4 pt-5 pb-4 bg-white mx-4"
+      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-4 pt-5 pb-4 bg-primary-gray mx-4"
     >
       <form @submit.prevent="submit">
         <div>
@@ -28,7 +28,7 @@
                 type="radio"
                 name="sell_type"
                 value="1"
-                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
+                class="h-4 w-4 border-gray-400 focus:ring-2 focus:ring-blue-300 bg-transparent"
                 aria-labelledby="sell-option-1"
                 aria-describedby="sell-option-1"
                 checked=""
@@ -47,7 +47,7 @@
                 type="radio"
                 name="sell_type"
                 value="0"
-                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
+                class="h-4 w-4 border-gray-400 focus:ring-2 focus:ring-blue-300 bg-transparent"
                 aria-labelledby="sell-option-2"
                 aria-describedby="sell-option-2"
               />
@@ -77,7 +77,7 @@
         </p>
         <div class="my-2 text-center">
           <button type="button" @click="addNewItem">
-            <i class="fa-solid fa-circle-plus text-2xl text-blue-400"></i>
+            <i class="fa-solid fa-circle-plus text-2xl text-[#ABD196]"></i>
           </button>
         </div>
         <div v-if="form.is_sell_to_employee == 0" class="relative z-0 mb-6 w-full group">
@@ -87,7 +87,7 @@
             type="text"
             name="floating_description"
             autocomplete="off"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A] peer"
             placeholder=" "
           />
           <label

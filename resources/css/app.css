@@ -32,7 +32,7 @@
     .bg-secondary-gray{
         background-color: #9a9a9a;
     }
-    .bg-thirt-gray{
+    .bg-thirth-gray{
         background-color: #cccccc;
     }
 }
@@ -70,11 +70,11 @@
     }
     
     .globe {
-        @apply bg-primary-gray text-gray-600 overflow-auto rounded-lg w-[90%] md:w-full md:mx-2 mx-auto px-3 pb-3 pt-1;
+        @apply bg-primary-gray text-gray-600 overflow-auto rounded-lg w-[90%] md:w-full md:mx-2 mx-auto px-7 py-5 pt-1;
     }
     
     .globe-title {
-        @apply font-bold text-center flex justify-center items-center pb-2;
+        @apply font-bold text-center flex justify-center items-center py-4;
     }
     
     .select {

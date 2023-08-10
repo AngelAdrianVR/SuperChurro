@@ -58,6 +58,7 @@ class PayrollUser extends Pivot
         $extras = 0; // minutes
         $late = 0; // minutes
         $tolerance = 0;
+        $days_late_number = []; //id of days where employee was late
 
         for ($i = 0; $i < 7; $i++) {
             $current_day_in_loop = $current_payroll->start_date->addDays($i);
@@ -100,10 +101,13 @@ class PayrollUser extends Pivot
                 $late_per_day = $user->getEntryTime()[$i]
                     ->diffInMinutes(Carbon::parse($current_attendance[$i]['in']), false);
 
+
                 if ($late_entry_permit) $late_per_day -= $late_entry_permit->time_requested;
                 // else $late_per_day -= 15;
 
-                if (($late_per_day - 10) <= 0) $late_per_day = 0;
+                if ($late_per_day <= 0) $late_per_day = 0;
+                else $days_late_number[] = $i;
+
                 $late += $late_per_day;
             }
 
@@ -122,6 +126,7 @@ class PayrollUser extends Pivot
             'vacations' => $vacations,
             'extras' => $extras,
             'late' => $late,
+            'days_late_number' => $days_late_number,
         ];
     }
 
@@ -241,8 +246,8 @@ class PayrollUser extends Pivot
                 $total_time += $extra['time'];
             }
         }
-        
-        
+
+
 
         return compact('total_pay', 'total_time');
     }
@@ -335,13 +340,13 @@ class PayrollUser extends Pivot
         $pesos_per_minute =  1;
 
         // minutes late
-        $minutes_late = $this->weekAttendanceArray()['late'];
-        if ($minutes_late) {
-            $discounts[] = [
-                'amount' => round($minutes_late * $pesos_per_minute, 1),
-                'description' => "$minutes_late minutos tarde en la semana"
-            ];
-        }
+        // $minutes_late = $this->weekAttendanceArray()['late'];
+        // if ($minutes_late) {
+        //     $discounts[] = [
+        //         'amount' => round($minutes_late * $pesos_per_minute, 1),
+        //         'description' => "$minutes_late minutos tarde en la semana"
+        //     ];
+        // }
 
         // loans
         $loan = $user->activeLoan->first();
@@ -356,12 +361,13 @@ class PayrollUser extends Pivot
         return $discounts;
     }
 
-    public function payVacations(){
+    public function payVacations()
+    {
         $user = User::find($this->user_id);
 
-        if(isset($this->extras['vacations'])){
+        if (isset($this->extras['vacations'])) {
             return $this->extras['vacations'] * $user->employee_properties['base_salary'];
-        }else{
+        } else {
             return 0;
         }
     }

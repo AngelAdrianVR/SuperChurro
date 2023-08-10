@@ -310,20 +310,23 @@ class User extends Authenticatable implements HasMedia
                     // propoerty "additional" is not null when payroll is closed
                     if ($last_payroll_user->additional) {
                         // get stored data
-                        $minutes_late = $last_payroll_user->attendance['late'];
+                        $attendances = $last_payroll_user->attendance;
                     } else {
                         // process data
-                        $minutes_late = $last_payroll_user->weekAttendanceArray()['late'];
+                        $attendances = $last_payroll_user->weekAttendanceArray();
                     }
-                    if ($minutes_late == 0) { //give punctuality bonus
-                        $factor = 0; //factor to multiply punctuality amount
-                        foreach ($this->employee_properties['work_days'] as $work_day) {
+
+                    $days_late_collection = collect($attendances['days_late_number']);
+                    $factor = 0; //factor to multiply punctuality amount
+                    foreach ($this->employee_properties['work_days'] as $work_day) {
+                        // dd($attendances); EVITAR QUE DE BONO EN DIAS QUE NO HAN PASADO O QUE TUVO FALTA!!!!
+                        if ($days_late_collection->doesntContain($work_day['day'])) {
                             if ($work_day['shift'] == "carrito 2 turnos") $factor += 2;
                             else $factor++;
                         }
-                        $amount = $factor * $current_bonus->amount;
-                        $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $amount];
                     }
+                    $amount = $factor * $current_bonus->amount;
+                    $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $amount];
                 } else {
                     $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $current_bonus->amount];
                 }

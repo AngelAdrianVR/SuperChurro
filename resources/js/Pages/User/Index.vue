@@ -1,12 +1,12 @@
 <template>
   <AppLayout title="Usuarios">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Usuarios</h2>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">Usuarios</h2>
     </template>
 
     <div class="flex justify-end mb-3">
       <Link :href="route('users.create')">
-        <SecondaryButton class="mr-7 mt-4">Crear nuevo</SecondaryButton>
+        <SecondaryButton class="mr-7 mt-1"><i class="fa-solid fa-plus"></i></SecondaryButton>
       </Link>
     </div>
 
@@ -15,12 +15,12 @@
           <div
             v-for="user in users.data"
             :key="user.id"
-            class="bg-white border border-white shadow-lg rounded-2xl p-2 mx-3 my-1 hover:bg-slate-200"
+            class="bg-primary-gray border border-white shadow-lg rounded-2xl p-2 mx-3 my-1 hover:bg-slate-200"
           >
         <Link :href="route('users.show', user.id)">
             <div class="flex">
               <div class="relative h-16 w-16 mr-2">
-                <i class="fa-solid fa-circle-user text-6xl" :class="user.is_active ? 'text-green-400' : 'text-red-400'"></i>
+                <i class="fa-solid fa-circle-user text-6xl" :class="user.is_active ? 'text-[#8cbe71]' : 'text-red-400'"></i>
               </div>
               <section class="flex flex-col flex-1">
                 <div class="flex justify-between">

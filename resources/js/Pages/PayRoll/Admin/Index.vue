@@ -1,14 +1,14 @@
 <template>
   <AppLayout title="Administración de Nóminas">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Administración de Nóminas
       </h2>
     </template>
     <div class="globe-container">
       <div v-for="payroll in payrolls.data" :key="payroll.id" @click="payroll_selected = payroll"
         class="globe hover:bg-gray-100 cursor-pointer"
-        :class="{ 'border-4 border-sky-500 !bg-sky-100': payroll_selected.id === payroll.id }">
+        :class="{ 'border-4 border-[#883339] !bg-amber-700/10': payroll_selected.id === payroll.id }">
         <div class="globe-title pb-2">
           Semana {{ payroll.week }}: {{ payroll.start_date }} al {{ payroll.end_date }}
         </div>
@@ -23,9 +23,9 @@
       <div class="flex justify-between items-center">
         <p class="my-2 ml-5">Asistencias de empleados</p>
         <Link v-if="!payroll_selected.is_active" :href="route('payroll-admin.show-all', payroll_selected.id)">
-        <SecondaryButton class="mr-7 mt-4"><i class="fa-solid fa-print mr-1"></i> Imprimir nóminas</SecondaryButton>
+        <ThirthButton class="mr-7 mt-4"><i class="fa-solid fa-print mr-1"></i> Imprimir nóminas</ThirthButton>
         </Link>
-        <SecondaryButton @click="show_confirmation = true" v-else class="mr-7 mt-4">Cerrar nómina</SecondaryButton>
+        <ThirthButton @click="show_confirmation = true" v-else class="mr-7 mt-4">Cerrar nómina</ThirthButton>
       </div>
       <PayRollTable v-for="(payroll, index) in payroll_selected.users" :key="index" :payroll="payroll"
         @extraTime="createExtraTime($event)" />
@@ -73,7 +73,7 @@
                   border-0 border-b-2 border-gray-300
                   appearance-none
                   dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                  focus:outline-none focus:ring-0 focus:border-stone-600
+                  block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
                   peer
                 " placeholder=" " />
             <label for="floating_hour" class="
@@ -104,7 +104,7 @@
                 border-0 border-b-2 border-gray-300
                 appearance-none
                 dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                focus:outline-none focus:ring-0 focus:border-stone-600
+                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
                 peer
               " placeholder=" " />
             <label for="floating_minutes" class="
@@ -139,7 +139,7 @@
                 border-0 border-b-2 border-gray-300
                 appearance-none
                 dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                focus:outline-none focus:ring-0 focus:border-stone-600
+                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
                 peer
               " placeholder=" " />
           <label for="floating_description" class="
@@ -177,8 +177,9 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 import PayRollTable from "@/Components/PayRollTable.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import ThirthButton from "@/Components/ThirthButton.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import DialogModal from "@/Components/DialogModal.vue";
 import axios from "axios";
@@ -207,6 +208,7 @@ export default {
     ConfirmationModal,
     DialogModal,
     PrimaryButton,
+    ThirthButton
   },
   props: {
     payrolls: Object,

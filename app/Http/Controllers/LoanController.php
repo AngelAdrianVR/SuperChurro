@@ -14,6 +14,8 @@ class LoanController extends Controller
         $loans = LoanResource::collection(auth()->user()->loans()->latest()->get());
         $user_has_active_loan = auth()->user()->activeLoan;
 
+        // return $loans;
+
 
         return Inertia::render('Loan/Index', compact('loans', 'user_has_active_loan'));
     }

@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Avisos">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Avisos
       </h2>
     </template>

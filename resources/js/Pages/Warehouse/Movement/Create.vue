@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Movimientos de mercancia">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Movimientos de mercancía
       </h2>
     </template>

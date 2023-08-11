@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Editar Producto">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Editar producto: <strong>{{ product.name }}</strong>
       </h2>
     </template>
@@ -40,7 +40,7 @@
         rounded-lg
         px-5
         py-8
-        bg-white
+        bg-primary-gray
         mx-4
       "
     >
@@ -59,7 +59,7 @@
               w-full
               text-sm text-gray-900
               bg-transparent
-              border-0 border-b-2 border-gray-300
+              border-0 border-b-2 border-gray-400
               appearance-none
               dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
@@ -104,7 +104,7 @@
               w-full
               text-sm text-gray-900
               bg-transparent
-              border-0 border-b-2 border-gray-300
+              border-0 border-b-2 border-gray-400
               appearance-none
               dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
@@ -149,7 +149,7 @@
               w-full
               text-sm text-gray-900
               bg-transparent
-              border-0 border-b-2 border-gray-300
+              border-0 border-b-2 border-gray-400
               appearance-none
               dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
@@ -194,7 +194,7 @@
               w-full
               text-sm text-gray-900
               bg-transparent
-              border-0 border-b-2 border-gray-300
+              border-0 border-b-2 border-gray-400
               appearance-none
               dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
               focus:outline-none focus:ring-0 focus:border-stone-600
@@ -231,13 +231,13 @@
           v-model="form.unit_id"
         >
           <option disabled selected class="text-gray-500" value="">
-            -- Tipo de Permiso --
+            -- Unidad de medida --
           </option>
           <option
             class="text-gray-500"
             v-for="unit in units"
-            :key="unit.id"
-            :value="unit.id"
+            :key="unit?.id"
+            :value="unit?.id"
           >
             {{ unit.name }}
           </option>
@@ -264,7 +264,7 @@
             SVG, PNG, JPG o GIF (MAX. 4 MB).
           </p>
         </div>
-        <div class="flex justify-center lg:justify-end">
+        <div class="flex justify-center lg:justify-end mt-4">
           <PrimaryButton :disabled="form.processing">Actualizar</PrimaryButton>
         </div>
       </form>
@@ -283,7 +283,7 @@ export default {
     const form = useForm({
       name: this.product.name,
       low_stock: this.product.low_stock,
-      unit_id: this.product.unit.id,
+      unit_id: this.product.unit?.id,
       price: this.product.current_price.price,
       employee_price: this.product.current_employee_price.price,
       media: null,

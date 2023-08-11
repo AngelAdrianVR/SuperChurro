@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Remover productos">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Remover producto(s)
       </h2>
     </template>
@@ -33,7 +33,7 @@
         px-5
         pt-4
         pb-5
-        bg-white
+        bg-primary-gray
         mx-4
       ">
       <p v-if="validation_message" class="text-red-400 text-xs mb-2" v-html="validation_message"></p>
@@ -62,7 +62,7 @@
           productos </p>
         <div class="my-2 text-center">
           <button type="button" @click="addNewItem">
-            <i class="fa-solid fa-circle-plus text-2xl text-blue-400"></i>
+            <i class="fa-solid fa-circle-plus text-2xl text-[#ABD196]"></i>
           </button>
         </div>
         <PrimaryButton :disabled="form.processing">Remover de carrito</PrimaryButton>

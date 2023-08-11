@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Solicitar mercancía">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Solicitud de mercancía
       </h2>
     </template>
@@ -16,7 +16,7 @@
     </div>
 
     <div
-      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 pt-4 pb-5 bg-white mx-4"
+      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 pt-4 pb-5 bg-primary-gray mx-4"
     >
       <p
         v-if="validation_message"
@@ -40,7 +40,7 @@
         </p>
         <div class="my-2 text-center">
           <button type="button" @click="addNewItem">
-            <i class="fa-solid fa-circle-plus text-2xl text-blue-400"></i>
+            <i class="fa-solid fa-circle-plus text-2xl text-[#ABD196]"></i>
           </button>
         </div>
         <PrimaryButton :disabled="form.processing">Solicitar</PrimaryButton>

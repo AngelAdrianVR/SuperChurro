@@ -316,17 +316,19 @@ class User extends Authenticatable implements HasMedia
                         $attendances = $last_payroll_user->weekAttendanceArray();
                     }
 
-                    $days_late_collection = collect($attendances['days_late_number']);
-                    $factor = 0; //factor to multiply punctuality amount
-                    foreach ($this->employee_properties['work_days'] as $work_day) {
-                        // dd($attendances); EVITAR QUE DE BONO EN DIAS QUE NO HAN PASADO O QUE TUVO FALTA!!!!
-                        if ($days_late_collection->doesntContain($work_day['day'])) {
-                            if ($work_day['shift'] == "carrito 2 turnos") $factor += 2;
-                            else $factor++;
+                    if($attendances['late'] == 0) {
+                        $days_late_collection = collect($attendances['days_late_number']);
+                        $factor = 0; //factor to multiply punctuality amount
+                        $no_bonus_collection = collect(['Falta', '--:--:--', 'Día de descanso']);
+                        foreach ($this->employee_properties['work_days'] as $work_day) {
+                            if (!$no_bonus_collection->contains($attendances['payroll'][$work_day['day']]['out'])) {// EVITAR QUE DE BONO EN DIAS QUE NO HAN PASADO O QUE TUVO FALTA!!!!
+                                if ($work_day['shift'] == "carrito 2 turnos") $factor += 2;
+                                else $factor++;
+                            }
                         }
+                        $amount = $factor * $current_bonus->amount;
+                        $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $amount];
                     }
-                    $amount = $factor * $current_bonus->amount;
-                    $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $amount];
                 } else {
                     $detailed_bonuses[] = ['name' => $current_bonus->name, 'amount' => $current_bonus->amount];
                 }

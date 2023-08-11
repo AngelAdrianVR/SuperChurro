@@ -2,7 +2,7 @@
     <!-- component -->
 <div>
  
-<div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+<div class="max-w-sm w-full bg-transparent rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
 
   <div class="flex justify-between items-start w-full">
       <div class="flex-col items-center">
@@ -143,10 +143,12 @@
 </template>
 
 <script>
-  // ApexCharts options and config
-  window.addEventListener("load", function() {
-    const getChartOptions = () => {
-        return {
+import ApexCharts from 'apexcharts';
+
+export default {
+  data(){
+    return{
+        options: {
           series: [52.8, 26.8, 20.4],
           colors: ["#1C64F2", "#16BDCA", "#9061F9"],
           chart: {
@@ -201,11 +203,14 @@
             },
           },
         }
-      }
+    }
+  },
+  methods:{
 
-      if (document.getElementById("pie-chart") && typeof ApexCharts !== 'undefined') {
-        const chart = new ApexCharts(document.getElementById("pie-chart"), getChartOptions());
+  },
+  mounted(){
+      const chart = new ApexCharts(document.getElementById("pie-chart"), this.options);
         chart.render();
-      }
-  });
+  },
+}
 </script>

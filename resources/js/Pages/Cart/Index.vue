@@ -148,15 +148,14 @@
           >
             <div class="globe-title pb-2">
               {{
-                products.find((product) => product.id == cart_product_id).name
+                products.find((product) => product.id == cart_product_id)?.name
               }}
             </div>
             <div class="flex justify-center items-center">
               <p
                 >{{ cart_products[0].products[cart_product_id] }}
                 {{
-                  products.find((product) => product.id == cart_product_id).unit
-                    .name
+                  products.find((product) => product.id == cart_product_id).unit?.name
                 }}</p
               >
             </div>

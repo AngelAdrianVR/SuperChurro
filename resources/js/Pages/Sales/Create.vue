@@ -1,12 +1,12 @@
 <template>
   <AppLayout title="Corte">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Hacer corte
       </h2>
     </template>
 
-    <div class="mt-2 bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
+    <div class="mt-2 bg-teal-100 border-t-4 border-[teal-500] rounded-b text-teal-900 px-4 py-3 shadow-md"
       role="alert">
       <div class="flex">
         <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +47,7 @@
         rounded-lg
         px-5
         py-8
-        bg-white
+        bg-primary-gray
         mx-4
       ">
       <form @submit.prevent="store">
@@ -55,18 +55,7 @@
         <div class="grid grid-cols-2 gap-3">
           <div v-for="product in products" :key="product.id" class="relative z-0 mb-2 w-full group">
             <input v-model="form.product[product.id]" type="number" min="0" name="floating_churro_relleno"
-              autocomplete="off" required class="
-              block
-              py-2.5
-              px-0
-              w-full
-              text-sm text-gray-900
-              bg-transparent
-              border-0 border-b-2 border-gray-300
-              appearance-none
-              dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-              focus:outline-none focus:ring-0 focus:border-stone-600
-              peer
+              autocomplete="off" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
             " placeholder="" />
             <label for="floating_churro_relleno" class="
               absolute

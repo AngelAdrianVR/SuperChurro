@@ -1,7 +1,7 @@
 <template>
     <AppLayout title="Detalles solicitud de mercancía">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
                 Detalles solicitud de mercancía
             </h2>
         </template>
@@ -50,14 +50,14 @@
         px-5
         pt-4
         pb-5
-        bg-white
+        bg-primary-gray
         mx-4
       ">
-            <h1 class="text-sky-500 font-bold mb-2">Productos solicitados</h1>
+            <h1 class="text-secondary font-bold mb-2">Productos solicitados</h1>
             <ul>
                 <li v-for="request in product_request.products" :key="request.product_id" class="text-sm list-disc ml-2">
                     {{ products.find(product => request.product_id == product.id).name }}
-                    <i class="fa-solid fa-arrow-right mx-3 text-green-600"></i>
+                    <i class="fa-solid fa-arrow-right mx-3 text-[#ABD196]"></i>
                     {{ request.quantity }}
                     {{ products.find(product => request.product_id == product.id).unit.name }}
                 </li>

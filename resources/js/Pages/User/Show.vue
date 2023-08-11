@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Usuario">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
         Opciones de usuario
       </h2>
     </template>
@@ -51,7 +51,7 @@
     <!-- component -->
     <!-- This is an example component -->
     <div
-      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 py-8 bg-white mx-4 my-2"
+      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 py-8 bg-primary-gray mx-4 my-2"
     >
       <form @submit.prevent="update">
         <div class="relative z-0 mb-6 w-full group">
@@ -142,7 +142,7 @@
           <label class="w-full text-sm text-gray-500 block">Bonos</label>
           <div class="grid grid-cols-2 lg:grid-cols-3 gap-1">
             <label v-for="bonus in bonuses" :key="bonus.id">
-              <input v-model="form.employee_properties.bonuses" type="checkbox" :value="bonus.id" class="rounded border-gray-300 text-sky-600 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50" />
+              <input v-model="form.employee_properties.bonuses" type="checkbox" :value="bonus.id" class="rounded border-gray-300 text-primary shadow-sm focus:border-[#883339] focus:ring focus:ring-[#883339] focus:ring-opacity-50" />
               <span class="ml-1 text-xs text-gray-600">{{ bonus.name }}</span>
             </label>
           </div>
@@ -178,7 +178,7 @@
                 type="radio"
                 name="shift"
                 :value="shift"
-                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
+                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-[#ABD196] text-[#8cbe71]"
                 :aria-labelledby="'shift-option-' + index"
                 :aria-describedby="'shift-option-' + index"
                 checked=""
@@ -238,10 +238,27 @@
             </div>
           </div>
         </div>
-        <label class="text-gray-600 mt-4 block">
-          Subir documentos del empleado
-          <FileUploader @input="form.resources = $event.target.files" />
-        </label>
+        <div class="col-span-full mt-2">
+          <div class="flex items-center">
+            <span
+              class="font-bold text-[16px] inline-flex items-center text-gray-600 border border-r-8 border-transparent rounded-l-md h-9 darkk:bg-gray-600 darkk:text-gray-400 darkk:border-gray-600"
+            >
+              <el-tooltip content="Imagen del producto" placement="top">
+                <i class="fa-solid fa-images"></i>
+              </el-tooltip>
+            </span>
+            <input
+              @input="form.media = $event.target.files[0]"
+              class="input h-12 rounded-lg file:mr-4 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white file:cursor-pointer hover:file:bg-red-600"
+              aria-describedby="file_input_help"
+              id="file_input"
+              type="file"
+            />
+          </div>
+          <p class="mt-1 text-xs text-right text-gray-500" id="file_input_help">
+            SVG, PNG, JPG o GIF (MAX. 4 MB).
+          </p>
+        </div>
         <p class="mb-3 text-gray-600 underline underline-offset-4 font-bold">
           Vacaciones disponibles:
           {{ $page.props.user.employee_properties.vacations }}

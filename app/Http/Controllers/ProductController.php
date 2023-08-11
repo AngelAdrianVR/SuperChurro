@@ -18,6 +18,8 @@ class productController extends Controller
     {
         $products = ProductResource::collection(Product::with('unit', 'currentPrice', 'currentEmployeePrice')->get());
 
+        // return $products;
+
         return inertia('Product/Index', compact('products'));
     }
 

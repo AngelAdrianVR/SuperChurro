@@ -2,7 +2,7 @@
   <section class="relative py-2 bg-blueGray-50">
     <div class="w-full px-4">
       <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded 
-  bg-secondary-gray text-white">
+  bg-[#686868] text-white">
         <div class="rounded-t mb-0 px-4 py-3 border-0">
           <div class="flex flex-wrap items-center">
             <div class="relative w-full px-4 max-w-full flex-grow flex-1 flex justify-between">
@@ -20,19 +20,19 @@
             <thead>
               <tr>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-[#686868] text-wite border-stone-800">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-secondary-gray text-wite border-stone-800">
                   Día</th>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-[#686868] text-wite border-stone-800">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-secondary-gray text-wite border-stone-800">
                   Entrada</th>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-[#686868] text-wite border-stone-800">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-secondary-gray text-wite border-stone-800">
                   Salida</th>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-[#686868] text-wite border-stone-800">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-secondary-gray text-wite border-stone-800">
                   Extras</th>
                 <th v-if="$page.props.user.is_admin && payroll.is_active"
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-[#686868] text-wite border-stone-800">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-secondary-gray text-wite border-stone-800">
                   Acciones
                 </th>
               </tr>
@@ -61,11 +61,11 @@
                 </td>
                 <td v-if="$page.props.user.is_admin && payroll.is_active"
                   class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-                  <button v-if="day_in_edition === index" @click="update()" class="text-lg text-green-400 ml-5"><i
+                  <button v-if="day_in_edition === index" @click="update()" class="text-lg text-green-500 ml-5"><i
                       class="fa-regular fa-circle-check"></i></button>
-                  <button v-else @click="edit(index)" class="text-lg text-blue-400 ml-5"><i
+                  <button v-else @click="edit(index)" class="text-lg text-blue-500 ml-5"><i
                       class="fa-solid fa-pencil"></i></button>
-                  <button v-if="day_in_edition !== index" @click="addExtraTime(index)" class="text-lg text-sky-400 ml-5">
+                  <button v-if="day_in_edition !== index" @click="addExtraTime(index)" class="text-lg text-sky-500 ml-5">
                     <i class="fa-solid fa-clock"></i>
                   </button>
                 </td>

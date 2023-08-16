@@ -1,7 +1,7 @@
 <template>
     <AppLayout title="Nóminas">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Nóminas</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">Nóminas</h2>
         </template>
         <div class="mt-5 text-bold text-lg text-gray-700">
             <p class="my-2 ml-5">Detalle de nómina</p>
@@ -11,7 +11,7 @@
         <div class="globe-container">
             <div v-for="payroll in payrolls.data" :key="payroll.id" @click="payroll_selected = payroll"
                 class="globe hover:bg-gray-100 cursor-pointer"
-                :class="{ 'border-4 border-sky-500 !bg-sky-100': payroll_selected.id === payroll.id }">
+                :class="{ 'border-4 border-[#883339] !bg-amber-800/10': payroll_selected.id === payroll.id }">
                 <div class="globe-title pb-2">
                     Semana {{ payroll.week }}: {{ payroll.start_date }} al {{ payroll.end_date }}
                 </div>

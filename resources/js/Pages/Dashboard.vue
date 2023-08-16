@@ -2,7 +2,7 @@
 <template>
   <AppLayout title="Dashboard">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Inicio</h2>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">Inicio</h2>
     </template>
     <!-- -----------------------Registro de entrada y salida------------ -->
     <div class="py-7">
@@ -19,12 +19,12 @@
             </div>
             <SecondaryButton @click="getPosition">Salida</SecondaryButton>
           </div>
-          <div v-else class="flex items-center justify-between">
+          <div v-else class="flex flex-col md:flex-row items-center justify-between space-x-5 md:mt-5">
             <div>
               <i class="fa-regular fa-clock text-lg mr-2"></i>
               No has registrado entrada hoy
             </div>
-            <SecondaryButton @click="getPosition">Entrada</SecondaryButton>
+            <SecondaryButton class="mt-5 md:mt-0" @click="getPosition">Entrada</SecondaryButton>
           </div>
         </div>
         <!-- ------------Permutas------------- -->
@@ -65,10 +65,10 @@
         </div>
 <!-- -----------------Avisos----------------- -->
     <div class="lg:col-span-3">
-        <h1 class="font-bold text-lg text-red-500 text-center mt-3">AVISOS</h1>
+        <h1 class="font-bold text-lg text-secondary text-center mt-3">AVISOS</h1>
     </div>
 
-    <div class="bg-gray-400/50 py-4" v-if="notices.length">
+    <div class=" py-4" v-if="notices.length">
       <div v-for="notice in notices" :key="notice.id" class="globe my-2">
           <div class="globe-title">{{notice.title}}</div>
           <div class="flex justify-between items-center text-xs">

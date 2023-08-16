@@ -40,7 +40,7 @@
         <strong class="col-span-full text-right">Total: ${{ totalSale().shift_1 }}</strong>
       </div>
 
-      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-primary-gray shadow-md rounded-md px-2 py-1">
         <h1 class="col-span-full text-center text-sm font-bold">Ventas T/V</h1>
         <p v-for="sale in shift_2_sales" :key="sale.id">
           {{ sale.product.name }} x{{ sale.quantity }}
@@ -51,7 +51,7 @@
         <strong class="col-span-full text-right">Total: ${{ totalSale().shift_2 }}</strong>
       </div>
 
-      <div class="mt-3 mx-3 text-xs lg:grid lg:grid-cols-2 gap-1 bg-white shadow-md rounded-md px-2 py-1">
+      <div class="mt-3 mx-3 text-xs lg:grid lg:grid-cols-2 gap-1 bg-primary-gray shadow-md rounded-md px-2 py-1">
         <h1 class="col-span-full text-center text-sm font-bold">Ventas a empleados / cortesías</h1>
         <p v-for="sale in sales_to_employees" :key="sale.id">
           <span class="bg-sky-200"><i class="fa-solid fa-user mr-1"></i> {{ sale.user?.name }}:</span>
@@ -66,17 +66,7 @@
       <div class="flex justify-between mt-3">
         <div v-if="!stored_cash.length" class="relative z-0 w-1/2 group mx-4">
           <input v-model="cash" type="text" name="floating_cash" autocomplete="off" required class="
-                block
-                py-2.5
-                px-0
-                w-full
-                text-sm text-gray-900
-                bg-transparent
-                border-0 border-b-2 border-gray-300
-                appearance-none
-                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
-                peer
+                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
               " placeholder=" " />
           <label for="floating_cash" class="
                 absolute
@@ -100,17 +90,7 @@
         </div>
         <div v-if="edit_stored_cash" class="relative z-0 w-1/2 group mx-4">
           <input v-model="cash" type="text" name="floating_cash" autocomplete="off" required class="
-                block
-                py-2.5
-                px-0
-                w-full
-                text-sm text-gray-900
-                bg-transparent
-                border-0 border-b-2 border-gray-300
-                appearance-none
-                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
-                peer
+                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
               " placeholder=" " />
           <label for="floating_cash" class="
                 absolute
@@ -138,7 +118,7 @@
             totalSale().to_employees
           }}</p>
           <div v-if="stored_cash.length" class="flex justify-between items-center cursor-pointer pl-2">
-            <i @click="edit_stored_cash = true" class="fa-solid fa-pencil text-blue-500"></i>
+            <i @click="edit_stored_cash = true" class="fa-solid fa-pencil text-blue-600"></i>
             <p class="mx-3 font-bold text-green-600">registrado en caja: ${{ stored_cash[0].cash }}</p>
           </div>
           <p v-if="stored_cash.length" v-html="saleDiff()"></p>
@@ -155,17 +135,7 @@
       <template #content>
           <div class="relative z-0 mb-6 w-full group">
             <input v-model="form.quantity" type="number" name="floating_time_requested" autocomplete="off" required class="
-                block
-                py-2.5
-                px-0
-                w-full
-                text-sm text-gray-900
-                bg-transparent
-                border-0 border-b-2 border-gray-300
-                appearance-none
-                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
-                peer
+                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
               " placeholder=" " />
             <label for="floating_name" class="
                 absolute

@@ -54,8 +54,8 @@
 
         <div class="mb-4 mt-14 md:my-1 text-center">
           <p class="text-gray-700 ml-3 my-3 font-semibold">Cortes</p>
-
-          <ul class="o">
+<!-- 
+          <ul>
             <li class="flex items-center justify-center space-x-4">
               <p class="text-primary">Primer turno</p>
               <i class="fa-solid fa-check text-green-600"></i>
@@ -66,7 +66,7 @@
               <i class="fa-solid fa-check text-green-600"></i>
               <i class="fa-solid fa-minus text-gray-700"></i>
             </li>
-          </ul>
+          </ul> -->
 
           <div class="globe-container flex-col">
             <div v-for="sale in sales" :key="sale.id" class="globe">

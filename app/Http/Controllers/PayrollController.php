@@ -97,7 +97,7 @@ class PayrollController extends Controller
         $total_salaries = $active_payroll->users->reduce(function ($carry, $item) {
             return $carry + $item->pivot->paid();
         });
-        
+
         // create outcome for all salaries
         Outcome::create([
             'concept' => 'Salarios',
@@ -106,6 +106,26 @@ class PayrollController extends Controller
             'notes' => 'Generado automaticamente al cerrar las nominas',
             'user_id' => auth()->id(),
         ]);
+
+        // create outcome for rent if date 
+        $fechaActual = now();
+        // Obtén el quinto día del mes actual
+        $quintoDiaDelMes = now()->startOfMonth()->addDays(4);
+        $rentOutcome = Outcome::whereDate('created_at', $quintoDiaDelMes)->where('concept', 'Renta carrito')->first();
+
+        if (!$rentOutcome) {
+            // Compara las fechas
+            if ($fechaActual->gte($quintoDiaDelMes)) {
+                Outcome::create([
+                    'concept' => 'Renta carrito',
+                    'quantity' => 1,
+                    'cost' => 37910,
+                    'notes' => 'Generado automaticamente',
+                    'user_id' => auth()->id(),
+                    'created_at' => $quintoDiaDelMes
+                ]);
+            }
+        }
     }
 
     public function updatePayroll(Request $request)

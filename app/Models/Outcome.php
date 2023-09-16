@@ -15,12 +15,12 @@ class Outcome extends Model
         'quantity',
         'notes',
         'user_id',
+        'created_at',
     ];
 
     //relationships
-public function user()
-{
-    return $this->belongsTo(User::class);
-}
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -11,7 +11,7 @@ class OutcomeController extends Controller
     public function index()
     {
         $total_outcomes_money = 0;
-        $outcomes = Outcome::with('user')->latest()->get()->groupBy(function($data) {
+        $outcomes = Outcome::with('user')->latest()->get()->groupBy(function ($data) {
             return $data->created_at->toDateString();
         });
 
@@ -23,7 +23,7 @@ class OutcomeController extends Controller
         }
 
         $total_outcomes_money = number_format($total_outcomes_money, 2);
-        
+
         return inertia('Outcome/Index', compact('outcomes', 'total_outcomes_money'));
     }
 
@@ -36,7 +36,6 @@ class OutcomeController extends Controller
 
     public function store(Request $request)
     {
-        // return $request;
         $request->validate([
             'items.*.concept' => 'required|max:191',
             'items.*.quantity' => 'required|numeric|min:1',
@@ -68,7 +67,6 @@ class OutcomeController extends Controller
 
     public function edit(Outcome $outcome)
     {
-
     }
 
 
@@ -90,16 +88,16 @@ class OutcomeController extends Controller
     public function filter(Request $request)
     {
         $total_outcomes_money = 0;
-        $outcomes = Outcome::query()->when($request->year, function ($query) use($request){
-           return $query->whereYear('created_at', $request->year);
-        })->when($request->month, function ($query) use($request){
+        $outcomes = Outcome::query()->when($request->year, function ($query) use ($request) {
+            return $query->whereYear('created_at', $request->year);
+        })->when($request->month, function ($query) use ($request) {
             return $query->whereMonth('created_at', $request->month);
-         })->with('user')->latest()->get()->groupBy(function($data) {
+        })->with('user')->latest()->get()->groupBy(function ($data) {
             return $data->created_at->toDateString();
         });
 
 
-         foreach ($outcomes as $outcome) {
+        foreach ($outcomes as $outcome) {
             $total_outcomes_money += $outcome->sum(function ($outcome) {
                 return $outcome->cost * $outcome->quantity;
             });

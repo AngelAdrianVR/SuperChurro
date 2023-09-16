@@ -7,11 +7,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class PayrollUser extends Pivot
 {
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
     public $incrementing = true;
 
     protected $fillable = [

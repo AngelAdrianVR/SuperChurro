@@ -5,6 +5,7 @@
         Administración de Nóminas
       </h2>
     </template>
+    aqui va
     <div class="globe-container">
       <div v-for="payroll in payrolls.data" :key="payroll.id" @click="payroll_selected = payroll"
         class="globe hover:bg-gray-100 cursor-pointer"

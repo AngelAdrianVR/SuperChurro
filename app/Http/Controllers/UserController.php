@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PayrollResource;
 use App\Http\Resources\UserResource;
 use App\Models\Bonus;
 use App\Models\Payroll;
@@ -36,15 +37,15 @@ class UserController extends Controller
     {
 
         $validated = $request->validate([
-            'name'=> 'required|max:255',
-            'email'=> 'email',
-            'phone_number'=> 'required|numeric|digits:10',
-            'employee_properties.birthdate'=> 'required|date',
-            'employee_properties.base_salary'=> 'required|numeric',
-            'employee_properties.work_days'=> 'required',
-            'employee_properties.vacations'=> 'max:30',
-            'employee_properties.vacations_updated_date'=> 'string',
-            'employee_properties.bonuses'=> 'nullable',
+            'name' => 'required|max:255',
+            'email' => 'email',
+            'phone_number' => 'required|numeric|digits:10',
+            'employee_properties.birthdate' => 'required|date',
+            'employee_properties.base_salary' => 'required|numeric',
+            'employee_properties.work_days' => 'required',
+            'employee_properties.vacations' => 'max:30',
+            'employee_properties.vacations_updated_date' => 'string',
+            'employee_properties.bonuses' => 'nullable',
         ]);
 
         $user = User::create($validated + [
@@ -82,9 +83,9 @@ class UserController extends Controller
             'employee_properties.birthdate' => 'required|date',
             'employee_properties.base_salary' => 'required|numeric',
             'employee_properties.work_days' => 'required',
-            'employee_properties.vacations'=> 'max:30',
-            'employee_properties.vacations_updated_date'=> 'min:1',
-            'employee_properties.bonuses'=> 'nullable',
+            'employee_properties.vacations' => 'max:30',
+            'employee_properties.vacations_updated_date' => 'min:1',
+            'employee_properties.bonuses' => 'nullable',
         ]);
 
         $user->update($validated);
@@ -105,8 +106,8 @@ class UserController extends Controller
             'employee_properties.birthdate' => 'required|date',
             'employee_properties.base_salary' => 'required|numeric',
             'employee_properties.work_days' => 'required',
-            'employee_properties.vacations'=> 'max:30',
-            'employee_properties.vacations_updated_date'=> 'min:1',
+            'employee_properties.vacations' => 'max:30',
+            'employee_properties.vacations_updated_date' => 'min:1',
         ]);
 
         $user->update($validated);
@@ -162,15 +163,15 @@ class UserController extends Controller
 
         return response()->json(['success' => 'success'], 200);
     }
-    
+
     public function showUsersCrhismasBonus(User $user)
     {
         $current_year = now()->year;
         $initial_date = Carbon::createMidnightDate($current_year, 1, 1);
-        $worked_days = $initial_date->diffInDays(now()->addDays(15)); 
+        $worked_days = $initial_date->diffInDays(now()->addDays(15));
         $work_days_per_week = count($user->employee_properties['work_days']);
         $base_salary = $user->employee_properties['base_salary'];
-        $month_salary = $work_days_per_week * $base_salary * 4; 
+        $month_salary = $work_days_per_week * $base_salary * 4;
         $daily_salary = $month_salary / 30;
         $bonus_days = ($worked_days * 15) / 365;
         $chrismas_bonus = number_format($bonus_days * $daily_salary);
@@ -184,10 +185,10 @@ class UserController extends Controller
 
         $current_year = now()->year;
         $initial_date = Carbon::createMidnightDate($current_year, 1, 1);
-        $worked_days = $initial_date->diffInDays(now()); 
+        $worked_days = $initial_date->diffInDays(now());
         $work_days_per_week = count($user->employee_properties['work_days']);
         $base_salary = $user->employee_properties['base_salary'];
-        $month_salary = $work_days_per_week * $base_salary * 4; 
+        $month_salary = $work_days_per_week * $base_salary * 4;
         $daily_salary = $month_salary / 30;
         $bonus_days = ($worked_days * 15) / 365;
         $chrismas_bonus = round($bonus_days * $daily_salary);
@@ -195,7 +196,7 @@ class UserController extends Controller
         $vacation_bonus =  $user->employee_properties['vacations'] * $base_salary * 0.25;
         $settlement = round($proporcional_vacations + $vacation_bonus + $chrismas_bonus);
 
-        return inertia('User/Calculations/SettlementTemplate', compact('user', 'chrismas_bonus','month_salary', 'proporcional_vacations', 'vacation_bonus', 'settlement' ));
+        return inertia('User/Calculations/SettlementTemplate', compact('user', 'chrismas_bonus', 'month_salary', 'proporcional_vacations', 'vacation_bonus', 'settlement'));
     }
 
     public function showUserVacationBonus(User $user)
@@ -230,7 +231,7 @@ class UserController extends Controller
         $base_salary = $user->employee_properties['base_salary'];
         $vacation_bonus =  number_format(($days_per_year - $user->employee_properties['vacations']) * $base_salary * 0.25);
 
-        return inertia('User/Calculations/VacationBonusTemplate', compact('user','vacation_bonus','days_per_year'));
+        return inertia('User/Calculations/VacationBonusTemplate', compact('user', 'vacation_bonus', 'days_per_year'));
     }
 
     public function payVacations(Request $request)
@@ -249,5 +250,14 @@ class UserController extends Controller
         $user->update(compact('employee_properties'));
 
         return response()->json(['message' => 'Vacaciones agregadas a nomina']);
+    }
+
+    public function generatePayroll($user_id)
+    {
+        $user = User::find($user_id);
+        $user->checkAttendance();
+        $payroll = Payroll::with('users')->latest()->first();
+
+        return response()->json(['payroll' => PayrollResource::make($payroll)]);
     }
 }

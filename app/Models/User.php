@@ -22,11 +22,6 @@ class User extends Authenticatable implements HasMedia
     use TwoFactorAuthenticatable;
     use InteractsWithMedia;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
     protected $fillable = [
         'name',
         'email',
@@ -38,11 +33,6 @@ class User extends Authenticatable implements HasMedia
         'employee_properties',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password',
         'remember_token',
@@ -50,21 +40,11 @@ class User extends Authenticatable implements HasMedia
         'two_factor_secret',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'employee_properties' => 'array',
     ];
 
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
     protected $appends = [
         'profile_photo_url',
     ];

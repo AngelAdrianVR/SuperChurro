@@ -129,6 +129,10 @@ Route::post('/users/pay-vacations', [UserController::class, 'payVacations'])
     ->middleware('auth')
     ->name('users.pay-vacations');
 
+Route::get('/users/generate-payroll/{user_id}', [UserController::class, 'generatePayroll'])
+    ->middleware('auth')
+    ->name('users.generate-payroll');
+
 Route::post('/cash-register', function (Request $request) {
     CashRegister::create([
         'cash' => $request->cash,

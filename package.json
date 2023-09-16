@@ -17,12 +17,15 @@
         "lodash": "^4.17.19",
         "postcss": "^8.4.14",
         "tailwindcss": "^3.1.0",
+        "unplugin-auto-import": "^0.16.6",
+        "unplugin-vue-components": "^0.25.2",
         "vite": "^4.0.0",
         "vue": "^3.2.31"
     },
     "dependencies": {
         "@vuepic/vue-datepicker": "^3.6.5",
         "apexcharts": "^3.41.1",
+        "element-plus": "^2.3.14",
         "html5-qrcode": "^2.3.4"
     }
 }

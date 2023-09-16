@@ -34,8 +34,13 @@ class PayrollController extends Controller
     public function adminIndex()
     {
         $payrolls = PayrollResource::collection(Payroll::with('users')->latest()->get()->take(4));
+        $currentPayrollId = $payrolls[0]->id; // ID de la nómina en curso
 
-        return inertia('PayRoll/Admin/Index', compact('payrolls'));
+        $usersWithNoAttendance = User::whereDoesntHave('payrolls', function ($query) use ($currentPayrollId) {
+            $query->where('payroll_id', $currentPayrollId);
+        })->where('is_active', true)->whereNotIn('id', [1,3])->get();
+
+        return inertia('PayRoll/Admin/Index', compact('payrolls', 'usersWithNoAttendance'));
     }
 
     public function showUsersPayrolls($payroll_id)

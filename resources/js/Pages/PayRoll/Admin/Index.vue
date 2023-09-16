@@ -5,7 +5,6 @@
         Administración de Nóminas
       </h2>
     </template>
-    aqui va
     <div class="globe-container">
       <div v-for="payroll in payrolls.data" :key="payroll.id" @click="payroll_selected = payroll"
         class="globe hover:bg-gray-100 cursor-pointer"
@@ -28,10 +27,28 @@
         </Link>
         <ThirthButton @click="show_confirmation = true" v-else class="mr-7 mt-4">Cerrar nómina</ThirthButton>
       </div>
+      <div class="ml-6">
+        <label>Empleados sin asistencia esta semana:</label>
+        <select class="
+            mt-3
+            ml-5
+            rounded-lg
+            border
+            text-gray-500
+            focus:border-stone-500 focus:text-stone-500
+          "  v-model="userWithNoAttendance">
+          <option class="text-gray-500" value="">
+            -- Selecciona empleado --
+          </option>
+          <option v-for="user in usersWithNoAttendance" :key="user.id" class="text-gray-500" :value="user.id">
+            {{ user.name }}
+          </option>
+        </select>
+        <ThirthButton @click="generatePayrollUser()" :disabled="!userWithNoAttendance || loading" class="mr-7 ml-4 disabled:cursor-not-allowed disabled:text-gray-600 disabled:border-gray-600">Generar asistencia</ThirthButton>
+      </div>
       <PayRollTable v-for="(payroll, index) in payroll_selected.users" :key="index" :payroll="payroll"
         @extraTime="createExtraTime($event)" />
     </div>
-
     <ConfirmationModal :show="show_confirmation" @close="show_confirmation = false">
       <template #title>
         <div>¿Deseas continuar?</div>
@@ -199,6 +216,8 @@ export default {
       add_extra_time_info: null,
       form,
       week_days: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+      userWithNoAttendance: '',
+      loading: false,
     }
   },
   components: {
@@ -213,11 +232,33 @@ export default {
   },
   props: {
     payrolls: Object,
+    usersWithNoAttendance: Array,
   },
   methods: {
     createExtraTime(payroll_user_info) {
       this.add_extra_time_info = payroll_user_info;
       this.show_dialog = true;
+    },
+    async generatePayrollUser() {
+      try {
+        this.loading = true;
+        const response = await axios.get(route('users.generate-payroll', this.userWithNoAttendance));
+
+        if (response.status === 200) {
+          this.payrolls.data[0] = response.data.payroll;
+          console.log(this.payrolls);
+          this.userWithNoAttendance = '';
+          this.$notify({
+            title: "Correcto",
+            message: "Se ha registrado la asistencia del usuario seleccionado",
+            type: "success",
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.loading = false;
+      }
     },
     async storeExtraTime() {
       try {
@@ -232,7 +273,7 @@ export default {
         // this.payrolls.data[0].users.find(
         //   user => user.payroll_user_id == this.add_extra_time_info.payroll_user.payroll_user_id
         // )?.extras = [];
-          this.show_dialog = false;
+        this.show_dialog = false;
       } catch (error) {
         console.log(error);
       }

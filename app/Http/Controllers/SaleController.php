@@ -83,7 +83,7 @@ class SaleController extends Controller
     public function getByDate(Request $request)
     {
         // refactor (used in cartController too)
-        $middle_date = Carbon::parse($request->date)->addHours(16);
+        $middle_date = Carbon::parse($request->date)->addHours(17);
         
         $shift_1_sales = Sale::whereDate('created_at', $request->date)
             ->whereTime('created_at', '<', $middle_date)
@@ -112,7 +112,7 @@ class SaleController extends Controller
     public function getMonthSale(Request $request)
     {
         // refactor (used in cartController too)
-        $middle_date = Carbon::parse($request->date)->addHours(16);
+        $middle_date = Carbon::parse($request->date)->addHours(17);
         $month = Carbon::parse($request->date)->month;
         
         $month_sales = Sale::whereMonth('created_at', $month)

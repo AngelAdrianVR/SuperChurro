@@ -17,14 +17,24 @@
               <i class="fa-regular fa-clock text-lg text-green-600 mr-2"></i>
               <span class="text-green-600">Entrada registrada.</span>
             </div>
-            <SecondaryButton @click="getPosition">Salida</SecondaryButton>
+            <el-popconfirm confirm-button-text="Si" cancel-button-text="No" icon-color="#0355B5" title="¿Continuar?"
+              @confirm="$inertia.post(route('payroll.store-attendance'))">
+              <template #reference>
+                <SecondaryButton>Salida</SecondaryButton>
+              </template>
+            </el-popconfirm>
           </div>
           <div v-else class="flex flex-col md:flex-row items-center justify-between space-x-5 md:mt-5">
             <div>
               <i class="fa-regular fa-clock text-lg mr-2"></i>
               No has registrado entrada hoy
             </div>
-            <SecondaryButton class="mt-5 md:mt-0" @click="getPosition">Entrada</SecondaryButton>
+            <el-popconfirm confirm-button-text="Si" cancel-button-text="No" icon-color="#0355B5" title="¿Continuar?"
+              @confirm="$inertia.post(route('payroll.store-attendance'))">
+              <template #reference>
+                <SecondaryButton class="mt-5 md:mt-0">Entrada</SecondaryButton>
+              </template>
+            </el-popconfirm>
           </div>
         </div>
         <!-- ------------Permutas------------- -->
@@ -43,8 +53,8 @@
             <span>{{ leave.permission_type.name }}</span>
             <span v-if="leave.status === 1" class="ml-2 text-orange-600 font-bold"><i
                 class="fa-solid fa-hourglass-start"></i> Revisando.</span>
-            <span v-else-if="leave.status === 2" class="ml-2 text-green-600 font-bold"><i
-                class="fa-solid fa-check"></i> Aprobado.</span>
+            <span v-else-if="leave.status === 2" class="ml-2 text-green-600 font-bold"><i class="fa-solid fa-check"></i>
+              Aprobado.</span>
             <span v-else class="ml-2 text-red-600 font-bold"><i class="fa-solid fa-xmark"></i> Rechazado.</span>
           </div>
           <p v-if="!leaves.length" class="text-center text-gray-500 text-xs">No hay información para mostrar.</p>
@@ -57,26 +67,26 @@
             <span>${{ loan.amount }} solicitado</span>
             <span v-if="!loan.authorized_at" class="ml-2 text-orange-600 font-bold"><i
                 class="fa-solid fa-hourglass-start"></i> Revisando.</span>
-            <span v-else-if="loan.remaining" class="ml-2 text-green-600 font-bold"><i
-                class="fa-solid fa-check"></i> Aprobado.</span>
+            <span v-else-if="loan.remaining" class="ml-2 text-green-600 font-bold"><i class="fa-solid fa-check"></i>
+              Aprobado.</span>
             <span v-else class="ml-2 text-red-600 font-bold"><i class="fa-solid fa-xmark"></i> Rechazado.</span>
           </div>
           <p v-else class="text-center text-gray-500 text-xs">No hay información para mostrar.</p>
         </div>
-<!-- -----------------Avisos----------------- -->
-    <div class="lg:col-span-3">
-        <h1 class="font-bold text-lg text-secondary text-center mt-3">AVISOS</h1>
-    </div>
+        <!-- -----------------Avisos----------------- -->
+        <div class="lg:col-span-3">
+          <h1 class="font-bold text-lg text-secondary text-center mt-3">AVISOS</h1>
+        </div>
 
-    <div class=" py-4" v-if="notices.length">
-      <div v-for="notice in notices" :key="notice.id" class="globe my-2">
-          <div class="globe-title">{{notice.title}}</div>
-          <div class="flex justify-between items-center text-xs">
-            <p class="text-center">{{ notice.content }}</p>
+        <div class=" py-4" v-if="notices.length">
+          <div v-for="notice in notices" :key="notice.id" class="globe my-2">
+            <div class="globe-title">{{ notice.title }}</div>
+            <div class="flex justify-between items-center text-xs">
+              <p class="text-center">{{ notice.content }}</p>
+            </div>
           </div>
-      </div>
-    </div>
-          <p v-else class="text-center text-gray-500 text-xs">No hay avisos para mostrar.</p>
+        </div>
+        <p v-else class="text-center text-gray-500 text-xs">No hay avisos para mostrar.</p>
 
 
       </div>

@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-2 gap-1">
+    <div class="lg:grid grid-cols-2 gap-1">
         <div v-for="current_payroll in payroll.data.users" :key="current_payroll.id"
             class="rounded-md border-2 border-gray-400 px-3 py-2 leading-none text-xs">
             <div class="globe-title">

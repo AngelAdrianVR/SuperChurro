@@ -17,8 +17,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseMovementController;
 use App\Http\Controllers\WorkPermitController;
+use App\Http\Resources\PayrollUserResource2;
 use App\Models\CashRegister;
 use App\Models\Notice;
+use App\Models\Payroll;
+use App\Models\PayrollUser;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -156,3 +160,11 @@ Route::post('/cash-register/update', function (Request $request) {
 Route::put('bonus/toggle-status/{bonus}', [BonusController::class, 'toggleStatus'])
     ->middleware(['auth', 'admin'])
     ->name('bonuses.toggle-status');
+
+Route::get('/paty-nominas', function (Request $request) {
+    $payrolls = PayrollUserResource2::collection(PayrollUser::with('payroll', 'user')->whereIn('id', [289,294,300,307,313])->get());
+    // return $payrolls;
+    return inertia('PayRoll/Admin/Template3', compact('payrolls'));
+})
+    ->middleware('auth')
+    ->name('cash-register.update');

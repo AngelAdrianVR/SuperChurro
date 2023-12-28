@@ -4,25 +4,25 @@
 
 @layer utilities{
     .bg-primary {
-        background-color: #BF532A;
+        background-color: #F07209;
     }
     .bg-primary-light {
         background-color: #ad6e55;
     }
 
     .text-primary {
-        color: #BF532A;
+        color: #F07209;
     }
 
     .bg-secondary{
-        background-color: #883339;
+        background-color: #F4DC59;
     }
     .bg-secondary-light{
         background-color: #a84148;
     }
 
     .text-secondary{
-        color: #883339;
+        color: #F4DC59;
     }
 
     .bg-primary-gray{
@@ -43,22 +43,22 @@
 }
 
 *::-webkit-scrollbar-thumb {
-	background: #BF532A;
+	background: #cccccc;
 	border-radius: 2px;
 }
 
 *::-webkit-scrollbar-thumb:horizontal {
-	background: #BF532A;
+	background: #cccccc;
 	border-radius: 2px;
 }
 
  @layer components{
     .input{
-        @apply h-8 bg-[#CCCCCC] border placeholder:text-gray-400 border-transparent text-gray-700 text-sm rounded-lg focus:ring-[#883339] focus:border-[#883339] block w-full p-2.5;
+        @apply h-8 bg-transparent border placeholder:text-gray-400 border-gray3 text-gray-700 text-sm rounded-lg focus:ring-gray2 focus:border-gray2 block w-full p-2.5;
     }
 
     .textarea{
-        @apply bg-[#CCCCCC] placeholder:text-gray-400 border border-transparent text-gray-700 text-sm rounded-lg focus:ring-[#883339] focus:border-[#883339] block w-full p-2.5;
+        @apply bg-[#CCCCCC] placeholder:text-gray-400 border border-transparent text-gray-700 text-sm rounded-lg focus:ring-[#F4DC59] focus:border-[#F4DC59] block w-full p-2.5;
     }
 
     .label{
@@ -70,7 +70,7 @@
     }
     
     .globe {
-        @apply bg-primary-gray text-gray-600 overflow-auto rounded-lg w-[90%] md:w-full md:mx-2 mx-auto px-7 py-5 pt-1;
+        @apply bg-transparent border border-gray3 text-gray-600 overflow-auto rounded-lg w-[90%] md:w-full md:mx-2 mx-auto px-7 py-5 pt-1;
     }
     
     .globe-title {
@@ -79,6 +79,10 @@
     
     .select {
         @apply w-5/6 rounded-lg border border-gray-400 text-gray-500 focus:border-stone-500 focus:text-stone-500;
+    }
+
+    .hover-3dbuttom{
+        @apply hover:shadow-md transition ease-in-out duration-300 hover:-translate-y-2;
     }
     
 }

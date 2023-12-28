@@ -12,10 +12,12 @@ class WarehouseController extends Controller
     public function index()
     {
         $warehouse = Warehouse::first();
-        $products = Product::with('unit')->get();
+        $products = Product::with('unit','media')->get();
         $employees = User::all()->filter(
             fn($user) => $user->hasCheckedInToday() && $user->shiftOn(today()->dayOfWeek) === 'cocina'
         );
+
+        // return $warehouse;
 
         return inertia('Warehouse/Index', compact('warehouse', 'products', 'employees'));
     }

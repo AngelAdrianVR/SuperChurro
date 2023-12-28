@@ -139,14 +139,14 @@ const logout = () => {
 
     <Banner />
 
-    <div class="min-h-screen bg-gray-200">
+    <div class="min-h-screen bg-gray-100">
       <nav class="
           bg-transparent
         ">
         <!-- Primary Navigation Menu -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
           <div class="flex justify-between h-16">
-            <div class="flex">
+            <div class="flex justify-between">
               <!-- Logo -->
               <div class="shrink-0 flex items-center pt-8">
                 <Link :href="route('dashboard')">
@@ -155,7 +155,7 @@ const logout = () => {
               </div>
 
               <!-- Navigation Links -->
-              <div class="hidden space-x-3 sm:-my-px sm:ml-10 sm:flex justify-end">
+              <div class="hidden space-x-3 sm:-my-px sm:ml-24 sm:flex">
                 <template v-for="(menu, index) in menues" :key="index">
                   <NavLink v-if="menu.admin_can_see || !$page.props.user.is_admin" :href="route(menu.route_name)"
                     :active="menu.is_active">

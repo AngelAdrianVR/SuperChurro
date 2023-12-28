@@ -284,8 +284,8 @@ export default {
       name: this.product.name,
       low_stock: this.product.low_stock,
       unit_id: this.product.unit?.id,
-      price: this.product.current_price.price,
-      employee_price: this.product.current_employee_price.price,
+      price: this.product.current_price?.price,
+      employee_price: this.product.current_employee_price?.price,
       media: null,
     });
     return {

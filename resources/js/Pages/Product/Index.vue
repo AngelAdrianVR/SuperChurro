@@ -23,8 +23,8 @@
         <div class="flex flex-col">
           <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Stock mínimo: {{ product.low_stock }} </span>
           <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Unidad de medida: {{ product.unit?.name }} </span>
-          <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Precio actual: ${{ product.price.price }} </span>
-          <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Precio a empleados: ${{ product.employee_price.price }} </span>
+          <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Precio actual: ${{ product.price?.price }} </span>
+          <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Precio a empleados: ${{ product.employee_price?.price }} </span>
         </div>
         </Link>
         <!-- <button class="absolute bottom-1 right-2 z-10" @click="delete_confirm = true; item_to_delete = product;">

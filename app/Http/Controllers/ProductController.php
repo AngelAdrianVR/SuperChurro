@@ -16,7 +16,7 @@ class productController extends Controller
 
     public function index()
     {
-        $products = ProductResource::collection(Product::with('unit', 'currentPrice', 'currentEmployeePrice')->get());
+        $products = ProductResource::collection(Product::with('unit', 'currentPrice', 'currentEmployeePrice', 'media')->get());
 
         // return $products;
 
@@ -40,6 +40,11 @@ class productController extends Controller
         ]);
 
         $new_product = Product::create($validated);
+
+        // Guardar el archivo en media
+        if ($request->hasFile('media')) {
+            $new_product->addAllMediaFromRequest()->each(fn ($file) => $file->toMediaCollection());
+        }
 
         // store price
         Price::create([

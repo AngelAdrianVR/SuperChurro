@@ -8,7 +8,7 @@
     </template>
 
     <div class="md:mx-12 mx-1">
-      <p class="text-secondary font-bold text-lg">Operaciones</p>
+      <p class="text-primary font-bold text-lg">Operaciones</p>
 
       <!-- ----------------------------- Solicitudes de mercancia starts ------------------------------- -->
       <div class="globe-container flex-col">
@@ -19,7 +19,7 @@
               >Solicitud de mercancía</span
             >
             <i
-              class="fa-solid fa-plus text-primary justify-end absolute right-4 hover:bg-gray-400/50 cursor-pointer p-2 rounded-md"
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
           </div>
           <div class="flex flex-col">
@@ -51,7 +51,7 @@
               >Colaboradores en carrito / cocina</span
             >
             <i
-              class="fa-solid fa-pencil text-primary justify-end absolute right-4 hover:bg-gray-400/50 cursor-pointer p-2 rounded-md"
+              class="fa-solid fa-pencil text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
           </div>
           <p class="text-primary mb-2">Carrito</p>
@@ -86,7 +86,7 @@
           <div class="globe-title pb-2">
             <span class="text-gray-700 justify-center">Cortes</span>
             <i
-              class="fa-solid fa-plus text-primary justify-end absolute right-4 hover:bg-gray-400/50 cursor-pointer p-2 rounded-md"
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
           </div>
           <p class="text-primary mb-2">Carrito</p>
@@ -120,7 +120,7 @@
           <div class="globe-title pb-2">
             <span class="text-gray-700 justify-center">Cumpleaños</span>
             <i
-              class="fa-solid fa-pencil text-primary justify-end absolute right-4 hover:bg-gray-400/50 cursor-pointer p-2 rounded-md"
+              class="fa-solid fa-pencil text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
           </div>
           <div class="flex flex-col">
@@ -133,14 +133,14 @@
               (Fecha de hoy)
             </span>
             <i
-              class="fa-solid fa-cake-candles text-6xl text-secondary mt-3 text-center"
+              class="fa-solid fa-cake-candles text-6xl text-primary mt-3 text-center"
             ></i>
           </div>
         </div>
         <!-- ----------------------------- Cumpleaños ends ------------------------------- -->
       </div>
 
-      <p class="text-secondary font-bold text-lg mt-5">Estadisticas</p>
+      <p class="text-primary font-bold text-lg mt-5">Estadisticas</p>
 
       <!-- ----------------------------- ventas chart starts ------------------------------- -->
       <div class="globe-container flex-col">
@@ -151,7 +151,7 @@
               >Ventas (mes en curso)</span
             >
             <i
-              class="fa-solid fa-plus text-primary justify-end absolute right-4 hover:bg-gray-400/50 cursor-pointer p-2 rounded-md"
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
           </div>
 
@@ -169,7 +169,7 @@
               >Profit (mes en curso)</span
             >
             <i
-              class="fa-solid fa-plus text-primary justify-end absolute right-4 hover:bg-gray-400/50 cursor-pointer p-2 rounded-md"
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
           </div>
           <IncomesOutcomesChart />

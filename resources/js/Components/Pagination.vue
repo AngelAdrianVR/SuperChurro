@@ -20,7 +20,7 @@
             :href="link.url" 
             v-html="link.label" 
             class="relative inline-flex items-center border px-3 py-1 text-sm rounded-xl"
-            :class="link.active ? 'z-10 bg-cyan-100 border-2 border-cyan-600 text-cyan-600 font-bold' : 'bg-gray-200 border-gray-400 text-black hover:bg-gray-200 hover:border-cyan-600'"
+            :class="link.active ? 'z-10 bg-gray-100 border-2 border-gray-600 text-gray-600 font-bold' : 'bg-gray-200 border-gray-400 text-black hover:bg-gray-200 hover:border-gray-600'"
             />
             
 

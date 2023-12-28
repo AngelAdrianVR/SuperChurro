@@ -1,21 +1,22 @@
 <template>
   <AppLayout title="Usuario">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
-        Opciones de usuario
-      </h2>
-    </template>
+      <div @click="showUserOptions = false" class="flex items-center justify-between mt-2">
+        <Back />
+        <div class="flex items-center space-x-2 relative">
+          <PrimaryButton class="!rounded-md">Editar</PrimaryButton>
+          <button @click.stop="showUserOptions = !showUserOptions" class="border border-gray3 rounded-md text-sm py-1 px-2">Más <i class="fa-solid fa-angle-down ml-1"></i></button>
+        </div>
+        <div v-if="showUserOptions" class="z-10 text-sm border border-gray3 bg-gray-100 rounded-lg py-3 absolute top-[138px] right-[16px] lg:right-[225px]">
+          <p @click="$inertia.put(route('user.reset-pass', $page.props.user.id))" class="px-3 py-1 cursor-pointer hover:bg-gray4">Resetear contraseña</p>
+          <p class="px-3 py-1 cursor-pointer hover:bg-gray4">Cálculos</p>
+          <p v-if="$page.props.user.is_active" @click.stop="$inertia.put(route('user.disable', $page.props.user.id))" class="px-3 py-1 cursor-pointer hover:bg-gray4">Dar de baja</p>
+          <p v-else @click="$inertia.put(route('user.enable', $page.props.user.id))" class="px-3 py-1 cursor-pointer hover:bg-gray4">Dar de alta</p>
+        </div>
+      </div>
+    </template> 
 
-    <div class="flex justify-start ml-2">
-      <Link :href="route('users.index')" class="flex items-center mt-2 text-secondary">
-        <i
-          class="fa-solid fa-angle-left text-lg hover:bg-gray-300 bg-opacity-100 rounded-full w-7 h-7 pl-1"
-        ></i>
-        <span class="ml-1 cursor-default">Atrás</span>
-      </Link>
-    </div>
-
-    <div class="flex justify-center items-center">
+    <div  class="flex justify-center items-center">
       <PrimaryButton
         v-if="$page.props.user.is_active"
         @click="$inertia.put(route('user.disable', $page.props.user.id))"
@@ -51,6 +52,7 @@
     <!-- component -->
     <!-- This is an example component -->
     <div
+      @click="showUserOptions = false"
       class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 py-8 bg-primary-gray mx-4 my-2"
     >
       <form @submit.prevent="update">
@@ -322,11 +324,12 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import InputError from "@/Components/InputError.vue";
 import FileUploader from "@/Components/FileUploader.vue";
 import Checkbox from "@/Components/Checkbox.vue";
-import { Link, useForm } from "@inertiajs/inertia-vue3";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import Back from "@/Components/Back.vue";
 import { Inertia } from "@inertiajs/inertia";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
 
 export default {
   data() {
@@ -347,6 +350,7 @@ export default {
     return {
       form,
       show_confirmation: false,
+      showUserOptions: false,
       file_to_delete: null,
       confirmation_for_pay_vacations: false,
       week_days: [
@@ -367,7 +371,6 @@ export default {
   components: {
     AppLayout,
     PayRollTable,
-    Link,
     PrimaryButton,
     SecondaryButton,
     InputError,
@@ -376,6 +379,8 @@ export default {
     Dropdown,
     DropdownLink,
     ConfirmationModal,
+    Back,
+    Link,
   },
   props: {
     user: Object,

@@ -1,165 +1,71 @@
 <template>
   <AppLayout title="Crear nuevo usuario">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Crear nuevo usuario
-      </h2>
+      <div class="flex items-center mt-2">
+        <Back />
+        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+          Crear nuevo usuario
+        </h2>
+      </div>
     </template>
 
-    <div class="flex justify-start">
-      <Link :href="route('users.index')" class="flex items-center mt-2 text-secondary">
-      <i class="
-            fas
-            fa-solid fa-angle-left
-            text-lg
-            active:bg-gray-300
-            bg-opacity-100
-            rounded-full
-            w-7
-            h-7
-            pl-1
-            ml-2
-          "></i>
-      <span class="ml-1 cursor-default">Atrás</span>
-      </Link>
-    </div>
-
-    <!-- component -->
-    <!-- This is an example component -->
     <div class="
-        max-w-2xl
+        max-w-5xl
         md:mx-auto
         mt-5
-        shadow-md shadow-gray-500/70
-        rounded-lg
         px-5
         py-8
-        bg-white
+        bg-transparent
         mx-4
-        my-2
+        relative
       ">
-      <form @submit.prevent="store">
-        <div class="relative z-0 mb-6 w-full group">
-          <input v-model="form.name" type="text" name="floating_time_requested" autocomplete="off" required class="
-              block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-            " placeholder=" " />
-          <label for="floating_name" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">Nombre*</label>
+      <div class="absolute -top-10 left-72 lg:-top-5 lg:-left-40 bg-white rounded-full py-5 px-6">
+      <i class="fa-solid fa-user text-4xl lg:text-8xl text-gray4"></i>
+      </div>
+      <form class="" @submit.prevent="store">
+        <h1 class="font-bold mb-9 ml-3 col-span-full">Datos personales</h1>
+        <div class="mb-3 w-full group">
+          <InputLabel value="Nombre *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.name" type="text" autocomplete="off" class="input"
+           placeholder="Escribe el nombre del colaborador" />
           <InputError :message="$page.props?.errors.name" />
         </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input v-model="form.email" type="email" name="floating_email" autocomplete="off" class="
-              block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-            " placeholder=" " />
-          <label for="floating_email" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">Email</label>
+
+        <div class="mb-3 w-full group">
+          <InputLabel value="Correo electrónico *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.email" type="text" autocomplete="off" class="input"
+           placeholder="Escribe el correo del colaborador" />
+          <InputError :message="$page.props?.errors.email" />
         </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input v-model="form.phone_number" type="phone_number" name="floating_phone_number" required
-            autocomplete="off" class="
-              block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-            " placeholder=" " />
-          <label for="floating_phone_number" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">Número de contacto*</label>
+
+        <div class="mb-3 w-full group">
+          <InputLabel value="Número de teléfono *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.phone_number" type="text" autocomplete="off" class="input"
+           placeholder="Escribe el correo del colaborador" />
           <InputError :message="$page.props?.errors.phone_number" />
         </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input v-model="form.employee_properties.birthdate" type="date" name="floating_birthdate" autocomplete="off"
-            required class="
-              block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-            " placeholder=" " />
-          <label for="floating_birthdate" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">Fecha de nacimiento*</label>
-          <InputError :message="$page.props?.errors.employee_properties?.birthdate" />
+
+        <div class="mb-3 w-full group">
+          <InputLabel value="Fecha de nacimieno *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.employee_properties.birthdate" type="date" autocomplete="off" class="input"
+           placeholder="Seleccione la fecha" />
+          <InputError :message="$page.props?.errors['employee_properties.birthdate']" />
         </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input v-model="form.employee_properties.base_salary" type="number" name="floating_base_salary"
-            autocomplete="off" required class="
-              block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-            " placeholder=" " />
-          <label for="floating_base_salary" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">Salario base*</label>
-          <InputError :message="$page.props?.errors.employee_properties?.base_salary" />
+
+        <h1 class="font-bold my-9 ml-3 col-span-full">Datos laborales</h1>
+
+        <div class="mb-3 w-full group">
+          <InputLabel value="Fecha de Ingreso *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.employee_properties.birthdate" type="date" autocomplete="off" class="input"
+           placeholder="Seleccione la fecha" />
+          <!-- <InputError :message="$page.props?.errors['employee_properties.birthdate']" />  -->
+        </div>
+
+        <div class="mb-3 w-full group">
+          <InputLabel value="Salario base *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.employee_properties.base_salary" type="number" min="0" autocomplete="off" class="input"
+           placeholder="Escriba el salario" />
+          <InputError :message="$page.props?.errors['employee_properties.base_salary']" />
         </div>
 
         <div class="mb-3">
@@ -200,7 +106,7 @@
                 </label>
               </div>
             </div>
-            <SecondaryButton @click="addWorkDay" class="mb-4">Agregar día</SecondaryButton>
+            <ThirthButton @click="addWorkDay" class="mb-4"><i class="fa-solid fa-plus mr-2"></i>Agregar día de trabajo</ThirthButton>
             <div>
               <span v-for="(item,index) in form.employee_properties.work_days" :key="item.day" class="bg-sky-100 px-1 py-px rounded-md mr-3 text-xs">
                 {{ week_days[item.day] }} - {{ item.shift }} <button type="button" @click="deleteUser(index)">x</button>
@@ -246,7 +152,9 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputError from "@/Components/InputError.vue";
 import FileUploader from "@/Components/FileUploader.vue";
 import Checkbox from "@/Components/Checkbox.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
+import ThirthButton from "@/Components/ThirthButton.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import Back from "@/Components/Back.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 export default {
   data() {
@@ -289,12 +197,14 @@ export default {
   components: {
     AppLayout,
     PayRollTable,
-    Link,
     PrimaryButton,
     InputError,
     Checkbox,
     FileUploader,
-    SecondaryButton,
+    ThirthButton,
+    InputLabel,
+    Back,
+    Link,
   },
   props: {
     bonuses: Array,

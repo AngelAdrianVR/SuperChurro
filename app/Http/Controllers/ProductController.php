@@ -88,16 +88,17 @@ class productController extends Controller
 
     public function show(product $product)
     {
-        $product = Product::with('currentPrice', 'unit', 'currentEmployeePrice')->find($product->id);
-        $units = Unit::all();
-
-        return inertia('Product/Show', compact('product', 'units'));
+        //
     }
 
 
-    public function edit(product $product)
+    public function edit($product_id)
     {
-        //
+        $product = Product::with('currentPrice', 'unit', 'currentEmployeePrice', 'media')->find($product_id);
+        $units = Unit::all();
+
+        // return $product;
+        return inertia('Product/Edit', compact('product', 'units'));
     }
 
 
@@ -129,6 +130,26 @@ class productController extends Controller
                 'is_employee_price' => true
             ]);
         }
+
+        request()->session()->flash('flash.banner', '¡Se ha actualizado correctamente!');
+        request()->session()->flash('flash.bannerStyle', 'success');
+
+        return to_route('products.index');
+    }
+
+
+    public function updateWithMedia(Request $request, product $product)
+    {
+        $request->validate([
+            'name' => 'required|max:25',
+            'low_stock' => 'numeric',
+            'unit_id' => 'required',
+        ]);
+
+        $product->update($request->all());
+          // update image
+        $product->clearMediaCollection();
+        $product->addAllMediaFromRequest()->each(fn ($file) => $file->toMediaCollection());
 
         request()->session()->flash('flash.banner', '¡Se ha actualizado correctamente!');
         request()->session()->flash('flash.bannerStyle', 'success');

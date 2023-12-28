@@ -67,6 +67,8 @@ Route::post('cart/remove-products', [CartController::class, 'removeProducts'])->
 
 // admin routes
 Route::resource('products', ProductController::class)->middleware(['auth', 'admin']);
+Route::post('products/update-with-media/{product}', [ProductController::class, 'updateWithMedia'])->name('products.update-with-media')->middleware('auth');
+
 Route::resource('users', UserController::class)->middleware(['auth', 'admin']);
 Route::resource('sales', SaleController::class)->middleware(['auth']);
 Route::resource('settings', SettingController::class)->middleware(['auth', 'admin']);

@@ -8,14 +8,14 @@
 
     <div class="flex justify-end">
       <Link :href="route('products.create')">
-      <SecondaryButton class="mr-7 my-5">Agregar <i class="fa-solid fa-plus ml-2"></i></SecondaryButton>
+      <PrimaryButton class="mr-7 my-5">Agregar <i class="fa-solid fa-plus ml-2"></i></PrimaryButton>
       </Link>
     </div>
 
     <div class="globe-container flex-col">
       <div v-for="product in products.data" :key="product.id"
         class="globe hover:bg-gray-200 cursor-pointer relative z-0">
-        <Link :href="route('products.show', product.id)">
+        <Link :href="route('products.edit', product.id)">
         <div class="globe-title !justify-between pb-2">
           <p class="text-gray-700"><i class="fa-solid fa-box mr-1"></i>
             {{ product.name }}</p>

@@ -1,36 +1,14 @@
 <template>
   <AppLayout title="Editar Producto">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
-        Editar producto: <strong>{{ product.name }}</strong>
-      </h2>
+      <div class="flex items-center mt-2">
+        <Back />
+        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+          Editar producto: <strong>{{ product.name }}</strong>
+        </h2>
+      </div>
     </template>
 
-    <div class="flex justify-start">
-      <Link
-        :href="route('products.index')"
-        class="flex items-center mt-2 text-secondary"
-      >
-        <i
-          class="
-            fas
-            fa-solid fa-angle-left
-            text-lg
-            active:bg-gray-300
-            bg-opacity-100
-            rounded-full
-            w-7
-            h-7
-            pl-1
-            ml-2
-          "
-        ></i>
-        <span class="ml-1 cursor-default">Atrás</span>
-      </Link>
-    </div>
-
-    <!-- component -->
-    <!-- This is an example component -->
     <div
       class="
         max-w-2xl
@@ -40,7 +18,7 @@
         rounded-lg
         px-5
         py-8
-        bg-primary-gray
+        bg-white
         mx-4
       "
     >
@@ -277,6 +255,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import PayRollTable from "@/Components/PayRollTable.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputError from "@/Components/InputError.vue";
+import Back from "@/Components/Back.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 export default {
   data() {
@@ -295,9 +274,10 @@ export default {
   components: {
     AppLayout,
     PayRollTable,
-    Link,
     PrimaryButton,
     InputError,
+    Back,
+    Link,
   },
   props: {
     product: Object,
@@ -305,7 +285,13 @@ export default {
   },
   methods: {
     update() {
-      this.form.put(route("products.update",this.product.id));
+      if (this.form.media == null) {
+        this.form.put(route("products.update", this.product.id));
+      } else {
+        this.form.post(route("products.update-with-media", this.product.id), {
+          method: '_put'
+        });
+      }
     },
   },
 };

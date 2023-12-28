@@ -34,7 +34,7 @@
         <div class="globe-container flex-col">
           <div v-for="product_id in Object.keys(warehouse.products)" :key="product_id" class="globe hover:bg-gray-200 cursor-pointer">
           <figure v-if="products.find(product => product.id == product_id )?.media.length > 0" class="justify-center pt-2">
-            <img :src="products.find(product => product.id == product_id )?.media[0]?.original_url" alt="Imagen del producto" class="rounded-lg w-32 mx-auto">
+            <img :src="products.find(product => product.id == product_id )?.media[0]?.original_url" alt="Imagen del producto" class="rounded-lg h-32 mx-auto">
           </figure>
             <Link :href="route('warehouse-movements.show-product-record', product_id)">
               <div class="globe-title !justify-center pb-2">
@@ -43,6 +43,7 @@
               <div class="flex justify-center items-center" 
               :class="warehouse.products[product_id] <= products.find(product => product.id == product_id ).low_stock ? 'text-red-500' : 'text-green-500' ">
                 <span>{{ warehouse.products[product_id] }} {{ products.find(product => product.id == product_id ).unit?.name }}</span>
+                <i v-if="warehouse.products[product_id] <= products.find(product => product.id == product_id ).low_stock" class="fa-solid fa-triangle-exclamation ml-2 text-xs text-red-500"></i>
               </div>
             </Link>
           </div>

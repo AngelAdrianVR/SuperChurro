@@ -1,28 +1,13 @@
 <template>
   <AppLayout title="Historial de Solicitudes de mercancía">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
-        Historial de Solicitudes de mercancía
-      </h2>
+      <div class="flex items-center mt-2">
+        <Back />
+        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+          Historial de Solicitudes de mercancía
+        </h2>
+      </div>
     </template>
-
-    <div class="flex justify-start">
-      <Link :href="route('carts.index')" class="flex items-center mt-2 text-secondary">
-      <i class="
-            fas
-            fa-solid fa-angle-left
-            text-lg
-            active:bg-gray-300
-            bg-opacity-100
-            rounded-full
-            w-7
-            h-7
-            pl-1
-            ml-2
-          "></i>
-      <span class="ml-1 cursor-default">Atrás</span>
-      </Link>
-    </div>
 
     <div class="globe-container flex-col">
         <Link :href="route('product-request.show', request)" v-for="request in requests.data" :key="request.id"
@@ -52,8 +37,9 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link } from "@inertiajs/inertia-vue3";
 import Pagination from "@/Components/Pagination.vue";
+import Back from "@/Components/Back.vue";
+import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
   data() {
@@ -63,8 +49,9 @@ export default {
   },
   components: {
     AppLayout,
-    Link,
     Pagination,
+    Back,
+    Link,
   },
   props: {
     requests: Array,

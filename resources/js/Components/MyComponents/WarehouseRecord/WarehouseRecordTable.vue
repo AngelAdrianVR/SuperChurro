@@ -19,10 +19,10 @@
             :class="{ 'bg-gray4': index % 2 == 0 }"
           >
             <td class="text-left py-2 rounded-l-full px-5">
-              {{ movement.user.name }}
+              <p class="w-36">{{ movement.user.name }}</p>
             </td>
             <td class="text-center py-2 px-5">
-              {{ movement.concept.name }}
+              <p class="w-40">{{ movement.concept.name }}</p>
             </td>
             <td class="text-center py-2 px-5">
               {{ movement.created_at.split("T")[0] }}
@@ -31,21 +31,23 @@
               {{ movement.warehouse_id }}
             </td>
             <td class="text-center py-2 px-5">
-              {{ movement.notes ?? "--" }}
+              <p class="w-40">{{ movement.notes ?? "--" }}</p>
             </td>
             <td
               :class="
                 movement.concept.is_entry ? 'text-green-500' : 'text-red-500'
               "
-              class="text-center py-2 flex items-center rounded-r-full pr-3"
+              class="text-center py-2"
             >
-              <i
-                v-if="movement.concept.is_entry"
-                class="fa-solid fa-plus mr-1"
-              ></i>
-              <i v-else class="fa-solid fa-minus mr-1"></i>
-              <span>{{ movement.quantity }} {{ product.unit.name }}</span>
-            </td>
+              <div class="flex items-center rounded-r-full w-36">
+                  <i
+                    v-if="movement.concept.is_entry"
+                    class="fa-solid fa-plus mr-1"
+                  ></i>
+                  <i v-else class="fa-solid fa-minus mr-1"></i>
+                  <span>{{ movement.quantity }} {{ product.unit.name }}</span>
+              </div>
+              </td>
           </tr>
         </tbody>
       </table>

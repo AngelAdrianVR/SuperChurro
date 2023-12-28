@@ -6,44 +6,25 @@
       common-container
     ">
         <div>
-            <select @change="syncItem" v-model="selection" class="select w-2/3 lg:w-3/4" required>
+            <select @change="syncItem" v-model="selection" class="select w-full lg:w-full" required>
                 <option value="x">-- Seleccionar producto --</option>
                 <option v-for="product in products" :key="product.id" :value="product.id">
-                    {{ product.name }} {{ show_price ? '($' + product.current_employee_price.price + '/unidad)' : '' }}
+                    {{ product.name }} {{ show_price ? '($' + product.current_employee_price?.price + '/unidad)' : '' }}
                 </option>
             </select>
             <p v-if="error_validation" class="text-red-400 text-xs">Favor de seleccionar el producto</p>
         </div>
         <div class="relative z-0 mb-6 w-1/4 group">
-            <input @change="syncItem" v-model.number="quantity" min="1" type="number" name="floating_description"
-                autocomplete="off" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-            " placeholder=" " />
-            <label for="floating_description" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">Cantidad</label>
+            <input @change="syncItem" v-model.number="quantity" min="1" type="number"
+                autocomplete="off" class="input w-1/2 ml-2" placeholder=" " />
         </div>
         <!-- <span>{{ product.unit.name }}</span> -->
         <!-- <span>${{ getTotal }}</span> -->
         <button type="button" @click="$emit('deleteItem')">
             <i class="
-          fa-solid fa-xmark
-          text-gray-300
-          hover:text-red-300
+          fa-regular fa-trash-can
+          text-sm
+          text-primary
           cursor-pointer
         "></i>
         </button>
@@ -82,7 +63,7 @@ export default {
     computed: {
         getTotal() {
             return this.selection != "x"
-                ? (this.quantity * this.products.find(product => { return product.id === this.selection }).price).toFixed(2) +
+                ? (this.quantity * this.products.find(product => { return product.id === this.selection }).price)?.toFixed(2) +
                 " " +
                 this.products.find(product => { return product.id === this.selection }).currency
                 : 0;

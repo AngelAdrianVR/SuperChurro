@@ -54,11 +54,11 @@
 
  @layer components{
     .input{
-        @apply h-8 bg-transparent border placeholder:text-gray-400 border-gray3 text-gray-700 text-sm rounded-lg focus:ring-gray2 focus:border-gray2 block w-full p-2.5;
+        @apply h-8 bg-transparent border placeholder:text-gray-400 border-gray3 text-gray-700 text-sm rounded-md focus:ring-gray2 focus:border-gray2 block w-full p-2.5;
     }
 
     .textarea{
-        @apply bg-[#CCCCCC] placeholder:text-gray-400 border border-transparent text-gray-700 text-sm rounded-lg focus:ring-[#F4DC59] focus:border-[#F4DC59] block w-full p-2.5;
+        @apply bg-transparent placeholder:text-gray-400 border border-gray3 text-gray-700 text-sm rounded-md focus:ring-gray2 focus:border-gray2 block w-full p-2.5;
     }
 
     .label{
@@ -70,7 +70,7 @@
     }
     
     .globe {
-        @apply bg-transparent border border-gray3 text-gray-600 overflow-auto rounded-lg w-[90%] md:w-full md:mx-2 mx-auto px-7 py-5 pt-1;
+        @apply bg-transparent border border-gray3 text-gray-600 overflow-auto rounded-md w-[90%] md:w-full md:mx-2 mx-auto px-7 py-5 pt-1;
     }
     
     .globe-title {
@@ -78,7 +78,7 @@
     }
     
     .select {
-        @apply w-5/6 rounded-lg border border-gray-400 text-gray-500 focus:border-stone-500 focus:text-stone-500;
+        @apply bg-transparent h-9 text-sm w-5/6 rounded-md border border-gray3 text-gray-500 focus:border-stone-500 focus:text-stone-500;
     }
 
     .hover-3dbuttom{

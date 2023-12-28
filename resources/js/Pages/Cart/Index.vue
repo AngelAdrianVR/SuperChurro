@@ -3,11 +3,8 @@
     <!-- <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">Carrito</h2>
     </template> -->
-    <div class="md:mx-10 mx-1">
+    <div class="md:mx-10 mx-2">
       <div class="md:flex justify-between items-center space-y-5 my-9">
-        <Link :href="route('sales-to-employees.create')">
-          <ThirthButton class="">Venta a empleado / Cortesías</ThirthButton>
-        </Link>
         <div
           class="flex space-x-3 md:flex-row justify-between md:justify-end md:mr-10 items-center"
         >
@@ -25,7 +22,7 @@
 
           <div>
             <Link :href="route('product-request.create')">
-              <ThirthButton class="">Solicitar mercancía</ThirthButton>
+              <PrimaryButton class="">Solicitar mercancía</PrimaryButton>
             </Link>
           </div>
         </div>
@@ -41,7 +38,7 @@
           <div class="">
             <p v-for="employee in employees" :key="employee.id" class="mx-3 my-2">
               <i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
-              <span class="text-primary">{{ employee.name }}</span>
+              <span>{{ employee.name }}</span>
             </p>
             <p
               v-if="Array.isArray(employees)"
@@ -50,6 +47,9 @@
               No hay colaboradores en carrito
             </p>
           </div>
+          <Link :href="route('sales-to-employees.create')">
+            <ThirthButton class="mt-4">Venta a empleado / Cortesías</ThirthButton>
+          </Link>
         </div>
 
         <div class="mb-4 mt-14 md:my-1 text-center">
@@ -92,8 +92,8 @@
         <p class="text-gray-700 text-left mx-4 my-3 font-semibold flex items-center">
           Solicitudes de mercancía (Hoy)
           <Link :href="route('product-request.history')">
-            <PrimaryButton class="md:ml-7 ml-2" v-if="$page.props.user.is_admin"
-              >Ver historial</PrimaryButton
+            <p class="ml-9 text-primary font-normal" v-if="$page.props.user.is_admin"
+              >Ver historial</p
             >
           </Link>
         </p>
@@ -144,20 +144,25 @@
           <div
             v-for="cart_product_id in Object.keys(cart_products[0].products)"
             :key="cart_product_id"
-            class="globe"
+            class="globe grid grid-cols-2"
           >
-            <div class="globe-title pb-2">
-              {{
-                products.find((product) => product.id == cart_product_id)?.name
-              }}
-            </div>
-            <div class="flex justify-center items-center">
-              <p
-                >{{ cart_products[0].products[cart_product_id] }}
+          <figure v-if="products.find(product => product.id == cart_product_id )?.media.length > 0" class="justify-center pt-2">
+            <img :src="products.find(product => product.id == cart_product_id )?.media[0]?.original_url" alt="Imagen del producto" class="rounded-lg h-32 mx-auto">
+          </figure>
+            <div>
+              <div class="globe-title !font-semibold pb-2">
                 {{
-                  products.find((product) => product.id == cart_product_id).unit?.name
-                }}</p
-              >
+                  products.find((product) => product.id == cart_product_id)?.name
+                }}
+              </div>
+              <div class="flex justify-center items-center">
+                <p class="font-bold"
+                  >{{ cart_products[0].products[cart_product_id] }}
+                  {{
+                    products.find((product) => product.id == cart_product_id).unit?.name
+                  }}</p
+                >
+              </div>
             </div>
           </div>
         </div>

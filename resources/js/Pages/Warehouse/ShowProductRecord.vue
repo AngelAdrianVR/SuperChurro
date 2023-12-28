@@ -10,23 +10,23 @@
     </template>
 
     <div
-      class="border-y border-[#9a9a9a] flex mt-4 transition-all duration-300 ease-in"
+      class="border-y border-[#9a9a9a] flex mt-4 transition ease-linearn duration-300"
     >
       <p
         @click="tab = 1"
         :class="tab == 1 ? 'text-primary' : ''"
-        class="px-4 py-2 md:ml-24 cursor-pointer hover:text-primary"
+        class="px-7 py-2 md:ml-48 cursor-pointer hover:text-primary"
       >
         Historial
       </p>
-      <div class="border-r my-2 border-[#9a9a9a]"></div>
+      <!-- <div class="border-r my-2 border-[#9a9a9a]"></div>
       <p
         @click="tab = 2"
         :class="tab == 2 ? 'text-primary' : ''"
         class="px-4 py-2 cursor-pointer hover:text-primary"
       >
         Stock
-      </p>
+      </p> -->
     </div>
 
     

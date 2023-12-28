@@ -10,7 +10,7 @@
     </template>
 
     <div
-      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 py-8 bg-white mx-4"
+      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 py-8 bg-transparent mx-4"
     >
       <form @submit.prevent="store">
         <div class="relative z-0 mb-6 w-full group">

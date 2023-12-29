@@ -8,22 +8,35 @@
 
         <div class="flex justify-end mb-3">
             <Link :href="route('bonuses.create')">
-            <SecondaryButton class="mr-7 mt-4">Crear nuevo</SecondaryButton>
+            <PrimaryButton class="mr-7 my-4">Crear bono</PrimaryButton>
             </Link>
         </div>
 
         <div v-if="bonuses.length" class="globe-container">
-            <div v-for="bonus in bonuses" :key="bonus.id" class="globe relative cursor-pointer hover:bg-slate-100 text-sm">
-                <Link :href="route('bonuses.edit', bonus)">
+            <div v-for="bonus in bonuses" :key="bonus.id" class="globe relative hover:bg-slate-100 text-sm">
                     <div class="globe-title !justify-between">
                         <p>{{ bonus.name }}</p>
                     </div>
                     <p><strong>Cantidad: </strong> ${{ bonus.amount }}</p>
                     <p class="mb-3"><strong>Descripción: </strong> {{ bonus.description }}</p>
-                    <p v-if="bonus.is_active" class="px-2 py-1 text-center text-green-700 bg-green-200 rounded-md">Activo
+                    <p v-if="bonus.is_active" class="px-2 py-1 text-center text-green-700 bg-[#B4FD9B] rounded-md absolute top-4 right-3">Activo
                     </p>
-                    <p v-else class="px-2 py-1 text-center text-red-700 bg-red-200 rounded-md">Inactivo</p>
-                </Link>
+                    <p v-else class="px-2 py-1 text-center text-red-700 bg-red-200 rounded-md absolute top-4 right-3">Inactivo</p>
+
+                    <div class="flex justify-between items-center mt-2">
+                        <PrimaryButton @click="$inertia.get(route('bonuses.edit', bonus.id ))">Editar</PrimaryButton>
+                        <ThirthButton
+                        v-if="bonus.is_active"
+                        @click="$inertia.put(route('bonuses.toggle-status', bonus))"
+                        >Marcar como inactivo
+                        </ThirthButton
+                        >
+                        <ThirthButton
+                        v-else
+                        @click="$inertia.put(route('bonuses.toggle-status', bonus))"
+                        >Marcar como activo</ThirthButton
+                        >
+                    </div>
             </div>
         </div>
 
@@ -36,7 +49,8 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import ThirthButton from "@/Components/ThirthButton.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 export default {
     data() {
@@ -46,8 +60,9 @@ export default {
     },
     components: {
         AppLayout,
-        SecondaryButton,
-        Link,
+        PrimaryButton,
+        ThirthButton,
+        Link
     },
     props: {
         bonuses: Array,

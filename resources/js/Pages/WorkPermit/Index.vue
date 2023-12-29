@@ -81,8 +81,8 @@ export default {
   components: {
     AppLayout,
     SecondaryButton,
-    Link,
     ConfirmationModal,
+    Link
   },
   props: {
     work_permits: Object,

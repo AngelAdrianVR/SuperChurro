@@ -2,13 +2,9 @@
   <AppLayout title="Solicitudes">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Solicitudes de Empleados
+        Permisos
       </h2>
     </template>
-
-    <div class="my-4 border-b border-gray-300">
-      <Tabs :tabs="tabs" />
-    </div>
 
     <div v-if="work_permits.data.length" class="globe-container">
       <div v-for="work_permit in work_permits.data" :key="work_permit.id" class="globe relative">
@@ -24,20 +20,22 @@
           <p v-if="work_permit.permission_type_id == 1 || work_permit.permission_type_id == 2 "><strong>Tiempo requerido: </strong>{{work_permit.time_requested}} minutos</p>
            <p><strong>Notas: </strong>{{ work_permit.description }} </p>
             <span v-if="work_permit.status == 1" class="text-orange-500 font-bold mt-2"><i class="fa-solid fa-hourglass-start mr-2"></i>Revisando...</span>  
-            <span v-if="work_permit.status == 2" class="text-green-600 font-bold mt-2"><i class="fa-solid fa-check mr-2"></i>Aprobado</span>  
-            <span v-if="work_permit.status == 3" class="text-red-600 font-bold mt-2"><i class="fa-solid fa-xmark mr-2"></i>Rechazado</span>  
+            <span v-if="work_permit.status == 2" class="text-green-500 font-bold mt-2"><i class="fa-solid fa-check mr-2"></i>Aprobado</span>  
+            <span v-if="work_permit.status == 3" class="text-red-500 font-bold mt-2"><i class="fa-solid fa-xmark mr-2"></i>Rechazado</span>  
         </div>
         <div v-if="work_permit.status == 1" class="flex justify-center items-center mt-1 mb-3 space-x-2">
-          <PrimaryButton @click="$inertia.put(route('work-permit.accept',work_permit.id))" class="bg-green-600">Aprobar</PrimaryButton>
-          <PrimaryButton @click="$inertia.put(route('work-permit.reject',work_permit.id))" class="!bg-red-600">Rechazar</PrimaryButton>
+          <PrimaryButton @click="$inertia.put(route('work-permit.accept',work_permit.id))" class="bg-green-400">Aprobar</PrimaryButton>
+          <PrimaryButton @click="$inertia.put(route('work-permit.reject',work_permit.id))" class="!bg-red-400">Rechazar</PrimaryButton>
         </div>
-        <div class="absolute bottom-0 left-2 text-xs text-gray-400">Solicitud creada el: {{ work_permit.created_at }}</div>
+        <div class="absolute bottom-1 right-2 text-xs text-gray-400">Solicitud creada el: {{ work_permit.created_at }}</div>
       </div>
     </div>
 
     <div v-else class="text-center">    
           <p>No hay información para mostrar.</p>
     </div>
+
+    <Pagination class="py-5" :pagination="work_permits" />
 
   </AppLayout>
 </template>
@@ -46,9 +44,9 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { Link } from "@inertiajs/inertia-vue3";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
-import Tabs from "@/Components/Tabs.vue";
+import Pagination from "@/Components/Pagination.vue";
+import { Link } from "@inertiajs/inertia-vue3";
 export default {
   data() {
     return {
@@ -58,25 +56,15 @@ export default {
         'Día de vacaciones',
         'Permiso sin goce',
       ],
-      tabs: [
-        {
-          label: "Permisos",
-          url: "admin-requests.permits",
-        },
-        {
-          label: "Préstamos",
-          url: "admin-requests.loans",
-        },
-      ],
     };
   },
   components: {
     AppLayout,
     SecondaryButton,
-    Link,
     ConfirmationModal,
-    Tabs,
     PrimaryButton,
+    Pagination,
+    Link
   },
   props: {
     work_permits: Object,

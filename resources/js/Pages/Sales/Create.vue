@@ -38,14 +38,14 @@
       <form @submit.prevent="store">
         <InputErrors v-if="form.hasErrors" :errors="form.errors" class="mb-3" />
         <div class="grid grid-cols-2 gap-2">
-          <div v-for="product in products" :key="product.id" class="relative z-0 mb-1 w-full group">
+          <div v-for="product in products" :key="product.id" class="mb-1 w-full">
             <InputLabel :value="product.name" class="ml-3 mb-1 text-sm" />
             <input v-model="form.product[product.id]" type="number" min="0"
               autocomplete="off" required class="input" placeholder="00" />
           </div>
         </div>
 
-        <div class="relative z-0 my-2 w-full group">
+        <div class="my-2 w-full">
           <InputLabel value="Comentarios u observaciones" class="ml-3 mb-1 text-sm" />
           <textarea
             v-model="form.notes"

@@ -1,27 +1,16 @@
 <template>
   <AppLayout title="Nuevo producto">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
-        Nuevo producto
-      </h2>
+      <div class="flex items-center mt-2">
+        <Back />
+        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+          Nuevo producto
+        </h2>
+      </div>
     </template>
 
-    <div class="flex justify-start">
-      <Link
-        :href="route('products.index')"
-        class="flex items-center mt-2 text-secondary"
-      >
-        <i
-          class="fa-solid fa-angle-left text-lg active:bg-gray-300 bg-opacity-100 rounded-full w-7 h-7 pl-1 m-2 md:ml-5"
-        ></i>
-        <span class="ml-1 cursor-default">Atrás</span>
-      </Link>
-    </div>
-
-    <!-- component -->
-    <!-- This is an example component -->
     <div
-      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 py-8 bg-white mx-4"
+      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 py-8 bg-transparent mx-4"
     >
       <form @submit.prevent="store">
         <div class="relative z-0 mb-6 w-full group">
@@ -104,8 +93,8 @@
           >
         </div>
         <select class="select mb-5" required v-model="form.unit_id">
-          <option disabled selected class="text-gray-500" value="">
-            -- Tipo de Permiso --
+          <option disabled selected class="text-gray-500">
+            -- Unidad de medida --
           </option>
           <option
             class="text-gray-500"
@@ -148,6 +137,7 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PayRollTable from "@/Components/PayRollTable.vue";
+import Back from "@/Components/Back.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputError from "@/Components/InputError.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
@@ -169,9 +159,10 @@ export default {
   components: {
     AppLayout,
     PayRollTable,
-    Link,
     PrimaryButton,
     InputError,
+    Back,
+    Link,
   },
   props: {
     units: Array,

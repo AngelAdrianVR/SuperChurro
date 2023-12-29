@@ -151,7 +151,7 @@ class UserController extends Controller
         $user->password = bcrypt('12345678');
         $user->save();
 
-        request()->session()->flash('flash.banner', '¡Se ha dado reseteado la contraseña correctamente!');
+        request()->session()->flash('flash.banner', '¡Se ha dado reseteado la contraseña a 12345678!');
         request()->session()->flash('flash.bannerStyle', 'success');
 
         return redirect()->route('users.index');

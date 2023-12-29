@@ -1,40 +1,25 @@
 <template>
   <AppLayout title="Remover productos">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
-        Remover producto(s)
-      </h2>
+      <div class="flex items-center mt-2">
+          <Back />
+          <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+            Remover producto(s)
+          </h2>
+        </div>
     </template>
-
-    <div class="flex justify-start">
-      <Link :href="route('carts.index')" class="flex items-center mt-2 text-secondary">
-      <i class="
-            fas
-            fa-solid fa-angle-left
-            text-lg
-            active:bg-gray-300
-            bg-opacity-100
-            rounded-full
-            w-7
-            h-7
-            pl-1
-            ml-2
-          "></i>
-      <span class="ml-1 cursor-default">Atrás</span>
-      </Link>
-    </div>
 
     <div class="
         max-w-2xl
         md:mx-auto
         mt-5
-        shadow-md shadow-gray-500/70
         rounded-lg
         px-5
         pt-4
         pb-5
-        bg-primary-gray
+        bg-transparent
         mx-4
+        border border-gray3
       ">
       <p v-if="validation_message" class="text-red-400 text-xs mb-2" v-html="validation_message"></p>
       <form @submit.prevent="store">
@@ -42,11 +27,8 @@
         <select class="
             mb-3
             mr-2
-            rounded-lg
-            border
-            text-gray-500
-            focus:border-stone-500 focus:text-stone-500
-          " v-model="form.concept">
+            select"
+            v-model="form.concept">
           <option disabled selected class="text-gray-500" value="">
             -- Selecciona concepto --
           </option>
@@ -56,13 +38,14 @@
         </select>
         <div>
           <ProductInput :products="products" v-for="(item, index) in form.items" :key="item.id" :id="item.id"
-            @deleteItem="deleteItem(index)" @syncItem="syncItems(index, $event)" class="mb-5" />
+            @deleteItem="deleteItem(index)" @syncItem="syncItems(index, $event)" class="mb-1" />
         </div>
         <p v-if="!form.items.length" class="text-sm text-gray-600"> Click al botón de "+" para empezar a agregar
           productos </p>
-        <div class="my-2 text-center">
-          <button type="button" @click="addNewItem">
-            <i class="fa-solid fa-circle-plus text-2xl text-[#ABD196]"></i>
+        <div class="mt-2 mb-6 text-left">
+          <button class="text-primary text-sm" type="button" @click="addNewItem">
+            <i class="fa-solid fa-plus"></i>
+            Agregar producto
           </button>
         </div>
         <PrimaryButton :disabled="form.processing">Remover de carrito</PrimaryButton>
@@ -79,6 +62,7 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import ProductInput from "@/Components/ProductInput.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
+import Back from "@/Components/Back.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 
 export default {
@@ -105,12 +89,13 @@ export default {
   },
   components: {
     AppLayout,
-    Link,
     PrimaryButton,
     InputError,
     SecondaryButton,
     ProductInput,
     InputLabel,
+    Back,
+    Link,
   },
   props: {
     products: Array,

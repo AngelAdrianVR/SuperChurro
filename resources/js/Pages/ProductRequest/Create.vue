@@ -1,22 +1,16 @@
 <template>
   <AppLayout title="Solicitar mercancía">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
-        Solicitud de mercancía
-      </h2>
+      <div class="flex items-center mt-2">
+        <Back />
+        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+          Solicitud de mercancía
+        </h2>
+      </div>
     </template>
 
-    <div class="flex justify-start">
-      <Link :href="route('carts.index')" class="flex items-center mt-2 text-secondary">
-        <i
-          class="fa-solid fa-angle-left text-lg hover:bg-gray-300 bg-opacity-100 rounded-full w-7 h-7 pl-1 ml-5"
-        ></i>
-        <span class="ml-1 cursor-default">Atrás</span>
-      </Link>
-    </div>
-
     <div
-      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 pt-4 pb-5 bg-primary-gray mx-4"
+      class="max-w-lg md:mx-auto mt-5 rounded-lg px-5 pt-4 pb-5 border border-gray3 bg-transparent mx-4"
     >
       <p
         v-if="validation_message"
@@ -32,15 +26,16 @@
             :id="item.id"
             @deleteItem="deleteItem(index)"
             @syncItem="syncItems(index, $event)"
-            class="mb-5"
+            class="mb-1"
           />
         </div>
         <p v-if="!form.items.length" class="text-sm text-gray-600">
           Click al botón de "+" para empezar a agregar productos
         </p>
-        <div class="my-2 text-center">
-          <button type="button" @click="addNewItem">
-            <i class="fa-solid fa-circle-plus text-2xl text-[#ABD196]"></i>
+        <div class="mt-2 mb-6 text-left">
+          <button class="text-primary text-sm" type="button" @click="addNewItem">
+            <i class="fa-solid fa-plus"></i>
+            Agregar producto
           </button>
         </div>
         <PrimaryButton :disabled="form.processing">Solicitar</PrimaryButton>
@@ -55,6 +50,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import ProductInput from "@/Components/ProductInput.vue";
 import InputError from "@/Components/InputError.vue";
+import Back from "@/Components/Back.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 export default {
   data() {
@@ -75,11 +71,12 @@ export default {
   },
   components: {
     AppLayout,
-    Link,
     PrimaryButton,
     InputError,
     SecondaryButton,
     ProductInput,
+    Back,
+    Link,
   },
   props: {
     products: Array,

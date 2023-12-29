@@ -18,7 +18,7 @@ class CartController extends Controller
     public function index()
     {
         $cart_products = Cart::get('products');
-        $products = Product::with('unit')->get();
+        $products = Product::with('unit', 'media')->get();
         $requests = ProductRequest::whereDate('created_at', now())->with('user')->latest()->get();
         $employees = User::all()->filter(
             fn ($user) => $user->hasCheckedInToday() && $user->shiftOn(today()->dayOfWeek) !== 'cocina'
@@ -40,6 +40,8 @@ class CartController extends Controller
         ->get();
 
         if ($shift_2_sales->count()) $sales[] = "Corte del segundo turno realizado";
+
+        // return $products;
 
         return inertia('Cart/Index', compact('cart_products', 'products', 'requests', 'employees', 'sales'));
     }

@@ -1,25 +1,16 @@
 <template>
   <AppLayout title="Movimientos de mercancia">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
-        Movimientos de mercancía
-      </h2>
+      <div class="flex items-center mt-2">
+        <Back />
+        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+          Movimientos de mercancía
+        </h2>
+      </div>
     </template>
 
-    <div class="flex justify-start">
-      <Link
-        :href="route('warehouses.index')"
-        class="flex items-center mt-2 text-secondary"
-      >
-        <i
-          class="fa-solid fa-angle-left text-lg hover:bg-gray-300 bg-opacity-100 rounded-full w-7 h-7 pl-1 ml-5"
-        ></i>
-        <span class="ml-1 cursor-default">Atrás</span>
-      </Link>
-    </div>
-
     <div
-      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 py-8 bg-white mx-4"
+      class="max-w-lg md:mx-auto mt-5 border border-gray3 rounded-lg px-5 py-8 bg-transparent mx-4"
     >
       <form @submit.prevent="submit">
         <div>
@@ -32,7 +23,7 @@
                 type="radio"
                 name="countries"
                 value="1"
-                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-[#ABD196] text-[#ABD196]"
+                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-primary text-primary"
                 aria-labelledby="country-option-1"
                 aria-describedby="country-option-1"
                 checked=""
@@ -66,9 +57,9 @@
         </div>
 
         <div class="mb-4">
-          <InputLabel value="Concepto" class="mb-1 text-xs" />
+          <InputLabel value="Tipo" class="mb-1 text-xs" />
           <select v-model="form.movement_concept_id" class="select w-full">
-            <option value="" selected>-- Seleccionar --</option>
+            <option selected>-- Seleccionar --</option>
             <option v-for="(concept) in concepts" :key="concept.id" :value="concept.id">
               {{ concept.name }}
             </option>
@@ -84,36 +75,33 @@
             :id="item.id"
             @deleteItem="deleteItem(index)"
             @syncItem="syncItems(index, $event)"
-            class="mb-5"
+            class="mb-1"
           />
         </div>
         <p v-if="!form.items.length" class="text-sm text-gray-600">
           Click al botón de "+" para empezar a agregar productos
         </p>
-        <div class="mt-2 mb-6 text-center">
-          <button type="button" @click="addNewItem">
-            <i class="fa-solid fa-circle-plus text-2xl text-[#ABD196]"></i>
+        <div class="mt-2 mb-6 text-left">
+          <button class="text-primary text-sm" type="button" @click="addNewItem">
+            <i class="fa-solid fa-plus"></i>
+            Agregar producto
           </button>
         </div>
 
         <div class="relative z-0 mb-6 w-full group">
+          <InputLabel value="Observaciones o comentarios" class="mb-1 text-xs" />
           <textarea
             v-model="form.notes"
-            rows="1"
+            rows="2"
             type="text"
             name="floating_description"
             autocomplete="off"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
+            class="textarea"
             placeholder=" "
           />
-          <label
-            for="floating_description"
-            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Notas o comentarios</label
-          >
         </div>
 
-        <div class="flex justify-center lg:justify-end">
+        <div class="flex justify-start">
           <PrimaryButton :disabled="form.processing">Registrar</PrimaryButton>
         </div>
       </form>
@@ -127,6 +115,7 @@ import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ProductInput from "@/Components/ProductInput.vue";
+import Back from "@/Components/Back.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 
 
@@ -151,11 +140,12 @@ export default {
   },
   components: {
     AppLayout,
-    Link,
     InputError,
     InputLabel,
     ProductInput,
     PrimaryButton,
+    Back,
+    Link,
     },
   props: {
     products: Array,

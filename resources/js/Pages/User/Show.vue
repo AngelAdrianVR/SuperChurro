@@ -4,148 +4,82 @@
       <div @click="showUserOptions = false" class="flex items-center justify-between mt-2">
         <Back />
         <div class="flex items-center space-x-2 relative">
-          <PrimaryButton class="!rounded-md">Editar</PrimaryButton>
+          <PrimaryButton v-if="!canEdit" @click="canEdit = true" class="!rounded-md">Editar</PrimaryButton>
+          <CancelButton v-if="canEdit" @click="canEdit = false" class="!rounded-md">Cancelar</CancelButton>
+          <PrimaryButton v-if="canEdit" :disabled="canEdit" @click="canEdit = true" class="!rounded-md">En edición</PrimaryButton>
           <button @click.stop="showUserOptions = !showUserOptions" class="border border-gray3 rounded-md text-sm py-1 px-2">Más <i class="fa-solid fa-angle-down ml-1"></i></button>
         </div>
         <div v-if="showUserOptions" class="z-10 text-sm border border-gray3 bg-gray-100 rounded-lg py-3 absolute top-[138px] right-[16px] lg:right-[225px]">
-          <p @click="$inertia.put(route('user.reset-pass', $page.props.user.id))" class="px-3 py-1 cursor-pointer hover:bg-gray4">Resetear contraseña</p>
-          <p class="px-3 py-1 cursor-pointer hover:bg-gray4">Cálculos</p>
-          <p v-if="$page.props.user.is_active" @click.stop="$inertia.put(route('user.disable', $page.props.user.id))" class="px-3 py-1 cursor-pointer hover:bg-gray4">Dar de baja</p>
-          <p v-else @click="$inertia.put(route('user.enable', $page.props.user.id))" class="px-3 py-1 cursor-pointer hover:bg-gray4">Dar de alta</p>
+          <p @click="$inertia.put(route('user.reset-pass', user.id))" class="px-3 py-1 cursor-pointer hover:bg-gray4">Resetear contraseña</p>
+          <p @click.stop="showCalcsOptions = !showCalcsOptions" class="px-3 py-1 cursor-pointer hover:bg-gray4">Cálculos</p>
+          <p v-if="showCalcsOptions" @click="$inertia.put(route('chrismas-bonus.show', user.id))" class="pr-3 pl-5 py-1 cursor-pointer hover:bg-gray4 text-xs">Aguinaldo</p>
+          <p v-if="showCalcsOptions" @click="$inertia.put(route('settlement.show', user.id))" class="pr-3 pl-5 py-1 cursor-pointer hover:bg-gray4 text-xs">Finiquito</p>
+          <p v-if="showCalcsOptions" @click="$inertia.put(route('vacation-bonus.show', user.id))" class="pr-3 pl-5 py-1 cursor-pointer hover:bg-gray4 text-xs">Prima vacacional</p>
+          <p v-if="user.is_active" @click.stop="$inertia.put(route('user.disable', user.id))" class="px-3 py-1 cursor-pointer hover:bg-gray4">Dar de baja</p>
+          <p v-else @click="$inertia.put(route('user.enable', user.id))" class="px-3 py-1 cursor-pointer hover:bg-gray4">Dar de alta</p>
         </div>
       </div>
     </template> 
 
-    <div  class="flex justify-center items-center">
-      <PrimaryButton
-        v-if="$page.props.user.is_active"
-        @click="$inertia.put(route('user.disable', $page.props.user.id))"
-        class="!bg-red-600 m-2 shadow-md shadow-red-900/100"
-        >Dar de baja</PrimaryButton
-      >
-      <PrimaryButton
-        v-else
-        @click="$inertia.put(route('user.enable', $page.props.user.id))"
-        class="!bg-green-600 m-2 shadow-md shadow-green-900/100"
-        >Dar de alta</PrimaryButton
-      >
-
-      <PrimaryButton
-        @click="$inertia.put(route('user.reset-pass', $page.props.user.id))"
-        class="m-2"
-        >Resetear contraseña</PrimaryButton
-      >
-      <Dropdown align="right" width="48">
-        <template #trigger>
-          <PrimaryButton class="m-2 shadow-md">Cálculos</PrimaryButton>
-        </template>
-        <template #content>
-          <DropdownLink :href="route('chrismas-bonus.show', user.id)">
-            Aguinaldo
-          </DropdownLink>
-          <DropdownLink :href="route('settlement.show', user.id)"> Finiquito </DropdownLink>
-          <DropdownLink :href="route('vacation-bonus.show', user.id)"> Prima vacacional </DropdownLink>
-        </template>
-      </Dropdown>
-    </div>
-
-    <!-- component -->
-    <!-- This is an example component -->
     <div
       @click="showUserOptions = false"
-      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 py-8 bg-primary-gray mx-4 my-2"
+      class="max-w-4xl md:mx-auto mt-5 rounded-lg px-5 py-8 bg-transparent mx-4 my-2"
     >
       <form @submit.prevent="update">
         <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.name"
-            type="text"
-            name="floating_time_requested"
-            autocomplete="off"
-            required
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
-            placeholder=" "
-          />
-          <label
-            for="floating_name"
-            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Nombre*</label
-          >
-          <InputError :message="$page.props?.errors.name" />
-        </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.email"
-            type="email"
-            name="floating_email"
-            autocomplete="off"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
-            placeholder=" "
-          />
-          <label
-            for="floating_email"
-            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Email</label
-          >
-        </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.phone_number"
-            type="phone_number"
-            name="floating_phone_number"
-            required
-            autocomplete="off"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
-            placeholder=" "
-          />
-          <label
-            for="floating_phone_number"
-            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Número de contacto*</label
-          >
-          <InputError :message="$page.props?.errors.phone_number" />
-        </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.employee_properties.birthdate"
-            type="date"
-            name="floating_birthdate"
-            autocomplete="off"
-            required
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
-            placeholder=" "
-          />
-          <label
-            for="floating_birthdate"
-            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Fecha de nacimiento*</label
-          >
-          <InputError :message="$page.props?.errors.employee_properties?.birthdate" />
-        </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.employee_properties.base_salary"
-            type="number"
-            name="floating_base_salary"
-            autocomplete="off"
-            required
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
-            placeholder=" "
-          />
-          <label
-            for="floating_base_salary"
-            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Salario base*</label
-          >
-          <InputError :message="$page.props?.errors.employee_properties?.base_salary" />
+          <h1 class="font-bold mb-9 ml-3 col-span-full">Datos personales</h1>
+          <div class="mb-3 w-full group">
+            <InputLabel value="Nombre *" class="ml-3 mb-1 text-sm" />
+            <input :disabled="!canEdit" v-model="form.name" type="text" autocomplete="off" class="input"
+            placeholder="Escribe el nombre del colaborador" />
+            <InputError :message="$page.props?.errors.name" />
+          </div>
+
+          <div class="mb-3 w-full group">
+            <InputLabel value="Correo electrónico *" class="ml-3 mb-1 text-sm" />
+            <input :disabled="!canEdit" v-model="form.email" type="text" autocomplete="off" class="input"
+            placeholder="Escribe el correo del colaborador" />
+            <InputError :message="$page.props?.errors.email" />
+          </div>
+
+          <div class="mb-3 w-full group">
+            <InputLabel value="Número de teléfono *" class="ml-3 mb-1 text-sm" />
+            <input :disabled="!canEdit" v-model="form.phone_number" type="text" autocomplete="off" class="input"
+            placeholder="Escribe el correo del colaborador" />
+            <InputError :message="$page.props?.errors.phone_number" />
+          </div>
+
+          <div class="mb-3 w-full group">
+            <InputLabel value="Fecha de nacimieno *" class="ml-3 mb-1 text-sm" />
+            <input :disabled="!canEdit" v-model="form.employee_properties.birthdate" type="date" autocomplete="off" class="input"
+            placeholder="Seleccione la fecha" />
+            <InputError :message="$page.props?.errors['employee_properties.birthdate']" />
+          </div>
+
+          <h1 class="font-bold my-9 ml-3 col-span-full">Datos laborales</h1>
+
+          <div class="mb-3 w-full group">
+            <InputLabel value="Fecha de Ingreso *" class="ml-3 mb-1 text-sm" />
+            <input :disabled="!canEdit" v-model="form.created_at" type="date" autocomplete="off" class="input"
+            placeholder="Seleccione la fecha" />
+          </div>
+
+          <div class="mb-3 w-full group">
+            <InputLabel value="Salario base *" class="ml-3 mb-1 text-sm" />
+            <input :disabled="!canEdit" v-model="form.employee_properties.base_salary" type="number" min="0" autocomplete="off" class="input"
+            placeholder="Escriba el salario" />
+            <InputError :message="$page.props?.errors['employee_properties.base_salary']" />
+          </div>
+
         </div>
 
         <div class="mb-3">
           <label class="w-full text-sm text-gray-500 block">Bonos</label>
           <div class="grid grid-cols-2 lg:grid-cols-3 gap-1">
             <label v-for="bonus in bonuses" :key="bonus.id">
-              <input v-model="form.employee_properties.bonuses" type="checkbox" :value="bonus.id" class="rounded border-gray-300 text-primary shadow-sm focus:border-[#883339] focus:ring focus:ring-[#883339] focus:ring-opacity-50" />
-              <span class="ml-1 text-xs text-gray-600">{{ bonus.name }}</span>
+              <input :disabled="!canEdit" v-model="form.employee_properties.bonuses" type="checkbox" :value="bonus.id"
+               class="rounded border-gray-300 text-primary shadow-sm focus:border-[#883339] focus:ring focus:ring-[#883339] focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray4" />
+              <span :class="!canEdit ? 'text-gray-400' : 'text-gray-600'" class="ml-1 text-xs">{{ bonus.name }}</span>
             </label>
           </div>
         </div>
@@ -153,6 +87,7 @@
         <label class="mb-3 w-full text-sm text-gray-500">Días de trabajo</label>
         <div class="">
           <select
+            :disabled="!canEdit"
             class="bg-gray-200 mb-3 mr-2 rounded-lg border border-gray-300 text-gray-500 focus:border-stone-500 focus:text-stone-500"
             v-model="selected_day"
           >
@@ -175,37 +110,39 @@
               class="flex items-center mr-3"
             >
               <input
+                :disabled="!canEdit"
                 v-model="selected_shift"
                 :id="'shift-option-' + index"
                 type="radio"
                 name="shift"
                 :value="shift"
-                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-[#ABD196] text-[#8cbe71]"
+                class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-[#ABD196] text-[#8cbe71] disabled:bg-gray4 disabled:text-gray-400 disabled:cursor-not-allowed"
                 :aria-labelledby="'shift-option-' + index"
                 :aria-describedby="'shift-option-' + index"
                 checked=""
               />
               <label
                 :for="'shift-option-' + index"
-                class="text-sm font-medium text-gray-900 ml-2 block"
+                class="text-sm font-medium ml-2 block"
+                :class="!canEdit ? 'text-gray-400' : 'text-gray-700'"
               >
                 {{ shift }}
               </label>
             </div>
           </div>
           <div class="mb-4">
-            <SecondaryButton @click="addWorkDay" class="mr-2"
-              >Agregar día</SecondaryButton
+            <ThirthButton :disabled="!canEdit" @click="addWorkDay" class="mr-2"
+              >Agregar día</ThirthButton
             >
-            <SecondaryButton @click="cleanWorkDays">Borrar días</SecondaryButton>
+            <ThirthButton :disabled="!canEdit" @click="cleanWorkDays">Borrar días</ThirthButton>
           </div>
           <div>
             <span
               v-for="(item, index) in form.employee_properties.work_days"
               :key="item.day"
-              class="bg-sky-100 px-1 py-px rounded-md mr-3 text-xs"
+              class="bg-sky-100 px-2 py-1 rounded-full mr-3 text-xs"
             >
-              {{ week_days[item.day] }} - {{ item.shift }} <button type="button" @click="deleteWorkDay(index)">x</button>
+              {{ week_days[item.day] }} - {{ item.shift }} <button v-if="canEdit" type="button" @click="deleteWorkDay(index)">x</button>
             </span>
           </div>
         </div>
@@ -250,6 +187,7 @@
               </el-tooltip>
             </span>
             <input
+              :disabled="!canEdit"
               @input="form.media = $event.target.files[0]"
               class="input h-12 rounded-lg file:mr-4 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white file:cursor-pointer hover:file:bg-red-600"
               aria-describedby="file_input_help"
@@ -261,16 +199,18 @@
             SVG, PNG, JPG o GIF (MAX. 4 MB).
           </p>
         </div>
-        <p class="mb-3 text-gray-600 underline underline-offset-4 font-bold">
-          Vacaciones disponibles:
-          {{ $page.props.user.employee_properties.vacations }}
-        </p>
-        <div class="flex justify-center lg:justify-end">
-          <PrimaryButton :disabled="form.processing">Actualizar</PrimaryButton>
+        <div class="flex justify-center lg:justify-end mt-4">
+          <CancelButton v-if="canEdit" @click="canEdit = false" class="!rounded-md mr-3">Cancelar</CancelButton>
+          <PrimaryButton v-if="canEdit" :disabled="form.processing">Actualizar</PrimaryButton>
         </div>
-      </form>
-        <PrimaryButton @click.stop="show_confirmation = true; confirmation_for_pay_vacations = true;" class="ml-4" :disabled="form.processing">Pagar Vacaciones</PrimaryButton>
+        <div class="border-b border-gray3 my-8"></div>
+        <p class="mb-3 text-gray-600 flex">
+          Vacaciones disponibles:
+          {{ $page.props.user.employee_properties.vacations?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+        <ThirthButton type="button" @click.stop="show_confirmation = true; confirmation_for_pay_vacations = true;" class="ml-10" :disabled="form.processing">Pagar Vacaciones</ThirthButton>
         <p v-if="vacations_error_message" class="text-red-500 text-sm my-2 "> {{ vacations_error_message }} </p>
+        </p>
+      </form>
     </div>
 
     <ConfirmationModal :show="show_confirmation" @close="show_confirmation = false">
@@ -320,8 +260,10 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PayRollTable from "@/Components/PayRollTable.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
+import CancelButton from "@/Components/CancelButton.vue";
+import ThirthButton from "@/Components/ThirthButton.vue";
 import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
 import FileUploader from "@/Components/FileUploader.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import Dropdown from "@/Components/Dropdown.vue";
@@ -345,10 +287,13 @@ export default {
         vacations_updated_date: this.user.employee_properties.vacations_updated_date,
         bonuses: this.user.employee_properties.bonuses ?? [],
       },
+      created_at: this.user.created_at,
       resources: [],
     });
     return {
       form,
+      showCalcsOptions: false,
+      canEdit: false,
       show_confirmation: false,
       showUserOptions: false,
       file_to_delete: null,
@@ -372,13 +317,15 @@ export default {
     AppLayout,
     PayRollTable,
     PrimaryButton,
-    SecondaryButton,
+    ThirthButton,
+    CancelButton,
     InputError,
     Checkbox,
     FileUploader,
     Dropdown,
     DropdownLink,
     ConfirmationModal,
+    InputLabel,
     Back,
     Link,
   },

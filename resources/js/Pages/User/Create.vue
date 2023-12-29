@@ -56,7 +56,7 @@
 
         <div class="mb-3 w-full group">
           <InputLabel value="Fecha de Ingreso *" class="ml-3 mb-1 text-sm" />
-          <input v-model="form.employee_properties.birthdate" type="date" autocomplete="off" class="input"
+          <input v-model="form.created_at" type="date" autocomplete="off" class="input"
            placeholder="Seleccione la fecha" />
           <!-- <InputError :message="$page.props?.errors['employee_properties.birthdate']" />  -->
         </div>
@@ -170,6 +170,7 @@ export default {
         vacations_updated_date: new Date().toISOString().split('T')[0],
         bonuses: []
       },
+      created_at: null,
       resources: null,
     });
     return {

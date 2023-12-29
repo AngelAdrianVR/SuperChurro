@@ -36,31 +36,24 @@
         border border-gray3
       ">
       <form @submit.prevent="store">
-        <InputErrors v-if="form.hasErrors" :errors="form.errors" class="mb-4" />
-        <div class="grid grid-cols-2 gap-3">
-          <div v-for="product in products" :key="product.id" class="relative z-0 mb-2 w-full group">
-            <input v-model="form.product[product.id]" type="number" min="0" name="floating_churro_relleno"
-              autocomplete="off" required class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-            " placeholder="" />
-            <label for="floating_churro_relleno" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">{{ product.name }}</label>
+        <InputErrors v-if="form.hasErrors" :errors="form.errors" class="mb-3" />
+        <div class="grid grid-cols-2 gap-2">
+          <div v-for="product in products" :key="product.id" class="relative z-0 mb-1 w-full group">
+            <InputLabel :value="product.name" class="ml-3 mb-1 text-sm" />
+            <input v-model="form.product[product.id]" type="number" min="0"
+              autocomplete="off" required class="input" placeholder="00" />
           </div>
+        </div>
+
+        <div class="relative z-0 my-2 w-full group">
+          <InputLabel value="Comentarios u observaciones" class="ml-3 mb-1 text-sm" />
+          <textarea
+            v-model="form.notes"
+            rows="2"
+            type="text"
+            autocomplete="off"
+            class="textarea"
+          />
         </div>
 
         <div class="flex justify-center lg:justify-end mt-5">
@@ -76,6 +69,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import InputErrors from "@/Components/InputErrors.vue";
+import InputLabel from "@/Components/InputLabel.vue";
 import Back from "@/Components/Back.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 export default {
@@ -92,6 +86,7 @@ export default {
     PrimaryButton,
     InputErrors,
     SecondaryButton,
+    InputLabel,
     Back,
     Link,
   },

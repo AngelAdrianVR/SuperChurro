@@ -24,29 +24,29 @@
       </div>
       <form class="" @submit.prevent="store">
         <h1 class="font-bold mb-9 ml-3 col-span-full">Datos personales</h1>
-        <div class="mb-3 w-full group">
+        <div class="mb-3 w-full">
           <InputLabel value="Nombre *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.name" type="text" autocomplete="off" class="input"
            placeholder="Escribe el nombre del colaborador" />
           <InputError :message="$page.props?.errors.name" />
         </div>
 
-        <div class="mb-3 w-full group">
+        <div class="mb-3 w-full">
           <InputLabel value="Correo electrónico *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.email" type="text" autocomplete="off" class="input"
            placeholder="Escribe el correo del colaborador" />
           <InputError :message="$page.props?.errors.email" />
         </div>
 
-        <div class="mb-3 w-full group">
+        <div class="mb-3 w-full">
           <InputLabel value="Número de teléfono *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.phone_number" type="text" autocomplete="off" class="input"
            placeholder="Escribe el correo del colaborador" />
           <InputError :message="$page.props?.errors.phone_number" />
         </div>
 
-        <div class="mb-3 w-full group">
-          <InputLabel value="Fecha de nacimieno *" class="ml-3 mb-1 text-sm" />
+        <div class="mb-3 w-full">
+          <InputLabel value="Fecha de nacimiento *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.employee_properties.birthdate" type="date" autocomplete="off" class="input"
            placeholder="Seleccione la fecha" />
           <InputError :message="$page.props?.errors['employee_properties.birthdate']" />
@@ -54,14 +54,14 @@
 
         <h1 class="font-bold my-9 ml-3 col-span-full">Datos laborales</h1>
 
-        <div class="mb-3 w-full group">
+        <div class="mb-3 w-full">
           <InputLabel value="Fecha de Ingreso *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.created_at" type="date" autocomplete="off" class="input"
            placeholder="Seleccione la fecha" />
           <!-- <InputError :message="$page.props?.errors['employee_properties.birthdate']" />  -->
         </div>
 
-        <div class="mb-3 w-full group">
+        <div class="mb-3 w-full">
           <InputLabel value="Salario base *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.employee_properties.base_salary" type="number" min="0" autocomplete="off" class="input"
            placeholder="Escriba el salario" />

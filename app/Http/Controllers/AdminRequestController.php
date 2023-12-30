@@ -13,14 +13,14 @@ class AdminRequestController extends Controller
 {
     public function permits()
     {
-        $work_permits = WorkPermitResource::collection(WorkPermit::with('user')->latest()->get());
+        $work_permits = WorkPermitResource::collection(WorkPermit::with('user')->latest()->paginate(15));
         // return $work_permits;
         return inertia('AdminRequest/Permits', compact('work_permits')); 
     }
 
     public function loans()
     {
-        $loans = LoanResource::collection(Loan::with('user')->latest()->get());
+        $loans = LoanResource::collection(Loan::with('user')->latest()->paginate(15));
         return inertia('AdminRequest/Loans',compact('loans')); 
     }
 

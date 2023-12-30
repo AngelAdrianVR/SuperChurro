@@ -35,9 +35,14 @@ const admin_menues = [
     is_active: route().current("products.*"),
   },
   {
-    label: "Solicitudes",
+    label: "Permisos",
     route_name: "admin-requests.permits",
-    is_active: route().current("admin-requests.*"),
+    is_active: route().current("admin-permits.*"),
+  },
+  {
+    label: "Préstamos",
+    route_name: "admin-requests.loans",
+    is_active: route().current("admin-loans.*"),
   },
   {
     label: "Nóminas",
@@ -345,7 +350,7 @@ const logout = () => {
                   p-2
                   rounded-md
                   text-gray-500
-                  focus:outline-none focus:ring focus:ring-[#883339] focus:text-gray-500
+                  focus:outline-none focus:bg-gray4 focus:text-gray-500
                   transition ease-in-out delay-150
                 " @click="showingNavigationDropdown = !showingNavigationDropdown">
                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">

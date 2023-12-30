@@ -1,50 +1,33 @@
 <template>
   <AppLayout title="Administración de Nóminas">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
+      <h2 class="font-semibold text-lg text-gray-800 leading-tight text-center">
         Administración de Nóminas
       </h2>
     </template>
-    <div class="globe-container">
-      <div v-for="payroll in payrolls.data" :key="payroll.id" @click="payroll_selected = payroll"
-        class="globe hover:bg-gray-100 cursor-pointer"
-        :class="{ 'border-4 border-[#883339] !bg-amber-700/10': payroll_selected.id === payroll.id }">
-        <div class="globe-title pb-2">
-          Semana {{ payroll.week }}: {{ payroll.start_date }} al {{ payroll.end_date }}
+    <div class="contenedor">
+      <div class="flex justify-center">
+        <div v-for="payroll in payrolls.data" :key="payroll.id" @click="payroll_selected = payroll"
+          class="globe w-80 border border-gray3 hover:bg-gray-100 cursor-pointer mx-2"
+          :class="{ 'border-2 border-primary': payroll_selected.id === payroll.id }">
+          <div class="globe-title pb-2">
+            Semana {{ payroll.week }}: {{ payroll.start_date }} al {{ payroll.end_date }}
+          </div>
+          <div v-if="!payroll.is_active" class="text-sm">
+            {{ payroll.users.length }} empleado(s) en nómina
+          </div>
+          <p v-else class="text-gray-500 text-sm text-center">Nómina en curso</p>
         </div>
-        <div v-if="!payroll.is_active" class="text-sm">
-          {{ payroll.users.length }} empleado(s) en nómina
-        </div>
-        <p v-else class="text-gray-500 text-sm text-center">Nómina en curso</p>
       </div>
     </div>
 
     <div class="mt-5 text-bold text-lg text-gray-700">
-      <div class="flex justify-between items-center">
-        <p class="my-2 ml-5">Asistencias de empleados</p>
+      <div class="flex justify-between items-center my-4">
+        <p class="ml-5 text-sm font-bold">Asistencias de empleados</p>
         <Link v-if="!payroll_selected.is_active" :href="route('payroll-admin.show-all', payroll_selected.id)">
-        <ThirthButton class="mr-7 mt-4"><i class="fa-solid fa-print mr-1"></i> Imprimir nóminas</ThirthButton>
+        <PrimaryButton class="mr-7"><i class="fa-solid fa-print mr-1"></i> Imprimir nóminas</PrimaryButton>
         </Link>
-        <ThirthButton @click="show_confirmation = true" v-else class="mr-7 mt-4">Cerrar nómina</ThirthButton>
-      </div>
-      <div class="ml-6">
-        <label>Empleados sin asistencia esta semana:</label>
-        <select class="
-            mt-3
-            ml-5
-            rounded-lg
-            border
-            text-gray-500
-            focus:border-stone-500 focus:text-stone-500
-          "  v-model="userWithNoAttendance">
-          <option class="text-gray-500" value="">
-            -- Selecciona empleado --
-          </option>
-          <option v-for="user in usersWithNoAttendance" :key="user.id" class="text-gray-500" :value="user.id">
-            {{ user.name }}
-          </option>
-        </select>
-        <ThirthButton @click="generatePayrollUser()" :disabled="!userWithNoAttendance || loading" class="mr-7 ml-4 disabled:cursor-not-allowed disabled:text-gray-600 disabled:border-gray-600">Generar asistencia</ThirthButton>
+        <PrimaryButton @click="show_confirmation = true" v-else class="mr-7">Cerrar nómina</PrimaryButton>
       </div>
       <PayRollTable v-for="(payroll, index) in payroll_selected.users" :key="index" :payroll="payroll"
         @extraTime="createExtraTime($event)" />
@@ -75,114 +58,34 @@
     </ConfirmationModal>
     <DialogModal :show="show_dialog" @close="show_dialog = false">
       <template #title>
-        Tiempo extra para <span class="text-sky-600 font-bold">{{ add_extra_time_info.payroll_user.user.name }}</span> |
-        dia: {{ week_days[add_extra_time_info.day] }}
+          <h1 class="font-bold text-center"> Agregar tiempo extra </h1>
+          <i @click="show_dialog = false" class="absolute right-3 top-2 fa-regular fa-circle-xmark text-xl cursor-pointer"></i>
+        <p class="text-gray-600 font-bold text-sm mt-3"><i class="fa-regular fa-circle-user mr-3"></i>{{ add_extra_time_info.payroll_user.user.name }}</p>
+        <p class="text-gray-600 font-bold text-sm mt-2"><i class="fa-solid fa-calendar-days mr-3"></i>{{ week_days[add_extra_time_info.day] }}</p>
+        
       </template>
       <template #content>
         <div class="relative z-0 mb-6 w-full group">
-          <div class="grid grid-cols-2 gap-2">
-            <input v-model="form.hours" type="number" name="floating_hour" autocomplete="off" required class="
-                  block
-                  py-2.5
-                  px-0
-                  w-full
-                  text-sm text-gray-900
-                  bg-transparent
-                  border-0 border-b-2 border-gray-300
-                  appearance-none
-                  dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                  block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
-                  peer
-                " placeholder=" " />
-            <label for="floating_hour" class="
-                  absolute
-                  text-sm text-gray-500
-                  dark:text-gray-700
-                  duration-300
-                  transform
-                  -translate-y-6
-                  scale-75
-                  top-3
-                  -z-10
-                  origin-[0]
-                  peer-focus:left-0
-                  peer-focus:text-stone-600
-                  peer-focus:dark:text-stone-500
-                  peer-placeholder-shown:scale-100
-                  peer-placeholder-shown:translate-y-0
-                  peer-focus:scale-75 peer-focus:-translate-y-6
-                ">Horas *</label>
-            <input v-model="form.minutes" type="number" name="floating_minutes" autocomplete="off" required class="
-                block
-                py-2.5
-                px-0
-                w-full
-                text-sm text-gray-900
-                bg-transparent
-                border-0 border-b-2 border-gray-300
-                appearance-none
-                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
-                peer
-              " placeholder=" " />
-            <label for="floating_minutes" class="
-                absolute
-                right-0
-                text-sm text-gray-500
-                dark:text-gray-700
-                duration-300
-                transform
-                -translate-y-6
-                scale-75
-                top-3
-                -z-10
-                origin-[0]
-                peer-focus:right-0
-                peer-focus:text-stone-600
-                peer-focus:dark:text-stone-500
-                peer-placeholder-shown:scale-100
-                peer-placeholder-shown:translate-y-0
-                peer-focus:scale-75 peer-focus:-translate-y-6
-              ">Minutos *</label>
+          <div class="flex items-center space-x-1">
+            <div>
+              <InputLabel value="Horas *" class="ml-3 mb-1 text-sm" />
+              <input v-model="form.hours" type="number" autocomplete="off" class="input" placeholder="0" required />
+            </div>
+
+            <div>
+              <InputLabel value="Minutos *" class="ml-3 mb-1 text-sm" />
+              <input v-model="form.minutes" type="number" autocomplete="off" class="input" placeholder="0" required />
+            </div>
+
+            <div>
+              <InputLabel value="Remuneración *" class="ml-3 mb-1 text-sm" />
+              <input v-model="form.pay" type="number" autocomplete="off" class="input" placeholder="$00.0" required />
+            </div>
           </div>
-        </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input v-model="form.pay" type="number" name="floating_description" autocomplete="off" class="
-                block
-                py-2.5
-                px-0
-                w-full
-                text-sm text-gray-900
-                bg-transparent
-                border-0 border-b-2 border-gray-300
-                appearance-none
-                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
-                peer
-              " placeholder=" " />
-          <label for="floating_description" class="
-                absolute
-                text-sm text-gray-500
-                dark:text-gray-700
-                duration-300
-                transform
-                -translate-y-6
-                scale-75
-                top-3
-                -z-10
-                origin-[0]
-                peer-focus:left-0
-                peer-focus:text-stone-600
-                peer-focus:dark:text-stone-500
-                peer-placeholder-shown:scale-100
-                peer-placeholder-shown:translate-y-0
-                peer-focus:scale-75 peer-focus:-translate-y-6
-              ">Pago ($)*</label>
-          <!-- <InputError :message="$page.props?.errors.desciption" /> -->
         </div>
       </template>
       <template #footer>
-        <SecondaryButton @click="show_dialog = false">Cancelar</SecondaryButton>
+        <CancelButton class="!rounded-full" @click="show_dialog = false">Cancelar</CancelButton>
         <PrimaryButton @click="storeExtraTime" class="ml-2" :disabled="form.processing">Guardar</PrimaryButton>
       </template>
     </DialogModal>
@@ -193,13 +96,14 @@
 <script>
 
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link, useForm } from "@inertiajs/inertia-vue3";
 import PayRollTable from "@/Components/PayRollTable.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
+import CancelButton from "@/Components/CancelButton.vue";
 import ThirthButton from "@/Components/ThirthButton.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import DialogModal from "@/Components/DialogModal.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
 import axios from "axios";
 
 export default {
@@ -223,12 +127,13 @@ export default {
   components: {
     AppLayout,
     PayRollTable,
-    Link,
-    SecondaryButton,
+    CancelButton,
     ConfirmationModal,
     DialogModal,
     PrimaryButton,
-    ThirthButton
+    ThirthButton,
+    InputLabel,
+    Link,
   },
   props: {
     payrolls: Object,
@@ -281,3 +186,13 @@ export default {
   },
 };
 </script>
+
+<style>
+.contenedor {
+  display: flex;
+  overflow-x: scroll;
+  /* Permite el desplazamiento horizontal */
+  white-space: nowrap;
+  /* Evita el salto de línea de las secciones */
+}
+</style>

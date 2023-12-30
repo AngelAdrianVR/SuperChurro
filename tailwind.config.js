@@ -29,6 +29,7 @@ module.exports = {
                 gray3: '#BEBFC1',
                 gray4: '#D9D9D9',
                 gray5: '#F2F2F2',
+                gray6: '#CCCCCC',
             }
         },
     },

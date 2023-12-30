@@ -8,7 +8,7 @@
 
     <div class="flex justify-end">
       <Link :href="route('work-permits.create')">
-      <SecondaryButton class="mr-7 my-5">Solicitar Permiso</SecondaryButton>
+      <PrimaryButton class="mr-7 my-5">Solicitar Permiso</PrimaryButton>
       </Link>
     </div>
 
@@ -16,8 +16,8 @@
       <div v-for="work_permit in work_permits.data" :key="work_permit.id" class="globe relative">
         <div class="globe-title !justify-between">
           <p>Fecha requerida: {{work_permit.date}}</p>
-          <button class="absolute bottom-1 right-2" @click="delete_confirm = true; item_to_delete = work_permit;">
-          <i v-if="work_permit.status == 1" class="fa-solid fa-trash text-red-600"></i>
+          <button class="absolute bottom-1 right-2 p-1" @click="delete_confirm = true; item_to_delete = work_permit;">
+          <i v-if="work_permit.status == 1" class="fa-regular fa-trash-can text-red-500"></i>
           </button>
         </div>
         <div class="flex flex-col mb-2">
@@ -28,13 +28,11 @@
             <span v-if="work_permit.status == 2" class="text-green-600 font-bold mt-2"><i class="fa-solid fa-check mr-2"></i>Aprobado</span>  
             <span v-if="work_permit.status == 3" class="text-red-600 font-bold mt-2"><i class="fa-solid fa-xmark mr-2"></i>Rechazado</span>  
         </div>
-        <div class="absolute bottom-0 left-2 text-xs text-gray-400">Solicitado el: {{ work_permit.created_at }}</div>
+        <div class="absolute bottom-1 left-2 text-xs text-gray-400">Solicitado el: {{ work_permit.created_at }}</div>
       </div>
     </div>
 
-    <div v-else class="text-center">    
-          <p>No hay información para mostrar.</p>
-    </div>
+       <p v-else class="text-center text-sm text-gray-500">No hay información para mostrar.</p>
 
     
 
@@ -62,9 +60,10 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import { Link } from "@inertiajs/inertia-vue3";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import { Link } from "@inertiajs/inertia-vue3";
+
 export default {
   data() {
     return {
@@ -80,7 +79,7 @@ export default {
   },
   components: {
     AppLayout,
-    SecondaryButton,
+    PrimaryButton,
     ConfirmationModal,
     Link
   },

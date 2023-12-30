@@ -10,9 +10,9 @@
       <div v-for="work_permit in work_permits.data" :key="work_permit.id" class="globe relative">
         <div class="globe-title !justify-between">
           <p>Fecha del permiso solicitado: {{work_permit.date}}</p>
-          <button class="absolute bottom-1 right-2" @click="delete_confirm = true; item_to_delete = work_permit;">
+          <!-- <button class="absolute bottom-1 right-2" @click="delete_confirm = true; item_to_delete = work_permit;">
           <i v-if="work_permit.status == 1" class="fa-solid fa-trash text-red-600"></i>
-          </button>
+          </button> -->
         </div>
         <div class="flex flex-col mb-2">
           <p ><strong> Solicitado por: </strong>{{work_permit.user.name}}</p>

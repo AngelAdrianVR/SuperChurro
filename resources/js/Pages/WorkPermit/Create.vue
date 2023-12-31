@@ -10,13 +10,13 @@
     </template>
 
     <div
-      class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
+      class="bg-amber-100 border-t-4 border-amber-500 rounded-b text-amber-900 px-4 py-3 shadow-md"
       role="alert"
     >
       <div class="flex">
         <div class="py-1">
           <svg
-            class="fill-current h-6 w-6 text-teal-500 mr-4"
+            class="fill-current h-6 w-6 text-amber-500 mr-4"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
           >
@@ -29,7 +29,7 @@
           <p class="font-bold">Vacaciones disponibles</p>
           <p class="text-sm">
             Tienes
-            <strong>{{ $page.props.user.employee_properties?.vacations }}</strong> días de
+            <strong>{{ $page.props.user.employee_properties?.vacations?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</strong> días de
             vacaciones
           </p>
         </div>

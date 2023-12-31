@@ -349,7 +349,7 @@ class PayrollUser extends Pivot
             $pay = $loan->amount / 2;
             $discounts[] = [
                 'amount' => round($pay, 2),
-                'description' => "Abono de préstamo autorizado"
+                'description' => "Abono de préstamo"
             ];
         }
 

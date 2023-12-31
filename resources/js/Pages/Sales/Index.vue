@@ -6,6 +6,18 @@
       </h2>
     </template>
 
+    <!-- <el-tabs
+    v-model="activeName"
+    type="card"
+    class="demo-tabs"
+    @tab-click="handleClick"
+  >
+    <el-tab-pane label="User" name="first">User</el-tab-pane>
+    <el-tab-pane label="Config" name="second">Config</el-tab-pane>
+    <el-tab-pane label="Role" name="third">Role</el-tab-pane>
+    <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+  </el-tabs> -->
+
     <div class="mx-3 my-4 lg:w-1/3 lg:mx-auto">
       <label class="text-gray-500 text-sm">Selecciona la fecha para ver las ventas</label>
       <Datepicker v-model="date" inline auto-apply :month-change-on-scroll="false" model-type="yyyy-MM-dd"></Datepicker>

@@ -8,7 +8,7 @@
 
     <div class="flex justify-end">
       <Link :href="route('notices.create')">
-      <SecondaryButton class="mr-7 my-5">Crear Aviso</SecondaryButton>
+      <PrimaryButton class="mr-7 my-5">Crear aviso</PrimaryButton>
       </Link>
     </div>
 
@@ -17,7 +17,7 @@
         <div class="globe-title !justify-between">
           <p>{{notice.title}}</p>
           <button class="absolute bottom-1 right-2" @click="delete_confirm = true; item_to_delete = notice;">
-          <i class="fa-solid fa-trash text-red-600"></i>
+          <i class="fa-regular fa-trash-can text-red-600"></i>
           </button>
         </div>
         <div class="flex flex-col mb-2">
@@ -26,9 +26,7 @@
       </div>
     </div>
 
-    <div v-else class="text-center">    
-          <p>No hay información para mostrar.</p>
-    </div>
+    <p v-else class="text-center text-sm text-gray-500">No hay información para mostrar.</p>
 
     
 
@@ -55,9 +53,10 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import { Link } from "@inertiajs/inertia-vue3";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import { Link } from "@inertiajs/inertia-vue3";
+
 export default {
   data() {
     return {
@@ -67,9 +66,9 @@ export default {
   },
   components: {
     AppLayout,
-    SecondaryButton,
-    Link,
+    PrimaryButton,
     ConfirmationModal,
+    Link
   },
   props: {
     notices: Array,

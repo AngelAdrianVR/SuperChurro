@@ -72,7 +72,7 @@
 
                   <button v-if="day_in_edition === index" @click="update()" class="text-lg text-green-500"><i
                       class="fa-regular fa-circle-check"></i></button>
-                  <button v-if="day_in_edition === index" @click="day_in_edition = null" class="text-lg text-gray-500 mx-3">
+                  <button v-if="day_in_edition === index" @click="day_in_edition = null" class="text-lg text-red-500 mx-3">
                     <i class="fa-regular fa-circle-xmark"></i></button>
 
                   <i @click.stop="showOptions = !showOptions; indexSelected = index" class="fa-solid fa-ellipsis-vertical text-primary p-1 cursor-pointer"></i>

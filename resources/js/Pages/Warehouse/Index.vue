@@ -22,7 +22,7 @@
     <div class="border border-gray3 rounded-md inline-block mx-4 p-3 my-2">
         <p class="text-gray-800 font-bold text-left mb-2">Colaborador(es) en cocina</p>
         <div class="">
-          <p v-for="employee in employees" :key="employee.id">
+          <p class="text-sm" v-for="employee in employees" :key="employee.id">
             <i class="fa-regular fa-circle-user"></i>
             {{ employee.name }}
           </p>
@@ -33,10 +33,10 @@
     <div>
         <div class="globe-container flex-col">
           <div v-for="product_id in Object.keys(warehouse.products)" :key="product_id" class="globe hover:bg-gray-200 cursor-pointer">
-          <figure v-if="products.find(product => product.id == product_id )?.media.length > 0" class="justify-center pt-2">
-            <img :src="products.find(product => product.id == product_id )?.media[0]?.original_url" alt="Imagen del producto" class="rounded-lg h-32 mx-auto">
-          </figure>
             <Link :href="route('warehouse-movements.show-product-record', product_id)">
+              <figure v-if="products.find(product => product.id == product_id )?.media.length > 0" class="justify-center pt-2">
+                <img :src="products.find(product => product.id == product_id )?.media[0]?.original_url" alt="Imagen del producto" class="rounded-lg h-32 mx-auto">
+              </figure>
               <div class="globe-title !justify-center pb-2">
                 {{ products.find(product => product.id == product_id )?.name }}
               </div>

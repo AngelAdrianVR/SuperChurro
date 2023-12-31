@@ -48,7 +48,7 @@ Route::middleware([
         $notices = Notice::all();
 
         return auth()->user()->is_admin
-            ? Inertia::render('AdminDashboard')
+            ? Inertia::render('AdminDashboard', compact('notices'))
             : Inertia::render('Dashboard', compact('checked_in', 'checked_out', 'loan', 'leaves', 'notices'));
     })->name('dashboard');
 });

@@ -5,11 +5,12 @@
         Administración de Nóminas
       </h2>
     </template>
+    
     <div class="contenedor">
       <div class="flex justify-center">
         <div v-for="payroll in payrolls.data" :key="payroll.id" @click="payroll_selected = payroll"
           class="globe w-80 border border-gray3 hover:bg-gray-100 cursor-pointer mx-2"
-          :class="{ 'border-2 border-primary': payroll_selected.id === payroll.id }">
+          :class="{ 'border-2 !border-primary': payroll_selected.id === payroll.id }">
           <div class="globe-title pb-2">
             Semana {{ payroll.week }}: {{ payroll.start_date }} al {{ payroll.end_date }}
           </div>

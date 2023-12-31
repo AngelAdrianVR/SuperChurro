@@ -7,6 +7,23 @@
       </h2>
     </template>
 
+  <!-- Avisos ----------------------------------------- -->
+    <section v-if="notices.length > 0">
+      <div class="lg:col-span-3 mt-9">
+        <h1 class="font-bold text-lg text-primary text-center">AVISOS</h1>
+    </div>
+
+    <div v-if="notices.length">
+      <div v-for="notice in notices" :key="notice.id" class="globe my-2">
+          <div class="globe-title">{{notice.title}}</div>
+          <div class="flex justify-between items-center text-xs">
+            <p class="text-center">{{ notice.content }}</p>
+          </div>
+      </div>
+    </div>
+          <p v-else class="text-center text-gray-500 text-xs">No hay avisos para mostrar.</p>
+    </section>
+
     <div class="md:mx-12 mx-1">
       <p class="text-primary font-bold text-lg">Operaciones</p>
 
@@ -234,6 +251,7 @@ export default {
     checked_out: Boolean,
     leaves: Array,
     loan: Object,
+    notices: Array,
   },
   methods: {
     getPosition() {

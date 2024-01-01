@@ -25,6 +25,7 @@
     "dependencies": {
         "@vuepic/vue-datepicker": "^3.6.5",
         "apexcharts": "^3.41.1",
+        "date-fns": "^3.0.6",
         "element-plus": "^2.4.4",
         "html5-qrcode": "^2.3.4"
     }

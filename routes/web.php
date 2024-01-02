@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminRequestController;
 use App\Http\Controllers\BarterController;
 use App\Http\Controllers\BonusController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\OutcomeController;
@@ -19,7 +20,6 @@ use App\Http\Controllers\WarehouseMovementController;
 use App\Http\Controllers\WorkPermitController;
 use App\Http\Resources\PayrollUserResource2;
 use App\Models\CashRegister;
-use App\Models\Notice;
 use App\Models\PayrollUser;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -40,17 +40,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        $checked_in = auth()->user()->hasCheckedInToday();
-        $checked_out = auth()->user()->hasCheckedOutToday();
-        $loan = auth()->user()->loans()->where('remaining', '>', 0)->whereNotNull('authorized_at')->first();
-        $leaves = auth()->user()->workPermits()->whereDate('date', '>=', today())->with('permissionType')->get();
-        $notices = Notice::all();
-
-        return auth()->user()->is_admin
-            ? Inertia::render('AdminDashboard', compact('notices'))
-            : Inertia::render('Dashboard', compact('checked_in', 'checked_out', 'loan', 'leaves', 'notices'));
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 Route::resource('payrolls', PayrollController::class)->middleware('auth');

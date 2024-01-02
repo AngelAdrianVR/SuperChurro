@@ -7,21 +7,21 @@
       </h2>
     </template>
 
-  <!-- Avisos ----------------------------------------- -->
+    <!-- Avisos ----------------------------------------- -->
     <section v-if="notices.length > 0">
       <div class="lg:col-span-3 mt-9">
         <h1 class="font-bold text-lg text-primary text-center">AVISOS</h1>
-    </div>
+      </div>
 
-    <div v-if="notices.length">
-      <div v-for="notice in notices" :key="notice.id" class="globe my-2">
-          <div class="globe-title">{{notice.title}}</div>
+      <div v-if="notices.length">
+        <div v-for="notice in notices" :key="notice.id" class="globe my-2">
+          <div class="globe-title">{{ notice.title }}</div>
           <div class="flex justify-between items-center text-xs">
             <p class="text-center">{{ notice.content }}</p>
           </div>
+        </div>
       </div>
-    </div>
-          <p v-else class="text-center text-gray-500 text-xs">No hay avisos para mostrar.</p>
+      <p v-else class="text-center text-gray-500 text-xs">No hay avisos para mostrar.</p>
     </section>
 
     <div class="md:mx-12 mx-1">
@@ -32,33 +32,32 @@
         <div class="globe relative z-0">
           <!-- <Link :href="route('products.show', product.id)"> -->
           <div class="globe-title pb-2">
-            <span class="text-gray-700 justify-center"
-              >Solicitud de mercancía</span
-            >
+            <span class="text-gray-700 justify-center">Solicitud de mercancía</span>
             <i
+<<<<<<< HEAD
               class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
+=======
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"></i>
+>>>>>>> 2f4fb42bb57377598888f2608e6a685c8ddb658a
           </div>
           <div class="flex flex-col">
-            <span
-              ><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Stock mínimo:
+            <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Stock mínimo:
             </span>
-            <span
-              ><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Unidad de
+            <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Unidad de
               medida:
             </span>
-            <span
-              ><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Precio
+            <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Precio
               actual: $
             </span>
-            <span
-              ><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Precio a
+            <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Precio a
               empleados: $
             </span>
           </div>
           <!-- </Link> -->
         </div>
         <!-- ----------------------------- Solicitudes de mercancia ends ------------------------------- -->
+<<<<<<< HEAD
 
         <!-- ----------------------------- Colaboradores en carrito / cocina starts ------------------------------- -->
         <div class="globe relative z-0">
@@ -97,34 +96,38 @@
         </div>
         <!-- ----------------------------- Colaboradores en carrito / cocina ends ------------------------------- -->
 
+=======
+        <EmployeeStations />
+        
+>>>>>>> 2f4fb42bb57377598888f2608e6a685c8ddb658a
         <!-- ----------------------------- Cortes starts ------------------------------- -->
         <div class="globe relative z-0">
           <!-- <Link :href="route('products.show', product.id)"> -->
           <div class="globe-title pb-2">
             <span class="text-gray-700 justify-center">Cortes</span>
             <i
+<<<<<<< HEAD
               class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
+=======
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"></i>
+>>>>>>> 2f4fb42bb57377598888f2608e6a685c8ddb658a
           </div>
           <p class="text-primary mb-2">Carrito</p>
           <div class="flex flex-col">
-            <span
-              ><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
+            <span><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
               Nombre del colaborador
             </span>
-            <span
-              ><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
+            <span><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
               Nombre del colaborador
             </span>
           </div>
           <div class="flex flex-col">
             <p class="text-primary my-2">Cocina</p>
-            <span
-              ><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
+            <span><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
               Nombre del colaborador
             </span>
-            <span
-              ><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
+            <span><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
               Nombre del colaborador
             </span>
           </div>
@@ -132,6 +135,7 @@
         </div>
         <!-- ----------------------------- Cortes ends ------------------------------- -->
 
+<<<<<<< HEAD
         <!-- ----------------------------- Cumpleaños starts ------------------------------- -->
         <div class="globe relative text-center z-0">
           <div class="globe-title pb-2">
@@ -155,8 +159,10 @@
           </div>
         </div>
         <!-- ----------------------------- Cumpleaños ends ------------------------------- -->
+=======
+        <BirthdatesCard :users="collaborators_birthdays" />
+>>>>>>> 2f4fb42bb57377598888f2608e6a685c8ddb658a
       </div>
-
       <p class="text-primary font-bold text-lg mt-5">Estadisticas</p>
 
       <!-- ----------------------------- ventas chart starts ------------------------------- -->
@@ -164,12 +170,14 @@
         <div class="globe relative z-0">
           <!-- <Link :href="route('products.show', product.id)"> -->
           <div class="globe-title pb-2">
-            <span class="text-gray-700 justify-center"
-              >Ventas (mes en curso)</span
-            >
+            <span class="text-gray-700 justify-center">Ventas (mes en curso)</span>
             <i
+<<<<<<< HEAD
               class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
+=======
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"></i>
+>>>>>>> 2f4fb42bb57377598888f2608e6a685c8ddb658a
           </div>
 
           <FinancesChart />
@@ -178,16 +186,18 @@
         </div>
         <!-- ----------------------------- ventas chart ends ------------------------------- -->
 
-              <!-- ----------------------------- ventas chart starts ------------------------------- -->
+        <!-- ----------------------------- ventas chart starts ------------------------------- -->
         <div class="globe relative z-0">
           <!-- <Link :href="route('products.show', product.id)"> -->
           <div class="globe-title pb-2">
-            <span class="text-gray-700 justify-center"
-              >Profit (mes en curso)</span
-            >
+            <span class="text-gray-700 justify-center">Profit (mes en curso)</span>
             <i
+<<<<<<< HEAD
               class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
+=======
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"></i>
+>>>>>>> 2f4fb42bb57377598888f2608e6a685c8ddb658a
           </div>
           <IncomesOutcomesChart />
           <!-- </Link> -->
@@ -196,7 +206,7 @@
         <!-- ----------------------------- ventas chart ends ------------------------------- -->
       </div>
     </div>
-<!-- 
+    <!-- 
       <SecondaryButton @click="getPosition" class="mt-3"
         >Probar geolocalización</SecondaryButton
       > -->
@@ -209,6 +219,8 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import FinancesChart from "@/Components/FinancesChart.vue";
 import IncomesOutcomesChart from "@/Components/IncomesOutcomesChart.vue";
+import BirthdatesCard from "@/Components/MyComponents/Dashboard/BirthdatesCard.vue";
+import EmployeeStations from "@/Components/MyComponents/Dashboard/EmployeeStations.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
@@ -244,7 +256,9 @@ export default {
     SecondaryButton,
     Link,
     FinancesChart,
-    IncomesOutcomesChart
+    IncomesOutcomesChart,
+    BirthdatesCard,
+    EmployeeStations,
   },
   props: {
     checked_in: Boolean,
@@ -252,6 +266,7 @@ export default {
     leaves: Array,
     loan: Object,
     notices: Array,
+    collaborators_birthdays: Array,
   },
   methods: {
     getPosition() {
@@ -279,17 +294,17 @@ export default {
       if (validated_area !== undefined) {
         alert(
           validated_area.label +
-            ". Posición: " +
-            current_position.coords.latitude +
-            ", " +
-            current_position.coords.longitude
+          ". Posición: " +
+          current_position.coords.latitude +
+          ", " +
+          current_position.coords.longitude
         );
       } else {
         alert(
           "Ubicación no válida para registrar asistencia." +
-            current_position.coords.latitude +
-            ", " +
-            current_position.coords.longitude
+          current_position.coords.latitude +
+          ", " +
+          current_position.coords.longitude
         );
       }
     },

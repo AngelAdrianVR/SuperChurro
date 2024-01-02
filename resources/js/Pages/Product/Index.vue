@@ -14,22 +14,27 @@
 
     <div class="globe-container flex-col">
       <div v-for="product in products.data" :key="product.id"
-        class="globe hover:bg-gray-200 cursor-pointer relative z-0">
+        class="globe grid grid-cols-2 hover:bg-gray-200 cursor-pointer relative z-0">
         <Link :href="route('products.edit', product.id)">
-        <div class="globe-title !justify-between pb-2">
-          <p class="text-gray-700"><i class="fa-solid fa-box mr-1"></i>
-            {{ product.name }}</p>
-        </div>
-        <div class="flex flex-col">
-          <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Stock mínimo: {{ product.low_stock }} </span>
-          <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Unidad de medida: {{ product.unit?.name }} </span>
-          <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Precio actual: ${{ product.price?.price }} </span>
-          <span><i class="fa-solid fa-circle-dot mr-1 text-xs text-primary"></i> Precio a empleados: ${{ product.employee_price?.price }} </span>
-        </div>
+          <div class="globe-title !justify-between pb-2">
+            <p class="text-gray-700"><i class="fa-solid fa-box mr-1"></i>
+              {{ product.name }}</p>
+          </div>
+          <div class="flex flex-col">
+            <span>Stock mínimo: {{ product.low_stock }} </span>
+            <span>Unidad de medida: {{ product.unit?.name }} </span>
+            <span>Precio actual: ${{ product.price?.price }} </span>
+            <span>Precio a empleados: ${{ product.employee_price?.price }} </span>
+          </div>
         </Link>
-        <!-- <button class="absolute bottom-1 right-2 z-10" @click="delete_confirm = true; item_to_delete = product;">
-          <i class="fa-solid fa-trash text-red-600"></i>
-        </button> -->
+        <Link :href="route('products.edit', product.id)">
+        <figure class="justify-center pt-2">
+          <img :src="product.media[0]?.original_url" alt="Imagen del producto" class="rounded-lg h-32 mx-auto">
+        </figure>
+        </Link>
+        <button class="absolute bottom-1 right-2 z-10" @click="delete_confirm = true; item_to_delete = product;">
+          <i class="fa-regular fa-trash-can text-red-500"></i>
+        </button>
       </div>
     </div>
 
@@ -39,8 +44,8 @@
       </template>
       <template #content>
         <div>
-          Estás a punto de eliminar una solicitud de préstamo. Una vez realizado ya no se podrá
-          recuperar y la solicitud quedará cancelada.
+          Estás a punto de eliminar un producto. Una vez realizado ya no se podrá
+          recuperar.
         </div>
       </template>
       <template #footer>

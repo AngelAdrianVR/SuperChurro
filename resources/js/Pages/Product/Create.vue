@@ -10,91 +10,49 @@
     </template>
 
     <div
-      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 py-8 bg-transparent mx-4"
+      class="max-w-xl md:mx-auto mt-5 rounded-lg px-5 py-8 bg-transparent border border-gray3 mx-4"
     >
       <form @submit.prevent="store">
-        <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.name"
-            type="text"
-            name="floating_name_product"
-            autocomplete="off"
-            required
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
-            placeholder=" "
-          />
-          <label
-            for="floating_name_product"
-            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Nombre del producto*</label
-          >
+
+        <div class="mb-3 w-full">
+          <InputLabel value="Nombre del producto *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.name" type="text" autocomplete="off" class="input"
+           placeholder="Escribe el nombre del producto" />
           <InputError :message="$page.props?.errors.name" />
         </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.low_stock"
-            type="number"
-            name="floating_low_stock"
-            autocomplete="off"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
-            placeholder=" "
-          />
-          <label
-            for="floating_low_stock"
-            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Stock mínimo</label
-          >
+
+        <div class="mb-3 w-full">
+          <InputLabel value="Stock mínimo *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.low_stock" type="number" autocomplete="off" class="input"
+           placeholder="00" />
+          <InputError :message="$page.props?.errors.low_stock" />
         </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.initial_stock"
-            type="number"
-            name="floating_low_stock"
-            autocomplete="off"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
-            placeholder=" "
-          />
-          <label
-            for="floating_low_stock"
-            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Stock inicial o de apertura</label
-          >
+
+        <div class="mb-3 w-full">
+          <InputLabel value="Stock de apertura *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.initial_stock" type="number" autocomplete="off" class="input"
+           placeholder="00" />
+          <InputError :message="$page.props?.errors.initial_stock" />
         </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.price"
-            type="number"
-            step="0.1"
-            name="floating_price"
-            autocomplete="off"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
-            placeholder=" "
-          />
-          <label
-            for="floating_low_stock"
-            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Precio</label
-          >
+
+        <div class="mb-3 w-full">
+          <InputLabel value="Precio *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.price" type="number" autocomplete="off" class="input"
+           placeholder="$00.0" />
+          <InputError :message="$page.props?.errors.price" />
         </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <input
-            v-model="form.employee_price"
-            type="number"
-            step="0.1"
-            name="floating_price"
-            autocomplete="off"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer"
-            placeholder=" "
-          />
-          <label
-            for="floating_low_stock"
-            class="absolute text-sm text-gray-500 dark:text-gray-700 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-stone-600 peer-focus:dark:text-stone-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Precio a empleados</label
-          >
+
+        <div class="mb-3 w-full">
+          <InputLabel value="Precio a empleados *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.employee_price" type="number" autocomplete="off" class="input"
+           placeholder="$00.0" />
+          <InputError :message="$page.props?.errors.employee_price" />
         </div>
-        <select class="select mb-5" required v-model="form.unit_id">
+
+        <InputLabel value="Unidad de medida *" class="ml-3 mb-1 text-sm" />
+        <select class="select mb-5" v-model="form.unit_id">
           <option disabled selected class="text-gray-500">
-            -- Unidad de medida --
+            -- Seleccione --
           </option>
           <option
             class="text-gray-500"
@@ -126,7 +84,7 @@
             SVG, PNG, JPG o GIF (MAX. 4 MB).
           </p>
         </div>
-        <div class="flex justify-center lg:justify-end">
+        <div class="flex justify-end mt-4">
           <PrimaryButton :disabled="form.processing">Agregar</PrimaryButton>
         </div>
       </form>
@@ -140,6 +98,7 @@ import PayRollTable from "@/Components/PayRollTable.vue";
 import Back from "@/Components/Back.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 export default {
   data() {
@@ -161,6 +120,7 @@ export default {
     PayRollTable,
     PrimaryButton,
     InputError,
+    InputLabel,
     Back,
     Link,
   },

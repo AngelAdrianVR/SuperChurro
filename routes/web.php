@@ -111,21 +111,22 @@ Route::post('payroll/store-extras', [PayrollController::class, 'storeExtras'])
     ->middleware('auth')
     ->name('payroll.store-extras');
 
+// users routes -------------------------------------
 Route::post('/users/update-with-resources/{user}', [UserController::class, 'updateWithResources'])
     ->middleware('auth')
     ->name('users.update-with-resources');
-
 Route::post('/users/delete-file', [UserController::class, 'deleteFile'])
     ->middleware('auth')
     ->name('users.delete-file');
-
 Route::post('/users/pay-vacations', [UserController::class, 'payVacations'])
     ->middleware('auth')
     ->name('users.pay-vacations');
-
 Route::get('/users/generate-payroll/{user_id}', [UserController::class, 'generatePayroll'])
     ->middleware('auth')
     ->name('users.generate-payroll');
+Route::get('/users-get-employees-in-station', [UserController::class, 'getInStation'])
+    ->middleware('auth')
+    ->name('users.get-in-station');
 
 Route::post('/cash-register', function (Request $request) {
     CashRegister::create([

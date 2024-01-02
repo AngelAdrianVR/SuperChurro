@@ -3,7 +3,7 @@
         <div class="globe-title pb-2">
             <h1 class="font-bold">Cumpleaños</h1>
         </div>
-        <ul>
+        <ul class="text-[#373737]">
             <li v-for="user in users" :key="user.id" class="flex text-sm space-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-4 h-4">

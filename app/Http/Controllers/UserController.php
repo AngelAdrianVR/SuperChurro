@@ -35,7 +35,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-
         $validated = $request->validate([
             'name' => 'required|max:255',
             'email' => 'email',
@@ -259,5 +258,19 @@ class UserController extends Controller
         $payroll = Payroll::with('users')->latest()->first();
 
         return response()->json(['payroll' => PayrollResource::make($payroll)]);
+    }
+
+    public function getInStation()
+    {
+        $users = User::all();
+        
+        $employees_in_cart = $users->filter(
+            fn ($user) => $user->hasCheckedInToday() && $user->shiftOn(today()->dayOfWeek) !== 'cocina'
+        );
+        $employees_in_kitchen = $users->filter(
+            fn ($user) => $user->hasCheckedInToday() && $user->shiftOn(today()->dayOfWeek) === 'cocina'
+        );
+
+        return response()->json(['kitchen' => $employees_in_kitchen, 'cart' => $employees_in_cart]);
     }
 }

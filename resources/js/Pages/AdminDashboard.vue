@@ -27,100 +27,15 @@
     <div class="md:mx-12 mx-1">
       <p class="text-primary font-bold text-lg">Operaciones</p>
 
-      <!-- ----------------------------- Solicitudes de mercancia starts ------------------------------- -->
       <div class="globe-container flex-col">
-        <div class="globe relative z-0">
-          <!-- <Link :href="route('products.show', product.id)"> -->
-          <div class="globe-title pb-2">
-            <span class="text-gray-700 justify-center">Solicitud de mercancía</span>
-            <i
-              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
-            ></i>
-          </div>
-          <div class="flex flex-col">
-            <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Stock mínimo:
-            </span>
-            <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Unidad de
-              medida:
-            </span>
-            <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Precio
-              actual: $
-            </span>
-            <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Precio a
-              empleados: $
-            </span>
-          </div>
-          <!-- </Link> -->
-        </div>
-        <!-- ----------------------------- Solicitudes de mercancia ends ------------------------------- -->
         <EmployeeStations />
-        
-        <!-- ----------------------------- Cortes starts ------------------------------- -->
-        <div class="globe relative z-0">
-          <!-- <Link :href="route('products.show', product.id)"> -->
-          <div class="globe-title pb-2">
-            <span class="text-gray-700 justify-center">Cortes</span>
-            <i
-              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
-            ></i>
-          </div>
-          <p class="text-primary mb-2">Carrito</p>
-          <div class="flex flex-col">
-            <span><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
-              Nombre del colaborador
-            </span>
-            <span><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
-              Nombre del colaborador
-            </span>
-          </div>
-          <div class="flex flex-col">
-            <p class="text-primary my-2">Cocina</p>
-            <span><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
-              Nombre del colaborador
-            </span>
-            <span><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
-              Nombre del colaborador
-            </span>
-          </div>
-          <!-- </Link> -->
-        </div>
-        <!-- ----------------------------- Cortes ends ------------------------------- -->
-
         <BirthdatesCard :users="collaborators_birthdays" />
       </div>
       <p class="text-primary font-bold text-lg mt-5">Estadisticas</p>
-
-      <!-- ----------------------------- ventas chart starts ------------------------------- -->
       <div class="globe-container flex-col">
-        <div class="globe relative z-0">
-          <!-- <Link :href="route('products.show', product.id)"> -->
-          <div class="globe-title pb-2">
-            <span class="text-gray-700 justify-center">Ventas (mes en curso)</span>
-            <i
-              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
-            ></i>
-          </div>
-
-          <FinancesChart />
-
-          <!-- </Link> -->
-        </div>
-        <!-- ----------------------------- ventas chart ends ------------------------------- -->
-
-        <!-- ----------------------------- ventas chart starts ------------------------------- -->
-        <div class="globe relative z-0">
-          <!-- <Link :href="route('products.show', product.id)"> -->
-          <div class="globe-title pb-2">
-            <span class="text-gray-700 justify-center">Profit (mes en curso)</span>
-            <i
-              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
-            ></i>
-          </div>
-          <IncomesOutcomesChart />
-          <!-- </Link> -->
-
-        </div>
-        <!-- ----------------------------- ventas chart ends ------------------------------- -->
+        <BarChart :options="yearSalesComparisonChartOptions" title="Ventas año en curso vs anterior" />
+        <BarChart :options="yearOutcomesComparisonChartOptions" title="Egresos año en curso vs anterior" />
+        <Kpi :options="profitKpiOptions" title="Ganancias de este mes vs mes anterior" />
       </div>
     </div>
     <!-- 
@@ -134,9 +49,9 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import FinancesChart from "@/Components/FinancesChart.vue";
-import IncomesOutcomesChart from "@/Components/IncomesOutcomesChart.vue";
 import BirthdatesCard from "@/Components/MyComponents/Dashboard/BirthdatesCard.vue";
+import BarChart from "@/Components/MyComponents/Charts/BarChart.vue";
+import Kpi from "@/Components/MyComponents/Charts/Kpi.vue";
 import EmployeeStations from "@/Components/MyComponents/Dashboard/EmployeeStations.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 
@@ -165,6 +80,39 @@ export default {
           longitudes: [-103.42651, -103.40651],
         },
       ],
+
+      // chart options
+      yearSalesComparisonChartOptions: {
+        colors: ['#BEBFC1', '#F07209'],
+        categories: ['Ene', 'Feb', 'Mar'],
+        series: [{
+          name: 'Año pasado',
+          data: [10, 11, 9]
+        },
+        {
+          name: 'Año en curso',
+          data: [9, 12, 8.5]
+        }],
+      },
+      yearOutcomesComparisonChartOptions: {
+        colors: ['#BEBFC1', '#F07209'],
+        categories: ['Ene', 'Feb', 'Mar'],
+        series: [{
+          name: 'Año pasado',
+          data: [10, 11, 9]
+        },
+        {
+          name: 'Año en curso',
+          data: [9, 12, 8.5]
+        }],
+      },
+      profitKpiOptions: {
+        currentVal: 1155.8,
+        refVal: 1000,
+        tooltipCurrentVal: 'Ganancias mes actual',
+        tooltipRefVal: 'Ganancias mes anterior',
+        unit: '$',
+      }
     };
   },
   components: {
@@ -172,10 +120,10 @@ export default {
     PrimaryButton,
     SecondaryButton,
     Link,
-    FinancesChart,
-    IncomesOutcomesChart,
     BirthdatesCard,
     EmployeeStations,
+    BarChart,
+    Kpi,
   },
   props: {
     checked_in: Boolean,

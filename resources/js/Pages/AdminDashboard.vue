@@ -34,7 +34,12 @@
           <div class="globe-title pb-2">
             <span class="text-gray-700 justify-center">Solicitud de mercancía</span>
             <i
+<<<<<<< HEAD
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
+            ></i>
+=======
               class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"></i>
+>>>>>>> 2f4fb42bb57377598888f2608e6a685c8ddb658a
           </div>
           <div class="flex flex-col">
             <span><i class="fa-solid fa-circle-dot mr-1 text-xs"></i> Stock mínimo:
@@ -52,15 +57,61 @@
           <!-- </Link> -->
         </div>
         <!-- ----------------------------- Solicitudes de mercancia ends ------------------------------- -->
+<<<<<<< HEAD
+
+        <!-- ----------------------------- Colaboradores en carrito / cocina starts ------------------------------- -->
+        <div class="globe relative z-0">
+          <!-- <Link :href="route('products.show', product.id)"> -->
+          <div class="globe-title pb-2">
+            <span class="text-gray-700 justify-center"
+              >Colaboradores en carrito / cocina</span
+            >
+            <i
+              class="fa-solid fa-pencil text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
+            ></i>
+          </div>
+          <p class="text-primary mb-2">Carrito</p>
+          <div class="flex flex-col">
+            <span
+              ><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
+              Nombre del colaborador
+            </span>
+            <span
+              ><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
+              Nombre del colaborador
+            </span>
+          </div>
+          <div class="flex flex-col">
+            <p class="text-primary my-2">Cocina</p>
+            <span
+              ><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
+              Nombre del colaborador
+            </span>
+            <span
+              ><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
+              Nombre del colaborador
+            </span>
+          </div>
+          <!-- </Link> -->
+        </div>
+        <!-- ----------------------------- Colaboradores en carrito / cocina ends ------------------------------- -->
+
+=======
         <EmployeeStations />
         
+>>>>>>> 2f4fb42bb57377598888f2608e6a685c8ddb658a
         <!-- ----------------------------- Cortes starts ------------------------------- -->
         <div class="globe relative z-0">
           <!-- <Link :href="route('products.show', product.id)"> -->
           <div class="globe-title pb-2">
             <span class="text-gray-700 justify-center">Cortes</span>
             <i
+<<<<<<< HEAD
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
+            ></i>
+=======
               class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"></i>
+>>>>>>> 2f4fb42bb57377598888f2608e6a685c8ddb658a
           </div>
           <p class="text-primary mb-2">Carrito</p>
           <div class="flex flex-col">
@@ -84,7 +135,33 @@
         </div>
         <!-- ----------------------------- Cortes ends ------------------------------- -->
 
+<<<<<<< HEAD
+        <!-- ----------------------------- Cumpleaños starts ------------------------------- -->
+        <div class="globe relative text-center z-0">
+          <div class="globe-title pb-2">
+            <span class="text-gray-700 justify-center">Cumpleaños</span>
+            <i
+              class="fa-solid fa-pencil text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
+            ></i>
+          </div>
+          <div class="flex flex-col">
+            <span
+              ><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
+              Nombre del colaborador
+            </span>
+            <span
+              ><i class="fa-regular fa-circle-user text-gray-600 mr-3"></i>
+              (Fecha de hoy)
+            </span>
+            <i
+              class="fa-solid fa-cake-candles text-6xl text-primary mt-3 text-center"
+            ></i>
+          </div>
+        </div>
+        <!-- ----------------------------- Cumpleaños ends ------------------------------- -->
+=======
         <BirthdatesCard :users="collaborators_birthdays" />
+>>>>>>> 2f4fb42bb57377598888f2608e6a685c8ddb658a
       </div>
       <p class="text-primary font-bold text-lg mt-5">Estadisticas</p>
 
@@ -95,7 +172,12 @@
           <div class="globe-title pb-2">
             <span class="text-gray-700 justify-center">Ventas (mes en curso)</span>
             <i
+<<<<<<< HEAD
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
+            ></i>
+=======
               class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"></i>
+>>>>>>> 2f4fb42bb57377598888f2608e6a685c8ddb658a
           </div>
 
           <FinancesChart />
@@ -110,7 +192,12 @@
           <div class="globe-title pb-2">
             <span class="text-gray-700 justify-center">Profit (mes en curso)</span>
             <i
+<<<<<<< HEAD
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
+            ></i>
+=======
               class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"></i>
+>>>>>>> 2f4fb42bb57377598888f2608e6a685c8ddb658a
           </div>
           <IncomesOutcomesChart />
           <!-- </Link> -->

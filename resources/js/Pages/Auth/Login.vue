@@ -46,7 +46,7 @@ const togglePasswordVisibility = () => {
         </template>
 
         <div class="border-b border-gray-300 mb-12 mt-9 text-center w-[80%] mx-auto">
-       <span class="inline-block border-b-2 border-[#BF532A] px-4 text-gray-600">Iniciar sesión</span>
+       <span class="inline-block border-b-2 border-primary px-4 text-gray-600">Iniciar sesión</span>
     </div>
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
@@ -81,7 +81,7 @@ const togglePasswordVisibility = () => {
           />
           <i
             :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"
-            class="text-gray-400 ml-2 cursor-pointer absolute right-3 top-9"
+            class="text-gray-400 ml-2 cursor-pointer absolute right-3 top-8"
             @click="togglePasswordVisibility"
           ></i>
         </div>
@@ -99,10 +99,11 @@ const togglePasswordVisibility = () => {
                 <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
                     ¿Olvidaste tu contraseña?
                 </Link>
-
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Ingresar <i class="fa-solid fa-arrow-right ml-2"></i>
-                </PrimaryButton>
+                <div class="mx-auto mt-5">
+                    <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        Ingresar <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </PrimaryButton>
+                </div>
             </div>
         </form>
     </AuthenticationCard>

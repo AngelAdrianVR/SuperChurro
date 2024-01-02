@@ -144,7 +144,7 @@ const logout = () => {
 
     <Banner />
 
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-gray-50">
       <nav class="
           bg-transparent
         ">
@@ -256,8 +256,8 @@ const logout = () => {
                 <!-- admin menu -->
                 <Dropdown v-if="$page.props.user.is_admin" align="right" width="48">
                   <template #trigger>
-                    <button class="text-white hover:border hover:rounded-full w-8 h-8">
-                      <i class="fa-solid fa-user-gear text-gray-600"></i>
+                    <button class="text-white hover:bg-gray4 hover:rounded-full w-8 h-8">
+                      <i class="fa-solid fa-user-gear text-gray-500"></i>
                     </button>
                   </template>
                   <template #content>

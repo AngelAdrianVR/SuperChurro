@@ -36,7 +36,7 @@
               >Solicitud de mercancía</span
             >
             <i
-              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
           </div>
           <div class="flex flex-col">
@@ -68,7 +68,7 @@
               >Colaboradores en carrito / cocina</span
             >
             <i
-              class="fa-solid fa-pencil text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
+              class="fa-solid fa-pencil text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
           </div>
           <p class="text-primary mb-2">Carrito</p>
@@ -103,7 +103,7 @@
           <div class="globe-title pb-2">
             <span class="text-gray-700 justify-center">Cortes</span>
             <i
-              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
           </div>
           <p class="text-primary mb-2">Carrito</p>
@@ -137,7 +137,7 @@
           <div class="globe-title pb-2">
             <span class="text-gray-700 justify-center">Cumpleaños</span>
             <i
-              class="fa-solid fa-pencil text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
+              class="fa-solid fa-pencil text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
           </div>
           <div class="flex flex-col">
@@ -168,7 +168,7 @@
               >Ventas (mes en curso)</span
             >
             <i
-              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
           </div>
 
@@ -186,7 +186,7 @@
               >Profit (mes en curso)</span
             >
             <i
-              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:border-gray3 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
+              class="fa-solid fa-plus text-primary justify-end absolute right-4 border border-transparent hover:bg-gray4 cursor-pointer p-1 rounded-full transition ease-linear duration-200"
             ></i>
           </div>
           <IncomesOutcomesChart />

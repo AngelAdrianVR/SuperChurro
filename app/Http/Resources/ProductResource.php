@@ -21,8 +21,9 @@ class ProductResource extends JsonResource
             'unit' => $this->whenLoaded('unit'),
             'price' => $this->whenLoaded('currentPrice'),
             'employee_price' => $this->whenLoaded('currentEmployeePrice'),
+            'media' => $this->getMedia()->all(),
             'created_at' => $this->created_at?->isoFormat('DD MMM YYYY'),
-            'updated_at' => $this->updated_at?->isoFormat('DD MMM YYYY'),
+            'updated_at' => $this->updated_at?->isoFormat('DD MMM YYYY'), 
         ];
     }
 }

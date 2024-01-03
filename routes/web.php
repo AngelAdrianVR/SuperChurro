@@ -5,6 +5,7 @@ use App\Http\Controllers\BarterController;
 use App\Http\Controllers\BonusController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JustificationEventController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\OutcomeController;
@@ -18,9 +19,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseMovementController;
 use App\Http\Controllers\WorkPermitController;
-use App\Http\Resources\PayrollUserResource2;
 use App\Models\CashRegister;
-use App\Models\PayrollUser;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -152,10 +151,13 @@ Route::put('bonus/toggle-status/{bonus}', [BonusController::class, 'toggleStatus
     ->middleware(['auth', 'admin'])
     ->name('bonuses.toggle-status');
 
-Route::get('/paty-nominas', function (Request $request) {
-    $payrolls = PayrollUserResource2::collection(PayrollUser::with('payroll', 'user')->whereIn('id', [289,294,300,307,313])->get());
-    // return $payrolls;
-    return inertia('PayRoll/Admin/Template3', compact('payrolls'));
-})
-    ->middleware('auth')
-    ->name('cash-register.update');
+// Justifications routes -----------------------
+Route::resource('justifications', JustificationEventController::class);
+
+// Route::get('/paty-nominas', function (Request $request) {
+//     $payrolls = PayrollUserResource2::collection(PayrollUser::with('payroll', 'user')->whereIn('id', [289,294,300,307,313])->get());
+//     // return $payrolls;
+//     return inertia('PayRoll/Admin/Template3', compact('payrolls'));
+// })
+//     ->middleware('auth')
+//     ->name('cash-register.update');

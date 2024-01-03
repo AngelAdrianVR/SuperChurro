@@ -100,7 +100,7 @@ export default {
         }],
       },
       yearOutcomesComparisonChartOptions: {
-        colors: ['#BEBFC1', '#F07209'],
+        colors: ['#BEBFC1', '#E0212F'],
         categories: this.outcomesLastYear.map(item => item.month),
         series: [{
           name: 'Año pasado',

@@ -1,87 +1,38 @@
 <template>
     <div class="
-      flex
-      space-y-0 flex-row justify-between items-center
-      px-3
-      common-container
-    ">
-        <div class="relative z-0 w-1/4 group">
-            <input @change="syncItem" v-model="concept" type="text" name="floating_description"
-                autocomplete="off" class="
-              block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-            " placeholder=" " />
-            <label for="floating_description" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">Concepto *</label>
-        </div>
-        <div class="relative z-0 mb-6 w-1/4 group">
-            <input @change="syncItem" v-model.number="quantity" min="1" type="number" name="floating_description"
-                autocomplete="off" class="
-              block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-            " placeholder=" " />
-            <label for="floating_description" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">Cantidad</label>
-        </div>
-        <div class="relative z-0 mb-6 w-1/4 group">
-            <input @change="syncItem" v-model="cost" min="1" step="0.1" type="number" name="floating_description"
-                autocomplete="off" class="
-              block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-            " placeholder=" " />
-            <label for="floating_description" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">$Costo/unidad</label>
-        </div>
+        flex
+        space-x-1 flex-row justify-between items-center
+        common-container">
+
+    <div class="w-2/3">
+        <InputLabel value="Concepto" class="ml-3 mb-1 text-sm" />
+        <input @change="syncItem" v-model="concept" type="text" autocomplete="off" class="input mt-1" />
+    </div>
+
+    <div class="w-1/4 relative">
+        <InputLabel value="Costo*" class="ml-3 mb-1 text-sm" />
+        <input @change="syncItem"  v-model="cost" type="number" min="1" step="0.1" autocomplete="off" class="input pl-6" />
+        <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]">$</p>
+    </div>
+
+    <div class="w-12">
+        <InputLabel value="Cant." class="ml-3 mb-1 text-sm" />
+        <input @change="syncItem" v-model.number="quantity" type="number" min="1" autocomplete="off" class="input" />
+    </div>
+
+    <div class="w-1/3 relative">
+        <InputLabel value="Total" class="ml-3 mb-1 text-sm" />
+        <input @change="syncItem"  :value="cost * quantity" type="number" min="1" step="0.1" autocomplete="off" class="input pl-6" />
+        <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]">$</p>
+    </div>
+
         <button type="button" @click="$emit('deleteItem')">
             <i class="
-          fa-solid fa-xmark
-          text-gray-300
-          hover:text-red-300
+          fa-regular fa-trash-can
+          ml-2
+          mt-5
+          text-sm
+          text-primary
           cursor-pointer
         "></i>
         </button>
@@ -89,6 +40,7 @@
 </template>
 
 <script>
+import InputLabel from "@/Components/InputLabel.vue";
 
 export default {
     data() {
@@ -97,6 +49,9 @@ export default {
             quantity: 1,
             cost: null,
         };
+    },
+    components:{
+        InputLabel,
     },
     emits: ['deleteItem', 'syncItem'],
     props: {

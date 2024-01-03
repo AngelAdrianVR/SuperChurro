@@ -1,66 +1,106 @@
 <template>
   <AppLayout title="Agregar Egresos">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Agregar Egreso
-      </h2>
+      <div class="flex items-center mt-2">
+        <Back />
+        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+          Agregar egreso
+        </h2>
+      </div>
     </template>
-    <div class="flex justify-start">
-      <Link :href="route('outcomes.index')" class="flex items-center mt-2 text-secondary">
-      <i class="fa-solid fa-angle-left text-lg hover:bg-gray-300 bg-opacity-100 rounded-full w-7 h-7 pl-1 ml-5"></i>
-      <span class="ml-1 cursor-default">Atrás</span>
-      </Link>
-    </div>
 
     <div class="
         max-w-2xl
         md:mx-auto
         mt-5
-        shadow-md shadow-gray-500/70
         rounded-lg
         px-5
         pt-4
         pb-5
-        bg-white
+        bg-transparent
+        border border-gray3
         mx-4
       ">
       <p v-if="validation_message" class="text-red-400 text-xs mb-2" v-html="validation_message"></p>
       <form @submit.prevent="store">
         <div>
+          <InputLabel value="Categoría" class="ml-3 mb-1 text-sm" />
+          <select
+            class="select mb-3 w-full"
+            v-model="form.category"
+          >
+            <option disabled selected class="text-gray-500">
+              -- Seleccione --
+            </option>
+            <option
+              class="text-gray-500"
+              v-for="category in categories"
+              :key="category"
+              :value="category"
+            >
+              {{ category }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3 w-full">
+          <InputLabel value="Fecha *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.date" type="date" autocomplete="off" class="input"
+           placeholder="Seleccione la fecha" />
+        </div>
+
+        <div>
+          <InputLabel value="Método de pago" class="ml-3 mb-1 text-sm" />
+          <select
+            class="select mb-3 w-full"
+            v-model="form.payment_method"
+          >
+            <option disabled selected class="text-gray-500">
+              -- Seleccione --
+            </option>
+            <option
+              class="text-gray-500"
+              v-for="item in payment_methods"
+              :key="item"
+              :value="item"
+            >
+              {{ item }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3 w-full">
+          <InputLabel value="Proveedor o comercio *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.provider" type="text" autocomplete="off" class="input" />
+        </div>
+
+        <div>
           <OutcomeInput v-for="(item, index) in form.items" :key="item.id" :id="item.id" @deleteItem="deleteItem(index)"
-            @syncItem="syncItems(index, $event)" class="mb-5" />
+            @syncItem="syncItems(index, $event)" class="mb-2" />
         </div>
         <p v-if="!form.items.length" class="text-sm text-gray-600"> Click al botón de "+" para empezar a agregar
           productos </p>
-        <div class="my-2 text-center">
-          <button type="button" @click="addNewItem">
-            <i class="fa-solid fa-circle-plus text-2xl text-blue-400"></i>
+        <div class="mt-2 mb-6 text-left">
+          <button class="text-primary text-sm" type="button" @click="addNewItem">
+            <i class="fa-solid fa-plus"></i>
+            Agregar producto
           </button>
         </div>
-        <div class="relative z-0 mb-6 w-full group">
-          <textarea v-model="form.notes" min="1" name="floating_description" autocomplete="off" class="
-              block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-            " placeholder=" " />
-          <label for="floating_description" class="
-              absolute
-              text-sm text-gray-500
-              dark:text-gray-700
-              duration-300
-              transform
-              -translate-y-6
-              scale-75
-              top-3
-              -z-10
-              origin-[0]
-              peer-focus:left-0
-              peer-focus:text-stone-600
-              peer-focus:dark:text-stone-500
-              peer-placeholder-shown:scale-100
-              peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-6
-            ">Notas</label>
+
+        <div class="my-2 w-full">
+          <InputLabel value="Notas" class="ml-3 mb-1 text-sm" />
+          <textarea
+            v-model="form.notes"
+            rows="2"
+            type="text"
+            autocomplete="off"
+            class="textarea"
+          />
         </div>
-        <PrimaryButton :disabled="form.processing">Agregar</PrimaryButton>
+
+        <div class="mt-5">
+          <PrimaryButton :disabled="form.processing">Guardar</PrimaryButton>
+        </div>
       </form>
     </div>
 
@@ -72,13 +112,18 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { Link, useForm } from "@inertiajs/inertia-vue3";
 import OutcomeInput from "@/Components/OutcomeInput.vue";
+import Back from "@/Components/Back.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
 
 
 export default {
   data() {
     const form = useForm({
+      category: null,
+      date: null,
+      payment_method: null,
       items: [
         {
           id: 1,
@@ -90,17 +135,36 @@ export default {
       notes: "",
     })
     return {
+      form,
       validation_message: "",
       next_item_id: 2,
-      form,
+      categories: [
+        'Gastos varios',
+        'Compra de insumos',
+        'Gasto de alimento para colaboradores',
+        'Costo de operaciones del carrito',
+        'Servicios públicos',
+        'Gastos administrativos',
+        'Material de limpieza',
+        'Gastos de farmacia',
+        'Otro',
+      ],
+      payment_methods: [
+        'Efectivo',
+        'Tarjeta de crédito',
+        'Tarjeta de débito',
+        'Otro',
+      ],
     }
   },
   components: {
     AppLayout,
     SecondaryButton,
     PrimaryButton,
-    Link,
     OutcomeInput,
+    Back,
+    InputLabel,
+    Link,
   },
   props: {
 

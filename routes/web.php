@@ -111,6 +111,10 @@ Route::post('payroll/store-extras', [PayrollController::class, 'storeExtras'])
     ->middleware('auth')
     ->name('payroll.store-extras');
 
+Route::get('payroll/get-by-date/{date}', [PayrollController::class, 'getByDate'])
+    ->middleware('auth')
+    ->name('payroll.get-by-date');
+
 // users routes -------------------------------------
 Route::post('/users/update-with-resources/{user}', [UserController::class, 'updateWithResources'])
     ->middleware('auth')

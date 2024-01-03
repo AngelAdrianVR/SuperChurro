@@ -73,7 +73,7 @@
                     <CancelButton @click="dayInEdition = null">Cancelar</CancelButton>
                     <PrimaryButton @click="update()">Guardar</PrimaryButton>
                   </div>
-                  <el-dropdown trigger="click" @command="handleCommand">
+                  <el-dropdown v-if="attendance.in != 'Día de descanso'" trigger="click" @command="handleCommand">
                     <button
                       class="w-6 h-6 rounded-full hover:bg-gray5 cursor-pointer flex items-center text-primary disabled:text-gray3 disabled:hover:bg-transparent disabled:cursor-not-allowed justify-center"
                       :disabled="dayInEdition !== null">
@@ -81,13 +81,15 @@
                     </button>
                     <template #dropdown>
                       <el-dropdown-menu>
+                        <el-dropdown-item :command="'attendance-' + index" :disabled="attendance.in != 'Falta'">
+                          Poner asistencia</el-dropdown-item>
                         <el-dropdown-item :command="'edit-' + index">
                           Editar</el-dropdown-item>
                         <el-dropdown-item :command="'extras-' + index">
                           Agregar T. Extra</el-dropdown-item>
                         <small class="px-4 text-gray4">Agregar incidencia</small>
                         <template v-for="item in justifications" :key="item.id">
-                          <el-dropdown-item :command="item.id + '-' + index" :disabled="item.id == 0 && attendance.in != 'Falta'">
+                          <el-dropdown-item :command="item.id + '-' + index">
                             {{ item.name }}
                           </el-dropdown-item>
                         </template>
@@ -127,7 +129,6 @@ export default {
       showOptions: false,
       week_days: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
       justifications: [
-        {name: 'Poner asistencia', id: 0},
         {name: 'Vacaciones', id: 3},
         {name: 'Permiso sin goce', id:4},
         {name: 'Permiso con goce', id: 5},

@@ -2,21 +2,9 @@
   <AppLayout title="Historial de ventas">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
-        Historial de ventas
+        Ventas
       </h2>
     </template>
-
-    <!-- <el-tabs
-    v-model="activeName"
-    type="card"
-    class="demo-tabs"
-    @tab-click="handleClick"
-  >
-    <el-tab-pane label="User" name="first">User</el-tab-pane>
-    <el-tab-pane label="Config" name="second">Config</el-tab-pane>
-    <el-tab-pane label="Role" name="third">Role</el-tab-pane>
-    <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
-  </el-tabs> -->
 
     <div class="mx-3 my-4 lg:w-1/3 lg:mx-auto">
       <label class="text-gray-500 text-sm">Selecciona la fecha para ver las ventas</label>
@@ -24,173 +12,139 @@
     </div>
 
     <div v-if="shift_1_sales.length || shift_2_sales.length">
-      <div class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-primary-gray shadow-md rounded-md px-2 py-1">
-        <h1 class="col-span-full text-center text-sm font-bold">Venta mensual acumulada</h1>
-        <p>
+      <div class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-transparent rounded-md px-2 py-1">
+        <h1 class="col-span-full text-left text-sm font-bold">Venta mensual acumulada</h1>
+        <p class="ml-4">
           Ventas: ${{ numberFormat(totalMonthSale().month_sales + totalMonthSale().to_employees) }} <br>
           <span>registrado en caja: ${{ numberFormat(month_stored_cash) }}</span> <br>
           <span v-html="monthSaleDiff()"></span>
         </p>
       </div>
 
-      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-primary-gray shadow-md rounded-md px-2 py-1">
-        <h1 class="col-span-full text-center text-sm font-bold">Empleados activos este día</h1>
-        <p v-for="(employee, index) in employees" :key="index">
-          <i class="fa-solid fa-user text-gray-500"></i>
-          {{ employee.name }}
-        </p>
-      </div>
+      <div class="border-b border-gray3 border-dashed mx-2 my-3"></div>
 
-      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-primary-gray shadow-md rounded-md px-2 py-1">
-        <h1 class="col-span-full text-center text-sm font-bold">Ventas T/M</h1>
-        <p v-for="sale in shift_1_sales" :key="sale.id">
-          {{ sale.product.name }} x{{ sale.quantity }}
-          <i class="fa-solid fa-arrow-right-long text-[#8cbe71]"></i>
-          ${{ sale.price * sale.quantity }}
-          <i @click="editSale(sale)" class="fa-solid fa-pencil text-blue-400 text-xs cursor-pointer ml-1"></i>
-        </p>
-        <strong class="col-span-full text-right">Total: ${{ totalSale().shift_1 }}</strong>
-      </div>
-
-      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-primary-gray shadow-md rounded-md px-2 py-1">
-        <h1 class="col-span-full text-center text-sm font-bold">Ventas T/V</h1>
-        <p v-for="sale in shift_2_sales" :key="sale.id">
-          {{ sale.product.name }} x{{ sale.quantity }}
-          <i class="fa-solid fa-arrow-right-long text-[#8cbe71]"></i>
-          ${{ sale.price * sale.quantity }}
-          <i @click="editSale(sale)" class="fa-solid fa-pencil text-blue-400 text-xs cursor-pointer ml-1"></i>
-        </p>
-        <strong class="col-span-full text-right">Total: ${{ totalSale().shift_2 }}</strong>
-      </div>
-
-      <div class="mt-3 mx-3 text-xs lg:grid lg:grid-cols-2 gap-1 bg-primary-gray shadow-md rounded-md px-2 py-1">
-        <h1 class="col-span-full text-center text-sm font-bold">Ventas a empleados / cortesías</h1>
-        <p v-for="sale in sales_to_employees" :key="sale.id">
-          <span class="bg-sky-200"><i class="fa-solid fa-user mr-1"></i> {{ sale.user?.name }}:</span>
-          {{ sale.product.name }} x{{ sale.quantity }}
-          <i class="fa-solid fa-arrow-right-long text-[#8cbe71]"></i>
-          ${{ sale.price * sale.quantity }}
-          {{ sale.notes ? '(Cortesías: ' + sale.notes + ')' : '' }}
-        </p>
-        <p class="font-bold col-span-full text-right">Total: ${{ totalSale().to_employees }}</p>
-      </div>
-
-      <div class="flex justify-between mt-3">
-        <div v-if="!stored_cash.length" class="relative z-0 w-1/2 group mx-4">
-          <input v-model="cash" type="text" name="floating_cash" autocomplete="off" required class="
-                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-              " placeholder=" " />
-          <label for="floating_cash" class="
-                absolute
-                text-sm text-gray-500
-                dark:text-gray-700
-                duration-300
-                transform
-                -translate-y-6
-                scale-75
-                top-3
-                -z-10
-                origin-[0]
-                peer-focus:left-0
-                peer-focus:text-stone-600
-                peer-focus:dark:text-stone-500
-                peer-placeholder-shown:scale-100
-                peer-placeholder-shown:translate-y-0
-                peer-focus:scale-75 peer-focus:-translate-y-6
-              ">Cantidad total en caja</label>
-          <SecondaryButton @click="storeCash" class="ml-3 my-2" :disabled="!cash">Guardar</SecondaryButton>
+      <!------------------------------ Empleados de ese día -------------------------- -->
+      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-transparent rounded-md px-2 py-1">
+        <h1 class="col-span-full text-center text-sm font-bold mb-4">Empleados activos este día </h1>
+        <div v-for="(employee, index) in employees" :key="index">
+          <div class="rounded-md border border-gray3 flex items-center py-2 px-3">
+            <i class="fa-regular fa-user-circle text-gray-500 text-lg mr-2"></i>
+            <p>{{ employee.name }}</p>
+          </div>
         </div>
-        <div v-if="edit_stored_cash" class="relative z-0 w-1/2 group mx-4">
-          <input v-model="cash" type="text" name="floating_cash" autocomplete="off" required class="
-                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-              " placeholder=" " />
-          <label for="floating_cash" class="
-                absolute
-                text-sm text-gray-500
-                dark:text-gray-700
-                duration-300
-                transform
-                -translate-y-6
-                scale-75
-                top-3
-                -z-10
-                origin-[0]
-                peer-focus:left-0
-                peer-focus:text-stone-600
-                peer-focus:dark:text-stone-500
-                peer-placeholder-shown:scale-100
-                peer-placeholder-shown:translate-y-0
-                peer-focus:scale-75 peer-focus:-translate-y-6
-              ">Cantidad total en caja</label>
-          <SecondaryButton @click="updateCash" class="ml-3 my-2" :disabled="!cash">Actualizar</SecondaryButton>
+      </div>
+      <!-- ---------------------------------------------------------------------------- -->
+
+      <div class="border-b border-gray3 border-dashed mx-2 my-3"></div>
+
+      <!-- ----------------- Ventas T/M --------------------------------- -->
+      <div class="mt-3 mx-3 text-xs rounded-md px-2 py-1">
+        <h1 class="col-span-full text-left text-sm font-bold mb-4">Ventas turno matutino</h1>
+
+        <SaleTable :shiftSales="shift_1_sales" />
+
+        <div class="flex justify-end">
+          <p class="font-bold bg-[#F2FEA8] px-4 py-2 mt-4">Total: ${{ (totalSale().shift_1).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
         </div>
-        <div class="flex flex-col items-end">
-          <p class="mx-3 font-bold text-green-600">Total: ${{
-            totalSale().shift_1 + totalSale().shift_2 +
-            totalSale().to_employees
-          }}</p>
-          <div v-if="stored_cash.length" class="flex justify-between items-center cursor-pointer pl-2">
-            <i @click="edit_stored_cash = true" class="fa-solid fa-pencil text-blue-600"></i>
-            <p class="mx-3 font-bold text-green-600">registrado en caja: ${{ stored_cash[0].cash }}</p>
+      </div>
+      <!-- ----------------------------------------------------------------- -->
+
+      <div class="border-b border-gray3 border-dashed mx-2 my-3"></div>
+
+      <!-- ----------------- Ventas T/V --------------------------------- -->
+      <div class="mt-3 mx-3 text-xs rounded-md px-2 py-1">
+        <h1 class="col-span-full text-center text-sm font-bold mb-4">Ventas turno vespertino</h1>
+
+        <SaleTable :shiftSales="shift_2_sales" />
+
+        <div class="flex justify-end">
+          <p class="font-bold bg-[#F2FEA8] px-4 py-2 mt-4">Total: ${{ (totalSale().shift_2).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
+        </div>
+      </div>
+      <!-- ----------------------------------------------------------------- -->
+
+      <div class="border-b border-gray3 border-dashed mx-2 my-3"></div>
+
+      <!-- Ventas a empleados y cortesías ---------------------------- -->
+      <div class="mt-3 mx-3 text-xs lg:grid lg:grid-cols-2 gap-1 bg-transparent rounded-md px-2 py-1">
+        <h1 class="col-span-full text-left text-sm font-bold mb-4">Ventas a empleados / cortesías</h1>
+
+        <div class="border border-gray3 rounded-md px-3 py-2 my-2" v-for="sale in sales_to_employees" :key="sale.id">
+          <div class="flex items-center mb-3">
+            <i class="fa-regular fa-user-circle text-gray-500 text-lg mr-2"></i>
+            <p class="text-sm">{{ sale.user?.name }}</p>
+          </div>
+          <div class="grid grid-cols-6 gap-1">
+            <p class="font-bold col-span-2">Producto</p>
+            <p class="font-bold">Tipo</p>
+            <p class="font-bold">Canidad</p>
+            <p class="font-bold">Total</p>
+            <p class="font-bold">Motivo</p>
+
+            <p class="col-span-2">{{ sale.product.name }}</p>
+            <p>{{ sale.price == 0 ? 'C' : 'VE' }}</p>
+            <p>{{ sale.quantity }}</p>
+            <p>${{ (sale.price * sale.quantity)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
+            <p>{{ sale.notes ? '(Cortesías: ' + sale.notes + ')' : '' }}</p>
+            
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <p class="font-bold bg-[#F2FEA8] px-4 py-2 mt-4">Total: ${{ (totalSale().to_employees).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
+        </div>
+      </div>
+      <!-- -------------------------------------------------------------------- -->
+
+
+      <!-- Venta total del día ------------------- -->
+      <div class="flex justify-end my-3 mx-4">
+
+        <div v-if="!stored_cash.length" class="mb-3 w-full">
+          <InputLabel value="Cantidad total en caja *" class="ml-3 mb-1 text-sm" />
+          <input v-model="cash" type="number" autocomplete="off" required class="input"
+           placeholder="$00.0" />
+           <PrimaryButton @click="storeCash" class="ml-3 my-2" :disabled="!cash">Guardar</PrimaryButton>
+        </div>
+
+        <div v-if="edit_stored_cash" class="mb-3 w-full">
+          <InputLabel value="Cantidad total en caja *" class="ml-3 mb-1 text-sm" />
+          <input v-model="cash" type="number" autocomplete="off" required class="input"
+           placeholder="$00.0" />
+           <CancelButton @click="edit_stored_cash = false" class="ml-3 my-2 !rounded-full">Cancelar</CancelButton>
+           <PrimaryButton @click="updateCash" class="ml-3 my-2" :disabled="!cash">Actualizar</PrimaryButton>
+        </div>
+
+        <div class="flex flex-col items-end text-sm">
+          <p class="mx-3 font-bold text-gray-700 mr-6">Total del sistema: ${{
+            (totalSale().shift_1 + totalSale().shift_2 + totalSale().to_employees)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}
+          </p>
+          <div v-if="stored_cash.length && !edit_stored_cash" class="flex justify-between items-center cursor-pointer pl-2">
+            <p class="mx-3 font-bold text-gray-700">Registrado en caja: ${{ (stored_cash[0].cash)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
+            <i v-if="!edit_stored_cash" @click="edit_stored_cash = true" class="fa-solid fa-pencil text-primary text-xs"></i>
           </div>
           <p v-if="stored_cash.length" v-html="saleDiff()"></p>
-          <p class="mx-3 font-bold text-green-600">Comisión: ${{ totalSale().commissions }}</p>
+          <p class="mx-3 font-bold text-gray-700 mr-6 text-sm">Comisión: ${{ totalSale().commissions }}</p>
         </div>
       </div>
     </div>
     <p v-else class="mt-6 text-sm text-gray-500 text-center">No hay ventas para mostrar</p>
 
-    <DialogModal :show="show_edit_sale_modal" @close="show_edit_sale_modal = false">
-      <template #title>
-        Editar venta <span class="text-sky-600 font-bold">{{ edit_sale.product.name }}</span>
-      </template>
-      <template #content>
-          <div class="relative z-0 mb-6 w-full group">
-            <input v-model="form.quantity" type="number" name="floating_time_requested" autocomplete="off" required class="
-                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500 focus:outline-none focus:ring-0 focus:border-stone-600 peer
-              " placeholder=" " />
-            <label for="floating_name" class="
-                absolute
-                text-sm text-gray-500
-                dark:text-gray-700
-                duration-300
-                transform
-                -translate-y-6
-                scale-75
-                top-3
-                -z-10
-                origin-[0]
-                peer-focus:left-0
-                peer-focus:text-stone-600
-                peer-focus:dark:text-stone-500
-                peer-placeholder-shown:scale-100
-                peer-placeholder-shown:translate-y-0
-                peer-focus:scale-75 peer-focus:-translate-y-6
-              ">Cantidad *</label>
-          </div>
-      </template>
-      <template #footer>
-        <SecondaryButton @click="show_edit_sale_modal = false">Cancelar</SecondaryButton>
-        <PrimaryButton @click="updateSale" class="ml-2" :disabled="form.processing">Guardar</PrimaryButton>
-      </template>
-    </DialogModal>
   </AppLayout>
 </template>
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import DialogModal from "@/Components/DialogModal.vue";
-import { Link, useForm } from "@inertiajs/inertia-vue3";
+import CancelButton from "@/Components/CancelButton.vue";
+import SaleTable from "@/Components/MyComponents/Sale/SaleTable.vue";
 import Datepicker from '@vuepic/vue-datepicker';
+import InputLabel from "@/Components/InputLabel.vue";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
 import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
   data() {
-    const form = useForm({
-      quantity: null,
-    });
+
     return {
       date: null,
       shift_1_sales: [],
@@ -204,16 +158,16 @@ export default {
       edit_stored_cash: false,
       show_edit_sale_modal: false,
       edit_sale: null,
-      form,
     }
   },
   components: {
     AppLayout,
-    SecondaryButton,
     PrimaryButton,
-    Link,
+    CancelButton,
     Datepicker,
-    DialogModal,
+    InputLabel,
+    SaleTable,
+    Link,
   },
   props: {
     products: Array,
@@ -292,8 +246,8 @@ export default {
       const diff = this.stored_cash[0].cash - total;
 
       return diff > 0
-        ? '<span class="text-green-600 font-bold">Diferencia + $' + diff + '</span>'
-        : '<span class="text-red-600">Diferencia $' + diff + '</span>';
+        ? '<span class="text-green-500 text-sm mr-6 font-bold">Diferencia + $' + diff + '</span>'
+        : '<span class="text-red-500 text-sm mr-6">Diferencia $' + diff + '</span>';
     },
     monthSaleDiff() {
       const total_sale = this.totalMonthSale();
@@ -339,18 +293,6 @@ export default {
       this.form.quantity = sale.quantity;
       this.show_edit_sale_modal = true;
     },
-    updateSale() {
-      this.form.put(route('sales.update', this.edit_sale.id), {
-        onSuccess: () => {
-          this.show_edit_sale_modal = false;
-          let sale = this.shift_1_sales.find(item => this.edit_sale.id === item.id);
-          if (!sale)
-            sale = this.shift_2_sales.find(item => this.edit_sale.id === item.id);
-          
-          sale.quantity = this.form.quantity;
-        },
-      });
-    }
   },
 };
 </script>

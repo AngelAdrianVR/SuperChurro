@@ -68,6 +68,7 @@ Route::get('/admin/payrolls/show-all/{payroll}', [PayrollController::class, 'sho
 Route::get('/admin/payrolls/show/{payrollUser}', [PayrollController::class, 'showUserPayroll'])->middleware(['auth', 'admin'])->name('payroll-admin.show');
 Route::get('/admin/payrolls/close', [PayrollController::class, 'closePayroll'])->middleware(['auth', 'admin'])->name('payroll-admin.close');
 Route::post('/admin/payrolls/update', [PayrollController::class, 'updatePayroll'])->middleware(['auth', 'admin'])->name('payroll-admin.update');
+Route::put('/admin/payrolls/set-incident', [PayrollController::class, 'setIncident'])->middleware(['auth', 'admin'])->name('payroll-admin.set-incident');
 Route::get('/admin-requests/permits', [AdminRequestController::class, 'permits'])->middleware(['auth', 'admin'])->name('admin-requests.permits');
 Route::get('/admin-requests/loans', [AdminRequestController::class, 'loans'])->middleware(['auth', 'admin'])->name('admin-requests.loans');
 Route::put('/accept/work-permit/{work_permit}', [AdminRequestController::class, 'acceptWorkPermit'])->middleware(['auth', 'admin'])->name('work-permit.accept');

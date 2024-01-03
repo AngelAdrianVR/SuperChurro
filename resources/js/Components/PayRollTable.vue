@@ -1,4 +1,10 @@
 <template>
+  <div v-if="pageLoading" class="fixed z-10 left-0 top-0 inset-0 bg-black opacity-25 flex items-center justify-center">
+  </div>
+  <div v-if="pageLoading"
+    class="fixed z-20 top-1/2 left-[36%] lg:left-[46%] w-32 h-32 rounded-lg bg-white flex items-center justify-center">
+    <i class="fa-solid fa-circle-notch fa-spin text-5xl text-primary"></i>
+  </div>
   <section class="relative py-2 bg-blueGray-50">
     <div class="w-full px-4">
       <div class="relative flex flex-col min-w-0 break-words w-full mb-6 rounded-lg 
@@ -37,37 +43,36 @@
                 <th class="border-t-0 px-6 align-middle text-sm whitespace-nowrap p-2 text-left flex items-center">
                   <span class="ml-3 font-bold text-gray-700"> {{ attendance.day }} </span>
                 </th>
-                <td class="border-t-0 px-6 align-middle text-sm whitespace-nowrap p-2">
-                  <input v-if="dayInEdition === index" v-model="form.payroll[index].in" type="text"
+                <td class="px-6 align-middle text-sm whitespace-nowrap p-2 border-white rounded-l-md"
+                  :class="getColor(attendance.in)">
+                  <input v-if="dayInEdition == index" v-model="form.payroll[index].in" type="time"
                     class="bg-transparent text-sm rounded-md">
                   <p v-else>{{ attendance.in }}</p>
                 </td>
-                <td class="border-t-0 px-6 align-middle text-sm whitespace-nowrap p-2">
-                  <input v-if="dayInEdition === index" v-model="form.payroll[index].out" type="text"
+                <td class="px-6 align-middle text-sm whitespace-nowrap p-2 border-white" :class="getColor(attendance.in)">
+                  <input v-if="dayInEdition == index" v-model="form.payroll[index].out" type="time"
                     class="bg-transparent text-sm rounded-md">
                   <p v-else>{{ attendance.out }}</p>
                 </td>
-                <td class="border-t-0 px-6 align-middle text-sm whitespace-nowrap p-2">
-                  <span v-if="payroll.extras" class="ml-3 font-bold text-gray-700">
+                <td class="px-6 align-middle text-sm whitespace-nowrap p-2 border-white rounded-r-md"
+                  :class="getColor(attendance.in)">
+                  <span v-if="payroll.extras" class="text-gray-700">
                     {{ payroll.extras[week_days[index]] ? payroll.extras[week_days[index]]?.time + ' minutos ($' +
                       payroll.extras[week_days[index]]?.pay + ')' : '--' }}
                   </span>
                   <span v-else>--</span>
                 </td>
                 <td class="border-t-0 px-6 align-middle text-sm whitespace-nowrap p-2">
-                  <span v-if="payroll.extras" class="ml-3 font-bold text-gray-700">
-                    {{ payroll.extras[week_days[index]] ? payroll.extras[week_days[index]]?.time + ' minutos ($' +
-                      payroll.extras[week_days[index]]?.pay + ')' : '--' }}
+                  <span class="text-gray-700">
+                    {{ calculateWorkedTime(attendance.in, attendance.out) }}
                   </span>
-                  <span v-else>--</span>
                 </td>
                 <td v-if="$page.props.user.is_admin && payroll.is_active"
                   class="px-6 align-middle text-sm whitespace-nowrap p-2 relative">
-
-                  <button v-if="dayInEdition === index" @click="update()" class="text-lg text-green-500"><i
-                      class="fa-regular fa-circle-check"></i></button>
-                  <button v-if="dayInEdition === index" @click="dayInEdition = null" class="text-lg text-red-500 mx-3">
-                    <i class="fa-regular fa-circle-xmark"></i></button>
+                  <div v-if="dayInEdition == index" class="flex items-center space-x-1">
+                    <CancelButton @click="dayInEdition = null">Cancelar</CancelButton>
+                    <PrimaryButton @click="update()">Guardar</PrimaryButton>
+                  </div>
                   <el-dropdown trigger="click" @command="handleCommand">
                     <button
                       class="w-6 h-6 rounded-full hover:bg-gray5 cursor-pointer flex items-center text-primary disabled:text-gray3 disabled:hover:bg-transparent disabled:cursor-not-allowed justify-center"
@@ -76,16 +81,15 @@
                     </button>
                     <template #dropdown>
                       <el-dropdown-menu>
-                        <el-dropdown-item :command="'edit-' + attendance.id">
+                        <el-dropdown-item :command="'edit-' + index">
                           Editar</el-dropdown-item>
-                        <el-dropdown-item :command="'late-' + attendance.id">
-                          Quitar retardo</el-dropdown-item>
-                        <el-dropdown-item :command="'extras-' + attendance.id">
+                        <el-dropdown-item :command="'extras-' + index">
                           Agregar T. Extra</el-dropdown-item>
                         <small class="px-4 text-gray4">Agregar incidencia</small>
                         <template v-for="item in justifications" :key="item.id">
-                          <el-dropdown-item v-if="item.id !== 7" :command="item.id + '-' + attendance.id + '-' + index">
-                            {{ item.name }}</el-dropdown-item>
+                          <el-dropdown-item :command="item.id + '-' + index" :disabled="item.id == 0 && attendance.in != 'Falta'">
+                            {{ item.name }}
+                          </el-dropdown-item>
                         </template>
                       </el-dropdown-menu>
                     </template>
@@ -100,15 +104,15 @@
   </section>
 </template>
 
-
 <script>
-
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import CancelButton from '@/Components/CancelButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import ThirthButton from '@/Components/ThirthButton.vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import axios from 'axios';
+import { parseISO, differenceInMinutes, differenceInSeconds, format, isValid } from 'date-fns';
 
 export default {
   data() {
@@ -122,19 +126,59 @@ export default {
       indexSelected: null,
       showOptions: false,
       week_days: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-      justifications: [],
+      justifications: [
+        {name: 'Poner asistencia', id: 0},
+        {name: 'Vacaciones', id: 3},
+        {name: 'Permiso sin goce', id:4},
+        {name: 'Permiso con goce', id: 5},
+        {name: 'Incapacidad', id: 6},
+      ],
+      pageLoading: false,
     };
   },
   components: {
     PrimaryButton,
     SecondaryButton,
     ThirthButton,
-    Link
+    Link,
+    CancelButton,
   },
   props: {
     payroll: Object,
   },
   methods: {
+    calculateWorkedTime(entry, exit) {
+      if (entry === '--:--:--' || exit === '--:--:--' || entry === 'Falta' || entry === 'Incapacidad' || entry === 'Día de descanso' || entry === 'Vacaciones' || entry === 'Día feriado') {
+        return '--';
+      }
+
+      const entryTime = parseISO(`2022-01-01T${entry}`);
+      const exitTime = exit === '00:00:00' ? new Date() : parseISO(`2022-01-01T${exit}`);
+
+      if (!isValid(entryTime) || !isValid(exitTime)) {
+        return '--';
+      }
+
+      const difference = differenceInSeconds(exitTime, entryTime);
+      const hoursWorked = Math.floor(difference / 3600);
+      const minutesWorked = Math.floor((difference % 3600) / 60);
+
+      return `${hoursWorked}h ${minutesWorked}m`;
+    },
+    getColor(incident) {
+      let styles = '';
+      if (incident == 'Falta') {
+        styles = 'bg-red-200 text-red-700';
+      } else if (incident == 'Vacaciones') {
+        styles = 'bg-yellow-200 text-yellow-700';
+      } else if (incident == 'Permiso sin goce') {
+        styles = 'bg-blue-200 text-blue-700';
+      } else if (['Día de descanso', 'Permiso con goce', 'Incapacidad', 'Día feriado'].some(item => item == incident)) {
+        styles = 'bg-green-200 text-green-700';
+      }
+
+      return styles;
+    },
     edit(day) {
       this.form.payroll = this.payroll.week_attendance.payroll;
       this.dayInEdition = day;
@@ -143,27 +187,44 @@ export default {
       const commandName = command.split('-')[0];
       const rowId = command.split('-')[1];
 
-      if (commandName == 'late') {
-        this.handleLate(rowId);
-      } else if (commandName == 'extras') {
-        this.handleExtras(rowId);
-      }else if (commandName == 'edit') {
-        this.dayInEdition = rowId;
-      } else if (commandName == 'attendance') {
-        const index = command.split('-')[2];
-        const date = this.processedAttendances[index].date.estandard;
-        this.handleAttendance(rowId, date);
+      if (commandName == 'extras') {
+        this.addExtraTime(rowId);
+      } else if (commandName == 'edit') {
+        this.edit(rowId);
       } else {
-        const index = command.split('-')[2];
-        const date = this.processedAttendances[index].date.estandard;
-        this.handleIncidents(rowId, commandName, date);
+        this.setIncident(rowId, commandName);
+      }
+    },
+    async setIncident(day, incidentId) {
+      try {
+        this.pageLoading = true;
+        const response = await axios.put(route('payroll-admin.set-incident'), {
+          payroll_user_id: this.payroll.payroll_user_id,
+          day: day,
+          incident_id: incidentId,
+          attendance: this.payroll.week_attendance.payroll[day],
+        });
+
+        if (response.status === 200) {
+          const justificationName = this.justifications.find(item => item.id == incidentId)?.name;
+          this.payroll.week_attendance.payroll[day].in = justificationName;
+          this.payroll.week_attendance.payroll[day].out = justificationName;
+          this.$notify({
+            title: response.data.notification.title,
+            message: response.data.notification.message,
+            type: response.data.notification.type
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.pageLoading = false;
       }
     },
     addExtraTime(index) {
       this.$emit('extraTime', { payroll_user: this.payroll, day: index });
     },
     update() {
-      // this.form.payroll = this.payroll.week_attendance.payroll;
       Inertia.post(route('payroll-admin.update'), {
         payroll_user_id: this.payroll.payroll_user_id,
         attendance: this.form.payroll[this.dayInEdition],
@@ -171,24 +232,25 @@ export default {
       });
       this.dayInEdition = null;
     },
-    async fetchJustifications() {
-      try {
-        const response = await axios.get(route('justifications.index'));
-        if (response.status === 200) {
-          this.justifications = response.data.items;
-        }
-      } catch (error) {
-        console.log(error);
-        this.$notify({
-          title: 'Hubo un problema en el servidor',
-          message: 'No se pudo procesar la petición de obtener la lista de justificaciones',
-          type: 'error',
-        });
-      }
-    }
-  },
-  mounted() {
-    this.fetchJustifications();
   }
+  //   async fetchJustifications() {
+  //     try {
+  //       const response = await axios.get(route('justifications.index'));
+  //       if (response.status === 200) {
+  //         this.justifications = response.data.items;
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //       this.$notify({
+  //         title: 'Hubo un problema en el servidor',
+  //         message: 'No se pudo procesar la petición de obtener la lista de justificaciones',
+  //         type: 'error',
+  //       });
+  //     }
+  //   }
+  // },
+  // mounted() {
+  //   this.fetchJustifications();
+  // }
 }
 </script>

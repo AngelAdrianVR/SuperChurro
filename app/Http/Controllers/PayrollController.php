@@ -10,6 +10,7 @@ use App\Models\Payroll;
 use App\Models\PayrollUser;
 use App\Models\Sale;
 use App\Models\User;
+use App\Models\WorkPermit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -38,7 +39,7 @@ class PayrollController extends Controller
 
         $usersWithNoAttendance = User::whereDoesntHave('payrolls', function ($query) use ($currentPayrollId) {
             $query->where('payroll_id', $currentPayrollId);
-        })->where('is_active', true)->whereNotIn('id', [1,3])->get();
+        })->where('is_active', true)->whereNotIn('id', [1, 3])->get();
 
         return inertia('PayRoll/Admin/Index', compact('payrolls', 'usersWithNoAttendance'));
     }
@@ -162,6 +163,46 @@ class PayrollController extends Controller
         }
 
         $payroll_user->update(['attendance' => $attendance]);
+    }
+
+    public function setIncident(Request $request)
+    {
+        $payroll_user = PayrollUser::find($request->payroll_user_id);
+        $create_incident = true;
+        $notificaion['title'] = "Correcto";
+        $notificaion['message'] = "Se ha registrado la incidencia";
+        $notificaion['type']  = "success";
+
+        // incidente 3 es vacaciones
+        if ($request->incident_id == 3 && $payroll_user->user->employee_properties['vacations'] < 1) {
+            $create_incident = false;
+            $notificaion['title'] = "Atención";
+            $notificaion['message'] = "No se pudo registrar el día de vacaciones debido a que el empleado no cuenta con días disponibles";
+            $notificaion['type']  = "info";
+        } else if ($request->incident_id == 3) {
+            $ep = $payroll_user->user->employee_properties;
+            $ep['vacations']--;
+            $payroll_user->user()->update(['employee_properties' => $ep]);
+        }
+
+        // crear permiso o incidencia
+        if ($create_incident) {
+            $date = $payroll_user->payroll->start_date->addDays($request->day)->toDateString();
+            $user_id = $payroll_user->user->id;
+
+            WorkPermit::updateOrCreate(
+                [
+                    'date' => $date,
+                    'user_id' => $user_id,
+                ],
+                [
+                    'permission_type_id' => $request->incident_id,
+                    'status' => 2,
+                ]
+            );
+        }
+
+        return response()->json(['notification' => $notificaion]);
     }
 
     public function storeExtras(Request $request)

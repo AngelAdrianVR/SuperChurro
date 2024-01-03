@@ -128,9 +128,7 @@ class PayrollUser extends Pivot
     private function typeOfAbsent($date)
     {
         if ($this->isDayOff($date->dayOfWeek)) $absent_type = "Día de descanso";
-        else if ($this->isVacation($date)) $absent_type = "Vacaciones";
-        else if ($this->isLeave($date)) $absent_type = "Permiso aprobado";
-        else if ($this->isHoliday($date)) $absent_type = "Día feriado";
+        else if ($this->getApprovedIncident($date)) $absent_type = $this->getApprovedIncident($date);
         else if ($date->greaterThanOrEqualTo(today())) $absent_type = "--:--:--";
         else $absent_type = "Falta";
 
@@ -150,28 +148,14 @@ class PayrollUser extends Pivot
         return $work_days->doesntContain('day', $day_of_week);
     }
 
-    private function isLeave($date)
+    private function getApprovedIncident($date)
     {
-        $is_there_an_approved_leave = WorkPermit::where('user_id', $this->user_id)
+        $incident = WorkPermit::where('user_id', $this->user_id)
             ->whereDate('date', $date)
             ->where('status', WorkPermit::STATUS_APPROVED)
-            ->where('time_requested', 0)
-            ->get()
-            ->count();
+            ->first();
 
-        return $is_there_an_approved_leave;
-    }
-
-    private function isVacation($date)
-    {
-        $is_there_an_approved_vacation = WorkPermit::where('user_id', $this->user_id)
-            ->whereDate('date', $date)
-            ->where('status', WorkPermit::STATUS_APPROVED)
-            ->where('permission_type_id', 3)
-            ->get()
-            ->count();
-
-        return $is_there_an_approved_vacation;
+        return $incident?->permissionType?->name;
     }
 
     private function isHoliday(Carbon $date)
@@ -241,8 +225,6 @@ class PayrollUser extends Pivot
                 $total_time += $extra['time'];
             }
         }
-
-
 
         return compact('total_pay', 'total_time');
     }

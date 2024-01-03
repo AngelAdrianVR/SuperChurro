@@ -33,6 +33,7 @@
       <PayRollTable v-for="(payroll, index) in payroll_selected.users" :key="index" :payroll="payroll"
         @extraTime="createExtraTime($event)" />
     </div>
+
     <ConfirmationModal :show="show_confirmation" @close="show_confirmation = false">
       <template #title>
         <div>¿Deseas continuar?</div>
@@ -90,7 +91,6 @@
         <PrimaryButton @click="storeExtraTime" class="ml-2" :disabled="form.processing">Guardar</PrimaryButton>
       </template>
     </DialogModal>
-
   </AppLayout>
 </template>
 

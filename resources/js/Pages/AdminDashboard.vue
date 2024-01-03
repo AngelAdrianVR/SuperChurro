@@ -55,6 +55,9 @@ import Kpi from "@/Components/MyComponents/Charts/Kpi.vue";
 import EmployeeStations from "@/Components/MyComponents/Dashboard/EmployeeStations.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+
 export default {
   data() {
     return {
@@ -80,35 +83,37 @@ export default {
           longitudes: [-103.42651, -103.40651],
         },
       ],
+      sales: [],
+      outcomes: [],
 
       // chart options
       yearSalesComparisonChartOptions: {
         colors: ['#BEBFC1', '#F07209'],
-        categories: ['Ene', 'Feb', 'Mar'],
+        categories: this.salesLastYear.map(item => item.month),
         series: [{
           name: 'Año pasado',
-          data: [10, 11, 9]
+          data: this.salesLastYear.map(item => item.amount.toFixed(2))
         },
         {
           name: 'Año en curso',
-          data: [9, 12, 8.5]
+          data: this.salesCurrentYear.map(item => item.amount.toFixed(2))
         }],
       },
       yearOutcomesComparisonChartOptions: {
-        colors: ['#BEBFC1', '#F07209'],
-        categories: ['Ene', 'Feb', 'Mar'],
+        colors: ['#BEBFC1', '#E0212F'],
+        categories: this.outcomesLastYear.map(item => item.month),
         series: [{
           name: 'Año pasado',
-          data: [10, 11, 9]
+          data: this.outcomesLastYear.map(item => item.amount.toFixed(2))
         },
         {
           name: 'Año en curso',
-          data: [9, 12, 8.5]
+          data: this.outcomesCurrentYear.map(item => item.amount.toFixed(2))
         }],
       },
       profitKpiOptions: {
-        currentVal: 1155.8,
-        refVal: 1000,
+        currentVal: this.getMonthProfit(),
+        refVal: this.getMonthProfit(1),
         tooltipCurrentVal: 'Ganancias mes actual',
         tooltipRefVal: 'Ganancias mes anterior',
         unit: '$',
@@ -132,8 +137,31 @@ export default {
     loan: Object,
     notices: Array,
     collaborators_birthdays: Array,
+    salesCurrentYear: Array,
+    outcomesCurrentYear: Array,
+    salesLastYear: Array,
+    outcomesLastYear: Array,
   },
   methods: {
+    getMonthProfit(subMonths = 0) {
+      // Obtiene la fecha actual
+      const currentDate = new Date();
+      // Formatea el mes actual en español
+      const currentMonth = parseInt(format(currentDate, 'M', { locale: es })) - 1 - subMonths;
+
+      let profit = 0;
+
+      if (currentMonth >= 0) {
+        profit = this.salesCurrentYear[currentMonth].amount -
+          this.outcomesCurrentYear[currentMonth].amount;
+      } else {
+        profit = this.salesLastYear[11].amount -
+          this.outcomesLastYear[11].amount;
+      }
+
+      return profit * 1000;
+
+    },
     getPosition() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(

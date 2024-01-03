@@ -5,7 +5,7 @@
         <main class="flex items-center space-x-4 pt-4">
             <section class="flex flex-col items-center space-y-1 w-2/3">
                 <el-tooltip :content="options.tooltipCurrentVal" placement="left">
-                    <p class="font-bold text-4xl">{{ options.unit }}{{ options.currentVal.toLocaleString('en-US', {
+                    <p class="font-bold text-3xl">{{ options.unit }}{{ options.currentVal.toLocaleString('en-US', {
                         minimumFractionDigits: 2
                     }) }}</p>
                 </el-tooltip>

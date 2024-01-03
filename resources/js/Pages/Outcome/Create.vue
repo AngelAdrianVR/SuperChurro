@@ -23,10 +23,10 @@
       ">
       <p v-if="validation_message" class="text-red-400 text-xs mb-2" v-html="validation_message"></p>
       <form @submit.prevent="store">
-        <div>
+        <div class="mb-3">
           <InputLabel value="Categoría" class="ml-3 mb-1 text-sm" />
           <select
-            class="select mb-3 w-full"
+            class="select w-full"
             v-model="form.category"
           >
             <option disabled selected class="text-gray-500">
@@ -41,18 +41,20 @@
               {{ category }}
             </option>
           </select>
+          <InputError :message="$page.props?.errors.category" />
         </div>
 
         <div class="mb-3 w-full">
-          <InputLabel value="Fecha *" class="ml-3 mb-1 text-sm" />
+          <InputLabel value="Fecha" class="ml-3 mb-1 text-sm" />
           <input v-model="form.date" type="date" autocomplete="off" class="input"
            placeholder="Seleccione la fecha" />
+           <InputError :message="$page.props?.errors.date" />
         </div>
 
-        <div>
+        <div class="mb-3">
           <InputLabel value="Método de pago" class="ml-3 mb-1 text-sm" />
           <select
-            class="select mb-3 w-full"
+            class="select w-full"
             v-model="form.payment_method"
           >
             <option disabled selected class="text-gray-500">
@@ -67,11 +69,13 @@
               {{ item }}
             </option>
           </select>
+          <InputError :message="$page.props?.errors.payment_method" />
         </div>
 
         <div class="mb-3 w-full">
-          <InputLabel value="Proveedor o comercio *" class="ml-3 mb-1 text-sm" />
+          <InputLabel value="Proveedor o comercio" class="ml-3 mb-1 text-sm" />
           <input v-model="form.provider" type="text" autocomplete="off" class="input" />
+          <InputError :message="$page.props?.errors.provider" />
         </div>
 
         <div>
@@ -115,6 +119,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import OutcomeInput from "@/Components/OutcomeInput.vue";
 import Back from "@/Components/Back.vue";
 import InputLabel from "@/Components/InputLabel.vue";
+import InputError from "@/Components/InputError.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 
 
@@ -124,6 +129,7 @@ export default {
       category: null,
       date: null,
       payment_method: null,
+      provider: null,
       items: [
         {
           id: 1,
@@ -162,8 +168,9 @@ export default {
     SecondaryButton,
     PrimaryButton,
     OutcomeInput,
-    Back,
     InputLabel,
+    InputError,
+    Back,
     Link,
   },
   props: {

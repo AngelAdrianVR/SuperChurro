@@ -16,6 +16,10 @@ return new class extends Migration
         Schema::create('outcomes', function (Blueprint $table) {
             $table->id();
             $table->string('concept');
+            $table->string('category');
+            $table->date('date');
+            $table->string('provider');
+            $table->string('payment_method');
             $table->unsignedSmallInteger('quantity');
             $table->unsignedFloat('cost');
             $table->string('notes')->nullable();

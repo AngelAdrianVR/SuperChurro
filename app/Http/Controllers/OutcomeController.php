@@ -16,6 +16,7 @@ class OutcomeController extends Controller
         });
 
         // return $outcomes;
+        
         foreach ($outcomes as $outcome) {
             $total_outcomes_money += $outcome->sum(function ($outcome) {
                 return $outcome->cost * $outcome->quantity;
@@ -41,11 +42,19 @@ class OutcomeController extends Controller
             'items.*.quantity' => 'required|numeric|min:1',
             'items.*.cost' => 'required|numeric|min:1',
             'notes' => 'max:191|nullable',
+            'category' => 'required|string',
+            'date' => 'required|date',
+            'payment_method' => 'required|string',
+            'provider' => 'required|string',
         ]);
 
         foreach ($request->items as $item) {
             Outcome::create([
                 'concept' => $item['concept'],
+                'category' => $request->category,
+                'date' => $request->date,
+                'provider' => $request->provider,
+                'payment_method' => $request->payment_method,
                 'quantity' => $item['quantity'],
                 'cost' => $item['cost'],
                 'notes' => $request->notes,

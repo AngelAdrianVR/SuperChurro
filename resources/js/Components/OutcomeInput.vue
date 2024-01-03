@@ -7,17 +7,18 @@
     <div class="w-2/3">
         <InputLabel value="Concepto" class="ml-3 mb-1 text-sm" />
         <input @change="syncItem" v-model="concept" type="text" autocomplete="off" class="input mt-1" />
+        
     </div>
 
     <div class="w-1/4 relative">
         <InputLabel value="Costo*" class="ml-3 mb-1 text-sm" />
-        <input @change="syncItem"  v-model="cost" type="number" min="1" step="0.1" autocomplete="off" class="input pl-6" />
+        <input @change="syncItem"  v-model="cost" type="number" min="1" required step="0.1" autocomplete="off" class="input pl-6" placeholder="0" />
         <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]">$</p>
     </div>
 
     <div class="w-12">
         <InputLabel value="Cant." class="ml-3 mb-1 text-sm" />
-        <input @change="syncItem" v-model.number="quantity" type="number" min="1" autocomplete="off" class="input" />
+        <input @change="syncItem" v-model.number="quantity" type="number" required min="1" autocomplete="off" class="input" placeholder="0" />
     </div>
 
     <div class="w-1/3 relative">
@@ -51,7 +52,7 @@ export default {
         };
     },
     components:{
-        InputLabel,
+        InputLabel
     },
     emits: ['deleteItem', 'syncItem'],
     props: {

@@ -160,5 +160,8 @@ return [
         'today' => 'Hoy',
         'phone_number' => 'Número telefónico',
         'date' => 'fecha',
+        'category' => 'categoría',
+        'payment_method' => 'método de pago',
+        'provider' => 'proveedor o comercio',
     ],
 ];

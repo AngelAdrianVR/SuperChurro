@@ -16,6 +16,14 @@ class Outcome extends Model
         'notes',
         'user_id',
         'created_at',
+        'category',
+        'date',
+        'provider',
+        'payment_method',
+    ];
+
+    protected $casts = [
+        'date' => 'date',
     ];
 
     //relationships

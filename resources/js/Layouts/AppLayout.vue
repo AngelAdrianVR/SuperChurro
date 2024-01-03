@@ -146,7 +146,7 @@ const logout = () => {
 
     <div class="min-h-screen bg-gray-50">
       <nav class="
-          bg-transparent
+          bg-transparent border-b pb-4
         ">
         <!-- Primary Navigation Menu -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">

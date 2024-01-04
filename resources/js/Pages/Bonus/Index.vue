@@ -21,7 +21,7 @@
                     <p class="mb-3">Descripción: <strong class="ml-2">{{ bonus.description }}</strong></p>
                     <p v-if="bonus.is_active" class="px-3 py-1 text-xs text-center text-green-700 bg-[#B4FD9B] rounded-md absolute top-4 right-3">Activo
                     </p>
-                    <p v-else class="px-2 py-1 text-center text-red-700 bg-red-200 rounded-md absolute top-4 right-3">Inactivo</p>
+                    <p v-else class="px-2 py-1 text-center text-xs text-red-700 bg-red-200 rounded-md absolute top-4 right-3">Inactivo</p>
 
                     <div class="flex justify-between items-center mt-4">
                         <PrimaryButton @click="$inertia.get(route('bonuses.edit', bonus.id ))">Editar</PrimaryButton>

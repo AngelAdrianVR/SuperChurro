@@ -45,7 +45,7 @@ const togglePasswordVisibility = () => {
             <AuthenticationCardLogo />
         </template>
 
-        <div class="border-b border-gray-300 mb-12 mt-9 text-center w-[80%] mx-auto">
+        <div class="border-b border-gray-300 mb-12 text-center w-[80%] mx-auto">
        <span class="inline-block border-b-2 border-primary px-4 text-gray-600">Iniciar sesión</span>
     </div>
 

@@ -147,6 +147,7 @@ class productController extends Controller
         ]);
 
         $product->update($request->all());
+
           // update image
         $product->clearMediaCollection();
         $product->addAllMediaFromRequest()->each(fn ($file) => $file->toMediaCollection());

@@ -77,6 +77,11 @@ class OutcomeController extends Controller
 
     public function edit(Outcome $outcome)
     {
+        $outcomes = Outcome::whereDate('created_at', $outcome->created_at)->get();
+
+        // return $outcomes;
+
+        return inertia('Outcome/Edit', compact('outcome', 'outcomes'));
     }
 
 
@@ -90,9 +95,16 @@ class OutcomeController extends Controller
     }
 
 
-    public function destroy(Outcome $outcome)
+    public function destroy(Request $request)
     {
-        //
+        $outcomesArray = $request->input('outcomesArray');
+
+        foreach ($outcomesArray as $outcomeId) {
+            // Realiza la lógica para eliminar el elemento con el ID $outcomeId
+            Outcome::destroy($outcomeId);
+        }
+
+        return response()->json(['items' => $outcomesArray]);
     }
 
     public function filter(Request $request)
@@ -103,8 +115,8 @@ class OutcomeController extends Controller
 
         $outcomes = Outcome::query()->when($request->year, function ($query) use ($request) {
             return $query->whereYear('created_at', $request->year);
-        })->when($request->month, function ($query) use ($replaced_month) {
-            return $query->whereMonth('created_at', $replaced_month);
+        })->when($request->month, function ($query) use ($request) {
+            return $query->whereMonth('created_at', $request->month);
         })->with('user')->latest()->get()->groupBy(function ($data) {
             return $data->created_at->toDateString();
         });

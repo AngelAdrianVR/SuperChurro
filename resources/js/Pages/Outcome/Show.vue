@@ -14,10 +14,10 @@
     >
       <div class="flex items-center justify-between">
         <p class="font-bold text-sm">Categoría: <span>{{ outcomes.category }}</span></p>
-        <div class="flex items-center space-x-1">
+        <!-- <div class="flex items-center space-x-1">
           <i class="fa-solid fa-pencil text-sm rounded-full py-1 px-[7px] hover:bg-gray5 cursor-pointer text-primary"></i>
           <i class="fa-regular fa-trash-can text-sm rounded-full py-1 px-[7px] hover:bg-gray5 cursor-pointer text-primary"></i>
-        </div>
+        </div> -->
       </div>
 
       <div class="grid grid-cols-4 lg:mx-4 mt-2 space-y-2 overflow-auto">
@@ -45,7 +45,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr
+                <tr @click="editOutcome(outcome)"
                     v-for="outcome in outcomes" :key="outcome.id" class="mb-4">
                     <td class="py-1 pl-3">
                         {{ outcome.concept }}
@@ -70,113 +70,33 @@
     
     <DialogModal :show="show_edit_outcome_modal" @close="show_edit_outcome_modal = false">
       <template #title>
-        Editar Egreso <span class="text-sky-600 font-bold">{{ edit_outcome.concept }}</span>
+        <p class="text-sm font-bold">Editar Egreso <span class="text-primary ml-2">{{ edit_outcome.concept }}</span></p>
       </template>
       <template #content>
-          <div class="relative z-0 mb-6 w-full group">
-            <input v-model="form.concept" type="text" name="floating_time_requested" autocomplete="off" required class="
-                block
-                py-2.5
-                px-0
-                w-full
-                text-sm text-gray-900
-                bg-transparent
-                border-0 border-b-2 border-gray-300
-                appearance-none
-                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
-                peer
-              " placeholder=" " />
-            <label for="floating_name" class="
-                absolute
-                text-sm text-gray-500
-                dark:text-gray-700
-                duration-300
-                transform
-                -translate-y-6
-                scale-75
-                top-3
-                -z-10
-                origin-[0]
-                peer-focus:left-0
-                peer-focus:text-stone-600
-                peer-focus:dark:text-stone-500
-                peer-placeholder-shown:scale-100
-                peer-placeholder-shown:translate-y-0
-                peer-focus:scale-75 peer-focus:-translate-y-6
-              ">Concepto *</label>
+
+        <div class="mb-2 w-full">
+          <InputLabel value="Concepto *" class="ml-3 mb-1 text-sm" />
+          <input v-model="form.concept" type="text" required autocomplete="off" class="input"
+           placeholder="Escribe el concepto" />
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <div class="mb-2 w-full">
+            <InputLabel value="Cantidad *" class="ml-3 mb-1 text-sm" />
+            <input v-model="form.quantity" type="number" required autocomplete="off" step="0.1" class="input"
+            placeholder="0" />
           </div>
 
-          <div class="relative z-0 mb-6 w-full group">
-            <input v-model="form.quantity" type="number" name="floating_time_requested" autocomplete="off" required class="
-                block
-                py-2.5
-                px-0
-                w-full
-                text-sm text-gray-900
-                bg-transparent
-                border-0 border-b-2 border-gray-300
-                appearance-none
-                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
-                peer
-              " placeholder=" " />
-            <label for="floating_name" class="
-                absolute
-                text-sm text-gray-500
-                dark:text-gray-700
-                duration-300
-                transform
-                -translate-y-6
-                scale-75
-                top-3
-                -z-10
-                origin-[0]
-                peer-focus:left-0
-                peer-focus:text-stone-600
-                peer-focus:dark:text-stone-500
-                peer-placeholder-shown:scale-100
-                peer-placeholder-shown:translate-y-0
-                peer-focus:scale-75 peer-focus:-translate-y-6
-              ">Cantidad *</label>
+          <div class="mb-2 w-full relative">
+            <InputLabel value="Costo *" class="ml-3 mb-1 text-sm" />
+            <input v-model="form.cost" type="number" min="1" required step="0.1" autocomplete="off" class="input pl-7" placeholder="0" />
+            <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[5px] py-[5px]">$</p>
           </div>
+        </div>
 
-          <div class="relative z-0 mb-6 w-full group">
-            <input v-model="form.cost" type="number" name="floating_time_requested" autocomplete="off" required class="
-                block
-                py-2.5
-                px-0
-                w-full
-                text-sm text-gray-900
-                bg-transparent
-                border-0 border-b-2 border-gray-300
-                appearance-none
-                dark:text-gray-700 dark:border-gray-600 dark:focus:border-stone-500
-                block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#BF532A]
-                peer
-              " placeholder=" " />
-            <label for="floating_name" class="
-                absolute
-                text-sm text-gray-500
-                dark:text-gray-700
-                duration-300
-                transform
-                -translate-y-6
-                scale-75
-                top-3
-                -z-10
-                origin-[0]
-                peer-focus:left-0
-                peer-focus:text-stone-600
-                peer-focus:dark:text-stone-500
-                peer-placeholder-shown:scale-100
-                peer-placeholder-shown:translate-y-0
-                peer-focus:scale-75 peer-focus:-translate-y-6
-              ">Costo *</label>
-          </div>
       </template>
       <template #footer>
-        <SecondaryButton @click="show_edit_outcome_modal = false">Cancelar</SecondaryButton>
+        <CancelButton class="!rounded-full" @click="show_edit_outcome_modal = false">Cancelar</CancelButton>
         <PrimaryButton @click="updateOutcome" class="ml-2" :disabled="form.processing">Guardar</PrimaryButton>
       </template>
     </DialogModal>
@@ -185,9 +105,10 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
+import CancelButton from "@/Components/CancelButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import DialogModal from "@/Components/DialogModal.vue";
+import InputLabel from "@/Components/InputLabel.vue";
 import Back from "@/Components/Back.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 
@@ -207,9 +128,10 @@ export default {
   },
   components: {
     AppLayout,
-    SecondaryButton,
+    CancelButton,
     PrimaryButton,
     DialogModal,
+    InputLabel,
     Back,
     Link
   },

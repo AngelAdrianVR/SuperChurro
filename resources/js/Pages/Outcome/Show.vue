@@ -1,40 +1,72 @@
 <template>
   <AppLayout title="Mostrar Egreso">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Detalles de egreso
-      </h2>
+      <div class="flex items-center mt-2">
+        <Back />
+        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+          Detalles de egresos
+        </h2>
+      </div>
     </template>
 
-    <div class="flex justify-start">
-      <Link :href="route('outcomes.index')" class="flex items-center mt-2 text-secondary">
-        <i
-          class="fa-solid fa-angle-left text-lg hover:bg-gray-300 bg-opacity-100 rounded-full w-7 h-7 pl-1 ml-5"
-        ></i>
-        <span class="ml-1 cursor-default">Atrás</span>
-      </Link>
-    </div>
-
     <div
-      class="max-w-2xl md:mx-auto mt-5 shadow-md shadow-gray-500/70 rounded-lg px-5 pt-4 pb-5 bg-white mx-4"
+      class="max-w-2xl md:mx-auto mt-5 rounded-lg px-5 pt-4 pb-5 bg-transparent border border-gray3 mx-4"
     >
-      <h1 class="text-sky-500 font-bold mb-2">Egreasos registrados</h1>
-      <ul>
-        <li
-          v-for="outcome in outcomes"
-          :key="outcome.id"
-          class="text-sm list-disc ml-2"
-        >
-          {{ outcome.concept }}
-          <i class="fa-solid fa-arrow-right mx-3 text-green-600"></i>
-          ${{ outcome.cost }} X
-          {{ outcome.quantity }} = ${{ outcome.quantity * outcome.cost}} 
-          <i @click="editOutcome(outcome)" class="fa-solid fa-pencil text-blue-400 text-xs cursor-pointer ml-1"></i>   
-        </li>
-      </ul>
-      <br>
-      Total= ${{getTotal()}} <br>
+      <div class="flex items-center justify-between">
+        <p class="font-bold text-sm">Categoría: <span>{{ outcomes.category }}</span></p>
+        <div class="flex items-center space-x-1">
+          <i class="fa-solid fa-pencil text-sm rounded-full py-1 px-[7px] hover:bg-gray5 cursor-pointer text-primary"></i>
+          <i class="fa-regular fa-trash-can text-sm rounded-full py-1 px-[7px] hover:bg-gray5 cursor-pointer text-primary"></i>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-4 lg:mx-4 mt-2 space-y-2 overflow-auto">
+        <p class="text-sm font-bold col-span-1">Método de pago:</p>
+        <p class="text-sm col-span-3">{{ outcomes.payment_method ?? '--' }}</p>
+        <p class="text-sm font-bold col-span-1">Monto:</p>
+        <p class="text-sm col-span-3">{{ getTotal().toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
+        <p class="text-sm font-bold col-span-1">Descripción:</p>
+
+        <table @click="showOptions = false" class="w-full mx-auto text-sm mt-5 col-span-3">
+            <thead class="bg-gray4">
+                <tr class="text-center">
+                    <th class="font-bold pb-1 pl-2 text-left rounded-l-full">
+                        Concepto
+                    </th>
+                    <th class="font-bold pb-1 pl-2 text-left">
+                        Costo
+                    </th>
+                    <th class="font-bold pb-1 px-1 text-left">
+                        Cantidad
+                    </th>
+                    <th class="font-bold pb-1 px-1 text-left rounded-r-full"> 
+                        Total
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    v-for="outcome in outcomes" :key="outcome.id" class="mb-4">
+                    <td class="py-1 pl-3">
+                        {{ outcome.concept }}
+                    </td>
+                    <td class="py-1 pr-2">
+                        ${{ outcome.cost?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}
+                    </td>
+                    <td class="py-1 pr-2">
+                        {{ outcome.quantity }}
+                    </td>
+                    <td class="py-1 pr-2">
+                        ${{ (outcome.quantity * outcome.cost)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="text-sm font-bold col-span-1">Comentarios:</p>
+        <p class="text-sm col-span-3">{{ outcomes.notes ?? '--' }}</p>
+      </div>
     </div>
+      <p class="text-right mx-4 font-bold text-sm mt-5 mb-5">Total= ${{getTotal().toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}} </p>
     
     <DialogModal :show="show_edit_outcome_modal" @close="show_edit_outcome_modal = false">
       <template #title>
@@ -156,6 +188,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import DialogModal from "@/Components/DialogModal.vue";
+import Back from "@/Components/Back.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 
 export default {
@@ -174,10 +207,11 @@ export default {
   },
   components: {
     AppLayout,
-    Link,
     SecondaryButton,
     PrimaryButton,
-    DialogModal
+    DialogModal,
+    Back,
+    Link
   },
   props: {
     outcomes: Array,

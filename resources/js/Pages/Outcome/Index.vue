@@ -8,13 +8,26 @@
       </div>
     </template>
 
-    <div class="flex justify-end">
+    <div class="flex justify-between mx-5">
+      <div class="block">
+        <el-date-picker
+        @change="applyFilter"
+          v-model="date"
+          type="month"
+          placeholder="Selecciona el mes"
+          format="MMM YYYY"
+          value-format="MMM YYYY"
+        />
+      </div>
+      {{date?.split(' ')[0]}}
       <Link :href="route('outcomes.create')">
-        <PrimaryButton class="mr-7  mb-5 !rounded-md"><i class="fa-solid fa-plus mr-2"></i> Nuevo</PrimaryButton>
+        <PrimaryButton class="mb-5 !rounded-md"><i class="fa-solid fa-plus mr-2"></i> Nuevo</PrimaryButton>
       </Link>
     </div>
 
-      <div class="pb-2 px-4 flex space-x-2">
+      <p v-if="month" class="font-bold text-sm mx-5">Total de egresos: $</p>
+
+      <div class="pb-2 px-4 flex space-x-2 mt-9">
         <select v-model="selected_year" class="select " name="year">
           <option value="" selected disabled>-- Selecciona el año --</option>
           <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
@@ -62,6 +75,7 @@ export default {
     });
     return {
       form,
+      date: null,
       selected_year: '',
       selected_month: '',
       filtered_outcomes: [],
@@ -114,8 +128,9 @@ export default {
       }, 0);
     },
    async applyFilter(){
+      
       try {
-        const response = await axios.post(route('outcomes.filter'),{year: this.selected_year, month: this.selected_month});
+        const response = await axios.post(route('outcomes.filter'),{year: this.date.split(' ')[1], month: this.date.split(' ')[0]});
         if(response.status == 200){
          this.filtered_outcomes = response.data.outcomes;
          this.total_outcome = response.data.total_outcomes_money;
@@ -123,6 +138,15 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      // try {
+      //   const response = await axios.post(route('outcomes.filter'),{year: this.selected_year, month: this.selected_month});
+      //   if(response.status == 200){
+      //    this.filtered_outcomes = response.data.outcomes;
+      //    this.total_outcome = response.data.total_outcomes_money;
+      //   }
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }
   },
   mounted() {

@@ -128,7 +128,7 @@ export default {
     const form = useForm({
       category: null,
       date: null,
-      payment_method: null,
+      payment_method: "Efectivo",
       provider: null,
       items: [
         {
@@ -157,6 +157,7 @@ export default {
       ],
       payment_methods: [
         'Efectivo',
+        'Transferencia bancaria',
         'Tarjeta de crédito',
         'Tarjeta de débito',
         'Otro',

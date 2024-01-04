@@ -70,6 +70,7 @@ class OutcomeController extends Controller
     {
         $outcomes = Outcome::whereDate('created_at', $outcome->created_at)->get();
 
+        // return $outcomes;
         return inertia('Outcome/Show', compact('outcomes'));
     }
 
@@ -97,10 +98,13 @@ class OutcomeController extends Controller
     public function filter(Request $request)
     {
         $total_outcomes_money = 0;
+
+        $replaced_month = str_replace("Dec", "Diciembre", $request->month);
+
         $outcomes = Outcome::query()->when($request->year, function ($query) use ($request) {
             return $query->whereYear('created_at', $request->year);
-        })->when($request->month, function ($query) use ($request) {
-            return $query->whereMonth('created_at', $request->month);
+        })->when($request->month, function ($query) use ($replaced_month) {
+            return $query->whereMonth('created_at', $replaced_month);
         })->with('user')->latest()->get()->groupBy(function ($data) {
             return $data->created_at->toDateString();
         });

@@ -26,7 +26,7 @@
                     {{ bonus.amount }} {{ bonus.name }}
                 </span>
                 <span v-if="current_payroll.extras">+<i class="text-green-700 fa-solid fa-dollar mr-1"></i>
-                {{ current_payroll.total_extras }} hrs. extra </span>
+                    {{ current_payroll.total_extras }} hrs. extra </span>
                 <span v-if="current_payroll.vacation_premium">+<i class="text-green-700 fa-solid fa-dollar mr-1"></i>{{
                     current_payroll.vacation_premium
                 }} prima

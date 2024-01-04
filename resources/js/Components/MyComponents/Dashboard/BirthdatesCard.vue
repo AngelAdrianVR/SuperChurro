@@ -1,7 +1,7 @@
 <template>
-    <div class="globe relative text-center z-0">
+    <div class="globe relative text-center self-start z-0">
         <div class="globe-title pb-2">
-            <h1 class="font-bold">Cumpleaños</h1>
+            <h1 class="font-bold">Cumpleaños de este mes</h1>
         </div>
         <ul class="text-[#373737]">
             <li v-for="user in users" :key="user.id" class="flex text-sm space-x-2">

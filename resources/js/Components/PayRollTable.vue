@@ -112,11 +112,10 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import CancelButton from '@/Components/CancelButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import ThirthButton from '@/Components/ThirthButton.vue';
-import { Inertia } from '@inertiajs/inertia';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import LoadingIndicator from "@/Components/MyComponents/LoadingIndicator.vue";
 import axios from 'axios';
-import { parseISO, differenceInMinutes, differenceInSeconds, format, isValid } from 'date-fns';
+import { parseISO, differenceInSeconds, isValid } from 'date-fns';
 
 export default {
   data() {

@@ -50,6 +50,9 @@ class PayrollUser extends Pivot
         $days_as_double = 0;
         $double_commission_on = [];
         $vacations = 0;
+        $paid_leaves = 0;
+        $no_paid_leaves = 0;
+        $sickness = 0;
         $extras = 0; // minutes
         $late = 0; // minutes
         $tolerance = 0;
@@ -61,11 +64,12 @@ class PayrollUser extends Pivot
                 // check if this day is off, applied leave or holyday
                 $current_attendance[$i] = $this->typeOfAbsent($current_day_in_loop);
 
-                // add vacations or sub attendances
+                // add incidents or sub attendances
                 if ($current_attendance[$i]['in'] !== 'Día feriado') $attendances--;
                 if ($current_attendance[$i]['in'] == 'Vacaciones') $vacations++;
-
-                // 
+                elseif ($current_attendance[$i]['in'] == 'Permiso con goce') $paid_leaves++;
+                elseif ($current_attendance[$i]['in'] == 'Permiso sin goce') $no_paid_leaves++;
+                elseif ($current_attendance[$i]['in'] == 'Incapacidad') $sickness++;
             } else if ($current_attendance[$i]['out'] !== '--:--:--') {
                 // add aditional day salary (full day worked)
                 if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos' || $this->isHoliday($current_day_in_loop)) {
@@ -119,6 +123,9 @@ class PayrollUser extends Pivot
             'days_as_double' => $days_as_double,
             'double_commission_on' => $double_commission_on,
             'vacations' => $vacations,
+            'paid_leaves' => $paid_leaves,
+            'no_paid_leaves' => $no_paid_leaves,
+            'sickness' => $sickness,
             'extras' => $extras,
             'late' => $late,
             'days_late_number' => $days_late_number,
@@ -170,13 +177,14 @@ class PayrollUser extends Pivot
     public function paid()
     {
         $total = $this->baseSalary()
-            + $this->vacationPremium()
             + collect($this->commissions())->sum()
             + $this->salaryForExtras()
             + $this->extraTime()['total_pay']
             + collect($this->bonuses())->sum('amount')
             - collect($this->discounts())->sum('amount')
-            + $this->payVacations();
+            + $this->payVacations()
+            + $this->payLeaves()
+            + $this->paySickness();
 
         return round($total);
     }
@@ -218,8 +226,8 @@ class PayrollUser extends Pivot
         $total_pay = 0;
         $total_time = 0;
         // extra time
-        if (($this->extras && !isset($this->extras['vacations']))) {
-            // get stored data
+        if ($this->extras) {
+            // get storeddata
             foreach ($this->extras as $extra) {
                 $total_pay += $extra['pay'];
                 $total_time += $extra['time'];
@@ -227,21 +235,6 @@ class PayrollUser extends Pivot
         }
 
         return compact('total_pay', 'total_time');
-    }
-
-    public function vacationPremium()
-    {
-        if ($this->additional) {
-            // get stored data
-            $vacation_days = $this->attendance['vacations'];
-            $base_salary = $this->additional['base_salary'];
-        } else {
-            // process data
-            $vacation_days = $this->weekAttendanceArray()['vacations'];
-            $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
-        }
-
-        return 0.25 * $base_salary * $vacation_days;
     }
 
     public function commissions()
@@ -338,14 +331,62 @@ class PayrollUser extends Pivot
         return $discounts;
     }
 
+    // public function payVacations()
+    // {
+    //     $user = User::find($this->user_id);
+
+    //     if (isset($this->extras['vacations'])) {
+    //         return $this->extras['vacations'] * $user->employee_properties['base_salary'];
+    //     } else {
+    //         return 0;
+    //     }
+    // }
+
     public function payVacations()
     {
-        $user = User::find($this->user_id);
-
-        if (isset($this->extras['vacations'])) {
-            return $this->extras['vacations'] * $user->employee_properties['base_salary'];
+        if ($this->additional) {
+            if (!key_exists('vacations', $this->attendance)) return 0;
+            // get stored data
+            $vacation_days = $this->attendance['vacations'];
+            $base_salary = $this->additional['base_salary'];
         } else {
-            return 0;
+            // process data
+            $vacation_days = $this->weekAttendanceArray()['vacations'];
+            $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
         }
+
+        return 1.25 * $base_salary * $vacation_days;
+    }
+
+    public function payLeaves()
+    {
+        if ($this->additional) {
+            if (!key_exists('paid_leaves', $this->attendance)) return 0;
+            // get stored data
+            $leaves = $this->attendance['paid_leaves'];
+            $base_salary = $this->additional['base_salary'];
+        } else {
+            // process data
+            $leaves = $this->weekAttendanceArray()['paid_leaves'];
+            $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
+        }
+
+        return $base_salary * $leaves;
+    }
+
+    public function paySickness()
+    {
+        if ($this->additional) {
+            if (!key_exists('sickness', $this->attendance)) return 0;
+            // get stored data
+            $sickness = $this->attendance['sickness'];
+            $base_salary = $this->additional['base_salary'];
+        } else {
+            // process data
+            $sickness = $this->weekAttendanceArray()['sickness'];
+            $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
+        }
+
+        return $base_salary * $sickness * 0.6;
     }
 }

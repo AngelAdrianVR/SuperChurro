@@ -15,22 +15,22 @@
         <p class="flex items-center mb-2 space-x-3 font-bold">
             <i class="fa-solid fa-hand-holding-dollar text-sm"></i>
             <span>Carrito </span>
-            <span>({{ inCart.length }})</span>
+            <span>({{ Object.keys(inCart).length }})</span>
         </p>
         <ul v-for="item in inCart" :key="item.id" class="text-sm ml-10">
             <li class="list-disc">{{ item.name }}</li>
         </ul>
-        <p v-if="!inCart.length" class="text-xs text-gray1 text-center">No hay empleados en carrito</p>
+        <p v-if="!Object.keys(inCart).length" class="text-xs text-gray1 text-center">No hay empleados en carrito</p>
         <div class="flex flex-col mt-3">
             <p class="flex items-center mb-2 space-x-2 font-bold">
                 <i class="fa-solid fa-kitchen-set text-sm"></i>
                 <span>Cocina</span>
-                <span>({{ inKitchen.length }})</span>
+                <span>({{ Object.keys(inKitchen).length }})</span>
             </p>
             <ul v-for="item in inKitchen" :key="item.id" class="text-sm ml-10">
                 <li class="list-disc">{{ item.name }}</li>
             </ul>
-            <p v-if="!inKitchen.length" class="text-xs text-gray1 text-center">No hay empleados en cocina</p>
+            <p v-if="!Object.keys(inKitchen).length" class="text-xs text-gray1 text-center">No hay empleados en cocina</p>
         </div>
     </div>
 </template>

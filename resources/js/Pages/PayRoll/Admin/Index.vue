@@ -1,7 +1,7 @@
 <template>
   <LoadingIndicator v-if="loading" />
   <AppLayout title="Administración de Nóminas">
-    <div class="mx-10">
+    <div class="mx-1 lg:mx-10">
       <h2 class="font-bold text-lg mt-8">
         Administración de Nóminas
       </h2>
@@ -35,9 +35,9 @@
         <div class="mt-5 text-bold text-lg text-gray-700">
           <div class="flex justify-between items-center my-4">
             <p class="ml-5 text-sm font-bold">Asistencias de empleados</p>
-            <Link v-if="!payroll_selected.is_active" :href="route('payroll-admin.show-all', payroll_selected.id)">
-            <PrimaryButton class="mr-7"><i class="fa-solid fa-print mr-1"></i> Imprimir nóminas</PrimaryButton>
-            </Link>
+            <a v-if="!payroll_selected.is_active" target="_blank" :href="route('payroll-admin.show-all', payroll_selected.id)">
+              <PrimaryButton class="mr-7"><i class="fa-solid fa-print mr-1"></i> Imprimir nóminas</PrimaryButton>
+            </a>
             <!-- <PrimaryButton @click="show_confirmation = true" v-else class="mr-7">Cerrar nómina</PrimaryButton> -->
           </div>
           <PayRollTable v-for="(payroll, index) in payroll_selected.users" :key="index" :payroll="payroll"

@@ -68,7 +68,7 @@ class PayrollController extends Controller
     {
         $payroll = PayrollResource::make(Payroll::with('users')->find($payroll_id));
 
-        return inertia('PayRoll/Admin/Template', compact('payroll'));
+        return inertia('PayRoll/Admin/Receipt', compact('payroll'));
     }
 
     public function showUserPayroll($payroll_user_id) // refactor (open same template of showUsersPayrolls method)

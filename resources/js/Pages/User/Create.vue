@@ -24,6 +24,7 @@
       </div>
       <form class="" @submit.prevent="store">
         <h1 class="font-bold mb-9 ml-3 col-span-full">Datos personales</h1>
+        
         <div class="mb-3 w-full">
           <InputLabel value="Nombre *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.name" type="text" autocomplete="off" class="input"

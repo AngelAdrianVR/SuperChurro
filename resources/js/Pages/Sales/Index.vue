@@ -1,4 +1,5 @@
 <template>
+<LoadingIndicator v-if="loading" />
   <AppLayout title="Historial de ventas">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
@@ -137,9 +138,10 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import CancelButton from "@/Components/CancelButton.vue";
 import SaleTable from "@/Components/MyComponents/Sale/SaleTable.vue";
+import LoadingIndicator from "@/Components/MyComponents/LoadingIndicator.vue";
 import Datepicker from '@vuepic/vue-datepicker';
 import InputLabel from "@/Components/InputLabel.vue";
-import { Link, useForm } from "@inertiajs/inertia-vue3";
+import { Link } from "@inertiajs/inertia-vue3";
 import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
@@ -158,6 +160,7 @@ export default {
       edit_stored_cash: false,
       show_edit_sale_modal: false,
       edit_sale: null,
+      loading: false,
     }
   },
   components: {
@@ -166,6 +169,7 @@ export default {
     CancelButton,
     Datepicker,
     InputLabel,
+    LoadingIndicator,
     SaleTable,
     Link,
   },
@@ -181,18 +185,45 @@ export default {
   },
   methods: {
     async getSales(date) {
+      this.loading = true;
+      this.shift_1_sales = [];
+      this.shift_2_sales = [];
+      this.employees = null;
+      this.sales_to_employees = null;
+      this.stored_cash = null;
       try {
         const response = await axios.post(route("sales.get-sales-by-date"), {
           date: date,
         });
-        this.shift_1_sales = response.data.shift_1_sales;
-        this.shift_2_sales = response.data.shift_2_sales;
-        this.employees = response.data.employees;
-        this.sales_to_employees = response.data.sales_to_employees;
-        this.stored_cash = response.data.stored_cash;
-        this.showing_monthly_sales = false;
+        if (response.status === 200) {
+
+          if(response.data.shift_1_sales?.length > 0 || response.data.shift_2_sales?.length > 0) {
+
+            this.shift_1_sales = response.data.shift_1_sales;
+            this.shift_2_sales = response.data.shift_2_sales;
+            this.employees = response.data.employees;
+            this.sales_to_employees = response.data.sales_to_employees;
+            this.stored_cash = response.data.stored_cash;
+            this.showing_monthly_sales = false;
+
+          } else {
+            this.$notify({
+            title: "Sin ventas",
+            message: "No se encontraron ventas en este día",
+            type: "warning",
+          });
+          }
+        }
+
       } catch (error) {
         console.log(error);
+        this.$notify({
+            title: "Algo salió mal",
+            message: "No se pudo cargar la venta. Intenta más tarde",
+            type: "error",
+          });
+      } finally {
+        this.loading = false;
       }
     },
     async getMonthSale(date) {
@@ -286,7 +317,7 @@ export default {
     numberFormat(number) {
       const exp = /(\d)(?=(\d{3})+(?!\d))/g;
       const rep = '$1,';
-      return number.toString().replace(exp, rep);
+      return number?.toString().replace(exp, rep);
     }, 
     editSale(sale) {
       this.edit_sale = sale;

@@ -1,54 +1,42 @@
 <template>
+  <LoadingIndicator v-if="loading" />
   <AppLayout title="Historial de Egresos">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Egresos
-      </h2>
+      <div class="flex items-center mt-2">
+        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+          Egresos
+        </h2>
+      </div>
     </template>
 
-    <div class="flex justify-end">
+    <div class="flex justify-between mx-5">
+      <div class="block">
+        <el-date-picker
+        @change="applyFilter"
+          v-model="date"
+          type="month"
+          placeholder="Selecciona el mes"
+          format="MMM YYYY"
+          value-format="MM YYYY"
+        />
+      </div>
       <Link :href="route('outcomes.create')">
-      <SecondaryButton class="mr-7 my-5">Agregar Egreso</SecondaryButton>
+        <PrimaryButton class="mb-5 !rounded-md"><i class="fa-solid fa-plus mr-2"></i> Nuevo</PrimaryButton>
       </Link>
     </div>
 
-      <div class="pb-2 px-4 flex space-x-2">
-        <select v-model="selected_year" class="select " name="year">
-          <option value="" selected disabled>-- Selecciona el año --</option>
-          <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-        </select>
+      <p v-if="month" class="font-bold text-sm mx-5">Total de egresos: $</p>
 
-        <select v-model="selected_month" class="select " name="year">
-          <option value="" selected disabled>-- Selecciona el mes --</option>
-          <option v-for="(month, index) in months" :key="month" :value="index + 1">{{ month }}</option>
-        </select>
-
-      <PrimaryButton @click="applyFilter">Aplicar filtro</PrimaryButton>
-
+      <div class="text-center font-bold mb-4">
+        
+        <label v-if="!total_outcome">Egresos totales: ${{ total_outcomes_money }} </label>
+        <label v-else>Egresos totales: ${{ total_outcome }} </label>
       </div>
 
-        <div class="text-center font-bold mb-4">
-          
-          <label v-if="!total_outcome">Egresos totales: ${{ total_outcomes_money }} </label>
-          <label v-else>Egresos totales: ${{ total_outcome }} </label>
-        </div>
 
-    <div>
-      <div class="globe-container flex-col">
-        <Link :href="route('outcomes.show', outcome)" v-for="outcome in filtered_outcomes" :key="outcome.id"
-          class="globe hover:bg-gray-200 cursor-pointer">
-        <div class="globe-title !justify-between pb-2">
-          <span class="text-gray-500"><i class="fa-solid fa-user mr-1"></i> {{ outcome[0].user.name }}</span>
-        </div>
-        <div class="flex justify-between items-center">
-          <span> {{ outcome.length }} Concepto(s) - (click para ver)</span>
-        </div>
-        <div class="-mb-3 mt-3 text-right">
-          <span class="text-xs text-gray-600">{{ outcome[0].created_at.split('T')[0] }}</span>
-        </div>
-        </Link>
+      <div v-if="!loading" class="mx-auto">
+        <OutcomesTable class="w-[95%]" :outcomes="filtered_outcomes" />
       </div>
-    </div>
 
     <!-- <Pagination :pagination="filtered_outcomes" /> -->
   </AppLayout>
@@ -58,8 +46,11 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { Link, useForm } from "@inertiajs/inertia-vue3";
 import Pagination from "@/Components/Pagination.vue";
+import OutcomesTable from "@/Components/MyComponents/Outcome/OutcomesTable.vue";
+import LoadingIndicator from "@/Components/MyComponents/LoadingIndicator.vue";
+import Back from "@/Components/Back.vue";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
 import axios from 'axios';
 
 
@@ -71,42 +62,23 @@ export default {
     });
     return {
       form,
+      date: null,
       selected_year: '',
       selected_month: '',
       filtered_outcomes: [],
       total_outcome: null,
-      years: [
-        '2023',
-        '2024',
-        '2025',
-        '2026',
-        '2027',
-        '2028',
-        '2029',
-        '2030',
-      ],
-      months: [
-        'Enero',
-        'Febrero',
-        'Marzo',
-        'Abril',
-        'Mayo',
-        'Junio',
-        'Julio',
-        'Agosto',
-        'Septiembre',
-        'Octubre',
-        'Noviembre',
-        'Diciembre',
-      ],
+      loading: false,
     }
   },
   components: {
     AppLayout,
     SecondaryButton,
     PrimaryButton,
-    Link,
-    Pagination
+    Pagination,
+    OutcomesTable,
+    LoadingIndicator,
+    Back,
+    Link
   },
   props: {
     outcomes: Object,
@@ -114,15 +86,29 @@ export default {
   },
 
   methods: {
+     calculateTotal(outcomeItems) {
+      // Calcular el total multiplicando quantity por cost y sumándolos
+      return outcomeItems.reduce((total, item) => {
+        return total + item.quantity * item.cost;
+      }, 0);
+    },
    async applyFilter(){
       try {
-        const response = await axios.post(route('outcomes.filter'),{year: this.selected_year, month: this.selected_month});
+        this.loading = true;
+        const response = await axios.post(route('outcomes.filter'),{year: this.date.split(' ')[1], month: this.date.split(' ')[0]});
         if(response.status == 200){
          this.filtered_outcomes = response.data.outcomes;
          this.total_outcome = response.data.total_outcomes_money;
         }
       } catch (error) {
         console.log(error);
+        this.$notify({
+            title: "Algo salió mal",
+            message: "No se pudo recuperar el historial de egresos. Intenta más tarde",
+            type: "error",
+          });
+      } finally {
+        this.loading = false;
       }
     }
   },

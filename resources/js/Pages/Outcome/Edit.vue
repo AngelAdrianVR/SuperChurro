@@ -1,10 +1,10 @@
 <template>
-  <AppLayout title="Agregar Egresos">
+  <AppLayout title="Editar Egresos">
     <template #header>
       <div class="flex items-center mt-2">
         <Back />
         <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
-          Agregar egreso
+          Editar egreso
         </h2>
       </div>
     </template>
@@ -103,7 +103,7 @@
         </div>
 
         <div class="mt-5">
-          <PrimaryButton :disabled="form.processing">Guardar</PrimaryButton>
+          <PrimaryButton :disabled="form.processing">Guardar cambios</PrimaryButton>
         </div>
       </form>
     </div>
@@ -126,10 +126,10 @@ import { Link, useForm } from "@inertiajs/inertia-vue3";
 export default {
   data() {
     const form = useForm({
-      category: null,
-      date: null,
+      category: this.outcome?.category,
+      date: this.outcomes[0]?.date,
       payment_method: "Efectivo",
-      provider: null,
+      provider: this.outcome?.provider,
       items: [
         {
           id: 1,
@@ -138,7 +138,7 @@ export default {
           cost: null,
         }
       ],
-      notes: "",
+      notes: this.outcome.notes,
     })
     return {
       form,
@@ -175,7 +175,8 @@ export default {
     Link,
   },
   props: {
-
+    outcome: Object,
+    outcomes: Array,
   },
 
   methods: {
@@ -193,7 +194,20 @@ export default {
     store() {
       this.form.post(this.route("outcomes.store"));
     },
-
   },
+  mounted() {
+    // Limpiar el array actual
+      this.form.items = [];
+
+      // Recorrer el array de objetos y asignar las propiedades
+      this.outcomes.forEach(obj => {
+        this.form.items.push({
+          concept: obj.concept,
+          quantity: obj.quantity,
+          cost: obj.cost,
+          // Agrega otras propiedades según sea necesario
+        });
+      });
+  }
 };
 </script>

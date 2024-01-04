@@ -37,9 +37,14 @@
     }
 }
 
+body {
+    font-family: 'Maitree', sans-serif;
+}
+
 *::-webkit-scrollbar {
 	width: 3px;
 	background: transparent;
+    height: 4px; /* Ajusta según tus preferencias */
 }
 
 *::-webkit-scrollbar-thumb {

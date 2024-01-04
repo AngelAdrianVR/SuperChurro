@@ -10,12 +10,13 @@ use App\Models\Payroll;
 use App\Models\PayrollUser;
 use App\Models\Sale;
 use App\Models\User;
+use App\Models\WorkPermit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PayrollController extends Controller
 {
-
     public function index()
     {
         $payrolls = PayrollUserResource::collection(auth()->user()->payrolls()->orderBy('id', 'desc')->get()->take(4));
@@ -33,14 +34,34 @@ class PayrollController extends Controller
     // admin
     public function adminIndex()
     {
-        $payrolls = PayrollResource::collection(Payroll::with('users')->latest()->get()->take(4));
-        $currentPayrollId = $payrolls[0]->id; // ID de la nómina en curso
+        $usersWithNoAttendance = [];
+        $payrolls = PayrollResource::collection(Payroll::with('users')
+            ->whereMonth('start_date', today())
+            ->whereYear('start_date', today())
+            ->latest()
+            ->get());
 
-        $usersWithNoAttendance = User::whereDoesntHave('payrolls', function ($query) use ($currentPayrollId) {
-            $query->where('payroll_id', $currentPayrollId);
-        })->where('is_active', true)->whereNotIn('id', [1,3])->get();
+        if ($payrolls->all()) {
+            $currentPayrollId = $payrolls[0]->id; // ID de la nómina en curso
+
+            $usersWithNoAttendance = User::whereDoesntHave('payrolls', function ($query) use ($currentPayrollId) {
+                $query->where('payroll_id', $currentPayrollId);
+            })->where('is_active', true)->whereNotIn('id', [1, 3])->get();
+        }
 
         return inertia('PayRoll/Admin/Index', compact('payrolls', 'usersWithNoAttendance'));
+    }
+
+    public function getByDate($date)
+    {
+        $carbonDate = Carbon::parse($date);
+        $payrolls = PayrollResource::collection(Payroll::with('users')
+            ->whereMonth('start_date', $carbonDate)
+            ->whereYear('start_date', $carbonDate)
+            ->latest()
+            ->get());
+
+        return response()->json(['items' => $payrolls]);
     }
 
     public function showUsersPayrolls($payroll_id)
@@ -136,32 +157,73 @@ class PayrollController extends Controller
     public function updatePayroll(Request $request)
     {
         $payroll_user = PayrollUser::find($request->payroll_user_id);
-        $is_absent = true;
 
         $attendance = $payroll_user->attendance;
-        foreach ($attendance as $key => $record) {
-            if ($record['day'] == $request->day) {
-                if ($request->attendance['in'] && strtolower($request->attendance['in']) != 'falta') {
-                    $attendance[$key]['in'] = $request->attendance['in'];
-                    $attendance[$key]['out'] = $request->attendance['out'];
-                    $is_absent = false;
-                    break;
-                } else {
-                    unset($attendance[$key]);
-                    $is_absent = false;
-                }
-            }
-        }
-        // it was an absent: create new attendance day
-        if ($is_absent && $request->attendance['in'] && strtolower($request->attendance['in']) != 'falta') {
-            $attendance[$request->day] = [
-                'in' => $request->attendance['in'],
-                'out' => $request->attendance['out'],
-                'day' => $request->day,
-            ];
-        }
+
+        // create new attendance day
+        $attendance[$request->day] = [
+            'in' => $request->attendance['in'],
+            'out' => $request->attendance['out'],
+            'day' => $request->day,
+        ];
 
         $payroll_user->update(['attendance' => $attendance]);
+    }
+
+    public function removeAbsent(Request $request)
+    {
+        $payroll_user = PayrollUser::find($request->payroll_user_id);
+
+        $attendance = $payroll_user->attendance;
+
+        // create new attendance day
+        $attendance[$request->day] = [
+            'in' => "10:00",
+            'out' => "10:01",
+            'day' => $request->day,
+        ];
+
+        $payroll_user->update(['attendance' => $attendance]);
+    }
+
+    public function setIncident(Request $request)
+    {
+        $payroll_user = PayrollUser::find($request->payroll_user_id);
+        $create_incident = true;
+        $notificaion['title'] = "Correcto";
+        $notificaion['message'] = "Se ha registrado la incidencia";
+        $notificaion['type']  = "success";
+
+        // incidente 3 es vacaciones
+        if ($request->incident_id == 3 && $payroll_user->user->employee_properties['vacations'] < 1) {
+            $create_incident = false;
+            $notificaion['title'] = "Atención";
+            $notificaion['message'] = "No se pudo registrar el día de vacaciones debido a que el empleado no cuenta con días disponibles";
+            $notificaion['type']  = "info";
+        } else if ($request->incident_id == 3) {
+            $ep = $payroll_user->user->employee_properties;
+            $ep['vacations']--;
+            $payroll_user->user()->update(['employee_properties' => $ep]);
+        }
+
+        // crear permiso o incidencia
+        if ($create_incident) {
+            $date = $payroll_user->payroll->start_date->addDays($request->day)->toDateString();
+            $user_id = $payroll_user->user->id;
+
+            WorkPermit::updateOrCreate(
+                [
+                    'date' => $date,
+                    'user_id' => $user_id,
+                ],
+                [
+                    'permission_type_id' => $request->incident_id,
+                    'status' => 2,
+                ]
+            );
+        }
+
+        return response()->json(['notification' => $notificaion]);
     }
 
     public function storeExtras(Request $request)

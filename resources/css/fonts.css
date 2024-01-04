@@ -1,0 +1,47 @@
+/* Maitree Bold */
+@font-face {
+    font-family: 'Maitree';
+    src: url('/fonts/Maitree-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* Maitree extraLight */
+@font-face {
+    font-family: 'Maitree';
+    src: url('/fonts/Maitree-ExtraLight.ttf') format('truetype');
+    font-weight: lighter;
+    font-style: normal;
+}
+
+/* Maitree Light */
+@font-face {
+    font-family: 'Maitree';
+    src: url('/fonts/Maitree-Light.ttf') format('truetype');
+    font-weight: light;
+    font-style: normal;
+}
+
+/* Maitree medium */
+@font-face {
+    font-family: 'Maitree';
+    src: url('/fonts/Maitree-Medium.ttf') format('truetype');
+    font-weight: medium;
+    font-style: normal;
+}
+
+/* Maitree regular */
+@font-face {
+    font-family: 'Maitree';
+    src: url('/fonts/Maitree-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Maitree regular */
+@font-face {
+    font-family: 'Maitree';
+    src: url('/fonts/Maitree-SemiBold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}

@@ -1,10 +1,5 @@
 <template>
-  <div v-if="loading" class="fixed z-10 left-0 top-0 inset-0 bg-gray-700 opacity-50 flex items-center justify-center">
-  </div>
-  <div v-if="loading"
-    class="fixed z-20 top-1/2 left-[36%] lg:left-[46%] w-32 h-32 rounded-lg bg-white flex items-center justify-center">
-    <i class="fa-solid fa-circle-notch fa-spin text-5xl text-primary"></i>
-  </div>
+  <LoadingIndicator v-if="loading" />
   <AppLayout title="Administración de Nóminas">
     <h2 class="font-bold text-lg mt-8 ml-4">
       Administración de Nóminas
@@ -42,7 +37,7 @@
           <Link v-if="!payroll_selected.is_active" :href="route('payroll-admin.show-all', payroll_selected.id)">
           <PrimaryButton class="mr-7"><i class="fa-solid fa-print mr-1"></i> Imprimir nóminas</PrimaryButton>
           </Link>
-          <PrimaryButton @click="show_confirmation = true" v-else class="mr-7">Cerrar nómina</PrimaryButton>
+          <!-- <PrimaryButton @click="show_confirmation = true" v-else class="mr-7">Cerrar nómina</PrimaryButton> -->
         </div>
         <PayRollTable v-for="(payroll, index) in payroll_selected.users" :key="index" :payroll="payroll"
           @extraTime="createExtraTime($event)" />
@@ -119,6 +114,7 @@
 
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PayRollTable from "@/Components/PayRollTable.vue";
+import LoadingIndicator from "@/Components/MyComponents/LoadingIndicator.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import CancelButton from "@/Components/CancelButton.vue";
 import ThirthButton from "@/Components/ThirthButton.vue";
@@ -157,6 +153,7 @@ export default {
     ThirthButton,
     InputLabel,
     Link,
+    LoadingIndicator,
   },
   props: {
     payrolls: Object,

@@ -1,10 +1,5 @@
 <template>
-  <div v-if="pageLoading" class="fixed z-10 left-0 top-0 inset-0 bg-black opacity-25 flex items-center justify-center">
-  </div>
-  <div v-if="pageLoading"
-    class="fixed z-20 top-1/2 left-[36%] lg:left-[46%] w-32 h-32 rounded-lg bg-white flex items-center justify-center">
-    <i class="fa-solid fa-circle-notch fa-spin text-5xl text-primary"></i>
-  </div>
+  <LoadingIndicator v-if="pageLoading" />
   <section class="relative py-2 bg-blueGray-50">
     <div class="w-full px-4">
       <div class="relative flex flex-col min-w-0 break-words w-full mb-6 rounded-lg 
@@ -113,6 +108,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import ThirthButton from '@/Components/ThirthButton.vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
+import LoadingIndicator from "@/Components/MyComponents/LoadingIndicator.vue";
 import axios from 'axios';
 import { parseISO, differenceInMinutes, differenceInSeconds, format, isValid } from 'date-fns';
 
@@ -143,6 +139,7 @@ export default {
     ThirthButton,
     Link,
     CancelButton,
+    LoadingIndicator,
   },
   props: {
     payroll: Object,

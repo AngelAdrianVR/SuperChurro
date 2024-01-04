@@ -86,7 +86,7 @@
           />
         </div>
 
-        <PrimaryButton :disabled="form.processing">Solicitar</PrimaryButton>
+        <PrimaryButton :disabled="form.processing">Registrar</PrimaryButton>
       </form>
     </div>
   </AppLayout>

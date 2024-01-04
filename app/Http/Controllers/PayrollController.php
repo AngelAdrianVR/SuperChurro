@@ -51,7 +51,7 @@ class PayrollController extends Controller
 
         return inertia('PayRoll/Admin/Index', compact('payrolls', 'usersWithNoAttendance'));
     }
-    
+
     public function getByDate($date)
     {
         $carbonDate = Carbon::parse($date);
@@ -60,7 +60,7 @@ class PayrollController extends Controller
             ->whereYear('start_date', $carbonDate)
             ->latest()
             ->get());
-        
+
         return response()->json(['items' => $payrolls]);
     }
 
@@ -157,30 +157,31 @@ class PayrollController extends Controller
     public function updatePayroll(Request $request)
     {
         $payroll_user = PayrollUser::find($request->payroll_user_id);
-        $is_absent = true;
 
         $attendance = $payroll_user->attendance;
-        foreach ($attendance as $key => $record) {
-            if ($record['day'] == $request->day) {
-                if ($request->attendance['in'] && strtolower($request->attendance['in']) != 'falta') {
-                    $attendance[$key]['in'] = $request->attendance['in'];
-                    $attendance[$key]['out'] = $request->attendance['out'];
-                    $is_absent = false;
-                    break;
-                } else {
-                    unset($attendance[$key]);
-                    $is_absent = false;
-                }
-            }
-        }
-        // it was an absent: create new attendance day
-        if ($is_absent && $request->attendance['in'] && strtolower($request->attendance['in']) != 'falta') {
-            $attendance[$request->day] = [
-                'in' => $request->attendance['in'],
-                'out' => $request->attendance['out'],
-                'day' => $request->day,
-            ];
-        }
+
+        // create new attendance day
+        $attendance[$request->day] = [
+            'in' => $request->attendance['in'],
+            'out' => $request->attendance['out'],
+            'day' => $request->day,
+        ];
+
+        $payroll_user->update(['attendance' => $attendance]);
+    }
+
+    public function removeAbsent(Request $request)
+    {
+        $payroll_user = PayrollUser::find($request->payroll_user_id);
+
+        $attendance = $payroll_user->attendance;
+
+        // create new attendance day
+        $attendance[$request->day] = [
+            'in' => "10:00",
+            'out' => "10:01",
+            'day' => $request->day,
+        ];
 
         $payroll_user->update(['attendance' => $attendance]);
     }

@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Outcome;
 use App\Models\Payroll;
+use App\Models\Sale;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -16,11 +19,74 @@ class ClosePayrollCommand extends Command
         $current = Payroll::latest()->first();
         Payroll::create([
             'start_date' => $current->start_date->addDays(7)->toDateString(),
-            'week' => today()->weekOfYear + 1,
+            'week' => $current->start_date->addDays(8)->weekOfYear,
         ]);
 
-        $current->update(['is_active' => 0]);
+        // get commissions of each day of week
+        $commissions = [];
+        for ($i = 0; $i < 7; $i++) {
+            $current_date = $current->start_date->addDays($i);
+            $day_commission = Sale::calculateCommissions($current_date->toDateString());
+            $commissions[$current_date->dayName] = $day_commission;
+        }
 
-        Log::info('app:increase-product-price executed successfully.');
+        // store discounts, additional & attendance info for each user payroll
+        $current->users->each(function ($user_payroll) use ($commissions) {
+            $user_payroll->pivot->update([
+                'discounts' => $user_payroll->pivot->getDiscounts(),
+                'attendance' => $user_payroll->pivot->weekAttendanceArray(),
+                'additional' => [
+                    'base_salary' => User::find($user_payroll->pivot->user_id)->employee_properties['base_salary'],
+                    'commissions' => $user_payroll->pivot->getCommissions($commissions),
+                    'bonuses' => $user_payroll->getBonuses()
+                ]
+            ]);
+
+            // decrement loan's amount if exists an active one
+            $loan = $user_payroll->activeLoan?->first();
+            $loan?->decrement('remaining', round($loan?->amount / 2, 2));
+        });
+
+        // store commissions & close payroll
+        $current->update([
+            'commissions' => $commissions,
+            'is_active' => false,
+        ]);
+
+        // calculate total salary
+        $total_salaries = $current->users->reduce(function ($carry, $item) {
+            return $carry + $item->pivot->paid();
+        });
+
+        // create outcome for all salaries
+        Outcome::create([
+            'concept' => 'Salarios',
+            'quantity' => 1,
+            'cost' => $total_salaries,
+            'notes' => 'Generado automaticamente al cerrar las nominas',
+            'user_id' => auth()->id(),
+        ]);
+
+        // create outcome for rent if date 
+        $fechaActual = now();
+        // Obtén el quinto día del mes actual
+        $quintoDiaDelMes = now()->startOfMonth()->addDays(4);
+        $rentOutcome = Outcome::whereDate('created_at', $quintoDiaDelMes)->where('concept', 'Renta carrito')->first();
+
+        if (!$rentOutcome) {
+            // Compara las fechas
+            if ($fechaActual->gte($quintoDiaDelMes)) {
+                Outcome::create([
+                    'concept' => 'Renta carrito',
+                    'quantity' => 1,
+                    'cost' => 37910,
+                    'notes' => 'Generado automaticamente',
+                    'user_id' => auth()->id(),
+                    'created_at' => $quintoDiaDelMes
+                ]);
+            }
+        }
+
+        Log::info('app:close-payroll executed successfully.');
     }
 }

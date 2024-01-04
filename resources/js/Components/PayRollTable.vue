@@ -1,13 +1,13 @@
 <template>
   <LoadingIndicator v-if="pageLoading" />
-  <section class="relative py-2 bg-blueGray-50">
+  <section class="relative py-2">
     <div class="w-full px-4">
       <div class="relative flex flex-col min-w-0 break-words w-full mb-6 rounded-lg 
-  bg-transparent text-gray-700">
+  bg-transparent text-[#373737]">
         <div class="rounded-t-lg mb-0 py-3 border-t border-x border-gray3">
-          <div class="py-1 flex flex-wrap items-center bg-gray4">
+          <div class="py-1 flex flex-wrap items-center bg-[#EDEDED]">
             <div class="relative w-full px-4 max-w-full flex-grow flex-1 flex justify-between">
-              <h3 class="font-semibold text-lg text-gray-700"><i class="fa-regular fa-circle-user mr-1"></i>
+              <h3 class="font-semibold text-base text-[#373737]"><i class="fa-regular fa-circle-user mr-1"></i>
                 {{ payroll?.user.name }}</h3>
             </div>
           </div>
@@ -17,26 +17,26 @@
             class="items-center w-full bg-transparent border-collapse border-b border-gray3">
             <thead>
               <tr class="border-b border-x border-gray3">
-                <th class="px-6 align-middle py-3 text-sm uppercase whitespace-nowrap text-left font-bold">
+                <th class="px-6 align-middle py-3 text-xs uppercase whitespace-nowrap text-left font-bold">
                   Día</th>
-                <th class="px-6 align-middle py-3 text-sm uppercase whitespace-nowrap text-left font-bold">
+                <th class="px-6 align-middle py-3 text-xs uppercase whitespace-nowrap text-left font-bold">
                   Entrada</th>
-                <th class="px-6 align-middle py-3 text-sm uppercase whitespace-nowrap text-left font-bold">
+                <th class="px-6 align-middle py-3 text-xs uppercase whitespace-nowrap text-left font-bold">
                   Salida</th>
-                <th class="px-6 align-middle py-3 text-sm uppercase whitespace-nowrap text-left font-bold">
+                <th class="px-6 align-middle py-3 text-xs uppercase whitespace-nowrap text-left font-bold">
                   T. extra</th>
-                <th class="px-6 align-middle py-3 text-sm uppercase whitespace-nowrap text-left font-bold">
+                <th class="px-6 align-middle py-3 text-xs uppercase whitespace-nowrap text-left font-bold">
                   H. totales</th>
                 <th v-if="$page.props.user.is_admin && payroll.is_active"
-                  class="px-6 align-middle py-3 text-sm uppercase whitespace-nowrap text-left font-bold">
+                  class="px-6 align-middle py-3 text-xs uppercase whitespace-nowrap text-left font-bold">
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr class="border-x border-gray3" v-for="(attendance, index) in payroll?.week_attendance.payroll"
                 :key="index">
-                <th class="border-t-0 px-6 align-middle text-sm whitespace-nowrap p-2 text-left flex items-center">
-                  <span class="ml-3 font-bold text-gray-700"> {{ attendance.day }} </span>
+                <th class="border-t-0 px-6 align-middle text-xs whitespace-nowrap p-2 text-left flex items-center">
+                  <span class="font-bold text-gray-700"> {{ attendance.day }} </span>
                 </th>
                 <td class="px-6 align-middle text-sm whitespace-nowrap p-2 border-white rounded-l-md"
                   :class="getColor(attendance.in)">
@@ -78,13 +78,19 @@
                       <el-dropdown-menu>
                         <el-dropdown-item :command="'attendance-' + index" :disabled="attendance.in != 'Falta'">
                           Poner asistencia</el-dropdown-item>
-                        <el-dropdown-item :command="'edit-' + index">
+                        <el-dropdown-item :command="'edit-' + index"
+                          v-if="!justifications.some(item => item.name == attendance.in) && attendance.in != 'Falta'">
                           Editar</el-dropdown-item>
-                        <el-dropdown-item :command="'extras-' + index">
+                        <el-dropdown-item :command="'extras-' + index"
+                          v-if="!justifications.some(item => item.name == attendance.in) && attendance.in != 'Falta'">
                           Agregar T. Extra</el-dropdown-item>
-                        <small class="px-4 text-gray4">Agregar incidencia</small>
+                        <small
+                          v-if="justifications.some(item => item.name == attendance.in) || attendance.in == 'Falta' || attendance.in == '--:--:--'"
+                          class="px-4 text-gray4">Agregar incidencia</small>
                         <template v-for="item in justifications" :key="item.id">
-                          <el-dropdown-item :command="item.id + '-' + index">
+                          <el-dropdown-item
+                            v-if="justifications.some(item => item.name == attendance.in) || attendance.in == 'Falta' || attendance.in == '--:--:--'"
+                            :command="item.id + '-' + index">
                             {{ item.name }}
                           </el-dropdown-item>
                         </template>
@@ -125,10 +131,10 @@ export default {
       showOptions: false,
       week_days: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
       justifications: [
-        {name: 'Vacaciones', id: 3},
-        {name: 'Permiso sin goce', id:4},
-        {name: 'Permiso con goce', id: 5},
-        {name: 'Incapacidad', id: 6},
+        { name: 'Vacaciones', id: 3 },
+        { name: 'Permiso sin goce', id: 4 },
+        { name: 'Permiso con goce', id: 5 },
+        { name: 'Incapacidad', id: 6 },
       ],
       pageLoading: false,
     };
@@ -189,6 +195,8 @@ export default {
         this.addExtraTime(rowId);
       } else if (commandName == 'edit') {
         this.edit(rowId);
+      } else if (commandName == 'attendance') {
+        this.removeAbsent(rowId);
       } else {
         this.setIncident(rowId, commandName);
       }
@@ -219,36 +227,56 @@ export default {
         this.pageLoading = false;
       }
     },
+    async removeAbsent(day) {
+      try {
+        this.pageLoading = true;
+        const response = await axios.put(route('payroll-admin.remove-absent'), {
+          payroll_user_id: this.payroll.payroll_user_id,
+          day: day,
+          attendance: this.payroll.week_attendance.payroll[day],
+        });
+
+        if (response.status === 200) {
+          this.payroll.week_attendance.payroll[day].in = '10:00';
+          this.payroll.week_attendance.payroll[day].out = '10:01';
+          this.$notify({
+            title: 'Correcto',
+            message: 'Se ha registrado asistencia. No olvides editar las horas de entrada y salida a tu gusto',
+            type: 'success'
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.pageLoading = false;
+      }
+    },
     addExtraTime(index) {
       this.$emit('extraTime', { payroll_user: this.payroll, day: index });
     },
-    update() {
-      Inertia.post(route('payroll-admin.update'), {
-        payroll_user_id: this.payroll.payroll_user_id,
-        attendance: this.form.payroll[this.dayInEdition],
-        day: this.dayInEdition
-      });
-      this.dayInEdition = null;
+    async update() {
+      try {
+        this.pageLoading = true;
+        const response = await axios.put(route('payroll-admin.update'), {
+          payroll_user_id: this.payroll.payroll_user_id,
+          attendance: this.form.payroll[this.dayInEdition],
+          day: this.dayInEdition
+        });
+
+        if (response.status === 200) {
+          this.dayInEdition = null;
+          this.$notify({
+            title: 'Correcto',
+            message: 'Se ha actualizado el registro',
+            type: 'success'
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.pageLoading = false;
+      }
     },
   }
-  //   async fetchJustifications() {
-  //     try {
-  //       const response = await axios.get(route('justifications.index'));
-  //       if (response.status === 200) {
-  //         this.justifications = response.data.items;
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //       this.$notify({
-  //         title: 'Hubo un problema en el servidor',
-  //         message: 'No se pudo procesar la petición de obtener la lista de justificaciones',
-  //         type: 'error',
-  //       });
-  //     }
-  //   }
-  // },
-  // mounted() {
-  //   this.fetchJustifications();
-  // }
 }
 </script>

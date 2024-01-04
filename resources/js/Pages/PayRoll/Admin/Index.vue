@@ -1,50 +1,52 @@
 <template>
   <LoadingIndicator v-if="loading" />
   <AppLayout title="Administración de Nóminas">
-    <h2 class="font-bold text-lg mt-8 ml-4">
-      Administración de Nóminas
-    </h2>
-    <header class="flex justify-center items-center mt-6 mb-10">
-      <i @click="changeMonth(-1)" class="fa-solid fa-angle-left text-primary text-xs mr-5 cursor-pointer p-1"></i>
-      <i class="fa-solid fa-calendar-days text-primary text-sm mr-2"></i>
-      <p class="text-[#cccccc]">|</p>
-      <p class="text-sm ml-2 uppercase">{{ currentMonth.toLocaleDateString('es-ES', {
-        month: 'long', year: 'numeric'
-      })
-      }}</p>
-      <i @click="changeMonth(1)" class="fa-solid fa-angle-right text-primary text-xs ml-5 cursor-pointer p-1"></i>
-    </header>
-    <div v-if="payrolls.data.length">
-      <div class="contenedor">
-        <div class="flex justify-center">
-          <div v-for="payroll in payrolls.data" :key="payroll.id" @click="payroll_selected = payroll"
-            class="globe w-80 border border-gray3 hover:bg-gray-100 cursor-pointer mx-2"
-            :class="{ 'border-2 !border-primary': payroll_selected.id === payroll.id }">
-            <div class="globe-title pb-2">
-              Semana {{ payroll.week }}: {{ payroll.start_date }} al {{ payroll.end_date }}
+    <div class="mx-10">
+      <h2 class="font-bold text-lg mt-8">
+        Administración de Nóminas
+      </h2>
+      <header class="flex justify-center items-center mt-6 mb-10">
+        <i @click="changeMonth(-1)" class="fa-solid fa-angle-left text-primary text-xs mr-5 cursor-pointer p-1"></i>
+        <i class="fa-solid fa-calendar-days text-primary text-sm mr-2"></i>
+        <p class="text-[#cccccc]">|</p>
+        <p class="text-sm ml-2 uppercase">{{ currentMonth.toLocaleDateString('es-ES', {
+          month: 'long', year: 'numeric'
+        })
+        }}</p>
+        <i @click="changeMonth(1)" class="fa-solid fa-angle-right text-primary text-xs ml-5 cursor-pointer p-1"></i>
+      </header>
+      <div v-if="payrolls.data.length">
+        <div class="contenedor text-sm pb-10">
+          <div class="flex justify-center">
+            <div v-for="payroll in payrolls.data" :key="payroll.id" @click="payroll_selected = payroll"
+              class="globe w-80 border-2 border-gray3 hover:bg-gray-100 cursor-pointer mx-2"
+              :class="{ '!border-primary': payroll_selected.id === payroll.id }">
+              <div class="globe-title pb-2">
+                Semana {{ payroll.week }}: {{ payroll.start_date }} al {{ payroll.end_date }}
+              </div>
+              <div v-if="!payroll.is_active" class="text-xs">
+                {{ payroll.users.length }} empleado(s) en nómina
+              </div>
+              <p v-else class="text-gray-500 text-center text-xs">Nómina en curso</p>
             </div>
-            <div v-if="!payroll.is_active" class="text-sm">
-              {{ payroll.users.length }} empleado(s) en nómina
-            </div>
-            <p v-else class="text-gray-500 text-sm text-center">Nómina en curso</p>
           </div>
         </div>
-      </div>
 
-      <div class="mt-5 text-bold text-lg text-gray-700">
-        <div class="flex justify-between items-center my-4">
-          <p class="ml-5 text-sm font-bold">Asistencias de empleados</p>
-          <Link v-if="!payroll_selected.is_active" :href="route('payroll-admin.show-all', payroll_selected.id)">
-          <PrimaryButton class="mr-7"><i class="fa-solid fa-print mr-1"></i> Imprimir nóminas</PrimaryButton>
-          </Link>
-          <!-- <PrimaryButton @click="show_confirmation = true" v-else class="mr-7">Cerrar nómina</PrimaryButton> -->
+        <div class="mt-5 text-bold text-lg text-gray-700">
+          <div class="flex justify-between items-center my-4">
+            <p class="ml-5 text-sm font-bold">Asistencias de empleados</p>
+            <Link v-if="!payroll_selected.is_active" :href="route('payroll-admin.show-all', payroll_selected.id)">
+            <PrimaryButton class="mr-7"><i class="fa-solid fa-print mr-1"></i> Imprimir nóminas</PrimaryButton>
+            </Link>
+            <!-- <PrimaryButton @click="show_confirmation = true" v-else class="mr-7">Cerrar nómina</PrimaryButton> -->
+          </div>
+          <PayRollTable v-for="(payroll, index) in payroll_selected.users" :key="index" :payroll="payroll"
+            @extraTime="createExtraTime($event)" />
         </div>
-        <PayRollTable v-for="(payroll, index) in payroll_selected.users" :key="index" :payroll="payroll"
-          @extraTime="createExtraTime($event)" />
       </div>
-    </div>
-    <div v-else class="my-10 px-12">
-      <p class="text-center text-gray1">No hay nominas en el periodo seleccionado para mostrar</p>
+      <div v-else class="my-10 px-12">
+        <p class="text-center text-gray1">No hay nominas en el periodo seleccionado para mostrar</p>
+      </div>
     </div>
 
     <ConfirmationModal :show="show_confirmation" @close="show_confirmation = false">

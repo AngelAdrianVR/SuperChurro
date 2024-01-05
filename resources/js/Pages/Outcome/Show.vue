@@ -9,7 +9,7 @@
       </div>
     </template>
 
-    <HideableLabel class="absolute right-0 top-40 z-50" iconClass="fa-solid fa-info">
+    <HideableLabel class="absolute right-0 top-40 z-20" iconClass="fa-solid fa-info">
       <p>
         Para editar el concepto da click sobre él.
       </p>

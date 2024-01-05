@@ -372,7 +372,22 @@ const logout = () => {
         <div :class="{
           block: showingNavigationDropdown,
           hidden: !showingNavigationDropdown,
-        }" class="sm:hidden">
+        }" class="sm:hidden z-40 rounded-tl-[6px] rounded-bl-[6px] bg-gray-50 w-4/6 absolute right-0 top-14 min-h-[50%] max-h-[90%] overflow-y-scroll overflow-x-hidden shadow-lg border border-gray4 pt-4">
+
+          <!-- User info -->
+          <div class="pb-4 mb-4 border-b border-gray-200">
+              <div @click="$inertia.get(route('profile.show'))" class="flex flex-col items-center justify-center mx-4">
+                  <img class="h-14 w-14 rounded-full object-cover mx-auto"
+                      :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
+                  <div class="font-semibold text-center text-base text-gray-600 w-full truncate">
+                      {{ $page.props.user.name }}
+                  </div>
+                  <div class="font-medium text-center text-sm text-gray-500 w-full truncate">
+                      {{ $page.props.user.email }}
+                  </div>
+              </div>
+          </div>
+
           <div class="pt-2 pb-3 space-y-1">
             <template v-for="(menu, index) in menues" :key="index">
               <ResponsiveNavLink v-if="menu.admin_can_see || !$page.props.user.is_admin" :href="route(menu.route_name)"
@@ -382,7 +397,7 @@ const logout = () => {
             </template>
 
             <!-- admin menu -->
-            <div v-if="$page.props.user.is_admin" class="pt-2 pb-1 border-t border-[#883339]">
+            <div v-if="$page.props.user.is_admin" class="pt-2 pb-1 border-t border-primary">
               <p class="text-gray-400 text-xs text-center">
                 <i class="fa-solid fa-user-gear mr-2"></i>
                 Opciones de administrador
@@ -395,38 +410,19 @@ const logout = () => {
           </div>
 
           <!-- Responsive Settings Options -->
-          <div class="pt-4 pb-1 border-t border-[#883339]">
-            <div class="flex items-center px-4">
-              <div v-if="$page.props.jetstream.managesProfilePhotos" class="shrink-0 mr-3">
-                <img class="h-10 w-10 rounded-full object-cover" :src="$page.props.user.profile_photo_url"
-                  :alt="$page.props.user.name" />
-              </div>
-
-              <div>
-                <div class="font-medium text-base text-gray-400">
-                  {{ $page.props.user.name }}
-                </div>
-                <div class="font-medium text-sm text-gray-400">
-                  {{ $page.props.user.email }}
-                </div>
-              </div>
-            </div>
+          <div class="pt-8 pb-1 border-t border-primary">
 
             <div class="mt-3 space-y-1">
-              <ResponsiveNavLink :href="route('profile.show')" :active="route().current('profile.show')">
-                Perfil
-              </ResponsiveNavLink>
-
               <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')"
                 :active="route().current('api-tokens.index')">
                 API Tokens
               </ResponsiveNavLink>
 
               <!-- Authentication -->
-              <form method="POST" @submit.prevent="logout">
-                <ResponsiveNavLink as="button">
-                  Cerrar sesión
-                </ResponsiveNavLink>
+              <form method="POST" @submit.prevent="logout" class="text-red-500 absolute bottom-3 right-3">
+                <button>
+                    <i class="fa-solid fa-arrow-right-from-bracket mr-[7px]"></i> Cerrar sesión
+                </button>
               </form>
 
               <!-- Team Management -->

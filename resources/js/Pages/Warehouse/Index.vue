@@ -4,15 +4,14 @@
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">Cocina</h2>
     </template> -->
 
-    <div class="flex flex-col space-x-3 md:flex-row justify-end md:mr-10 mr-4 mt-10">
-      <IconInput v-model="s" class="md:w-1/3" inputPlaceholder="Buscar producto" inputType="text">
-        <el-tooltip content="Razon social" placement="top">
+    <div class="flex flex-col space-x-3 md:flex-row justify-end md:mr-10 mr-4 mt-10 mx-4">
+      <IconInput @keyup.enter="handleSearch" v-model="inputSearch" class="md:w-1/3" inputPlaceholder="Buscar producto" inputType="text">
+        <el-tooltip content="Buscar producto" placement="top">
           <i class="fa-solid fa-magnifying-glass"></i>
         </el-tooltip>
       </IconInput>
-      <!-- <InputError :message="form.errors.business_name" /> -->
 
-      <div class="text-right ">
+      <div class="text-right my-3">
         <Link :href="route('warehouse-movements.create')">
           <PrimaryButton>Registrar entrada / salida</PrimaryButton>
         </Link>
@@ -32,7 +31,7 @@
 
     <div>
         <div class="globe-container flex-col">
-          <div v-for="product_id in Object.keys(warehouse.products)" :key="product_id" class="globe hover:bg-gray-200 cursor-pointer">
+          <div v-for="product_id in filteredTableData" :key="product_id" class="globe hover:bg-gray-200 cursor-pointer">
             <Link :href="route('warehouse-movements.show-product-record', product_id)">
               <figure v-if="products.find(product => product.id == product_id )?.media.length > 0" class="justify-center pt-2">
                 <img :src="products.find(product => product.id == product_id )?.media[0]?.original_url" alt="Imagen del producto" class="rounded-lg h-32 mx-auto">
@@ -57,26 +56,46 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import ThirthButton from "@/Components/ThirthButton.vue";
-import { Link } from "@inertiajs/inertia-vue3";
 import IconInput from "@/Components/IconInput.vue";
+import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
   data() {
-    return {};
+    return {
+      search: "",
+      inputSearch: "",
+    };
   },
   components: {
     AppLayout,
     PrimaryButton,
     SecondaryButton,
-    Link,
     IconInput,
-    ThirthButton
+    ThirthButton,
+    Link
   },
   props: {
     warehouse: Object,
     products: Array,
     employees: Object,
   },
-  methods: {},
+  methods: {
+    handleSearch() {
+      this.search = this.inputSearch;
+    },
+  },
+computed: {
+     filteredTableData() {
+    if (!this.search) {
+      // Si no hay término de búsqueda, devuelve todos los IDs
+      return this.products.map(product => product.id);
+    } else {
+      // Filtra los productos por nombre y devuelve los IDs
+      return this.products
+        .filter(product => product.name.toLowerCase().includes(this.search.toLowerCase()))
+        .map(filteredProduct => filteredProduct.id);
+    }
+  },
+  },
 };
 </script>

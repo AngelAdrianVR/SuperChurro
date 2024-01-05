@@ -3,7 +3,8 @@
       class="max-w-2xl md:mx-auto mt-5 rounded-lg px-3 pt-4 pb-5 bg-transparent border border-gray3 mx-2"
     >
       <div class="flex items-center justify-between">
-        <p class="font-bold text-sm">Categoría: <span class="ml-2 text-primary">{{ outcomes[0].category }}</span></p>
+        <p class="font-bold text-sm flex items-center">Categoría: <span class="mx-2 text-primary">{{ outcomes[0].category }}</span>
+        </p>
         <!-- <div class="flex items-center space-x-1">
           <i class="fa-solid fa-pencil text-sm rounded-full py-1 px-[7px] hover:bg-gray5 cursor-pointer text-primary"></i>
           <i class="fa-regular fa-trash-can text-sm rounded-full py-1 px-[7px] hover:bg-gray5 cursor-pointer text-primary"></i>

@@ -32,7 +32,7 @@
                         <span>Sueldo ({{ getShiftsWorked(current) }} turnos)</span>
                         <span>${{ current.base_salary }}</span>
                     </p>
-                    <p v-for="bonus in current.additional.bonuses" :key="bonus.name"
+                    <p v-for="bonus in current.additional?.bonuses" :key="bonus.name"
                         class="flex items-center justify-between px-2 self-start">
                         <span>{{ bonus.name }}</span>
                         <span>${{ bonus.amount }}</span>
@@ -53,7 +53,7 @@
                         <span>Incapacidades ({{ current.week_attendance.sickness }})</span>
                         <span>${{ current.paid_sickness }}</span>
                     </p>
-                    <p v-for="(commission, index) in current.additional.commissions.filter(item => item > 0)" :key="index"
+                    <p v-for="(commission, index) in current?.additional.commissions.filter(item => item > 0)" :key="index"
                         class="flex items-center justify-between px-2 self-start">
                         <span>Comisión {{ week_days[index] }}</span>
                         <span>${{ commission }}</span>

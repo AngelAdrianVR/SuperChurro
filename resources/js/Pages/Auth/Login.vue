@@ -33,7 +33,7 @@ const showPassword = ref(false);
 const password = ref('');
 
 const togglePasswordVisibility = () => {
-  showPassword.value = !showPassword.value;
+    showPassword.value = !showPassword.value;
 };
 </script>
 
@@ -45,9 +45,9 @@ const togglePasswordVisibility = () => {
             <AuthenticationCardLogo />
         </template>
 
-        <div class="border-b border-gray-300 mb-12 text-center w-[80%] mx-auto">
-       <span class="inline-block border-b-2 border-primary px-4 text-gray-600">Iniciar sesión</span>
-    </div>
+        <div class="border-b border-gray-300 mb-12 mt-9 text-center w-[80%] mx-auto">
+            <span class="inline-block border-b-2 border-primary px-4 text-gray-600">Iniciar sesión</span>
+        </div>
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
@@ -56,37 +56,22 @@ const togglePasswordVisibility = () => {
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="id" value="Número de empleado" class="text-gray-600" />
-                <TextInput
-                    id="id"
-                    v-model="form.id"
-                    type="number"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                />
+                <TextInput id="id" v-model="form.id" type="number" class="mt-1 block w-full" required autofocus />
                 <InputError class="mt-2" :message="form.errors.id" />
             </div>
 
             <div class="mt-4 relative">
-        <InputLabel for="password" value="Contraseña" class="text-gray-600" />
-        <div class="flex justify-center items-center">
-          <TextInput
-            id="password"
-            v-model="form.password"
-            :type="showPassword ? 'text' : 'password'"
-            class="mt-1 block w-full bg-transparent placeholder:text-[#9A9A9A]"
-            required
-            autocomplete="current-password"
-            placeholder="Contraseña"
-          />
-          <i
-            :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"
-            class="text-gray-400 ml-2 cursor-pointer absolute right-3 top-8"
-            @click="togglePasswordVisibility"
-          ></i>
-        </div>
-        <InputError class="mt-2" :message="form.errors.password" />
-      </div>
+                <InputLabel for="password" value="Contraseña" class="text-gray-600" />
+                <div class="flex justify-center items-center">
+                    <TextInput id="password" v-model="form.password" :type="showPassword ? 'text' : 'password'"
+                        class="mt-1 block w-full bg-transparent placeholder:text-[#9A9A9A]" required
+                        autocomplete="current-password" placeholder="Contraseña" />
+                    <i :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"
+                        class="text-gray-400 ml-2 cursor-pointer absolute right-3 top-8"
+                        @click="togglePasswordVisibility"></i>
+                </div>
+                <InputError class="mt-2" :message="form.errors.password" />
+            </div>
 
             <div class="block mt-4">
                 <label class="flex items-center">
@@ -96,8 +81,9 @@ const togglePasswordVisibility = () => {
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                    ¿Olvidaste tu contraseña?
+                <Link v-if="canResetPassword" :href="route('password.request')"
+                    class="underline text-sm text-gray-600 hover:text-gray-900">
+                ¿Olvidaste tu contraseña?
                 </Link>
                 <div class="mx-auto mt-5">
                     <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">

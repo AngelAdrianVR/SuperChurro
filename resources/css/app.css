@@ -75,7 +75,7 @@ body {
     }
     
     .globe {
-        @apply bg-transparent border border-gray3 overflow-auto rounded-[5px] w-[90%] md:w-full md:mx-2 mx-auto px-5 py-5 pt-1;
+        @apply bg-transparent border border-gray3 overflow-auto rounded-[10px] w-[90%] md:w-full md:mx-2 mx-auto px-5 py-5 pt-1;
     }
     
     .globe-title {

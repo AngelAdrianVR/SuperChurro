@@ -149,6 +149,7 @@ export default {
   props: {
     payroll: Object,
   },
+  emits: ['extraTime'],
   methods: {
     calculateWorkedTime(entry, exit) {
       if (entry === '--:--:--' || exit === '--:--:--' || entry === 'Falta' || entry === 'Incapacidad' || entry === 'Día de descanso' || entry === 'Vacaciones' || entry === 'Día feriado') {

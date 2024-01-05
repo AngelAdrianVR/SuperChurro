@@ -64,12 +64,30 @@ class PayrollController extends Controller
         return response()->json(['items' => $payrolls]);
     }
 
-    public function showUsersPayrolls($payroll_id)
+    public function showUsersPayrolls($ids, $payroll_id)
     {
-        $payroll = PayrollResource::make(Payroll::with('users')->find($payroll_id));
+        $ids = json_decode($ids);
+
+        $payroll = Payroll::with('users')->find($payroll_id);
+
+        // Filtrar los usuarios en base a los IDs proporcionados
+        $filteredUsers = $payroll->users->filter(function ($user) use ($ids) {
+            return in_array($user->id, $ids);
+        });
+
+        // Convertir la colección filtrada a un array de objetos
+        $filteredUsersArray = $filteredUsers->values()->all();
+
+        // Asignar el array de usuarios filtrados de nuevo al objeto $payroll
+        $payroll->users = $filteredUsersArray;
+
+        // Crear el recurso PayrollResource
+        $payroll = PayrollResource::make($payroll);
 
         return inertia('PayRoll/Admin/Receipt', compact('payroll'));
     }
+
+
 
     public function showUserPayroll($payroll_user_id) // refactor (open same template of showUsersPayrolls method)
     {

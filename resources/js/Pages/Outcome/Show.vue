@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Mostrar Egreso">
     <template #header>
-      <div class="flex items-center mt-2">
+      <div class="flex items-center mb-12">
         <Back />
         <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
           Detalles de egresos
@@ -9,131 +9,37 @@
       </div>
     </template>
 
-    <div
-      class="max-w-2xl md:mx-auto mt-5 rounded-lg px-5 pt-4 pb-5 bg-transparent border border-gray3 mx-4"
-    >
-      <div class="flex items-center justify-between">
-        <p class="font-bold text-sm">Categoría: <span>{{ outcomes.category }}</span></p>
-        <!-- <div class="flex items-center space-x-1">
-          <i class="fa-solid fa-pencil text-sm rounded-full py-1 px-[7px] hover:bg-gray5 cursor-pointer text-primary"></i>
-          <i class="fa-regular fa-trash-can text-sm rounded-full py-1 px-[7px] hover:bg-gray5 cursor-pointer text-primary"></i>
-        </div> -->
-      </div>
+    <HideableLabel class="absolute right-0 top-40 z-20" iconClass="fa-solid fa-info">
+      <p>
+        Para editar el concepto da click sobre él.
+      </p>
+    </HideableLabel>
 
-      <div class="grid grid-cols-4 lg:mx-4 mt-2 space-y-2 overflow-auto">
-        <p class="text-sm font-bold col-span-1">Método de pago:</p>
-        <p class="text-sm col-span-3">{{ outcomes.payment_method ?? '--' }}</p>
-        <p class="text-sm font-bold col-span-1">Monto:</p>
-        <p class="text-sm col-span-3">{{ getTotal().toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
-        <p class="text-sm font-bold col-span-1">Descripción:</p>
+    <OutcomesCard v-for="(outcomes, category) in groupedOutcomes" :key="category" :outcomes="outcomes" />
 
-        <table @click="showOptions = false" class="w-full mx-auto text-sm mt-5 col-span-3">
-            <thead class="bg-gray4">
-                <tr class="text-center">
-                    <th class="font-bold pb-1 pl-2 text-left rounded-l-full">
-                        Concepto
-                    </th>
-                    <th class="font-bold pb-1 pl-2 text-left">
-                        Costo
-                    </th>
-                    <th class="font-bold pb-1 px-1 text-left">
-                        Cantidad
-                    </th>
-                    <th class="font-bold pb-1 px-1 text-left rounded-r-full"> 
-                        Total
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr @click="editOutcome(outcome)"
-                    v-for="outcome in outcomes" :key="outcome.id" class="mb-4">
-                    <td class="py-1 pl-3">
-                        {{ outcome.concept }}
-                    </td>
-                    <td class="py-1 pr-2">
-                        ${{ outcome.cost?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}
-                    </td>
-                    <td class="py-1 pr-2">
-                        {{ outcome.quantity }}
-                    </td>
-                    <td class="py-1 pr-2">
-                        ${{ (outcome.quantity * outcome.cost)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <p class="text-sm font-bold col-span-1">Comentarios:</p>
-        <p class="text-sm col-span-3">{{ outcomes.notes ?? '--' }}</p>
-      </div>
-    </div>
       <p class="text-right mx-4 font-bold text-sm mt-5 mb-5">Total= ${{getTotal().toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}} </p>
     
-    <DialogModal :show="show_edit_outcome_modal" @close="show_edit_outcome_modal = false">
-      <template #title>
-        <p class="text-sm font-bold">Editar Egreso <span class="text-primary ml-2">{{ edit_outcome.concept }}</span></p>
-      </template>
-      <template #content>
-
-        <div class="mb-2 w-full">
-          <InputLabel value="Concepto *" class="ml-3 mb-1 text-sm" />
-          <input v-model="form.concept" type="text" required autocomplete="off" class="input"
-           placeholder="Escribe el concepto" />
-        </div>
-
-        <div class="flex items-center space-x-2">
-          <div class="mb-2 w-full">
-            <InputLabel value="Cantidad *" class="ml-3 mb-1 text-sm" />
-            <input v-model="form.quantity" type="number" required autocomplete="off" step="0.1" class="input"
-            placeholder="0" />
-          </div>
-
-          <div class="mb-2 w-full relative">
-            <InputLabel value="Costo *" class="ml-3 mb-1 text-sm" />
-            <input v-model="form.cost" type="number" min="1" required step="0.1" autocomplete="off" class="input pl-7" placeholder="0" />
-            <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[5px] py-[5px]">$</p>
-          </div>
-        </div>
-
-      </template>
-      <template #footer>
-        <CancelButton class="!rounded-full" @click="show_edit_outcome_modal = false">Cancelar</CancelButton>
-        <PrimaryButton @click="updateOutcome" class="ml-2" :disabled="form.processing">Guardar</PrimaryButton>
-      </template>
-    </DialogModal>
   </AppLayout>
 </template>
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import CancelButton from "@/Components/CancelButton.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import DialogModal from "@/Components/DialogModal.vue";
-import InputLabel from "@/Components/InputLabel.vue";
+import OutcomesCard from "@/Components/MyComponents/Outcome/OutcomesCard.vue";
+import HideableLabel from "@/Components/MyComponents/HideableLabel.vue";
 import Back from "@/Components/Back.vue";
-import { Link, useForm } from "@inertiajs/inertia-vue3";
 
 export default {
   data() {
-    const form = useForm({
-      concept: "",
-      quantity: null,
-      cost: "",
-    });
+    
     return {
-      outcomes_reversed: null,
-      show_edit_outcome_modal: false,
-      edit_outcome: null,
-      form
+      groupedOutcomes: {}, // Objeto para almacenar los resultados agrupados
     };
   },
   components: {
     AppLayout,
-    CancelButton,
-    PrimaryButton,
-    DialogModal,
-    InputLabel,
-    Back,
-    Link
+    OutcomesCard,
+    HideableLabel,
+    Back
   },
   props: {
     outcomes: Array,
@@ -146,22 +52,23 @@ export default {
         });
         return total;
     },
-    editOutcome(item){
-      this.edit_outcome = item; 
-      console.log(item);
-      this.form.concept = item.concept;
-      this.form.quantity = item.quantity;
-      this.form.cost = item.cost;
-      this.show_edit_outcome_modal = true;
-    },
-    updateOutcome(){
-      this.form.put(route('outcomes.update', this.edit_outcome.id), {
-        onSuccess: () => {
-          this.show_edit_outcome_modal = false;
-        },
-      });
-    },
+    groupOutcomesByCategory() {
+      // Agrupar los registros por categoría
+      this.groupedOutcomes = this.outcomes.reduce((result, outcome) => {
+        const category = outcome.category;
 
+        if (!result[category]) {
+          result[category] = [];
+        }
+
+        result[category].push(outcome);
+
+        return result;
+      }, {});
+    },
+  },
+  mounted() {
+    this.groupOutcomesByCategory();
   },
 };
 </script>

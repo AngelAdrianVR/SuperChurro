@@ -1,15 +1,13 @@
 <template>
   <div
-    class="bg-gray5 border border-white shadow-md rounded-2xl p-2 mx-3 my-2 hover:bg-slate-200"
+    class="bg-transparent border-2 border-gray3 rounded-2xl p-2 mx-3 my-2 hover:bg-slate-100"
 >
     <Link :href="route('users.show', user.id)">
         <div class="flex">
-            <div class="relative h-16 w-16 mr-2">
-            <i
-                class="fa-solid fa-circle-user text-6xl"
-                :class="user.is_active ? 'text-[#8cbe71]' : 'text-red-400'"
-            ></i>
-            </div>
+            <figure v-if="$page.props.jetstream.managesProfilePhotos" class="shrink-0 mr-3 mt-1">
+                <img class="h-14 w-14 rounded-full object-cover" :src="user.profile_photo_url"
+                  :alt="user.name" />
+            </figure>
             <section class="flex flex-col flex-1">
             <div class="flex justify-between">
                 <h1 class="text-xs font-bold">ID: {{ user.id }} | {{ user.name }}</h1>

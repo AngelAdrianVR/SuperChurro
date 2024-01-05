@@ -9,12 +9,13 @@
           class="flex space-x-3 md:flex-row justify-between md:justify-end md:mr-10 items-center"
         >
           <IconInput
-            v-model="s"
+            @keyup.enter="handleSearch" 
+            v-model="inputSearch"
             class="md:w-2/3 w-1/2"
             inputPlaceholder="Buscar producto"
             inputType="text"
           >
-            <el-tooltip content="Razon social" placement="top">
+            <el-tooltip content="Buscar producto" placement="top">
               <i class="fa-solid fa-magnifying-glass"></i>
             </el-tooltip>
           </IconInput>
@@ -110,7 +111,6 @@
                 ><i class="fa-solid fa-user mr-1"></i>
                 {{ request.user.name }}</span
               >
-              <!-- <small class="text-gray-400">{{ timeFormatter(request.created_at) }}</small> -->
             </div>
             <div class="flex justify-between items-center">
               <span>
@@ -142,7 +142,7 @@
 
         <div class="globe-container flex-col">
           <div
-            v-for="cart_product_id in Object.keys(cart_products[0].products)"
+            v-for="cart_product_id in filteredTableData"
             :key="cart_product_id"
             class="globe grid grid-cols-2"
           >
@@ -175,23 +175,26 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import { Link } from "@inertiajs/inertia-vue3";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import ThirthButton from "@/Components/ThirthButton.vue";
 import IconInput from "@/Components/IconInput.vue";
+import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
   data() {
-    return {};
+    return {
+      search: "",
+      inputSearch: "",
+    };
   },
   components: {
     AppLayout,
     SecondaryButton,
-    Link,
     ConfirmationModal,
     ThirthButton,
     IconInput,
     PrimaryButton,
+    Link
   },
   props: {
     products: Array,
@@ -205,6 +208,22 @@ export default {
       const date_n_time = timestamp.split("T");
       return " a las " + date_n_time[1].split(".")[0];
     },
+    handleSearch() {
+      this.search = this.inputSearch;
+    },
+  },
+  computed: {
+     filteredTableData() {
+    if (!this.search) {
+      // Si no hay término de búsqueda, devuelve todos los IDs
+      return this.products.map(product => product.id);
+    } else {
+      // Filtra los productos por nombre y devuelve los IDs
+      return this.products
+        .filter(product => product.name.toLowerCase().includes(this.search.toLowerCase()))
+        .map(filteredProduct => filteredProduct.id);
+    }
+  },
   },
 };
 </script>

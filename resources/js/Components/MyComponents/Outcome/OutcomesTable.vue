@@ -37,7 +37,7 @@
                 <td class="py-3 pr-2 relative">
                     <i @click.stop="showOptions = !showOptions; indexSelected = index" class="fa-solid fa-ellipsis-vertical text-primary p-1"></i>
                     <div v-if="showOptions && indexSelected == index" class="w-20 border border-gray3 rounded-md py-2 absolute top-9 right-5 bg-gray-50 z-10">
-                        <p @click.stop="$inertia.get(route('outcomes.edit', outcome[0].id))" class="px-2 py-1 hover:bg-gray4">Editar</p>
+                        <!-- <p @click.stop="$inertia.get(route('outcomes.edit', outcome[0].id))" class="px-2 py-1 hover:bg-gray4">Editar</p> -->
                         <p @click.stop="delete_confirm = true; itemToDelete = outcome" class="px-2 py-1 hover:bg-gray4">Eliminar</p>
                     </div>
                 </td>

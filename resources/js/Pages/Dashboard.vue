@@ -2,12 +2,10 @@
 <template>
   <AppLayout title="Dashboard">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">Inicio</h2>
+      <h1 class="font-bold text-center text-lg">Panel de inicio</h1>
     </template>
     <!-- -----------------------Registro de entrada y salida------------ -->
-    <div class="py-7">
-      <div class="globe-container">
-        <div class="globe">
+    <div class="py-2">
           <div v-if="checked_out" class="flex items-center">
             <i class="fa-regular fa-clock text-lg text-blue-500 mr-2"></i>
             <span class="text-blue-500">Salida registrada</span>
@@ -17,27 +15,37 @@
               <i class="fa-regular fa-clock text-lg text-green-500 mr-2"></i>
               <span class="text-green-500">Entrada registrada.</span>
             </div>
-            <SecondaryButton @click="getPosition">Salida</SecondaryButton>
+            <SecondaryButton @click="getPosition">Registrar salida</SecondaryButton>
           </div>
           <div v-else class="flex flex-col md:flex-row items-center justify-between space-x-5 md:mt-5">
-            <div>
-              <i class="fa-regular fa-clock text-lg mr-2"></i>
-              No has registrado entrada hoy
-            </div>
-            <SecondaryButton class="mt-5 md:mt-0" @click="getPosition">Entrada</SecondaryButton>
+            <PrimaryButton class="mt-5 md:mt-0" @click="getPosition">Registrar entrada</PrimaryButton>
           </div>
+
+      <div class="globe-container">
+
+        <!-- -----------------Avisos----------------- -->
+        <div class="lg:col-span-3 mt-7 mx-8">
+          <h1 class="font-bold text-lg text-primary text-left">Avisos</h1>
         </div>
-        <!-- ------------Permutas------------- -->
-        <!-- <div class="globe">
-          <div class="globe-title">Permutas</div>
-          <div>
-            <p class="text-center">No hay información para mostrar.</p>
-            <p>información de permutas.</p>
-          </div>
-        </div> -->
-        <!-- -----------------Permisos----------------- -->
+
         <div class="globe">
-          <div class="globe-title">Permisos</div>
+          <div v-if="notices.length">
+            <div v-for="notice in notices" :key="notice.id" class="globe my-2">
+              <div class="globe-title">{{ notice.title }}</div>
+              <div class="flex justify-between items-center text-xs">
+                <p class="text-center">{{ notice.content }}</p>
+              </div>
+            </div>
+          </div>
+          <p v-else class="text-center text-gray-500 text-xs">No hay avisos para mostrar.</p>
+        </div>
+
+        <!-- -----------------Permisos----------------- -->
+        <div class="lg:col-span-3 mt-7 mx-8">
+          <h1 class="font-bold text-lg text-primary text-left">Permisos</h1>
+        </div>
+
+        <div class="globe">
           <div v-for="leave in leaves" :key="leave.id" class="flex justify-between items-center text-xs">
             <p><i class="fa-regular fa-calendar-days mr-2"></i>{{ leave.date.split('T')[0] }}</p>
             <span>{{ leave.permission_type.name }}</span>
@@ -49,9 +57,13 @@
           </div>
           <p v-if="!leaves.length" class="text-center text-gray-500 text-xs">No hay información para mostrar.</p>
         </div>
+
         <!-- -----------------Préstamos----------------- -->
+        <div class="lg:col-span-3 mt-7 mx-8">
+          <h1 class="font-bold text-lg text-primary text-left">Préstamos</h1>
+        </div>
+
         <div class="globe">
-          <div class="globe-title">Préstamos</div>
           <div v-if="loan" class="flex justify-between items-center text-xs">
             <span><i class="fa-regular fa-calendar-days"></i>{{ loan.created_at.split('T')[0] }}</span>
             <span>${{ loan.amount }} solicitado</span>
@@ -63,20 +75,7 @@
           </div>
           <p v-else class="text-center text-gray-500 text-xs">No hay información para mostrar.</p>
         </div>
-        <!-- -----------------Avisos----------------- -->
-        <div class="lg:col-span-3 mt-9">
-          <h1 class="font-bold text-lg text-primary text-center">AVISOS</h1>
-        </div>
-
-        <div v-if="notices.length">
-          <div v-for="notice in notices" :key="notice.id" class="globe my-2">
-            <div class="globe-title">{{ notice.title }}</div>
-            <div class="flex justify-between items-center text-xs">
-              <p class="text-center">{{ notice.content }}</p>
-            </div>
-          </div>
-        </div>
-        <p v-else class="text-center text-gray-500 text-xs">No hay avisos para mostrar.</p>
+        
 
 
       </div>

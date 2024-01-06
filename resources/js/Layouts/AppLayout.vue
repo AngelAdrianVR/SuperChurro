@@ -85,12 +85,12 @@ const menues = [
     is_active: route().current("work-permits" + ".*"),
     admin_can_see: false,
   },
-  {
-    label: "Permutas",
-    route_name: "barters.index",
-    is_active: route().current("barters" + ".*"),
-    admin_can_see: false,
-  },
+  // {
+  //   label: "Permutas",
+  //   route_name: "barters.index",
+  //   is_active: route().current("barters" + ".*"),
+  //   admin_can_see: false,
+  // },
   {
     label: "Préstamos",
     route_name: "loans.index",

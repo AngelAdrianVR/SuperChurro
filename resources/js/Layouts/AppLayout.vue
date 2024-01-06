@@ -214,9 +214,8 @@ const logout = () => {
                         </div>
 
                         <!-- Team Settings -->
-                        <DropdownLink :href="
-                          route('teams.show', $page.props.user.current_team)
-                        ">
+                        <DropdownLink :href="route('teams.show', $page.props.user.current_team)
+                          ">
                           Team Settings
                         </DropdownLink>
 
@@ -235,9 +234,8 @@ const logout = () => {
                           <form @submit.prevent="switchToTeam(team)">
                             <DropdownLink as="button">
                               <div class="flex items-center">
-                                <svg v-if="
-                                  team.id == $page.props.user.current_team_id
-                                " class="mr-2 h-5 w-5 text-green-400" fill="none" stroke-linecap="round"
+                                <svg v-if="team.id == $page.props.user.current_team_id
+                                  " class="mr-2 h-5 w-5 text-green-400" fill="none" stroke-linecap="round"
                                   stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
                                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
@@ -372,20 +370,21 @@ const logout = () => {
         <div :class="{
           block: showingNavigationDropdown,
           hidden: !showingNavigationDropdown,
-        }" class="sm:hidden z-40 rounded-tl-[6px] rounded-bl-[6px] bg-gray-50 w-4/6 absolute right-0 top-14 min-h-[50%] max-h-[90%] overflow-y-scroll overflow-x-hidden shadow-lg border border-gray4 pt-4">
+        }"
+          class="sm:hidden z-40 rounded-tl-[6px] rounded-bl-[6px] bg-gray-50 w-4/6 absolute right-0 top-14 min-h-[50%] max-h-[90%] overflow-y-scroll overflow-x-hidden shadow-lg border border-gray4 pt-4">
 
           <!-- User info -->
           <div class="pb-4 mb-4 border-b border-gray-200">
-              <div @click="$inertia.get(route('profile.show'))" class="flex flex-col items-center justify-center mx-4">
-                  <img class="h-14 w-14 rounded-full object-cover mx-auto"
-                      :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
-                  <div class="font-semibold text-center text-base text-gray-600 w-full truncate">
-                      {{ $page.props.user.name }}
-                  </div>
-                  <div class="font-medium text-center text-sm text-gray-500 w-full truncate">
-                      {{ $page.props.user.email }}
-                  </div>
+            <div @click="$inertia.get(route('profile.show'))" class="flex flex-col items-center justify-center mx-4">
+              <img class="h-14 w-14 rounded-full object-cover mx-auto" :src="$page.props.user.profile_photo_url"
+                :alt="$page.props.user.name">
+              <div class="font-semibold text-center text-base text-gray-600 w-full truncate">
+                {{ $page.props.user.name }}
               </div>
+              <div class="font-medium text-center text-sm text-gray-500 w-full truncate">
+                {{ $page.props.user.email }}
+              </div>
+            </div>
           </div>
 
           <div class="pt-2 pb-3 space-y-1">
@@ -410,62 +409,15 @@ const logout = () => {
           </div>
 
           <!-- Responsive Settings Options -->
-          <div class="pt-8 pb-1 border-t border-primary">
+          <div class="pb-1 border-t border-gray4">
 
-            <div class="mt-3 space-y-1">
-              <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')"
-                :active="route().current('api-tokens.index')">
-                API Tokens
-              </ResponsiveNavLink>
-
+            <div class="my-1">
               <!-- Authentication -->
-              <form method="POST" @submit.prevent="logout" class="text-red-500 fixed bottom-3 right-3">
+              <form method="POST" @submit.prevent="logout" class="text-red-500 text-right px-2">
                 <button>
-                    <i class="fa-solid fa-arrow-right-from-bracket mr-[7px]"></i> Cerrar sesión
+                  <i class="fa-solid fa-arrow-right-from-bracket mr-[7px]"></i> Cerrar sesión
                 </button>
               </form>
-
-              <!-- Team Management -->
-              <template v-if="$page.props.jetstream.hasTeamFeatures">
-                <div class="border-t border-gray-200" />
-
-                <div class="block px-4 py-2 text-xs text-gray-400">
-                  Manage Team
-                </div>
-
-                <!-- Team Settings -->
-                <ResponsiveNavLink :href="route('teams.show', $page.props.user.current_team)"
-                  :active="route().current('teams.show')">
-                  Team Settings
-                </ResponsiveNavLink>
-
-                <ResponsiveNavLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')"
-                  :active="route().current('teams.create')">
-                  Create New Team
-                </ResponsiveNavLink>
-
-                <div class="border-t border-gray-200" />
-
-                <!-- Team Switcher -->
-                <div class="block px-4 py-2 text-xs text-gray-400">
-                  Switch Teams
-                </div>
-
-                <template v-for="team in $page.props.user.all_teams" :key="team.id">
-                  <form @submit.prevent="switchToTeam(team)">
-                    <ResponsiveNavLink as="button">
-                      <div class="flex items-center">
-                        <svg v-if="team.id == $page.props.user.current_team_id" class="mr-2 h-5 w-5 text-green-400"
-                          fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          stroke="currentColor" viewBox="0 0 24 24">
-                          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <div>{{ team.name }}</div>
-                      </div>
-                    </ResponsiveNavLink>
-                  </form>
-                </template>
-              </template>
             </div>
           </div>
         </div>

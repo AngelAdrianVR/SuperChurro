@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PayrollResource;
 use App\Http\Resources\PayrollUserResource;
-use App\Http\Resources\PayrollUserResource2;
-use App\Models\Outcome;
 use App\Models\Payroll;
 use App\Models\PayrollUser;
-use App\Models\Sale;
 use App\Models\User;
 use App\Models\WorkPermit;
 use Carbon\Carbon;
@@ -34,20 +31,13 @@ class PayrollController extends Controller
     // admin
     public function adminIndex()
     {
-        $usersWithNoAttendance = [];
         $payrolls = PayrollResource::collection(Payroll::with('users')
             ->whereMonth('start_date', today())
             ->whereYear('start_date', today())
             ->latest()
             ->get());
 
-        if ($payrolls->all()) {
-            $currentPayrollId = $payrolls[0]->id; // ID de la nómina en curso
-
-            $usersWithNoAttendance = User::whereDoesntHave('payrolls', function ($query) use ($currentPayrollId) {
-                $query->where('payroll_id', $currentPayrollId);
-            })->where('is_active', true)->whereNotIn('id', [1, 3])->get();
-        }
+        $usersWithNoAttendance = $this->getUsersWithNoAttendance($payrolls);
 
         return inertia('PayRoll/Admin/Index', compact('payrolls', 'usersWithNoAttendance'));
     }
@@ -61,7 +51,23 @@ class PayrollController extends Controller
             ->latest()
             ->get());
 
-        return response()->json(['items' => $payrolls]);
+        $usersWithNoAttendance = $this->getUsersWithNoAttendance($payrolls);
+
+        return response()->json(['items' => $payrolls, 'usersWithNoAttendance' => $usersWithNoAttendance]);
+    }
+
+    public function getUsersWithNoAttendance($payrolls)
+    {
+        $usersWithNoAttendance = [];
+
+        if ($payrolls->all()) {
+            $currentPayrollId = $payrolls[0]->id; // ID de la nómina en curso
+
+            $usersWithNoAttendance = User::whereDoesntHave('payrolls', function ($query) use ($currentPayrollId) {
+                $query->where('payroll_id', $currentPayrollId);
+            })->where('is_active', true)->whereNotIn('id', [1, 3])->get();
+        }
+        return $usersWithNoAttendance;
     }
 
     public function showUsersPayrolls($ids, $payroll_id)
@@ -87,90 +93,81 @@ class PayrollController extends Controller
         return inertia('PayRoll/Admin/Receipt', compact('payroll'));
     }
 
+    // public function closePayroll()
+    // {
+    //     $active_payroll = Payroll::where('is_active', true)->first();
 
+    //     //create new payroll
+    //     Payroll::create([
+    //         'week' => $active_payroll->start_date->addDays(8)->weekOfYear,
+    //         'start_date' => $active_payroll->start_date->addDays(7)->toDateString(),
+    //     ]);
 
-    public function showUserPayroll($payroll_user_id) // refactor (open same template of showUsersPayrolls method)
-    {
-        $payroll_user = PayrollUserResource2::make(PayrollUser::with('payroll', 'user')->find($payroll_user_id));
+    //     // get commissions of each day of week
+    //     $commissions = [];
+    //     for ($i = 0; $i < 7; $i++) {
+    //         $current_date = $active_payroll->start_date->addDays($i);
+    //         $day_commission = Sale::calculateCommissions($current_date->toDateString());
+    //         $commissions[$current_date->dayName] = $day_commission;
+    //     }
 
-        return inertia('PayRoll/Admin/Template2', compact('payroll_user'));
-    }
+    //     // store discounts, additional & attendance info for each user payroll
+    //     $active_payroll->users->each(function ($user_payroll) use ($commissions) {
+    //         $user_payroll->pivot->update([
+    //             'discounts' => $user_payroll->pivot->getDiscounts(),
+    //             'attendance' => $user_payroll->pivot->weekAttendanceArray(),
+    //             'additional' => [
+    //                 'base_salary' => User::find($user_payroll->pivot->user_id)->employee_properties['base_salary'],
+    //                 'commissions' => $user_payroll->pivot->getCommissions($commissions),
+    //                 'bonuses' => $user_payroll->getBonuses()
+    //             ]
+    //         ]);
 
-    public function closePayroll()
-    {
-        $active_payroll = Payroll::where('is_active', true)->first();
+    //         // decrement loan's amount if exists an active one
+    //         $loan = $user_payroll->activeLoan?->first();
+    //         $loan?->decrement('remaining', round($loan?->amount / 2, 2));
+    //     });
 
-        //create new payroll
-        Payroll::create([
-            'week' => $active_payroll->start_date->addDays(8)->weekOfYear,
-            'start_date' => $active_payroll->start_date->addDays(7)->toDateString(),
-        ]);
+    //     // store commissions & close payroll
+    //     $active_payroll->update([
+    //         'commissions' => $commissions,
+    //         'is_active' => false,
+    //     ]);
 
-        // get commissions of each day of week
-        $commissions = [];
-        for ($i = 0; $i < 7; $i++) {
-            $current_date = $active_payroll->start_date->addDays($i);
-            $day_commission = Sale::calculateCommissions($current_date->toDateString());
-            $commissions[$current_date->dayName] = $day_commission;
-        }
+    //     // calculate total salary
+    //     $total_salaries = $active_payroll->users->reduce(function ($carry, $item) {
+    //         return $carry + $item->pivot->paid();
+    //     });
 
-        // store discounts, additional & attendance info for each user payroll
-        $active_payroll->users->each(function ($user_payroll) use ($commissions) {
-            $user_payroll->pivot->update([
-                'discounts' => $user_payroll->pivot->getDiscounts(),
-                'attendance' => $user_payroll->pivot->weekAttendanceArray(),
-                'additional' => [
-                    'base_salary' => User::find($user_payroll->pivot->user_id)->employee_properties['base_salary'],
-                    'commissions' => $user_payroll->pivot->getCommissions($commissions),
-                    'bonuses' => $user_payroll->getBonuses()
-                ]
-            ]);
+    //     // create outcome for all salaries
+    //     Outcome::create([
+    //         'concept' => 'Salarios',
+    //         'quantity' => 1,
+    //         'cost' => $total_salaries,
+    //         'notes' => 'Generado automaticamente al cerrar las nominas',
+    //         'user_id' => auth()->id(),
+    //     ]);
 
-            // decrement loan's amount if exists an active one
-            $loan = $user_payroll->activeLoan?->first();
-            $loan?->decrement('remaining', round($loan?->amount / 2, 2));
-        });
+    //     // create outcome for rent if date 
+    //     $fechaActual = now();
+    //     // Obtén el quinto día del mes actual
+    //     $quintoDiaDelMes = now()->startOfMonth()->addDays(4);
+    //     $rentOutcome = Outcome::whereDate('created_at', $quintoDiaDelMes)->where('concept', 'Renta carrito')->first();
 
-        // store commissions & close payroll
-        $active_payroll->update([
-            'commissions' => $commissions,
-            'is_active' => false,
-        ]);
-
-        // calculate total salary
-        $total_salaries = $active_payroll->users->reduce(function ($carry, $item) {
-            return $carry + $item->pivot->paid();
-        });
-
-        // create outcome for all salaries
-        Outcome::create([
-            'concept' => 'Salarios',
-            'quantity' => 1,
-            'cost' => $total_salaries,
-            'notes' => 'Generado automaticamente al cerrar las nominas',
-            'user_id' => auth()->id(),
-        ]);
-
-        // create outcome for rent if date 
-        $fechaActual = now();
-        // Obtén el quinto día del mes actual
-        $quintoDiaDelMes = now()->startOfMonth()->addDays(4);
-        $rentOutcome = Outcome::whereDate('created_at', $quintoDiaDelMes)->where('concept', 'Renta carrito')->first();
-
-        if (!$rentOutcome) {
-            // Compara las fechas
-            if ($fechaActual->gte($quintoDiaDelMes)) {
-                Outcome::create([
-                    'concept' => 'Renta carrito',
-                    'quantity' => 1,
-                    'cost' => 37910,
-                    'notes' => 'Generado automaticamente',
-                    'user_id' => auth()->id(),
-                    'created_at' => $quintoDiaDelMes
-                ]);
-            }
-        }
-    }
+    //     if (!$rentOutcome) {
+    //         // Compara las fechas
+    //         if ($fechaActual->gte($quintoDiaDelMes)) {
+    //             Outcome::create([
+    //                 'concept' => 'Renta carrito',
+    //                 'quantity' => 1,
+    //                 'cost' => 37910,
+    //                 'notes' => 'Generado automaticamente',
+    //                 'user_id' => auth()->id(),
+    //                 'created_at' => $quintoDiaDelMes
+    //             ]);
+    //         }
+    //     }
+    // }
 
     public function updatePayroll(Request $request)
     {

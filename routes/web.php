@@ -64,8 +64,8 @@ Route::resource('settings', SettingController::class)->middleware(['auth', 'admi
 Route::resource('bonuses', BonusController::class)->middleware(['auth', 'admin']);
 Route::resource('outcomes', OutcomeController::class)->middleware(['auth', 'victor']);
 Route::get('/admin/payrolls', [PayrollController::class, 'adminIndex'])->middleware(['auth', 'admin'])->name('payroll-admin.index');
-Route::get('/admin/payrolls/show-all/{ids}/{payroll_id}', [PayrollController::class, 'showUsersPayrolls'])->middleware(['auth', 'admin'])->name('payroll-admin.show-all');
-Route::get('/admin/payrolls/show/{payrollUser}', [PayrollController::class, 'showUserPayroll'])->middleware(['auth', 'admin'])->name('payroll-admin.show');
+Route::get('/admin/payrolls/show-receipt/{ids}/{payroll_id}', [PayrollController::class, 'showUsersPayrolls'])->middleware(['auth', 'admin'])->name('payroll-admin.show-receipt');
+// Route::get('/admin/payrolls/show/{payrollUser}', [PayrollController::class, 'showUserPayroll'])->middleware(['auth', 'admin'])->name('payroll-admin.show');
 Route::get('/admin/payrolls/close', [PayrollController::class, 'closePayroll'])->middleware(['auth', 'admin'])->name('payroll-admin.close');
 Route::put('/admin/payrolls/update', [PayrollController::class, 'updatePayroll'])->middleware(['auth', 'admin'])->name('payroll-admin.update');
 Route::put('/admin/payrolls/set-incident', [PayrollController::class, 'setIncident'])->middleware(['auth', 'admin'])->name('payroll-admin.set-incident');
@@ -161,7 +161,7 @@ Route::put('bonus/toggle-status/{bonus}', [BonusController::class, 'toggleStatus
 Route::resource('justifications', JustificationEventController::class);
 
 // Route::get('/paty-nominas', function (Request $request) {
-//     $payrolls = PayrollUserResource2::collection(PayrollUser::with('payroll', 'user')->whereIn('id', [289,294,300,307,313])->get());
+//     $payrolls = PayrollUserResource::collection(PayrollUser::with('payroll', 'user')->whereIn('id', [289,294,300,307,313])->get());
 //     // return $payrolls;
 //     return inertia('PayRoll/Admin/Template3', compact('payrolls'));
 // })

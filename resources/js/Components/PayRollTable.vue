@@ -1,14 +1,15 @@
 <template>
   <LoadingIndicator v-if="pageLoading" />
   <section class="relative py-2">
-    <div class="w-full px-4">
-      <div class="relative flex flex-col min-w-0 break-words w-full mb-6 rounded-lg 
-  bg-transparent text-[#373737]">
+    <div class="w-full">
+      <div class="relative flex flex-col min-w-0 break-words w-full mb-6 rounded-lg bg-transparent text-[#373737]">
         <div class="rounded-t-lg mb-0 py-3 border-t border-x border-gray3">
           <div class="py-1 flex flex-wrap items-center bg-[#EDEDED]">
             <div class="relative w-full px-4 max-w-full flex-grow flex-1 flex justify-between">
-              <h3 class="font-semibold text-base text-[#373737]"><i class="fa-regular fa-circle-user mr-1"></i>
-                {{ payroll?.user.name }}</h3>
+              <h3 class="font-semibold text-base text-[#373737]">
+                <i class="fa-regular fa-circle-user mr-1"></i>
+                {{ payroll?.user.name }}
+              </h3>
             </div>
           </div>
         </div>

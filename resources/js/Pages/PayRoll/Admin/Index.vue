@@ -9,10 +9,9 @@
         <i @click="changeMonth(-1)" class="fa-solid fa-angle-left text-primary text-xs mr-5 cursor-pointer p-1"></i>
         <i class="fa-solid fa-calendar-days text-primary text-sm mr-2"></i>
         <p class="text-[#cccccc]">|</p>
-        <p class="text-sm ml-2 uppercase">{{ currentMonth.toLocaleDateString('es-ES', {
-          month: 'long', year: 'numeric'
-        })
-        }}</p>
+        <p class="text-sm ml-2 uppercase">
+          {{ currentMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }) }}
+        </p>
         <i @click="changeMonth(1)" class="fa-solid fa-angle-right text-primary text-xs ml-5 cursor-pointer p-1"></i>
       </header>
       <div v-if="payrolls.data.length">
@@ -31,7 +30,6 @@
             </div>
           </div>
         </div>
-
         <div class="mt-10 text-bold text-lg text-gray-700">
           <div class="flex justify-between items-center">
             <p class="ml-5 text-sm font-bold">Asistencias de empleados</p>
@@ -43,21 +41,27 @@
               </svg>
               Imprimir nóminas
             </PrimaryButton>
-            <!-- <a v-if="!payrollSelected.is_active" target="_blank"
-              :href="route('payroll-admin.show-all', payrollSelected.id)">
-              <PrimaryButton class="mr-7">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor" class="w-4 h-4 mr-1">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z" />
-                </svg>
-                Imprimir nóminas
-              </PrimaryButton>
-            </a> -->
-            <!-- <PrimaryButton @click="showConfirmation = true" v-else class="mr-7">Cerrar nómina</PrimaryButton> -->
           </div>
           <PayRollTable v-for="(payroll, index) in payrollSelected.users" :key="index" :payroll="payroll"
             @extraTime="createExtraTime($event)" />
+
+          <div v-if="localUsersWithNoAttendance.length && payrollSelected.is_active">
+            <h2 class="font-bold text-sm mb-1 mx-3">Usuarios sin asistencias esta semana</h2>
+            <div v-for="(user, index) in localUsersWithNoAttendance" :key="user.id"
+              class="rounded-lg mb-2 py-3 border-y border-x border-gray3">
+              <div class="py-1 flex flex-wrap items-center bg-[#EDEDED]">
+                <div class="relative w-full px-4 max-w-full flex-grow flex-1 flex justify-between">
+                  <h3 class="w-full flex items-center justify-between font-semibold text-base text-[#373737]">
+                    <p class="w-2/3 truncate">
+                      <i class="fa-regular fa-circle-user mr-1"></i>
+                      <span>{{ user.name }}</span>
+                    </p>
+                    <PrimaryButton @click="generatePayrollUser(index)">Registrar</PrimaryButton>
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div v-else class="my-10 px-12">
@@ -176,7 +180,7 @@ export default {
       form,
       weekDays: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
       usersSelected: [],
-      userWithNoAttendance: '',
+      localUsersWithNoAttendance: [],
       loading: false,
       currentMonth: new Date(),
     }
@@ -198,11 +202,8 @@ export default {
     usersWithNoAttendance: Array,
   },
   methods: {
-    // printPayrolls() {
-    //   this.$inertia.get(route('payroll-admin.show-all', { ids: JSON.stringify(this.usersSelected), payroll_id: this.payrollSelected.id }));
-    // },
     printPayrolls() {
-      const url = route('payroll-admin.show-all', {
+      const url = route('payroll-admin.show-receipt', {
         ids: JSON.stringify(this.usersSelected),
         payroll_id: this.payrollSelected.id,
       });
@@ -238,7 +239,7 @@ export default {
 
         if (response.status === 200) {
           this.payrolls.data = response.data.items;
-          this.userWithNoAttendance = '';
+          this.localUsersWithNoAttendance = response.data.usersWithNoAttendance;
           this.payrollSelected = this.payrolls.data[0];
         }
       } catch (error) {
@@ -247,14 +248,15 @@ export default {
         this.loading = false;
       }
     },
-    async generatePayrollUser() {
+    async generatePayrollUser(index) {
       try {
         this.loading = true;
-        const response = await axios.get(route('users.generate-payroll', this.userWithNoAttendance));
+        const response = await axios.get(route('users.generate-payroll', this.localUsersWithNoAttendance[index].id));
 
         if (response.status === 200) {
+          this.payrollSelected = response.data.payroll;
           this.payrolls.data[0] = response.data.payroll;
-          this.userWithNoAttendance = '';
+          this.localUsersWithNoAttendance.splice(index, 1);
           this.$notify({
             title: "Correcto",
             message: "Se ha registrado la asistencia del usuario seleccionado",
@@ -286,6 +288,9 @@ export default {
       }
     }
   },
+  mounted() {
+    this.localUsersWithNoAttendance = this.usersWithNoAttendance;
+  }
 };
 </script>
 

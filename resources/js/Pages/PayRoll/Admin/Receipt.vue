@@ -32,7 +32,7 @@
                         <span>Sueldo ({{ getShiftsWorked(current) }} turnos)</span>
                         <span>${{ current.base_salary }}</span>
                     </p>
-                    <p v-for="bonus in current.additional?.bonuses" :key="bonus.name"
+                    <p v-for="bonus in getBonuses(current)" :key="bonus.name"
                         class="flex items-center justify-between px-2 self-start">
                         <span>{{ bonus.name }}</span>
                         <span>${{ bonus.amount }}</span>
@@ -53,7 +53,7 @@
                         <span>Incapacidades ({{ current.week_attendance.sickness }})</span>
                         <span>${{ current.paid_sickness }}</span>
                     </p>
-                    <p v-for="(commission, index) in current?.additional.commissions.filter(item => item > 0)" :key="index"
+                    <p v-for="(commission, index) in getCommissions(current)" :key="index"
                         class="flex items-center justify-between px-2 self-start">
                         <span>Comisión {{ week_days[index] }}</span>
                         <span>${{ commission }}</span>
@@ -105,9 +105,23 @@ export default {
         };
     },
     methods: {
-        getShiftsWorked(payroll) {
-            return payroll.week_attendance.days_as_double
-                + payroll.week_attendance.attendances;
+        getShiftsWorked(payrollUser) {
+            return payrollUser.week_attendance.days_as_double
+                + payrollUser.week_attendance.attendances;
+        },
+        getBonuses(payrollUser) {
+            if (payrollUser.additional !== null) {
+                return payrollUser.additional.bonuses;
+            } else {
+                return payrollUser.bonuses;
+            }
+        },
+        getCommissions(payrollUser) {
+            if (payrollUser.additional !== null) {
+                return payrollUser.additional.commissions.filter(item => item > 0);
+            } else {
+                return payrollUser.commissions.filter(item => item > 0);
+            }
         }
     },
     props: {

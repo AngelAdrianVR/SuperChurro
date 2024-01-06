@@ -419,7 +419,7 @@ const logout = () => {
               </ResponsiveNavLink>
 
               <!-- Authentication -->
-              <form method="POST" @submit.prevent="logout" class="text-red-500 absolute bottom-3 right-3">
+              <form method="POST" @submit.prevent="logout" class="text-red-500 fixed bottom-3 right-3">
                 <button>
                     <i class="fa-solid fa-arrow-right-from-bracket mr-[7px]"></i> Cerrar sesión
                 </button>

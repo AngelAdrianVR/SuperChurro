@@ -53,6 +53,7 @@ class PayrollUser extends Pivot
         $paid_leaves = 0;
         $no_paid_leaves = 0;
         $sickness = 0;
+        $holidays = 0;
         $extras = 0; // minutes
         $late = 0; // minutes
         $tolerance = 0;
@@ -64,16 +65,26 @@ class PayrollUser extends Pivot
                 // check if this day is off, applied leave or holyday
                 $current_attendance[$i] = $this->typeOfAbsent($current_day_in_loop);
 
-                // add incidents or sub attendances
-                if ($current_attendance[$i]['in'] !== 'Día feriado') $attendances--;
-                if ($current_attendance[$i]['in'] == 'Vacaciones') $vacations++;
+                // add incidents & sub attendances
+                if ($current_attendance[$i]['in'] !== 'Día feriado') {
+                    // doble paga si colaborador trabaja 2 turnos el dia feriado
+                    if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos') {
+                        $holidays += 2;
+                    } else {
+                        $holidays ++;
+                    }
+                }
+                elseif ($current_attendance[$i]['in'] == 'Vacaciones') $vacations++;
                 elseif ($current_attendance[$i]['in'] == 'Permiso con goce') $paid_leaves++;
                 elseif ($current_attendance[$i]['in'] == 'Permiso sin goce') $no_paid_leaves++;
                 elseif ($current_attendance[$i]['in'] == 'Incapacidad') $sickness++;
-            } else if ($current_attendance[$i]['out'] !== '--:--:--') {
-                // add aditional day salary (full day worked)
+                $attendances--;
+            } else if ($current_attendance[$i]['out'] !== '--:--:--') { // si trabajó el colaborador
+                // colaborador trabajó en día feriado
+                // Si trabaja 2 turnos o si es dia feriado se da $ por minutos extras a las salida
                 if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos' || $this->isHoliday($current_day_in_loop)) {
                     if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos' && $this->isHoliday($current_day_in_loop)) {
+                        // se da el doble si se trabaja todo el dia en dia feriado
                         $days_as_double += 3;
                     } else {
                         $days_as_double++;
@@ -126,6 +137,7 @@ class PayrollUser extends Pivot
             'paid_leaves' => $paid_leaves,
             'no_paid_leaves' => $no_paid_leaves,
             'sickness' => $sickness,
+            'holidays' => $holidays,
             'extras' => $extras,
             'late' => $late,
             'days_late_number' => $days_late_number,
@@ -135,6 +147,7 @@ class PayrollUser extends Pivot
     private function typeOfAbsent($date)
     {
         if ($this->isDayOff($date->dayOfWeek)) $absent_type = "Día de descanso";
+        else if ($this->isHoliday($date)) $absent_type = "Día feriado";
         else if ($this->getApprovedIncident($date)) $absent_type = $this->getApprovedIncident($date);
         else if ($date->greaterThanOrEqualTo(today())) $absent_type = "--:--:--";
         else $absent_type = "Falta";
@@ -184,6 +197,7 @@ class PayrollUser extends Pivot
             - collect($this->discounts())->sum('amount')
             + $this->payVacations()
             + $this->payLeaves()
+            + $this->payHoliday()
             + $this->paySickness();
 
         return round($total);
@@ -356,6 +370,22 @@ class PayrollUser extends Pivot
         }
 
         return 1.25 * $base_salary * $vacation_days;
+    }
+    
+    public function payHoliday()
+    {
+        if ($this->additional) {
+            if (!key_exists('holidays', $this->attendance)) return 0;
+            // get stored data
+            $holidays = $this->attendance['holidays'];
+            $base_salary = $this->additional['base_salary'];
+        } else {
+            // process data
+            $holidays = $this->weekAttendanceArray()['holidays'];
+            $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
+        }
+
+        return $base_salary * $holidays;
     }
 
     public function payLeaves()

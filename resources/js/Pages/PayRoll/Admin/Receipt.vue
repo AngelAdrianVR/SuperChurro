@@ -45,6 +45,10 @@
                         <span>Vacaciones ({{ current.week_attendance.vacations }})</span>
                         <span>${{ current.paid_vacations }}</span>
                     </p>
+                    <p v-if="current.week_attendance.holidays" class="flex items-center justify-between px-2 self-start">
+                        <span>Día feriado</span>
+                        <span>${{ current.paid_holiday }}</span>
+                    </p>
                     <p v-if="current.week_attendance.paid_leaves" class="flex items-center justify-between px-2 self-start">
                         <span>Permisos con goce ({{ current.week_attendance.paid_leaves }})</span>
                         <span>${{ current.paid_leaves }}</span>
@@ -55,8 +59,8 @@
                     </p>
                     <p v-for="(commission, index) in getCommissions(current)" :key="index"
                         class="flex items-center justify-between px-2 self-start">
-                        <span>Comisión {{ week_days[index] }}</span>
-                        <span>${{ commission }}</span>
+                        <span>{{ commission.concept }}</span>
+                        <span>${{ commission.amount }}</span>
                     </p>
                     <p v-if="current.salary_for_extras" class="flex items-center justify-between px-2 self-start">
                         <span>Minutos adicionales a hra. de salida</span>
@@ -117,11 +121,28 @@ export default {
             }
         },
         getCommissions(payrollUser) {
+            let commissions = [];
+            let allCommisions = [];
             if (payrollUser.additional !== null) {
-                return payrollUser.additional.commissions.filter(item => item > 0);
+                allCommisions = payrollUser.additional.commissions;
             } else {
-                return payrollUser.commissions.filter(item => item > 0);
+                allCommisions = payrollUser.commissions;
             }
+
+            // filtrar comisiones
+            allCommisions.forEach((item, index) => {
+                const day = this.week_days[index];
+                if (item > 0) {
+                    const obj = {
+                        concept: "Comisión " + day,
+                        amount: item
+                    };
+
+                    commissions.push(obj);
+                };
+            });
+
+            return commissions;
         }
     },
     props: {

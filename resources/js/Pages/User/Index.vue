@@ -15,8 +15,13 @@
     </div>
 
     <div class="max-w-3xl w-full mx-auto z-10">
+      <h2 class="text-gray1 mx-5">Usuarios activos</h2>
       <div class="flex flex-col">
-        <UserCard  v-for="user in users.data" :key="user" :user="user" />
+        <UserCard  v-for="user in getActiveUsers()" :key="user" :user="user" />
+      </div>
+      <h2 class="text-gray1 mx-5 mt-4">Usuarios inactivos</h2>
+      <div class="flex flex-col">
+        <UserCard  v-for="user in getInactiveUsers()" :key="user" :user="user" />
       </div>
     </div>
   </AppLayout>
@@ -38,6 +43,14 @@ export default {
     PrimaryButton,
     UserCard,
     Link
+  },
+  methods: {
+    getActiveUsers() {
+      return this.users.data.filter(user => user.is_active);
+    },
+    getInactiveUsers() {
+      return this.users.data.filter(user => !user.is_active);
+    },
   },
   props: {
     users: Object,

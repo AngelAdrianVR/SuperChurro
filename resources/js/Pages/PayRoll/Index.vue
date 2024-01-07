@@ -12,7 +12,7 @@
                     <div class="font-bold text-sm text-center pb-1">
                         Semana {{ payroll.week }}: {{ payroll.start_date }} al {{ payroll.end_date }}
                     </div>
-                    <div >
+                    <div>
                         <article class="flex mt-1 text-[8px] lg:text-xs">
                             <div
                                 class="w-2/3 lg:w-3/4 mr-auto grid grid-cols-2 lg:grid-cols-3 gap-x-8 lg:gap-x-32 gap-y-1 border border-black">
@@ -34,6 +34,11 @@
                                     class="flex items-center justify-between px-2 self-start">
                                     <span>Vacaciones ({{ payroll.week_attendance.vacations }})</span>
                                     <span>${{ payroll.paid_vacations }}</span>
+                                </p>
+                                <p v-if="payroll.week_attendance.holidays"
+                                    class="flex items-center justify-between px-2 self-start">
+                                    <span>Día feriado</span>
+                                    <span>${{ payroll.paid_holiday }}</span>
                                 </p>
                                 <p v-if="payroll.week_attendance.paid_leaves"
                                     class="flex items-center justify-between px-2 self-start">

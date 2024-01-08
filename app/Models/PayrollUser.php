@@ -66,7 +66,7 @@ class PayrollUser extends Pivot
                 $current_attendance[$i] = $this->typeOfAbsent($current_day_in_loop);
 
                 // add incidents & sub attendances
-                if ($current_attendance[$i]['in'] !== 'Día feriado') {
+                if ($current_attendance[$i]['in'] == 'Día feriado') {
                     // doble paga si colaborador trabaja 2 turnos el dia feriado
                     if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos') {
                         $holidays += 2;

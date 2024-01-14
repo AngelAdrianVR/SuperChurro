@@ -94,9 +94,9 @@ class User extends Authenticatable implements HasMedia
         $time_to_work_array = [];
 
         foreach ($this->employee_properties['work_days'] as $work_day) {
-            if ($work_day['shift'] === 'carrito vespertino') {
+            if ($work_day['shift'] == 'carrito vespertino') {
                 $time_to_work = 360; // minutes (6 hours)
-            } else if ($work_day['shift'] === 'carrito 2 turnos') {
+            } else if ($work_day['shift'] == 'carrito 2 turnos') {
                 $time_to_work = 660; // minutes (11 hours)
             } else {
                 $time_to_work = 300; // minutes (5 hours)
@@ -204,7 +204,7 @@ class User extends Authenticatable implements HasMedia
             ->where('user_id', $this->id)
             ->first();
 
-        $today_attendance = ['in' => now()->isoFormat('hh:mm'), 'out' => '--:--:--', 'day' => today()->dayOfWeek];
+        $today_attendance = ['in' => now()->isoFormat('HH:mm'), 'out' => '--:--:--', 'day' => today()->dayOfWeek];
 
         // isn't the first attendance in current payroll?
         if ($payroll_user) {
@@ -212,7 +212,7 @@ class User extends Authenticatable implements HasMedia
 
             if ($this->hasCheckedInToday()) {
                 // checking out
-                $new_atendance[today()->dayOfWeek]['out'] = now()->isoFormat('hh:mm');
+                $new_atendance[today()->dayOfWeek]['out'] = now()->isoFormat('HH:mm');
             } else {
                 // checking in
                 $new_atendance[today()->dayOfWeek] = $today_attendance;
@@ -296,12 +296,12 @@ class User extends Authenticatable implements HasMedia
                         $attendances = $last_payroll_user->weekAttendanceArray();
                     }
 
-                    if($attendances['late'] == 0) {
+                    if ($attendances['late'] == 0) {
                         $days_late_collection = collect($attendances['days_late_number']);
                         $factor = 0; //factor to multiply punctuality amount
                         $no_bonus_collection = collect(['Falta', '--:--:--', 'Día de descanso']);
                         foreach ($this->employee_properties['work_days'] as $work_day) {
-                            if (!$no_bonus_collection->contains($attendances['payroll'][$work_day['day']]['out'])) {// EVITAR QUE DE BONO EN DIAS QUE NO HAN PASADO O QUE TUVO FALTA!!!!
+                            if (!$no_bonus_collection->contains($attendances['payroll'][$work_day['day']]['out'])) { // EVITAR QUE DE BONO EN DIAS QUE NO HAN PASADO O QUE TUVO FALTA!!!!
                                 if ($work_day['shift'] == "carrito 2 turnos") $factor += 2;
                                 else $factor++;
                             }

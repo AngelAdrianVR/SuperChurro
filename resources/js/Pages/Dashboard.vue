@@ -75,14 +75,8 @@
           </div>
           <p v-else class="text-center text-gray-500 text-xs">No hay información para mostrar.</p>
         </div>
-        
-
-
       </div>
     </div>
-
-
-
   </AppLayout>
 </template>
 

@@ -71,10 +71,9 @@ class PayrollUser extends Pivot
                     if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos') {
                         $holidays += 2;
                     } else {
-                        $holidays ++;
+                        $holidays++;
                     }
-                }
-                elseif ($current_attendance[$i]['in'] == 'Vacaciones') $vacations++;
+                } elseif ($current_attendance[$i]['in'] == 'Vacaciones') $vacations++;
                 elseif ($current_attendance[$i]['in'] == 'Permiso con goce') $paid_leaves++;
                 elseif ($current_attendance[$i]['in'] == 'Permiso sin goce') $no_paid_leaves++;
                 elseif ($current_attendance[$i]['in'] == 'Incapacidad') $sickness++;
@@ -82,25 +81,18 @@ class PayrollUser extends Pivot
             } else if ($current_attendance[$i]['out'] !== '--:--:--') { // si trabajó el colaborador
                 // colaborador trabajó en día feriado
                 // Si trabaja 2 turnos o si es dia feriado se da $ por minutos extras a las salida
-                if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos' || $this->isHoliday($current_day_in_loop)) {
-                    if ($user->shiftOn($current_day_in_loop->dayOfWeek) === 'carrito 2 turnos' && $this->isHoliday($current_day_in_loop)) {
+                if ($user->shiftOn($current_day_in_loop->dayOfWeek) == 'carrito 2 turnos' || $this->isHoliday($current_day_in_loop)) {
+                    if ($user->shiftOn($current_day_in_loop->dayOfWeek) == 'carrito 2 turnos' && $this->isHoliday($current_day_in_loop)) {
                         // se da el doble si se trabaja todo el dia en dia feriado
                         $days_as_double += 3;
                     } else {
                         $days_as_double++;
                     }
                     $double_commission_on[] = $i;
-                } else if ($user->shiftOn($current_day_in_loop->dayOfWeek) !== 'carrito vespertino') {
-                    $tolerance = 135;
                 }
-
-                // calculate extras
-                $extras_per_day = Carbon::parse($current_attendance[$i]['out'])
-                    ->diffInMinutes($current_attendance[$i]['in'])
-                    - $user->getTimeToWork()[$i];
-
-                if (($extras_per_day - $tolerance) <= 0) $extras_per_day = 0;
-                $extras += $extras_per_day;
+                // else if ($user->shiftOn($current_day_in_loop->dayOfWeek) !== 'carrito vespertino') {
+                //     $tolerance = 135;
+                // }
 
                 // late: serch for "permiso de llegada tarde" for this day
                 $late_entry_permit = WorkPermit::whereDate('date', $current_day_in_loop)
@@ -115,10 +107,27 @@ class PayrollUser extends Pivot
                 if ($late_entry_permit) $late_per_day -= $late_entry_permit->time_requested;
                 // else $late_per_day -= 15;
 
-                if ($late_per_day <= 0) $late_per_day = 0;
-                else $days_late_number[] = $i;
+                if ($late_per_day <= 0) {
+                    $late_per_day = 0;
+                } else {
+                    $days_late_number[] = $i;
+                }
 
                 $late += $late_per_day;
+
+                // calculate extras solo 
+                $current_shift = $user->shiftOn($current_day_in_loop->dayOfWeek);
+                if ($current_shift == 'carrito vespertino' || $current_shift == 'carrito 2 turnos') {
+                    $extras_per_day = Carbon::parse($current_attendance[$i]['out'])
+                        ->diffInMinutes($current_attendance[$i]['in'])
+                        - $user->getTimeToWork()[$i];
+
+                    if ($extras_per_day <= 0) {
+                        $extras_per_day = 0;
+                    } else {
+                        $extras += $extras_per_day;
+                    }
+                }
             }
 
             // add day in the register
@@ -371,7 +380,7 @@ class PayrollUser extends Pivot
 
         return 1.25 * $base_salary * $vacation_days;
     }
-    
+
     public function payHoliday()
     {
         if ($this->additional) {

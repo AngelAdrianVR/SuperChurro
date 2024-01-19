@@ -9,8 +9,7 @@
       </div>
     </template>
 
-    <div class="mt-2 bg-amber-100 border-t-4 border-[teal-500] rounded-b text-amber-900 px-4 py-3 shadow-md"
-      role="alert">
+    <div class="mt-2 bg-amber-100 border-t-4 border-[teal-500] rounded-b text-amber-900 px-4 py-3 shadow-md" role="alert">
       <div class="flex">
         <div class="py-1"><svg class="fill-current h-6 w-6 text-amber-500 mr-4" xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20">
@@ -37,23 +36,17 @@
       ">
       <form @submit.prevent="store">
         <InputErrors v-if="form.hasErrors" :errors="form.errors" class="mb-3" />
-        <div class="grid grid-cols-2 gap-2">
+        <div class="lg:grid grid-cols-2 gap-2">
           <div v-for="product in products" :key="product.id" class="mb-1 w-full">
             <InputLabel :value="product.name" class="ml-3 mb-1 text-sm" />
-            <input v-model="form.product[product.id]" type="number" min="0"
-              autocomplete="off" required class="input" placeholder="00" />
+            <input v-model="form.product[product.id]" :max="cart.products[product.id]" type="number" min="0" autocomplete="off" required class="input"
+              placeholder="00" />
           </div>
         </div>
 
         <div class="my-2 w-full">
           <InputLabel value="Comentarios u observaciones" class="ml-3 mb-1 text-sm" />
-          <textarea
-            v-model="form.notes"
-            rows="2"
-            type="text"
-            autocomplete="off"
-            class="textarea"
-          />
+          <textarea v-model="form.notes" rows="2" type="text" autocomplete="off" class="textarea" />
         </div>
 
         <div class="flex justify-center lg:justify-end mt-5">
@@ -92,6 +85,7 @@ export default {
   },
   props: {
     products: Array,
+    cart: Array,
   },
   methods: {
     store() {

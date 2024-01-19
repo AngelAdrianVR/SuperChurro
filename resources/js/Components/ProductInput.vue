@@ -2,7 +2,6 @@
     <div class="
       flex
       space-y-0 flex-row justify-between items-center
-      px-3
       common-container
     ">
         <div>
@@ -14,9 +13,9 @@
             </select>
             <p v-if="error_validation" class="text-red-400 text-xs">Favor de seleccionar el producto</p>
         </div>
-        <div class="relative z-0 mb-6 w-1/4 group">
+        <div class="relative z-0 mb-6 group">
             <input @change="syncItem" v-model.number="quantity" min="1" type="number"
-                autocomplete="off" class="input w-1/2 ml-2" placeholder=" " />
+                autocomplete="off" class="input w-1/2 lg:w-full ml-2" placeholder=" " />
         </div>
         <!-- <span>{{ product.unit.name }}</span> -->
         <!-- <span>${{ getTotal }}</span> -->

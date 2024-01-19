@@ -2,11 +2,11 @@
   <AppLayout title="Remover productos">
     <template #header>
       <div class="flex items-center mt-2">
-          <Back />
-          <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
-            Remover producto(s)
-          </h2>
-        </div>
+        <Back />
+        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+          Remover producto(s)
+        </h2>
+      </div>
     </template>
 
     <div class="
@@ -27,8 +27,7 @@
         <select class="
             mb-3
             mr-2
-            select"
-            v-model="form.concept">
+            select" v-model="form.concept">
           <option disabled selected class="text-gray-500" value="">
             -- Selecciona concepto --
           </option>

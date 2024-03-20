@@ -23,8 +23,9 @@ class SaleController extends Controller
     public function create()
     {
         $products = Product::all();
+        $cart = Cart::first();
 
-        return inertia('Sales/Create', compact('products'));
+        return inertia('Sales/Create', compact('products', 'cart'));
     }
 
     public function store(Request $request)

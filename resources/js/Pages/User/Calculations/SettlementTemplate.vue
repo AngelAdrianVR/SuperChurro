@@ -9,25 +9,25 @@
           de negocio comercial conocido como "ALDO CONTI", en el área común, Col.
           Jacarandas, Zapopan Jalisco.
         </p>
-        <div class="mb-2 text-center rounded-sm py-2 px-3 my-2">
+        <div class="mb-2 text-center rounded-sm py-2 px-3 my-2 text-xs">
           Nombre del colaborador: <strong> {{ user.name }} </strong>
         </div>
-        <div class="grid grid-cols-4 gap-3 my-4">
-          <p class="text-left col-start-2">Fecha de Ingreso: </p>
-          <p class="">{{ formattedCurrentDate(user.created_at) }}</p>
-          <p class="text-left col-start-2">Fin de ejercicio:</p>
+        <div class="grid grid-cols-2 gap-x-3 gap-y-1 my-4 text-xs">
+          <p class="text-right">Fecha de Ingreso: </p>
+          <p>{{ formattedCurrentDate(user.created_at) }}</p>
+          <p class="text-right">Fin de ejercicio:</p>
           <p>{{ formattedDate  }}</p>
-          <p class="text-left col-start-2">Salario mensual:</p>
+          <p class="text-right">Salario mensual:</p>
           <p>${{ separator(parseInt(month_salary)) }}</p>
-          <p class="text-left col-start-2">Días de vacaciones no tomados:</p>
-          <p>{{ proporcional_vacations }}</p>
-          <p class="text-left col-start-2">Prima vacacional proporcional:</p>
-          <p>${{ vacation_bonus }}</p>
-          <p class="text-left col-start-2">Proporción de aguinaldo:</p>
+          <p class="text-right">Días de vacaciones no tomados:</p>
+          <p>${{ proporcional_vacations.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
+          <p class="text-right">Prima vacacional proporcional:</p>
+          <p>${{ vacation_bonus.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }} ({{ vacations.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }} días)</p>
+          <p class="text-right">Proporción de aguinaldo:</p>
           <p>${{ chrismas_bonus  }}</p>
         </div>
 
-        <p class="font-bold my-9 text-center">Total a pagar  ...................................................  ${{ settlement }}</p>
+        <p class="font-bold my-5 text-center">Total a pagar  ...................................................  ${{ settlement.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
  
         <small style="font-size: 7px">
           RECIBI DE LA EMPRESA "PURO CHURRO" LA CANTIDAD SEÑALADA MISMA QUE CUBRE LAS
@@ -54,10 +54,11 @@
     },
     props: {
       user: Object,
-      chrismas_bonus: String,
+      chrismas_bonus: Number,
       month_salary: Number,
-      proporcional_vacations: String,
-      vacation_bonus: String,
+      proporcional_vacations: Number,
+      vacation_bonus: Number,
+      vacations: Number,
       settlement: String,
     },
     methods:{

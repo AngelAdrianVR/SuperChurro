@@ -65,6 +65,10 @@ class ClosePayrollCommand extends Command
             'cost' => $total_salaries,
             'notes' => 'Generado automaticamente al cerrar las nominas',
             'user_id' => auth()->id(),
+            'category' => 'Gastos administrativos',
+            'date' => now()->toDateString(),
+            'provider' => 'Administración',
+            'payment_method' => 'Efectivo',
         ]);
 
         // create outcome for rent if date 
@@ -79,9 +83,13 @@ class ClosePayrollCommand extends Command
                 Outcome::create([
                     'concept' => 'Renta carrito',
                     'quantity' => 1,
-                    'cost' => 37910,
+                    'cost' => 40800,
                     'notes' => 'Generado automaticamente',
                     'user_id' => auth()->id(),
+                    'category' => 'Gastos administrativos',
+                    'date' => now()->toDateString(),
+                    'provider' => 'Administración',
+                    'payment_method' => 'Efectivo',
                     'created_at' => $quintoDiaDelMes
                 ]);
             }

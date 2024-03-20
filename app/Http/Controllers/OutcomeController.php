@@ -132,4 +132,32 @@ class OutcomeController extends Controller
 
         return response()->json(compact('outcomes', 'total_outcomes_money'));
     }
+
+    public function printOutcomes()
+    {
+        // Obtener todas las ventas con sus productos relacionados donde la cantidad sea mayor que 0
+        $sales = Outcome::where('quantity', '>', 0)->get();
+
+        // Inicializar un array para almacenar los totales por fecha
+        $totalsByDate = [];
+
+        // Iterar sobre cada venta
+        foreach ($sales as $sale) {
+            // Obtener la fecha de la venta sin la hora para agrupar por fecha
+            $date = explode(' ', $sale->created_at)[0];
+
+            // Calcular el total de dinero vendido para esta venta
+            $total = $sale->quantity * $sale->cost;
+
+            // Sumar al total de la fecha correspondiente
+            if (isset($totalsByDate[$date])) {
+                $totalsByDate[$date] += $total;
+            } else {
+                $totalsByDate[$date] = $total;
+            }
+        }
+
+        // Devolver los totales por fecha
+        return inertia('Sales/Print', compact('totalsByDate'));
+    }
 }

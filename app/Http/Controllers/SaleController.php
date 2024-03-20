@@ -36,6 +36,7 @@ class SaleController extends Controller
 
         // store sales
         foreach ($cart->products as $product_id => $quantity) {
+
             $request->validate([
                 "product.$product_id" => "numeric|max:$quantity"
             ]);
@@ -85,25 +86,25 @@ class SaleController extends Controller
     {
         // refactor (used in cartController too)
         $middle_date = Carbon::parse($request->date)->addHours(17);
-        
+
         $shift_1_sales = Sale::whereDate('created_at', $request->date)
             ->whereTime('created_at', '<', $middle_date)
             ->with('product')
             ->get();
 
         $shift_2_sales = Sale::whereDate('created_at', $request->date)
-        ->whereTime('created_at', '>', $middle_date)
-        ->with('product')
-        ->get();
+            ->whereTime('created_at', '>', $middle_date)
+            ->with('product')
+            ->get();
 
         $sales_to_employees = SaleToEmployee::whereDate('created_at', $request->date)
-        ->with('product', 'user')
-        ->get();
+            ->with('product', 'user')
+            ->get();
 
         $stored_cash = CashRegister::whereDate('date', $request->date)->get();
 
         // get employees at $request->date to show in sales histories
-        $employees = User::where('id', '!=', 1)->get()->where(function($user) use ($request){
+        $employees = User::where('id', '!=', 1)->get()->where(function ($user) use ($request) {
             return $user->hasAttendanceOn($request->date);
         });
 
@@ -115,17 +116,46 @@ class SaleController extends Controller
         // refactor (used in cartController too)
         $middle_date = Carbon::parse($request->date)->addHours(17);
         $month = Carbon::parse($request->date)->month;
-        
+
         $month_sales = Sale::whereMonth('created_at', $month)
             ->with('product')
             ->get();
-            
+
         $month_sales_to_employees = SaleToEmployee::whereMonth('created_at', $month)
-        ->with('product', 'user')
-        ->get();
+            ->with('product', 'user')
+            ->get();
 
         $month_stored_cash = CashRegister::whereMonth('date', $month)->get()->sum('cash');
 
         return response()->json(compact('month_sales', 'month_sales_to_employees', 'month_stored_cash'));
+    }
+
+
+    public function printSales()
+    {
+        // Obtener todas las ventas con sus productos relacionados donde la cantidad sea mayor que 0
+        $sales = Sale::with('product')->where('quantity', '>', 0)->get();
+
+        // Inicializar un array para almacenar los totales por fecha
+        $totalsByDate = [];
+
+        // Iterar sobre cada venta
+        foreach ($sales as $sale) {
+            // Obtener la fecha de la venta sin la hora para agrupar por fecha
+            $date = explode(' ', $sale->created_at)[0];
+
+            // Calcular el total de dinero vendido para esta venta
+            $total = $sale->quantity * $sale->price;
+
+            // Sumar al total de la fecha correspondiente
+            if (isset($totalsByDate[$date])) {
+                $totalsByDate[$date] += $total;
+            } else {
+                $totalsByDate[$date] = $total;
+            }
+        }
+
+        // Devolver los totales por fecha
+        return inertia('Sales/Print', compact('totalsByDate'));
     }
 }

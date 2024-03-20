@@ -104,6 +104,17 @@ Route::post('sales/get-month-sale', [SaleController::class, 'getMonthSale'])
     ->middleware('auth')
     ->name('sales.get-month-sale');
 
+    //Imprimir ventas por fecha
+Route::get('sales-print', [SaleController::class, 'printSales'])
+    ->middleware('auth')
+    ->name('sales.print');
+
+
+    //Imprimir egresos por fecha
+Route::get('outcomes-print', [OutcomeController::class, 'printOutcomes'])
+    ->middleware('auth')
+    ->name('outcomes.print');
+
 Route::post('payroll/store-attendance', [PayrollController::class, 'storeAttendance'])
     ->middleware('auth')
     ->name('payroll.store-attendance');

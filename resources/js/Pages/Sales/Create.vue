@@ -41,7 +41,7 @@
           <div v-for="product in products" :key="product.id" class="mb-1 w-full">
             <InputLabel :value="product.name" class="ml-3 mb-1 text-sm" />
             <input v-model="form.product[product.id]" type="number" min="0"
-              autocomplete="off" required class="input" placeholder="00" />
+              autocomplete="off" required class="input" placeholder="Anota el sobrante" />
           </div>
         </div>
 

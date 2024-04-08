@@ -44,7 +44,11 @@ class ClosePayrollCommand extends Command
 
             // decrement loan's amount if exists an active one
             $loan = $user_payroll->activeLoan?->first();
-            $loan?->decrement('remaining', round($loan?->amount / 2, 2));
+            if ($loan) {
+                $half = $loan->amount / 2;
+                $remaining = round($half, 2);
+                $loan->decrement('remaining', $remaining);
+            }
         });
 
         // store commissions & close payroll
@@ -60,10 +64,11 @@ class ClosePayrollCommand extends Command
 
         // create outcome for all salaries
         Outcome::create([
-            'concept' => 'Salarios',
+            'concept' => 'Sueldos',
             'quantity' => 1,
+            'category' => 'Gastos administrativos',
             'cost' => $total_salaries,
-            'notes' => 'Generado automaticamente al cerrar las nominas',
+            'notes' => 'Generado automaticamente al cerrar las nóminas',
             'user_id' => auth()->id(),
             'category' => 'Gastos administrativos',
             'date' => now()->toDateString(),

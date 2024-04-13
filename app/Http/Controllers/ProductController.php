@@ -18,8 +18,6 @@ class productController extends Controller
     {
         $products = ProductResource::collection(Product::with('unit', 'currentPrice', 'currentEmployeePrice', 'media')->get());
 
-        // return $products;
-
         return inertia('Product/Index', compact('products'));
     }
 
@@ -27,6 +25,7 @@ class productController extends Controller
     public function create()
     {
         $units = Unit::all();
+
         return inertia('Product/Create', compact('units'));
     }
 
@@ -97,7 +96,6 @@ class productController extends Controller
         $product = Product::with('currentPrice', 'unit', 'currentEmployeePrice', 'media')->find($product_id);
         $units = Unit::all();
 
-        // return $product;
         return inertia('Product/Edit', compact('product', 'units'));
     }
 
@@ -147,6 +145,25 @@ class productController extends Controller
         ]);
 
         $product->update($request->all());
+
+        // update current price if setted different
+        if ($product->currentPrice->price != $request->price) {
+            Price::create([
+                'price' => $request->price,
+                'product_id' => $product->id,
+                'created_at' => now(),
+            ]);
+        }
+
+        // update current employee price if setted different
+        if ($product->currentEmployeePrice->price != $request->employee_price) {
+            Price::create([
+                'price' => $request->employee_price,
+                'product_id' => $product->id,
+                'created_at' => now(),
+                'is_employee_price' => true
+            ]);
+        }
 
           // update image
         $product->clearMediaCollection();

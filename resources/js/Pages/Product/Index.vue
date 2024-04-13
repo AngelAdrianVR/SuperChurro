@@ -28,8 +28,8 @@
           </div>
         </Link>
         <Link :href="route('products.edit', product.id)">
-        <figure class="justify-center pt-2">
-          <img :src="product.media[0]?.original_url" alt="Imagen del producto" class="rounded-lg h-32 mx-auto">
+        <figure v-if="product.media[0]?.original_url" class="justify-center pt-2">
+          <img :src="product.media[0]?.original_url" alt="Imagen del producto" class="rounded-lg h-32 mx-auto object-contain">
         </figure>
         </Link>
         <button class="absolute bottom-1 right-2 z-10" @click="delete_confirm = true; item_to_delete = product;">

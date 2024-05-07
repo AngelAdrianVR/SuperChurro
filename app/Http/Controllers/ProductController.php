@@ -183,4 +183,27 @@ class productController extends Controller
         request()->session()->flash('flash.bannerStyle', 'success');
         return redirect()->route('products.index');
     }
+
+
+    public function searchProduct(Request $request)
+    {
+        $query = $request->input('query');
+
+        // Realiza la búsqueda en la base de datos local
+        $products = Product::with(['media', 'currentPrice'])
+            ->where('name', 'like', "%$query%")
+            ->orWhere('code', 'like', "%$query%")
+            ->get()
+            ->take(10);
+
+        return response()->json(['items' => $products]);
+    }
+
+
+    public function getProductScaned($product_id)
+    {
+        $product = Product::where('id', $product_id)->with(['media', 'currentPrice'])->first();
+
+        return response()->json(['item' => $product]);
+    }
 }

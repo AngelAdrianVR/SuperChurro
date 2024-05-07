@@ -57,7 +57,7 @@ class SaleToEmployeeController extends Controller
         request()->session()->flash('flash.banner', 'Se registró la venta/cortesía');
         request()->session()->flash('flash.bannerStyle', 'success');
 
-        return to_route('carts.index');
+        return to_route('sales.point');
     }
 
     public function show(SaleToEmployee $saleToEmployee)

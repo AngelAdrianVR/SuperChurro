@@ -13,12 +13,24 @@ use Illuminate\Http\Request;
 
 class SaleController extends Controller
 {
+    public function pointIndex()
+    {
+        $products = Product::all(['id','name','code']);
+
+        //recupera la primera caja registradora de la tienda para mandar su info como current_cash
+        // $cash_register = CashRegister::where('store_id', auth()->user()->store_id)->first();
+
+        return inertia('Sales/Point', compact('products'));
+    }
+
+
     public function index()
     {
         $products = Product::all();
 
         return inertia('Sales/Index', compact('products'));
     }
+
 
     public function create()
     {
@@ -28,6 +40,7 @@ class SaleController extends Controller
         // return $products;
         return inertia('Sales/Create', compact('products', 'cart'));
     }
+
 
     public function store(Request $request)
     {
@@ -59,6 +72,7 @@ class SaleController extends Controller
 
         request()->session()->flash('flash.banner', '¡Se ha creado el corte correctamente!');
         request()->session()->flash('flash.bannerStyle', 'success');
+        
         return redirect()->route('carts.index');
     }
 

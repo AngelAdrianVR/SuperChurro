@@ -44,36 +44,56 @@ class SaleController extends Controller
 
     public function store(Request $request)
     {
-        $sales = [];
-        $new_cart_stock = [];
+        return $request;            
         $cart = Cart::first();
+        $is_after3PM = now()->isAfter(today()->setHour(15));
 
-        // store sales
-        foreach ($cart->products as $product_id => $quantity) {
+        foreach ($request->data['saleProducts'] as $sale) {
 
-            $request->validate([
-                "product.$product_id" => "numeric|max:$quantity"
-            ]);
+            $product_sold_today = Sale::whereDate('created_at', today())->where('product_id', $sale['product']['id'])->latest()->first(); 
 
-            $remaining_quantity = $request->product[$product_id];
-            $new_cart_stock[$product_id] = $remaining_quantity;
-            $sales[] = [
-                'quantity' => $cart->products[$product_id] - $request->product[$product_id],
-                'product_id' => $product_id,
-                'price' => Product::find($product_id)->currentPrice->price,
-                'created_at' => now(),
-            ];
+            //si es despues de las 3pm (turno vespertino) se revisa si el registro creado ya es del turno vespertino
+            if ( $is_after3PM ) {
+                // si el producto se creó despues de las 3pm se incrementa la cantidad del mismo registro para evitar crear mas registros
+                if ( $product_sold_today?->created_at->isAfter(today()->setHour(15)) ) {
+                    $product_sold_today->increment('quantity', $sale['quantity']);
+                } else {
+                    // Si el registro de ese producto no se ha creado entonces lo crea
+                    Sale::create([
+                        'quantity' => $sale['quantity'],
+                        'product_id' => $sale['product']['id'],
+                        'price' => $sale['product']['current_price']['price'],
+                    ]);
+                }
+            } else {
+                if ( $product_sold_today ) {
+                    $product_sold_today->increment('quantity', $sale['quantity']);
+                } else {
+                    Sale::create([
+                        'quantity' => $sale['quantity'],
+                        'product_id' => $sale['product']['id'],
+                        'price' => $sale['product']['current_price']['price'],
+                    ]);
+                }
+            }
+            
+            // Verificar si el producto está presente en el carrito
+            if (isset($cart->products[$sale['product']['id']])) {
+                $cart_products = $cart->products;
+                // Actualizar la cantidad de productos que hay en el carrito con la venta realizada
+                // Guardar el carrito actualizado
+                $cart_products[$sale['product']['id']] -= $sale['quantity'];
+                $cart->update([
+                    'products' => $cart_products
+                ]);
+            }
+            
         }
-
-        Sale::insert($sales);
-
-        $cart->products = $new_cart_stock;
-        $cart->save();
 
         request()->session()->flash('flash.banner', '¡Se ha creado el corte correctamente!');
         request()->session()->flash('flash.bannerStyle', 'success');
         
-        return redirect()->route('carts.index');
+    return redirect()->route('carts.index');
     }
 
     public function show($sale_date)
@@ -100,7 +120,7 @@ class SaleController extends Controller
     public function getByDate(Request $request)
     {
         // refactor (used in cartController too)
-        $middle_date = Carbon::parse($request->date)->addHours(17);
+        $middle_date = Carbon::parse($request->date)->addHours(15);
 
         $shift_1_sales = Sale::whereDate('created_at', $request->date)
             ->whereTime('created_at', '<', $middle_date)
@@ -129,7 +149,7 @@ class SaleController extends Controller
     public function getMonthSale(Request $request)
     {
         // refactor (used in cartController too)
-        $middle_date = Carbon::parse($request->date)->addHours(17);
+        $middle_date = Carbon::parse($request->date)->addHours(15);
         $month = Carbon::parse($request->date)->month;
 
         $month_sales = Sale::whereMonth('created_at', $month)

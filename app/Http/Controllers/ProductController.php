@@ -36,6 +36,7 @@ class productController extends Controller
             'name' => 'required|max:25',
             'low_stock' => 'numeric',
             'unit_id' => 'required',
+            'code' => 'nullable|string',
         ]);
 
         $new_product = Product::create($validated);
@@ -106,6 +107,7 @@ class productController extends Controller
             'name' => 'required|max:25',
             'low_stock' => 'numeric',
             'unit_id' => 'required',
+            'code' => 'nullable|string',
         ]);
 
         $product->update($validated);
@@ -142,6 +144,7 @@ class productController extends Controller
             'name' => 'required|max:25',
             'low_stock' => 'numeric',
             'unit_id' => 'required',
+            'code' => 'nullable|string',
         ]);
 
         $product->update($request->all());

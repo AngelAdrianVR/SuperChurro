@@ -302,7 +302,7 @@ methods:{
           });
           this.storeProcessing = false;
           this.clearTab();
-          this.fetchCashRegister();
+          // this.fetchCashRegister(); //actualiza el monto que hay en caja.
 
           // resetear variable de local storage a false
           localStorage.setItem('pendentProcess', false);

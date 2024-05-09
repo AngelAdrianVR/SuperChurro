@@ -44,7 +44,6 @@ class SaleController extends Controller
 
     public function store(Request $request)
     {
-        return $request;            
         $cart = Cart::first();
         $is_after3PM = now()->isAfter(today()->setHour(15));
 

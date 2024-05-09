@@ -65,7 +65,7 @@ class ProductRequestController extends Controller
         request()->session()->flash('flash.banner', 'Se ha pasado la mercancía de la cocina al carrito');
         request()->session()->flash('flash.bannerStyle', 'success');
 
-        return to_route('carts.index');
+        return to_route('sales.point');
     }
 
     public function show(ProductRequest $product_request)

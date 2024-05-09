@@ -74,6 +74,12 @@ const menues = [
     admin_can_see: true,
   },
   {
+    label: "Punto de venta",
+    route_name: "sales.point",
+    is_active: route().current("sales.point"),
+    admin_can_see: true,
+  },
+  {
     label: "Nóminas",
     route_name: "payrolls.index",
     is_active: route().current("payrolls" + ".*"),

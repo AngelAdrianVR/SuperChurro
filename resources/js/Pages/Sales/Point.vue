@@ -38,19 +38,7 @@
         <div class="inline-block border border-primary rounded-full px-4 pt-[3px] mt-3 md:mt-0">
           <el-col :span="3">
             <el-dropdown trigger="click">
-              <p class="text-sm text-primary w-24 flex items-center">
-                <svg class="mr-2" width="12" height="12" viewBox="0 0 12 12" fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <mask id="mask0_9380_424" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="12"
-                    height="12">
-                    <rect width="12" height="12" fill="#D9D9D9" />
-                  </mask>
-                  <g mask="url(#mask0_9380_424)">
-                    <path
-                      d="M2.5 10.5C2.225 10.5 1.98958 10.4021 1.79375 10.2063C1.59792 10.0104 1.5 9.775 1.5 9.5V2.5C1.5 2.225 1.59792 1.98958 1.79375 1.79375C1.98958 1.59792 2.225 1.5 2.5 1.5H9.5C9.775 1.5 10.0104 1.59792 10.2063 1.79375C10.4021 1.98958 10.5 2.225 10.5 2.5V9.5C10.5 9.775 10.4021 10.0104 10.2063 10.2063C10.0104 10.4021 9.775 10.5 9.5 10.5H2.5ZM6 8C6.31667 8 6.60417 7.90833 6.8625 7.725C7.12083 7.54167 7.3 7.3 7.4 7H9.5V2.5H2.5V7H4.6C4.7 7.3 4.87917 7.54167 5.1375 7.725C5.39583 7.90833 5.68333 8 6 8Z"
-                      fill="#F68C0F" />
-                  </g>
-                </svg>
+              <p class="text-sm text-primary flex items-center">
                 <span>Acciones</span>
                 <i class="fa-solid fa-angle-down text-[10px] ml-2 mt-px"></i>
               </p>

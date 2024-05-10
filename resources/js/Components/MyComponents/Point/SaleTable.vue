@@ -17,7 +17,7 @@
         </div>
         <div :class="editMode !== null ? 'w-[35%]' : 'w-[15%]'" class="text-base flex items-center">
           <template v-if="editMode !== index">
-            ${{ sale.product.current_price?.price }}
+            <span>${{ getPrice(sale.product) }}</span>
             <button @click.stop="startEditing(sale, index)"
               class="flex items-center justify-center text-primary bg-gray-200 size-5 rounded-full ml-2 mr-1">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -46,14 +46,16 @@
         <div class="w-[20%]">
           <el-input-number v-model="sale.quantity" :min="0" :precision="2" size="small" />
         </div>
-        <div class="text-[#5FCB1F] font-bold w-[15%]">${{ (sale.product.current_price?.price * sale.quantity).toLocaleString('en-US', {
-          minimumFractionDigits: 2
-        }) }}</div>
+        <div class="text-[#5FCB1F] font-bold w-[15%]">
+          ${{ (getPrice(sale.product) * sale.quantity).toLocaleString('en-US', { minimumFractionDigits: 2 })
+          }}
+        </div>
         <div class="w-[5%] text-right">
           <el-popconfirm confirm-button-text="Si" cancel-button-text="No" icon-color="#C30303" title="¿Continuar?"
             @confirm="deleteItem(sale.product.id)">
             <template #reference>
-              <i class="fa-regular fa-trash-can mr-2 text-primary cursor-pointer p-2 hover:bg-gray-100 rounded-full"></i>
+              <i
+                class="fa-regular fa-trash-can mr-2 text-primary cursor-pointer p-2 hover:bg-gray-100 rounded-full"></i>
             </template>
           </el-popconfirm>
         </div>
@@ -72,7 +74,7 @@
         <p class="font-bold">{{ sale.product.name }}</p>
         <div class="flex items-center space-x-2">
           <template v-if="editMode !== index">
-            ${{ sale.product.current_price?.price }}
+            ${{ getPrice(sale.product) }}
             <!-- Condicional en el boton depende de la configuracion seleccionada para no poder editar precio -->
             <button @click.stop="startEditing(sale, index)"
               class="flex items-center justify-center text-primary bg-gray-200 size-4 rounded-full ml-2 mr-1">
@@ -101,10 +103,9 @@
             </div>
           </template>
         </div>
-          <el-input-number v-model="sale.quantity" :min="0" :precision="2" size="small" />
-        <div class="text-[#5FCB1F] font-bold">${{ (sale.product.current_price?.price * sale.quantity).toLocaleString('en-US', {
-          minimumFractionDigits: 2
-        }) }}</div>
+        <el-input-number v-model="sale.quantity" :min="0" :precision="2" size="small" />
+        <div class="text-[#5FCB1F] font-bold">
+          ${{ (getPrice(sale.product) * sale.quantity).toLocaleString('en-US',{minimumFractionDigits: 2}) }}</div>
         <div class="self-end">
           <el-popconfirm confirm-button-text="Si" cancel-button-text="No" icon-color="#C30303" title="¿Continuar?"
             @confirm="deleteItem(sale.product.id)" class="justify-self-end">
@@ -122,7 +123,7 @@
     <p class="flex items-center justify-center text-gray99 text-sm">
       Escanea un producto o buscalo por nombre para comenzar la venta
       <i class="fa-regular fa-hand-point-up ml-3"></i>
-    </p>   
+    </p>
   </div>
 </template>
 
@@ -136,10 +137,20 @@ export default {
     };
   },
   props: {
-    saleProducts: Array
+    saleProducts: Array,
+    saleType: String,
   },
   emits: ['delete-product'],
   methods: {
+    getPrice(product) {
+      if (this.saleType == 'publico') {
+        return product.current_price?.price ?? 0;
+      } else if (this.saleType == 'empleado') {
+        return product.current_employee_price?.price ?? 0;
+      } else if (this.saleType == 'cortesia') {
+        return 0;
+      }
+    },
     deleteItem(productId) {
       this.$emit('delete-product', productId);
     },

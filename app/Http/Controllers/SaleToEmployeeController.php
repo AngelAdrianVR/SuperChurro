@@ -26,7 +26,7 @@ class SaleToEmployeeController extends Controller
         $validated = $request->validate([
             'items.*.quantity' => 'required|numeric|min:1',
             'items.*.product_id' => 'required|numeric|min:1',
-            'notes' => 'max:255'
+            'notes' => 'required|string|max:255',
         ]);
 
         $cart = Cart::first();

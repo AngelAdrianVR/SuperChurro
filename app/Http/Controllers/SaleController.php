@@ -37,7 +37,6 @@ class SaleController extends Controller
         $products = Product::all();
         $cart = Cart::first();
 
-        // return $products;
         return inertia('Sales/Create', compact('products', 'cart'));
     }
 
@@ -47,9 +46,16 @@ class SaleController extends Controller
         $cart = Cart::first();
         $is_after3PM = now()->isAfter(today()->setHour(15));
 
-        foreach ($request->data['saleProducts'] as $sale) {
-
+        foreach ($request->saleProducts as $sale) {
             $product_sold_today = Sale::whereDate('created_at', today())->where('product_id', $sale['product']['id'])->latest()->first(); 
+            // obtener el precio de producto depende del tipo de venta seleccionado (a publico, empleado o cortesia)
+            if ($request->saleType == 'publico') {
+                $price = $sale['product']['current_price']['price'];
+            } elseif ($request->saleType == 'empleado') {
+                $price = $sale['product']['current_employee_price']['price'];
+            } else {
+                $price = 0;
+            }
 
             //si es despues de las 3pm (turno vespertino) se revisa si el registro creado ya es del turno vespertino
             if ( $is_after3PM ) {
@@ -61,7 +67,7 @@ class SaleController extends Controller
                     Sale::create([
                         'quantity' => $sale['quantity'],
                         'product_id' => $sale['product']['id'],
-                        'price' => $sale['product']['current_price']['price'],
+                        'price' => $price,
                     ]);
                 }
             } else {
@@ -71,7 +77,7 @@ class SaleController extends Controller
                     Sale::create([
                         'quantity' => $sale['quantity'],
                         'product_id' => $sale['product']['id'],
-                        'price' => $sale['product']['current_price']['price'],
+                        'price' => $price,
                     ]);
                 }
             }
@@ -89,8 +95,8 @@ class SaleController extends Controller
             
         }
 
-        request()->session()->flash('flash.banner', '¡Se ha creado el corte correctamente!');
-        request()->session()->flash('flash.bannerStyle', 'success');
+        // request()->session()->flash('flash.banner', '¡Se ha creado el corte correctamente!');
+        // request()->session()->flash('flash.bannerStyle', 'success');
         
     return redirect()->route('carts.index');
     }

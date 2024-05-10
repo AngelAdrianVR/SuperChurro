@@ -193,7 +193,7 @@ class productController extends Controller
         $query = $request->input('query');
 
         // Realiza la búsqueda en la base de datos local
-        $products = Product::with(['media', 'currentPrice'])
+        $products = Product::with(['media', 'currentPrice', 'currentEmployeePrice'])
             ->where('name', 'like', "%$query%")
             ->orWhere('code', 'like', "%$query%")
             ->get()

@@ -67,10 +67,10 @@
       <div class="border-b border-gray3 border-dashed mx-2 my-3"></div>
 
       <!-- Ventas a empleados y cortesías ---------------------------- -->
-      <div class="mt-3 mx-3 text-xs lg:grid lg:grid-cols-2 gap-1 bg-transparent rounded-md px-2 py-1">
+      <div class="mt-3 mx-3 text-xs lg:grid lg:grid-cols-2 gap-2 bg-transparent rounded-md px-2 py-1">
         <h1 class="col-span-full text-left text-sm font-bold mb-4">Ventas a empleados / cortesías</h1>
 
-        <div class="border border-gray3 rounded-md px-3 py-2 my-2" v-for="sale in sales_to_employees" :key="sale.id">
+        <div class="border border-gray3 rounded-md px-3 py-2" v-for="sale in sales_to_employees" :key="sale.id">
           <div class="flex items-center mb-3">
             <i class="fa-regular fa-user-circle text-gray-500 text-lg mr-2"></i>
             <p class="text-sm">{{ sale.user?.name }}</p>
@@ -86,11 +86,11 @@
             <p>{{ sale.price == 0 ? 'C' : 'VE' }}</p>
             <p>{{ sale.quantity }}</p>
             <p>${{ (sale.price * sale.quantity)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
-            <p>{{ sale.notes ? '(Cortesías: ' + sale.notes + ')' : '' }}</p>
+            <p>{{ sale.price == 0 ? sale.notes : '' }}</p>
             
           </div>
         </div>
-        <div class="flex justify-end">
+        <div class="flex justify-end self-end">
           <p class="font-bold bg-[#F2FEA8] px-4 py-2 mt-4">Total: ${{ (totalSale().to_employees).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
         </div>
       </div>

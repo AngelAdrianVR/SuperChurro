@@ -4,6 +4,8 @@ use App\Http\Controllers\AdminRequestController;
 use App\Http\Controllers\BarterController;
 use App\Http\Controllers\BonusController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ConsumableController;
+use App\Http\Controllers\ConsumableRequestController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JustificationEventController;
 use App\Http\Controllers\LoanController;
@@ -94,6 +96,12 @@ Route::resource('product-request', ProductRequestController::class)->middleware(
 Route::get('/product-request-history', [ProductRequestController::class, 'history'])->middleware(['auth', 'admin'])->name('product-request.history');
 
 
+// consumable-request -----------------------------------------------------------------------
+// --------------------------------------------------------------------------------------
+Route::resource('consumable-request', ConsumableRequestController::class)->middleware('auth');
+Route::get('/consumable-request-history', [ConsumableRequestController::class, 'history'])->middleware(['auth', 'admin'])->name('consumable-request.history');
+
+
 // sales-to-employees ---------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------
 Route::resource('sales-to-employees', SaleToEmployeeController::class)->middleware('auth');
@@ -104,6 +112,7 @@ Route::resource('sales-to-employees', SaleToEmployeeController::class)->middlewa
 Route::get('carts', [CartController::class, 'index'])->middleware('auth')->name('carts.index');
 Route::get('cart/remove-products', [CartController::class, 'createRemovedProducts'])->middleware('auth')->name('cart.remove-products');
 Route::post('cart/remove-products', [CartController::class, 'removeProducts'])->middleware('auth')->name('cart.store-removed-products');
+Route::get('carts-requests-index', [CartController::class, 'requestsIndex'])->middleware('auth')->name('carts.requests-index');
 
 
 // products ----------------------------------------------------------------------------------
@@ -112,6 +121,12 @@ Route::resource('products', ProductController::class)->middleware(['auth', 'admi
 Route::get('products-search', [ProductController::class, 'searchProduct'])->name('products.search')->middleware('auth');
 Route::post('products/update-with-media/{product}', [ProductController::class, 'updateWithMedia'])->name('products.update-with-media')->middleware('auth');
 Route::get('products-get-product-scaned/{product_id}', [ProductController::class, 'getProductScaned'])->name('products.get-product-scaned')->middleware('auth');
+
+
+// products ----------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------
+Route::resource('consumables', ConsumableController::class)->middleware(['auth', 'admin']);
+Route::post('consumables/update-with-media/{consumable}', [ConsumableController::class, 'updateWithMedia'])->name('consumables.update-with-media')->middleware('auth');
 
 
 // users admin --------------------------------------------------------------------------------------

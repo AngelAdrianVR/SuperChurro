@@ -99,4 +99,9 @@ class CartController extends Controller
 
         return to_route('carts.index');
     }
+
+    public function requestsIndex()
+    {
+        return inertia('Cart/RequestsIndex');
+    }
 }

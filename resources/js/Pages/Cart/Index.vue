@@ -91,8 +91,8 @@
 
       <div>
         <p class="text-gray-700 text-left mx-4 my-3 font-semibold flex items-center">
-          Solicitudes de mercancía (Hoy)
-          <Link :href="route('product-request.history')">
+          Solicitudes de mercancía / Consumibles (Hoy)
+          <Link :href="route('carts.requests-index')">
             <p class="ml-9 text-primary font-normal" v-if="$page.props.user.is_admin"
               >Ver historial</p
             >

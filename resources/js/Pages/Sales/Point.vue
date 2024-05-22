@@ -44,8 +44,12 @@
               </p>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item @click="$inertia.visit(route('product-request.create'))">Solicitar
-                    mercancía</el-dropdown-item>
+                  <el-dropdown-item @click="$inertia.visit(route('product-request.create'))">
+                    Solicitar mercancía
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="$inertia.visit(route('consumable-request.create'))">
+                    Solicitar consumible
+                  </el-dropdown-item>
                   <el-dropdown-item @click="$inertia.visit(route('sales-to-employees.create'))">
                     Ventas a empleado / Cortesías</el-dropdown-item>
                   <!-- <el-dropdown-item @click="handleCashCut">Hacer corte</el-dropdown-item> -->

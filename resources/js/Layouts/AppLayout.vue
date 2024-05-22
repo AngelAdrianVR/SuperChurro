@@ -35,6 +35,11 @@ const admin_menues = [
     is_active: route().current("products.*"),
   },
   {
+    label: "Consumibles",
+    route_name: "consumables.index",  
+    is_active: route().current("consumables.*"),
+  },
+  {
     label: "Permisos",
     route_name: "admin-requests.permits",
     is_active: route().current("admin-permits.*"),
@@ -115,28 +120,16 @@ const menues = [
     is_active: route().current("carts" + ".*"),
     admin_can_see: true,
   },
-  {
-    label: "Egresos",
-    route_name: "outcomes.index",
-    is_active: route().current("outcomes.*"),
-    admin_can_see: false,
-  },
+  // {
+  //   label: "Egresos",
+  //   route_name: "outcomes.index",
+  //   is_active: route().current("outcomes.*"),
+  //   admin_can_see: false,
+  // },
 
 ];
 
 const showingNavigationDropdown = ref(false);
-
-const switchToTeam = (team) => {
-  Inertia.put(
-    route("current-team.update"),
-    {
-      team_id: team.id,
-    },
-    {
-      preserveState: false,
-    }
-  );
-};
 
 const logout = () => {
   Inertia.post(route("logout"));

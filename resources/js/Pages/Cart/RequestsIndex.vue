@@ -9,7 +9,7 @@
             </div>
         </template>
 
-        <el-tabs v-model="activeTab" @tab-click="handleClick" class="mt-5">
+        <el-tabs v-model="activeTab" @tab-click="handleClick" class="mt-5 mx-10">
             <el-tab-pane label="Mercancía" name="1">
                 <ProductHistory />
             </el-tab-pane>
@@ -41,10 +41,11 @@ export default {
         ConsumableHistory,
     },
     props: {
-        requests: Array,
     },
     methods: {
-
+        handleClick() {
+            
+        }
     },
 };
 </script>

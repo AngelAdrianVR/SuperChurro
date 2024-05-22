@@ -93,7 +93,8 @@ Route::resource('warehouse-movements', WarehouseMovementController::class)->midd
 // product-request -----------------------------------------------------------------------
 // --------------------------------------------------------------------------------------
 Route::resource('product-request', ProductRequestController::class)->middleware('auth');
-Route::get('/product-request-history', [ProductRequestController::class, 'history'])->middleware(['auth', 'admin'])->name('product-request.history');
+Route::get('product-request-history', [ProductRequestController::class, 'history'])->middleware(['auth', 'admin'])->name('product-request.history');
+Route::get('product-request-get-by-page/{currentPage}', [ProductRequestController::class, 'getItemsByPage'])->name('product-request.get-by-page')->middleware('auth');
 
 
 // consumable-request -----------------------------------------------------------------------

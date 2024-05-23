@@ -9,7 +9,7 @@
             </div>
         </template>
 
-        <el-tabs v-model="activeTab" @tab-click="handleClick" class="mt-5 mx-10">
+        <el-tabs v-model="activeTab" @tab-click="updateURL" class="mt-5 mx-10">
             <el-tab-pane label="Mercancía" name="1">
                 <ProductHistory />
             </el-tab-pane>
@@ -43,9 +43,22 @@ export default {
     props: {
     },
     methods: {
-        handleClick() {
-            
+        updateURL(tab) {
+            const params = new URLSearchParams(window.location.search);
+            params.set('tab', tab.props.name);
+            window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+        },
+        setActiveTabFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const tab = params.get('tab');
+            if (tab) {
+                this.activeTab = tab;
+            }
         }
     },
+    mounted() {
+        this.setActiveTabFromURL();
+    }
+
 };
 </script>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ConsumableRequestResource;
 use App\Models\Consumable;
 use App\Models\ConsumableRequest;
 use Illuminate\Http\Request;
@@ -11,7 +12,10 @@ class ConsumableRequestController extends Controller
 
     public function index()
     {
-        //
+        $total_items = ConsumableRequest::with('user')->latest()->get();
+        $requests = ConsumableRequestResource::collection($total_items->take(30));
+
+        return response()->json(['items' => $requests, 'total_items' => $total_items->count()]);
     }
 
     public function create()
@@ -39,9 +43,11 @@ class ConsumableRequestController extends Controller
         return to_route('sales.point');
     }
 
-    public function show(ConsumableRequest $consumableRequest)
+    public function show(ConsumableRequest $consumable_request)
     {
-        //
+        $consumables = Consumable::with('unit')->get();
+
+        return inertia('ConsumableRequest/Show', compact('consumable_request', 'consumables'));
     }
 
     public function edit(ConsumableRequest $consumableRequest)
@@ -58,4 +64,15 @@ class ConsumableRequestController extends Controller
     {
         //
     }
+
+    public function getItemsByPage($currentPage)
+    {
+        $offset = $currentPage * 30;
+        $requests = ConsumableRequestResource::collection(ConsumableRequest::with('user')->latest()->get()
+            ->skip($offset)
+            ->take(30));
+
+        return response()->json(['items' => $requests]);
+    }
+
 }

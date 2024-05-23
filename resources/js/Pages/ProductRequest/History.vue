@@ -14,16 +14,18 @@
         <span> {{ request.created_at }}</span>
       </div>
       </Link>
-      <p v-if="productRequests.length" class="text-gray66 text-[11px] mt-1">
-        {{ productRequests.length }} de {{ totalItems }}
-        elementos
-      </p>
-      <p v-if="loadingItems" class="text-xs my-4 text-center">
-        Cargando <i class="fa-sharp fa-solid fa-circle-notch fa-spin ml-2 text-primary"></i>
-      </p>
-      <button v-else-if="productRequests.length && totalItems > 30 && productRequests.length < totalItems"
-        @click="fetchItemsByPage" class="w-full text-primary my-4 text-xs mx-auto underline ml-6">Cargar más
-        elementos</button>
+      <div class="col-span-full">
+        <p v-if="productRequests.length" class="text-gray66 text-[11px] mt-1">
+          {{ productRequests.length }} de {{ totalItems }}
+          elementos
+        </p>
+        <p v-if="loadingItems" class="text-xs my-4 text-center">
+          Cargando <i class="fa-sharp fa-solid fa-circle-notch fa-spin ml-2 text-primary"></i>
+        </p>
+        <button v-else-if="productRequests.length && totalItems > 30 && productRequests.length < totalItems"
+          @click="fetchItemsByPage" class="w-full text-primary my-4 text-xs mx-auto underline ml-6">Cargar más
+          elementos</button>
+      </div>
     </div>
     <p v-else class="text-center text-xs text-gray-500 col-span-full mt-6">
       No hay solicitudes de mercancía aún
@@ -82,7 +84,6 @@ export default {
         const response = await axios.get(route('product-request.get-by-page', this.currentPage));
 
         if (response.status === 200) {
-          console.log(response.data.items)
           this.productRequests = [...this.productRequests, ...response.data.items];
           this.currentPage++;
         }

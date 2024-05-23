@@ -102,6 +102,8 @@ class CartController extends Controller
 
     public function requestsIndex()
     {
-        return inertia('Cart/RequestsIndex');
+        $tab = request('tab');
+
+        return inertia('Cart/RequestsIndex', compact('tab'));
     }
 }

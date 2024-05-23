@@ -101,6 +101,7 @@ Route::get('product-request-get-by-page/{currentPage}', [ProductRequestControlle
 // --------------------------------------------------------------------------------------
 Route::resource('consumable-request', ConsumableRequestController::class)->middleware('auth');
 Route::get('/consumable-request-history', [ConsumableRequestController::class, 'history'])->middleware(['auth', 'admin'])->name('consumable-request.history');
+Route::get('consumable-request-get-by-page/{currentPage}', [ConsumableRequestController::class, 'getItemsByPage'])->name('consumable-request.get-by-page')->middleware('auth');
 
 
 // sales-to-employees ---------------------------------------------------------------------

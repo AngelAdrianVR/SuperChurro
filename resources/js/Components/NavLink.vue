@@ -10,7 +10,7 @@ const props = defineProps({
 const classes = computed(() => {
     return props.active
         ? 'inline-flex items-center px-4 pt-7 border-b-2 border-primary text-base font-semibold leading-5 text-primary focus:outline-none focus:border-primary transition'
-        : 'inline-flex items-center px-4 pt-7 border-b-2 border-transparent text-base font-medium leading-5 text-gray-800 hover:text-[#883339] hover:border-[#883339] focus:outline-none focus:text-[#883339] focus:border-[#883339] transition';
+        : 'inline-flex items-center px-4 pt-7 border-b-2 border-transparent text-base font-medium leading-5 text-gray-800 hover:text-primary hover:border-primary focus:outline-none focus:text-primary focus:border-primary transition';
 });
 </script>
 

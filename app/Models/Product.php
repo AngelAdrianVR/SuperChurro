@@ -13,6 +13,7 @@ class Product extends Model implements HasMedia
 
     protected $fillable = [
         'name',
+        'code',
         'low_stock',
         'unit_id',
     ];
@@ -23,7 +24,7 @@ class Product extends Model implements HasMedia
         return $this->hasMany(Price::class)->where('is_employee_price', 0);
     }
 
-    public function employeePrices() 
+    public function employeePrices()
     {
         return $this->hasMany(Price::class)->where('is_employee_price', 1);
     }

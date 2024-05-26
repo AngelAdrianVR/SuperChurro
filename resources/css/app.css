@@ -83,7 +83,7 @@ body {
     }
     
     .select {
-        @apply bg-transparent h-9 text-sm w-5/6 rounded-[5px] border border-gray3 text-gray-500 focus:border-stone-500 focus:text-stone-500 disabled:cursor-not-allowed disabled:bg-gray4;
+        @apply bg-transparent h-8 text-sm w-5/6 rounded-[5px] border border-gray3 text-gray-500 focus:border-stone-500 focus:text-stone-500 disabled:cursor-not-allowed disabled:bg-gray4;
     }
 
     .hover-3dbuttom{

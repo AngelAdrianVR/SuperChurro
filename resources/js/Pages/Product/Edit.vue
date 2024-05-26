@@ -76,6 +76,14 @@
           </option>
         </select>
 
+        <div class="mt-3 w-ull relative">
+            <InputLabel value="Código del producto (en caso de tener)" class="ml-3 mb-1" />
+            <input v-model="form.code" type="text" autocomplete="off" class="input pl-8"
+              placeholder="Escribe el código de producto" />
+            <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]"><i class="fa-solid fa-barcode"></i></p>
+            <InputError :message="form.errors.code" />
+        </div>
+
         <div class="mt-5">
             <InputLabel value="Agregar foto del producto" class="ml-3 mb-1" />
             <InputFilePreview :imageUrl="product.media[0]?.original_url" @imagen="saveImage" />
@@ -107,6 +115,7 @@ export default {
       unit_id: this.product.unit?.id,
       price: this.product.current_price?.price,
       employee_price: this.product.current_employee_price?.price,
+      code: this.product.code,
       media: this.product.media,
     });
     return {

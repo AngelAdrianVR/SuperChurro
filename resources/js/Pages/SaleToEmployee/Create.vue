@@ -9,62 +9,36 @@
       </div>
     </template>
 
-    <div
-      class="max-w-lg md:mx-auto mt-5 px-4 pt-5 pb-4 rounded-lg border border-gray3 bg-transparent mx-4"
-    >
+    <div class="mx-2 md:mx-48 mt-5 px-4 pt-5 pb-4 rounded-lg border border-gray3 bg-transparent">
       <form @submit.prevent="submit">
         <div>
-          <div class="flex items-center mb-4">
+          <el-radio-group v-model="form.is_sell_to_employee" @change="handleChangeType"
+            class="!flex justify-center mb-4 mt-1">
+            <el-radio label="1">Venta a empleado</el-radio>
+            <el-radio label="0">Cortesías</el-radio>
+          </el-radio-group>
+          <!-- <div class="flex items-center mb-4">
             <div class="flex items-center mr-3">
-              <input
-                v-model="form.is_sell_to_employee"
-                id="sell-option-1"
-                type="radio"
-                name="sell_type"
-                value="1"
+              <input  v-model="form.is_sell_to_employee" id="sell-option-1" type="radio" name="sell_type" value="1"
                 class="h-4 w-4 border-gray-400 focus:ring-2 focus:ring-primary text-primary bg-transparent"
-                aria-labelledby="sell-option-1"
-                aria-describedby="sell-option-1"
-                checked=""
-              />
-              <label
-                for="sell-option-1"
-                class="text-sm font-medium text-gray-900 ml-2 block"
-              >
+                aria-labelledby="sell-option-1" aria-describedby="sell-option-1" checked="" />
+              <label for="sell-option-1" class="text-sm font-medium text-gray-900 ml-2 block">
                 Venta a empleado
               </label>
             </div>
             <div class="flex items-center">
-              <input
-                v-model="form.is_sell_to_employee"
-                id="sell-option-2"
-                type="radio"
-                name="sell_type"
-                value="0"
+              <input v-model="form.is_sell_to_employee" id="sell-option-2" type="radio" name="sell_type" value="0"
                 class="h-4 w-4 border-gray-400 focus:ring-2 focus:ring-primary text-primary bg-transparent"
-                aria-labelledby="sell-option-2"
-                aria-describedby="sell-option-2"
-              />
-              <label
-                for="sell-option-2"
-                class="text-sm font-medium text-gray-900 ml-2 block"
-              >
+                aria-labelledby="sell-option-2" aria-describedby="sell-option-2" />
+              <label for="sell-option-2" class="text-sm font-medium text-gray-900 ml-2 block">
                 Cortesías
               </label>
             </div>
-          </div>
+          </div> -->
         </div>
         <div>
-          <ProductInput
-            :products="products"
-            show_price
-            v-for="(item, index) in form.items"
-            :key="item.id"
-            :id="item.id"
-            @deleteItem="deleteItem(index)"
-            @syncItem="syncItems(index, $event)"
-            class="mb-1"
-          />
+          <ProductInput :products="products" show_price v-for="(item, index) in form.items" :key="item.id" :id="item.id"
+            @deleteItem="deleteItem(index)" @syncItem="syncItems(index, $event)" class="mb-1" />
         </div>
         <p v-if="!form.items.length" class="text-sm text-gray-600">
           Click al botón de "+" para empezar a agregar productos
@@ -76,14 +50,10 @@
           </button>
         </div>
         <div v-if="form.is_sell_to_employee == 0" class="relative z-0 mb-6 w-full group">
-          <textarea
-            v-model="form.notes"
-            rows="2"
-            type="text"
-            autocomplete="off"
-            class="textarea"
-            placeholder="Notas o comentarios"
-          />
+          <label class="text-sm mb-1 ml-2">Motivo *</label>
+          <textarea v-model="form.notes" rows="2" type="text" autocomplete="off" class="textarea"
+            placeholder="Ej. Rocío me dió permiso de tomar una botella de agua" />
+          <InputError :message="form.errors.notes" />
         </div>
 
         <PrimaryButton :disabled="form.processing">Registrar</PrimaryButton>
@@ -109,7 +79,7 @@ export default {
           quantity: null,
         },
       ],
-      is_sell_to_employee: 1,
+      is_sell_to_employee: '1',
       notes: null,
     });
     return {
@@ -129,6 +99,13 @@ export default {
     products: Array,
   },
   methods: {
+    handleChangeType() {
+      if (this.form.is_sell_to_employee == '0') {
+        this.form.notes = null;
+      } else {
+        this.form.notes = 'Venta a empleado';
+      }
+    },
     addNewItem() {
       this.form.items.push({ id: this.next_item_id++, product_id: null, quantity: null });
     },

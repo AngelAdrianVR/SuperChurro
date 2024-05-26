@@ -1,16 +1,25 @@
 <template>
-  <button @click="goBack" class="flex justify-center items-center rounded-full py-[9px] px-3 focus:outline-none hover-3dbuttom">
-        <i class="fa-solid fa-angle-left"></i>
+  <button @click="handleRedirection()"
+    class="flex justify-center items-center rounded-full py-[9px] px-3 focus:outline-none hover-3dbuttom">
+    <i class="fa-solid fa-angle-left text-xs"></i>
   </button>
 </template>
 
 <script>
 export default {
+  props: {
+    to: {
+      type: String,
+      default: null
+    }
+  },
   methods: {
-    goBack() {
-      // Puedes personalizar esta lógica según tus necesidades
-      // En este ejemplo, se utiliza la función history.back() para retroceder una página
-      window.history.back();
+    handleRedirection() {
+      if (this.to) {
+        this.$inertia.visit(this.to);
+      } else {
+        window.history.back();
+      }
     },
   },
 };

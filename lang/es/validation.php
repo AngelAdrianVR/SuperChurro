@@ -163,5 +163,6 @@ return [
         'category' => 'categoría',
         'payment_method' => 'método de pago',
         'provider' => 'proveedor o comercio',
+        'notes' => 'motivo',
     ],
 ];

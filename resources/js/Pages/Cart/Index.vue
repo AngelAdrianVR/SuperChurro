@@ -30,7 +30,7 @@
       </div>
 
       <div
-        class="md:grid grid-cols-2 my-7 border border-gray-300 p-4 rounded-lg text-center"
+        class="my-7 border border-gray-300 p-4 rounded-lg text-center"
       >
         <div class="">
           <p class="text-gray-700 text-center ml-3 my-3 font-semibold">
@@ -53,9 +53,9 @@
           </Link>
         </div>
 
-        <div class="mb-4 mt-14 md:my-1 text-center">
+        <!-- <div class="mb-4 mt-14 md:my-1 text-center">
           <p class="text-gray-700 ml-3 my-3 font-semibold">Cortes</p>
-<!-- 
+
           <ul>
             <li class="flex items-center justify-center space-x-4">
               <p class="text-primary">Primer turno</p>
@@ -67,7 +67,7 @@
               <i class="fa-solid fa-check text-green-600"></i>
               <i class="fa-solid fa-minus text-gray-700"></i>
             </li>
-          </ul> -->
+          </ul>
 
           <div class="globe-container flex-col">
             <div v-for="sale in sales" :key="sale.id" class="globe">
@@ -86,13 +86,13 @@
           <Link :href="route('sales.create')">
             <PrimaryButton class="mt-2">Hacer corte</PrimaryButton>
           </Link>
-        </div>
+        </div> -->
       </div>
 
       <div>
         <p class="text-gray-700 text-left mx-4 my-3 font-semibold flex items-center">
-          Solicitudes de mercancía (Hoy)
-          <Link :href="route('product-request.history')">
+          Solicitudes de mercancía / Consumibles (Hoy)
+          <Link :href="route('carts.requests-index')">
             <p class="ml-9 text-primary font-normal" v-if="$page.props.user.is_admin"
               >Ver historial</p
             >

@@ -99,4 +99,11 @@ class CartController extends Controller
 
         return to_route('carts.index');
     }
+
+    public function requestsIndex()
+    {
+        $tab = request('tab');
+
+        return inertia('Cart/RequestsIndex', compact('tab'));
+    }
 }

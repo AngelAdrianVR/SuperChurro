@@ -14,7 +14,10 @@ class ProductRequestController extends Controller
 {
     public function index()
     {
-        //
+        $total_items = ProductRequest::with('user')->latest()->get();
+        $requests = ProductRequestHistoryResource::collection($total_items->take(30));
+
+        return response()->json(['items' => $requests, 'total_items' => $total_items->count()]);
     }
 
     public function create()
@@ -44,8 +47,8 @@ class ProductRequestController extends Controller
         $current_products = $warehouse->products;
 
         $cart = Cart::find(1);
-        $current_products_cart = $cart->products;      
-        foreach($request->items as $item) {
+        $current_products_cart = $cart->products;
+        foreach ($request->items as $item) {
             WarehouseMovement::create([
                 'quantity' => $item['quantity'],
                 'product_id' => $item['product_id'],
@@ -65,13 +68,13 @@ class ProductRequestController extends Controller
         request()->session()->flash('flash.banner', 'Se ha pasado la mercancía de la cocina al carrito');
         request()->session()->flash('flash.bannerStyle', 'success');
 
-        return to_route('carts.index');
+        return to_route('sales.point');
     }
 
     public function show(ProductRequest $product_request)
     {
         $products = Product::with('unit')->get();
-        
+
         return inertia('ProductRequest/Show', compact('product_request', 'products'));
     }
 
@@ -93,10 +96,20 @@ class ProductRequestController extends Controller
         //
     }
 
-    public function history()
+    public function getItemsByPage($currentPage)
     {
-        $requests = ProductRequestHistoryResource::collection(ProductRequest::with('user')->latest()->paginate(30));
-        // return $requests;
-        return inertia('ProductRequest/History', compact('requests'));
+        $offset = $currentPage * 30;
+        $requests = ProductRequestHistoryResource::collection(ProductRequest::with('user')->latest()->get()
+            ->skip($offset)
+            ->take(30));
+
+        return response()->json(['items' => $requests]);
     }
+
+    // public function history()
+    // {
+    //     $requests = ProductRequestHistoryResource::collection(ProductRequest::with('user')->latest()->get()->take(30));
+
+    //     return inertia('ProductRequest/History', compact('requests'));
+    // }
 }

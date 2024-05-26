@@ -9,25 +9,12 @@
       </div>
     </template>
 
-    <div
-      class="max-w-lg md:mx-auto mt-5 rounded-lg px-5 pt-4 pb-5 border border-gray3 bg-transparent mx-4"
-    >
-      <p
-        v-if="validation_message"
-        class="text-red-400 text-xs mb-2"
-        v-html="validation_message"
-      ></p>
+    <div class="max-w-lg md:mx-auto mt-5 rounded-lg px-5 pt-4 pb-5 border border-gray3 bg-transparent mx-4">
+      <p v-if="validation_message" class="text-red-400 text-xs mb-2" v-html="validation_message"></p>
       <form @submit.prevent="store">
         <div>
-          <ProductInput
-            :products="products"
-            v-for="(item, index) in form.items"
-            :key="item.id"
-            :id="item.id"
-            @deleteItem="deleteItem(index)"
-            @syncItem="syncItems(index, $event)"
-            class="mb-1"
-          />
+          <ProductInput :products="products" v-for="(item, index) in form.items" :key="item.id" :id="item.id"
+            @deleteItem="deleteItem(index)" @syncItem="syncItems(index, $event)" class="mb-1" />
         </div>
         <p v-if="!form.items.length" class="text-sm text-gray-600">
           Click al botón de "+" para empezar a agregar productos

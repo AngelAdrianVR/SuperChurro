@@ -26,7 +26,7 @@ class SaleToEmployeeController extends Controller
         $validated = $request->validate([
             'items.*.quantity' => 'required|numeric|min:1',
             'items.*.product_id' => 'required|numeric|min:1',
-            'notes' => 'max:255'
+            'notes' => 'required|string|max:255',
         ]);
 
         $cart = Cart::first();
@@ -57,7 +57,7 @@ class SaleToEmployeeController extends Controller
         request()->session()->flash('flash.banner', 'Se registró la venta/cortesía');
         request()->session()->flash('flash.bannerStyle', 'success');
 
-        return to_route('carts.index');
+        return to_route('sales.point');
     }
 
     public function show(SaleToEmployee $saleToEmployee)

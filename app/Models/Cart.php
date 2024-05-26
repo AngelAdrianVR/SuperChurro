@@ -19,4 +19,5 @@ class Cart extends Model
     protected $casts = [
         'products' => 'array',
     ];
+
 } 

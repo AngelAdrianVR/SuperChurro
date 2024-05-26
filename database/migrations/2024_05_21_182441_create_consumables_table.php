@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('consumables', function (Blueprint $table) {
             $table->id();
-
             $table->string('name');
             $table->string('code')->nullable();
             $table->string('low_stock')->default(0);
             $table->foreignId('unit_id')->constrained()->cascadeOnDelete();
-            
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('consumables');
     }
 };

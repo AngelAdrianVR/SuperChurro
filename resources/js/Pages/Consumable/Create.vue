@@ -1,10 +1,10 @@
 <template>
-  <AppLayout title="Nuevo producto">
+  <AppLayout title="Nuevo Consumible">
     <template #header>
       <div class="flex items-center mt-2">
         <Back />
         <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
-          Nuevo producto
+          Nuevo Consumible
         </h2>
       </div>
     </template>
@@ -15,41 +15,25 @@
       <form @submit.prevent="store">
 
         <div class="mb-2 w-full">
-          <InputLabel value="Nombre del producto *" class="ml-3 mb-1 text-sm" />
+          <InputLabel value="Nombre del consumible *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.name" type="text" autocomplete="off" class="input"
-           placeholder="Escribe el nombre del producto" />
+           placeholder="Escribe el nombre del consumible" />
           <InputError :message="$page.props?.errors.name" />
         </div>
 
-        <div class="mb-2 w-full">
+        <!-- <div class="mb-2 w-full">
           <InputLabel value="Stock mínimo *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.low_stock" type="number" autocomplete="off" class="input"
            placeholder="Agrega el stock mínimo" />
           <InputError :message="$page.props?.errors.low_stock" />
-        </div>
+        </div> -->
 
-        <div class="mb-2 w-full">
+        <!-- <div class="mb-2 w-full">
           <InputLabel value="Stock de apertura *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.initial_stock" type="number" autocomplete="off" class="input"
            placeholder="Agrega el stock inicial" />
           <InputError :message="$page.props?.errors.initial_stock" />
-        </div>
-
-        <div class="mb-2 w-full relative">
-          <InputLabel value="Precio *" class="ml-3 mb-1 text-sm" />
-          <input v-model="form.price" type="number" autocomplete="off" class="input pl-7"
-           placeholder="Agrega el precio" />
-           <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]">$</p>
-          <InputError :message="$page.props?.errors.price" />
-        </div>
-
-        <div class="mb-2 w-full relative">
-          <InputLabel value="Precio a empleados *" class="ml-3 mb-1 text-sm" />
-          <input v-model="form.employee_price" type="number" autocomplete="off" class="input pl-7"
-           placeholder="Agrega el precio" />
-           <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]">$</p>
-          <InputError :message="$page.props?.errors.employee_price" />
-        </div>
+        </div> -->
 
         <InputLabel value="Unidad de medida *" class="ml-3 mb-1 text-sm" />
         <select class="select mb3" v-model="form.unit_id">
@@ -66,16 +50,16 @@
           </option>
         </select>
 
-        <div class="mt-3 w-ull relative">
-            <InputLabel value="Código del producto (en caso de tener)" class="ml-3 mb-1" />
+        <!-- <div class="mt-3 w-ull relative">
+            <InputLabel value="Código del consumible (en caso de tener)" class="ml-3 mb-1" />
             <input v-model="form.code" type="text" autocomplete="off" class="input pl-8"
-              placeholder="Escribe el código de producto" />
+              placeholder="Escribe el código de consumible" />
             <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]"><i class="fa-solid fa-barcode"></i></p>
             <InputError :message="form.errors.code" />
-        </div>
+        </div> -->
 
         <div class="mt-5">
-            <InputLabel value="Agregar foto del producto" class="ml-3 mb-1" />
+            <InputLabel value="Agregar foto del consumible" class="ml-3 mb-1" />
             <InputFilePreview @imagen="saveImage" />
         </div>
 
@@ -89,7 +73,6 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import PayRollTable from "@/Components/PayRollTable.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -100,11 +83,8 @@ export default {
   data() {
     const form = useForm({
       name: null,
-      low_stock: null,
+      low_stock: 100,
       unit_id: null,
-      price: null,
-      employee_price: null,
-      initial_stock: null,
       code: null,
       media: null,
     });
@@ -114,7 +94,6 @@ export default {
   },
   components: {
     AppLayout,
-    PayRollTable,
     PrimaryButton,
     InputError,
     InputLabel,
@@ -127,7 +106,15 @@ export default {
   },
   methods: {
     store() {
-      this.form.post(route("products.store"));
+      this.form.post(route("consumables.store"), {
+        onSuccess: () => {
+          this.$notify({
+            title: "Creado",
+            message: "",
+            type: "success",
+          });
+        }
+      });
     },
     saveImage(image) {
     this.form.media = image;

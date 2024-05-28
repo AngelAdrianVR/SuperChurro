@@ -24,7 +24,7 @@
           {{ sale.quantity }}
         </td>
         <td class="py-2 pr-2">
-          ${{ (sale.price * sale.quantity)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+          ${{ (sale.public_price * sale.quantity)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
         </td>
         <td class="py-2 pr-2">
           <i @click="editSale(sale)" class="fa-solid fa-pencil text-primary text-xs cursor-pointer ml-1"></i>

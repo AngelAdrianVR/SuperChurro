@@ -123,7 +123,7 @@ Route::resource('products', ProductController::class)->middleware(['auth', 'admi
 Route::get('products-search', [ProductController::class, 'searchProduct'])->name('products.search')->middleware('auth');
 Route::post('products/update-with-media/{product}', [ProductController::class, 'updateWithMedia'])->name('products.update-with-media')->middleware('auth');
 Route::get('products-get-product-scaned/{product_id}', [ProductController::class, 'getProductScaned'])->name('products.get-product-scaned')->middleware('auth');
-
+Route::get('products-get-all-for-indexedDB', [ProductController::class, 'getAllForIndexedDB'])->name('products.get-all-for-indexedDB')->middleware('auth');
 
 // products ----------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------

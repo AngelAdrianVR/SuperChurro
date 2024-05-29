@@ -174,8 +174,6 @@ export default {
     Link,
   },
   props: {
-    products: Array,
-    churro_price: Number,
   },
   watch: {
     date(newDate, oldDate) {
@@ -244,8 +242,9 @@ export default {
       this.shift_2_sales.forEach(sale => shift_2 += (sale.quantity * sale.price));
       this.sales_to_employees.forEach(sale => to_employees += (sale.quantity * sale.price));
 
-      // this.shift_1_sales[0]: churro price at the moment of sale
-      const churros_sold = ((shift_1 + shift_2 + to_employees) / (this.shift_1_sales[0].price)) + 5;
+      // reference_price: churro price at the moment of sale
+      const reference_price = this.shift_1_sales[0]?.price ?? this.shift_2_sales[0]?.price  
+      const churros_sold = ((shift_1 + shift_2 + to_employees) / (reference_price)) + 5;
       commissions = Math.floor(churros_sold / 100) * 10;
 
       return { shift_1: shift_1, shift_2: shift_2, to_employees: to_employees, commissions: commissions };

@@ -256,7 +256,8 @@ import InputError from "@/Components/InputError.vue";
 import Modal from "@/Components/Modal.vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 import axios from 'axios';
-import { getItemByPartialAttributes, getItemByAttributes, addOrUpdateBatchOfItems } from '@/dbService.js';
+import { getItemByPartialAttributes, getItemByAttributes } from '@/dbService.js';
+import { format } from 'date-fns';
 
 export default {
   data() {
@@ -420,50 +421,6 @@ export default {
         localStorage.setItem('pendentProcess', true);
       }
     },
-    // async getProductByCode() {
-    //   this.scanning = true;
-    //   //buscar primero en productos transferidos del catalogo con el codigo escaneado
-    //   let productScaned = this.products.find(item => item.code === this.scannerQuery);
-
-    //   // si no se encontró el producto escaneado aparece un mensaje y no busca en la bd para no tardar más
-    //   if (productScaned != null) {
-    //     try {
-    //       const response = await axios.get(route('products.get-product-scaned', productScaned.id));
-
-    //       if (response.status === 200 && response.data && response.data.item) {
-    //         this.productSelected = response.data.item;
-    //         this.addSaleProduct(this.productSelected);
-    //       } else {
-    //         console.error('La respuesta no tiene el formato esperado.');
-    //       }
-    //     } catch (error) {
-    //       console.error('Error al realizar la solicitud:', error);
-    //     } finally {
-    //       this.scanning = false;
-    //     }
-    //   } else {
-    //     this.$notify({
-    //       title: "Poducto no encontrado",
-    //       message: "El producto escaneado no esta registrado en la base de datos",
-    //       type: "warning"
-    //     });
-    //     console.error('El producto escaneado no tiene la propiedad "id".');
-    //     this.scannerQuery = null;
-    //     this.scanning = false;
-    //   }
-    // },
-    // async searchProducts() {
-    //   try {
-    //     this.loading = true;
-    //     const response = await axios.get(route('products.search'), { params: { query: this.searchQuery } });
-    //     if (response.status === 200) {
-    //       this.productsFound = response.data.items;
-    //       this.loading = false;
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
     selectProductFromList(product) {
       // crear link virtual de imagen blob si es que tiene imagen el producto
       if (product.image && !product.imageUrl) {
@@ -474,39 +431,6 @@ export default {
       this.productFoundSelected = product;
       this.searchQuery = null;
     },
-    // addSaleProduct(product) {
-    //   //revisa si el producto escaneado ya esta dentro del arreglo
-    //   const existingIndex = this.editableTabs[this.editableTabsValue - 1].saleProducts.findIndex(sale => {
-    //     if (product.global_product_id) {
-    //       return sale.product.global_product_id == product.global_product_id;
-    //     } else {
-    //       return sale.product.id == product.id && !sale.product.global_product_id;
-    //     }
-    //   });
-    //   if (existingIndex !== -1) {
-    //     this.editableTabs[this.editableTabsValue - 1].saleProducts[existingIndex] = {
-    //       ...this.editableTabs[this.editableTabsValue - 1].saleProducts[existingIndex],
-    //       quantity: this.editableTabs[this.editableTabsValue - 1].saleProducts[existingIndex].quantity + this.quantity
-    //     };
-    //   } else {
-    //     // Si el producto no existe, agrégalo al array
-    //     this.editableTabs[this.editableTabsValue - 1].saleProducts.push({
-    //       product: product,
-    //       quantity: this.quantity
-    //     });
-    //   }
-    //   this.scannerQuery = null;
-    //   this.quantity = 1;
-    //   this.scanning = false;
-    //   this.inputFocus();
-
-    //   // indicar al navegador mediante el local storage que hay proceso pendiente
-    //   const pendentProcess = JSON.parse(localStorage.getItem('pendentProcess'));
-    //   if (!pendentProcess) {
-    //     // guardar el valor en el localStorage
-    //     localStorage.setItem('pendentProcess', true);
-    //   }
-    // },
     deleteProduct(productId) {
       const indexToDelete = this.editableTabs[this.editableTabsValue - 1].saleProducts.findIndex(sale => sale.product.id === productId);
       this.editableTabs[this.editableTabsValue - 1].saleProducts.splice(indexToDelete, 1);
@@ -523,15 +447,6 @@ export default {
       this.editableTabs[this.editableTabsValue - 1].moneyReceived = null;
       this.inputFocus();
     },
-    // getPrice(product) {
-    //   if (this.saleType == 'publico') {
-    //     return product.current_price?.price ?? 0;
-    //   } else if (this.saleType == 'empleado') {
-    //     return product.current_employee_price?.price ?? 0;
-    //   } else if (this.saleType == 'cortesia') {
-    //     return 0;
-    //   }
-    // },
     calculateTotal() {
       // Suma de los productos del precio y la cantidad para cada elemento en saleProducts
       const total = this.editableTabs[this.editableTabsValue - 1]?.saleProducts?.reduce((accumulator, sale) => {

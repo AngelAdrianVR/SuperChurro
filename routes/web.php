@@ -155,6 +155,7 @@ Route::resource('sales', SaleController::class)->middleware(['auth']);
 Route::post('sales/get-by-date', [SaleController::class, 'getByDate'])->middleware('auth')->name('sales.get-sales-by-date');
 Route::get('sales-point', [SaleController::class, 'pointIndex'])->middleware('auth')->name('sales.point');
 Route::post('sales/get-month-sale', [SaleController::class, 'getMonthSale'])->middleware('auth')->name('sales.get-month-sale');
+Route::post('sales-sync-localstorage', [SaleController::class, 'syncLocalstorage'])->middleware('auth')->name('sales.sync-localstorage');
 //Imprimir ventas por fecha
 Route::get('sales-print', [SaleController::class, 'printSales'])->middleware('auth')->name('sales.print');
 

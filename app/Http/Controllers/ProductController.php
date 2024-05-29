@@ -86,7 +86,7 @@ class productController extends Controller
 
     public function edit($product_id)
     {
-        $product = Product::with('currentPrice', 'unit', 'currentEmployeePrice', 'media')->find($product_id);
+        $product = Product::with(['currentPrice', 'unit', 'currentEmployeePrice', 'media'])->find($product_id);
         $units = Unit::all();
 
         return inertia('Product/Edit', compact('product', 'units'));
@@ -122,6 +122,11 @@ class productController extends Controller
             ]);
         }
 
+         // Eliminar imagen si se eliminó la establecida
+         if ($request->media_cleared) {
+            $product->clearMediaCollection();
+        }
+
         return to_route('products.index');
     }
 
@@ -155,9 +160,16 @@ class productController extends Controller
             ]);
         }
 
-        // update image
-        $product->clearMediaCollection();
-        $product->addAllMediaFromRequest()->each(fn ($file) => $file->toMediaCollection());
+        // media ------------
+        // Eliminar imágenes antiguas solo si se proporcionan nuevas imágenes
+        if ($request->hasFile('media')) {
+            $product->clearMediaCollection();
+        }
+
+        // Guardar el archivo en la colección 'media'
+        if ($request->hasFile('media')) {
+            $product->addMediaFromRequest('media')->toMediaCollection();
+        }
 
         return to_route('products.index');
     }

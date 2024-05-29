@@ -21,7 +21,6 @@
         mx-4
       ">
       <form @submit.prevent="update">
-
         <div class="mb-2 w-full">
           <InputLabel value="Nombre del producto *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.name" type="text" autocomplete="off" class="input"
@@ -80,9 +79,8 @@
 
         <div class="mt-5">
           <InputLabel value="Agregar foto del producto" class="ml-3 mb-1" />
-          <InputFilePreview :imageUrl="product.media[0]?.original_url" @imagen="saveImage" />
+          <InputFilePreview :imageUrl="product.media[0]?.original_url" @imagen="saveImage" @cleared="clearMedia()" />
         </div>
-
         <div class="flex justify-start mt-10">
           <PrimaryButton :disabled="form.processing">Guardar cambios</PrimaryButton>
         </div>
@@ -111,7 +109,8 @@ export default {
       price: this.product.current_price?.price,
       employee_price: this.product.current_employee_price?.price,
       code: this.product.code,
-      media: this.product.media,
+      media: this.product.media[0],
+      media_cleared: false,
     });
     return {
       form,
@@ -132,6 +131,10 @@ export default {
     units: Array,
   },
   methods: {
+    clearMedia() {
+      this.form.media_cleared = true;
+      this.form.media = null;
+    },
     update() {
       if (this.form.media == null) {
         this.form.put(route("products.update", this.product.id), {

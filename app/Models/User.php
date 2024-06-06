@@ -164,6 +164,7 @@ class User extends Authenticatable implements HasMedia
         $user_payroll = $this->payrolls
             ->firstWhere(function ($payroll) use ($carbon_date) {
                 if ($carbon_date->dayOfWeek != 0)
+                    //verificar que semana y año de la nomina coincida con la fecha solicitada
                     return $payroll->week == $carbon_date->weekOfYear && $carbon_date->year == $payroll->start_date->year;
                 else  //sunday (new week in payroll)
                     return $payroll->week == $carbon_date->addDays(1)->weekOfYear && $carbon_date->year == $payroll->start_date->year;

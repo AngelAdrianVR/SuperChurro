@@ -241,6 +241,30 @@
         </section>
       </div>
     </div>
+
+    <DialogModal :show="showCourtesyModal" @close="showCourtesyModal = false">
+      <template #title>
+        <h1>Cortesias a viene viene</h1>
+      </template>
+      <template #content>
+        <form @submit.prevent="storeCourtesies" class="space-y-2">
+          <div class="flex items-center space-x-6 *:w-1/4">
+            <span class="text-sm text-gray1">Bolis</span>
+            <el-input-number v-model="courtesyForm.bolis" :min="0" :max="10" />
+          </div>
+          <div class="flex items-center space-x-6 *:w-1/4">
+            <span class="text-sm text-gray1">Botana</span>
+            <el-input-number v-model="courtesyForm.botana" :min="0" :max="10" />
+          </div>
+        </form>
+      </template>
+      <template #footer>
+        <div class="space-x-1">
+          <CancelButton @click="showCourtesyModal = false" :disabled="storingCourtesies">Cancelar</CancelButton>
+          <PrimaryButton @click="storeCourtesies" :disabled="storingCourtesies">Registrar cortesias</PrimaryButton>
+        </div>
+      </template>
+    </DialogModal>
   </AppLayout>
 </template>
 
@@ -248,6 +272,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
+import DialogModal from '@/Components/DialogModal.vue';
 import ThirthButton from '@/Components/ThirthButton.vue';
 import InputLabel from "@/Components/InputLabel.vue";
 import CancelButton from "@/Components/CancelButton.vue";
@@ -267,13 +292,23 @@ export default {
       registerNotes: null, //notas al entrar o sacar dinero
     });
 
+    const courtesyForm = useForm({
+      bolis: 0,
+      botana: 0,
+    });
+
     return {
       form,
+      courtesyForm,
       saleType: 'publico',
+      showCourtesyModal: false,
       showCashRegisterMoney: false,
+      // cargas
       loading: false, //cargando la busqueda de productos
+      storingCourtesies: false,
       storeProcessing: false, //cargando store de venta
       scanning: false, //cargando la busqueda de productos por escaner
+      // buscador
       scannerQuery: null, //input para scanear el codigo de producto
       searchQuery: null, //buscador
       searchFocus: false, //buscador
@@ -322,76 +357,13 @@ export default {
     InputError,
     InputLabel,
     SaleTable,
-    Modal
+    Modal,
+    DialogModal,
   },
   props: {
     products: Array,
   },
   methods: {
-    async store() {
-      if (!this.storeProcessing) {
-        this.storeProcessing = true;
-        if (this.isOnline) {
-          try {
-            const response = await axios.post(route('sales.store'), {
-              saleType: this.saleType,
-              saleProducts: this.editableTabs[this.editableTabsValue - 1]?.saleProducts
-            });
-            if (response.status === 200) {
-              this.$notify({
-                title: "Correcto",
-                text: "Se ha registrado la venta con éxito!",
-                type: "success",
-              });
-              this.clearTab();
-
-              // resetear variable de local storage a false
-              localStorage.setItem('pendentProcess', false);
-            }
-          } catch (error) {
-            console.log(error);
-          } finally {
-            this.storeProcessing = false;
-          }
-        } else {
-          this.saveToLocalStorage();
-          this.storeProcessing = false;
-          this.clearTab();
-        }
-      }
-    },
-    async searchProducts() {
-      try {
-        this.productsFound = await getItemByPartialAttributes('products', { name: this.searchQuery, code: this.searchQuery });
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async getProductByCode() {
-      this.scanning = true;
-
-      let foundProducts = await getItemByAttributes('products', { code: this.scannerQuery });
-      let productScaned = foundProducts[0];
-
-      // si no se encontró el producto escaneado aparece un mensaje y no busca en la bd para no tardar más
-      if (productScaned != null) {
-        // agregar la imagen al producto si es que no la tiene
-        if (productScaned.image && !productScaned.imageUrl) {
-          const imageUrl = URL.createObjectURL(productScaned.image);
-          productScaned = { ...productScaned, imageUrl };
-        }
-
-        this.addSaleProduct(productScaned);
-      } else {
-        this.$notify({
-          title: "Producto no encontrado",
-          message: "El producto escaneado no esta registrado en la base de datos",
-          type: "warning"
-        });
-        this.scannerQuery = null;
-        this.scanning = false;
-      }
-    },
     addSaleProduct(product) {
       //revisa si el producto a agregar ya esta dentro del arreglo
       const existingIndex = this.editableTabs[this.editableTabsValue - 1].saleProducts.findIndex(sale => {
@@ -524,6 +496,108 @@ export default {
       } finally {
         this.syncingData = false;
       }
+    },
+    async store() {
+      if (!this.storeProcessing) {
+        this.storeProcessing = true;
+        if (this.isOnline) {
+          try {
+            const response = await axios.post(route('sales.store'), {
+              saleType: this.saleType,
+              saleProducts: this.editableTabs[this.editableTabsValue - 1]?.saleProducts
+            });
+            if (response.status === 200) {
+              this.$notify({
+                title: "Correcto",
+                text: "Se ha registrado la venta con éxito!",
+                type: "success",
+              });
+              this.clearTab();
+
+              // resetear variable de local storage a false
+              localStorage.setItem('pendentProcess', false);
+            }
+          } catch (error) {
+            console.log(error);
+          } finally {
+            this.storeProcessing = false;
+          }
+        } else {
+          this.saveToLocalStorage();
+          this.storeProcessing = false;
+          this.clearTab();
+        }
+      }
+    },
+    async searchProducts() {
+      try {
+        this.productsFound = await getItemByPartialAttributes('products', { name: this.searchQuery, code: this.searchQuery });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getProductByCode() {
+      this.scanning = true;
+
+      if (this.scannerQuery == 999) {
+        this.showCourtesyModal = true;
+        this.scannerQuery = null;
+        this.scanning = false;
+        return;
+      }
+
+      let foundProducts = await getItemByAttributes('products', { code: this.scannerQuery });
+      let productScaned = foundProducts[0];
+
+      // si no se encontró el producto escaneado aparece un mensaje y no busca en la bd para no tardar más
+      if (productScaned != null) {
+        // agregar la imagen al producto si es que no la tiene
+        if (productScaned.image && !productScaned.imageUrl) {
+          const imageUrl = URL.createObjectURL(productScaned.image);
+          productScaned = { ...productScaned, imageUrl };
+        }
+
+        this.addSaleProduct(productScaned);
+      } else {
+        this.$notify({
+          title: "Producto no encontrado",
+          message: "El producto escaneado no esta registrado en la base de datos",
+          type: "warning"
+        });
+        this.scannerQuery = null;
+        this.scanning = false;
+      }
+    },
+    async storeCourtesies() {
+      this.storingCourtesies = true;
+
+      this.courtesyForm.post(route('sales-to-employees.store-special-courtesies'), {
+        onSuccess: () => {
+          this.$notify({
+            title: "Cortesías registradas",
+            message: "",
+            type: "success"
+          });
+
+          this.courtesyForm.reset();
+          this.showCourtesyModal = false;
+        },
+        onFinish: () => {
+          this.storingCourtesies = false;
+        }
+      });
+
+      // try {
+      //   const response = await axios.post(route('sales-to-employees.store-special-courtesies'));
+
+      //   if (response.status === 200) {
+
+      //   }
+      // } catch (error) {
+      //   console.log(error);
+      // } finally {
+      //   this.storingCourtesies = false;
+      // }
     },
   },
   mounted() {

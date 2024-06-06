@@ -34,7 +34,7 @@ class SaleToEmployeeController extends Controller
 
         // add aditional info to each sale before creating
         foreach ($validated['items'] as $sale) {
-            if(boolval($request->is_sell_to_employee)) {
+            if (boolval($request->is_sell_to_employee)) {
                 $sale['price'] = Product::find($sale['product_id'])->currentEmployeePrice->price;
                 $sale['notes'] = $request->notes;
             } else {
@@ -52,10 +52,6 @@ class SaleToEmployeeController extends Controller
 
         // updte cart stock
         $cart->update(['products' => $updated_cart_stock]);
-
-
-        request()->session()->flash('flash.banner', 'Se registró la venta/cortesía');
-        request()->session()->flash('flash.bannerStyle', 'success');
 
         return to_route('sales.point');
     }
@@ -78,5 +74,51 @@ class SaleToEmployeeController extends Controller
     public function destroy(SaleToEmployee $saleToEmployee)
     {
         //
+    }
+
+    // API
+    public function storeSpecialCourtesies(Request $request)
+    {
+        $validated = $request->validate([
+            'bolis' => 'required|numeric|min:0',
+            'botana' => 'required|numeric|min:0',
+        ]);
+
+        $cart = Cart::first();
+        $updated_cart_stock = $cart->products;
+
+        // guardar botana si es que es diferente de 0
+        if ($validated['botana']) {
+            $product_id = 3;
+            SaleToEmployee::create([
+                'quantity' => $validated['botana'],
+                'product_id' => $product_id,
+                'notes' => 'Cortesia para viene viene a las ' . now()->toTimeString(),
+                'price' => 0,
+                'user_id' => auth()->id(),
+            ]);
+
+            // substract quantity sold to cart stock
+            $updated_cart_stock[$product_id] -= $validated['botana'];
+        }
+        // guardar bolis si es que es diferente de 0
+        if ($validated['bolis']) {
+            $product_id = 4;
+            SaleToEmployee::create([
+                'quantity' => $validated['bolis'],
+                'product_id' => $product_id,
+                'notes' => 'Cortesia para viene viene a las ' . now()->toTimeString(),
+                'price' => 0,
+                'user_id' => auth()->id(),
+            ]);
+
+            // substract quantity sold to cart stock
+            $updated_cart_stock[$product_id] -= $validated['bolis'];
+        }
+
+        // updte cart stock
+        $cart->update(['products' => $updated_cart_stock]);
+
+        return to_route('sales.point');
     }
 }

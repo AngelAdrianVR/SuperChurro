@@ -27,6 +27,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+Route::redirect('/', 'login');
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -107,6 +109,7 @@ Route::get('consumable-request-get-by-page/{currentPage}', [ConsumableRequestCon
 // sales-to-employees ---------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------
 Route::resource('sales-to-employees', SaleToEmployeeController::class)->middleware('auth');
+Route::post('sales-to-employees/store-special-courtesies', [SaleToEmployeeController::class, 'storeSpecialCourtesies'])->middleware('auth')->name('sales-to-employees.store-special-courtesies');
 
 
 // carts -----------------------------------------------------------------------------------

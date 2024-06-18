@@ -32,7 +32,7 @@
           <div class="my-2 w-full">
             <InputLabel value="Descripción" class="ml-3 mb-1 text-sm" />
             <textarea
-              v-model="form.notes"
+              v-model="form.description"
               rows="2"
               type="text"
               autocomplete="off"

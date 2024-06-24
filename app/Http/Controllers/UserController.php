@@ -183,22 +183,23 @@ class UserController extends Controller
 
     public function showUserSettlement(User $user)
     {
-
         $current_year = now()->year;
         $initial_date = Carbon::createMidnightDate($current_year, 1, 1);
-        $worked_days = $initial_date->diffInDays(now()->addDays(1));
+        $worked_days = $initial_date->diffInDays(now()->addDays());
         $work_days_per_week = count($user->employee_properties['work_days']);
         $base_salary = $user->employee_properties['base_salary'];
         $month_salary = $work_days_per_week * $base_salary * 4;
         $daily_salary = $month_salary / 30;
         $bonus_days = ($worked_days * 15) / 365;
-        $chrismas_bonus = number_format($bonus_days * $daily_salary);
+        $chrismas_bonus = $bonus_days * $daily_salary;
         $vacations =  $user->employee_properties['vacations'];
         $proporcional_vacations = $vacations * $base_salary;
         $vacation_bonus =  $vacations * $base_salary * 0.25;
         $settlement = round($proporcional_vacations + $vacation_bonus + $chrismas_bonus);
+        // return $worked_days;
 
-        return inertia('User/Calculations/SettlementTemplate', compact('user', 'chrismas_bonus', 'month_salary', 'proporcional_vacations', 'vacation_bonus', 'settlement', 'vacations'));
+        return inertia('User/Calculations/SettlementTemplate', 
+        compact('user', 'chrismas_bonus', 'month_salary', 'proporcional_vacations', 'vacation_bonus', 'settlement', 'vacations'));
     }
 
     public function showUserVacationBonus(User $user)

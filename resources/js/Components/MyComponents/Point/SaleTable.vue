@@ -12,7 +12,8 @@
       <div v-for="(sale, index) in saleProducts" :key="index"
         class="mb-2 flex items-center space-x-4 border rounded-full relative">
         <div class="grid grid-cols-2 items-center h-14 w-[45%]">
-          <img class="mx-auto h-14 object-contain" :src="sale.product.media[0]?.original_url">
+          <img class="mx-auto h-14 object-contain" v-if="sale.product.imageUrl" :src="sale.product.imageUrl"
+            :alt="sale.product.name">
           <p class="font-bold">{{ sale.product.name }}</p>
         </div>
         <div :class="editMode !== null ? 'w-[35%]' : 'w-[15%]'" class="text-base flex items-center">
@@ -68,7 +69,8 @@
     <div v-for="(sale, index) in saleProducts" :key="index"
       class="mb-2 grid grid-cols-3 gap-2 border rounded-md items-center relative">
       <figure>
-        <img class="mx-auto w-3/4 object-contain" :src="sale.product.media[0]?.original_url" alt="">
+        <img class="mx-auto h-14 object-contain" v-if="sale.product.imageUrl" :src="sale.product.imageUrl"
+          :alt="sale.product.name">
       </figure>
       <div class="col-span-2 flex flex-col space-y-1 justify-center py-1">
         <p class="font-bold">{{ sale.product.name }}</p>
@@ -105,7 +107,7 @@
         </div>
         <el-input-number v-model="sale.quantity" :min="0" :precision="2" size="small" />
         <div class="text-[#5FCB1F] font-bold">
-          ${{ (getPrice(sale.product) * sale.quantity).toLocaleString('en-US',{minimumFractionDigits: 2}) }}</div>
+          ${{ (getPrice(sale.product) * sale.quantity).toLocaleString('en-US', { minimumFractionDigits: 2 }) }}</div>
         <div class="self-end">
           <el-popconfirm confirm-button-text="Si" cancel-button-text="No" icon-color="#C30303" title="¿Continuar?"
             @confirm="deleteItem(sale.product.id)" class="justify-self-end">
@@ -144,7 +146,7 @@ export default {
   methods: {
     getPrice(product) {
       if (this.saleType == 'publico') {
-        return product.current_price?.price ?? 0;
+        return product.public_price ?? 0;
       } else if (this.saleType == 'empleado') {
         return product.current_employee_price?.price ?? 0;
       } else if (this.saleType == 'cortesia') {

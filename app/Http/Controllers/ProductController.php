@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 
 class productController extends Controller
 {
-
     public function index()
     {
         $products = ProductResource::collection(Product::with('unit', 'currentPrice', 'currentEmployeePrice', 'media')->get());
@@ -21,14 +20,12 @@ class productController extends Controller
         return inertia('Product/Index', compact('products'));
     }
 
-
     public function create()
     {
         $units = Unit::all();
 
         return inertia('Product/Create', compact('units'));
     }
-
 
     public function store(Request $request)
     {
@@ -79,27 +76,21 @@ class productController extends Controller
             'warehouse_id' => $warehouse->id
         ]);
 
-        request()->session()->flash('flash.banner', '¡Se ha creado un nuevo producto correctamente!');
-        request()->session()->flash('flash.bannerStyle', 'success');
-
         return to_route('products.index');
     }
-
 
     public function show(product $product)
     {
         //
     }
 
-
     public function edit($product_id)
     {
-        $product = Product::with('currentPrice', 'unit', 'currentEmployeePrice', 'media')->find($product_id);
+        $product = Product::with(['currentPrice', 'unit', 'currentEmployeePrice', 'media'])->find($product_id);
         $units = Unit::all();
 
         return inertia('Product/Edit', compact('product', 'units'));
     }
-
 
     public function update(Request $request, product $product)
     {
@@ -131,12 +122,13 @@ class productController extends Controller
             ]);
         }
 
-        request()->session()->flash('flash.banner', '¡Se ha actualizado correctamente!');
-        request()->session()->flash('flash.bannerStyle', 'success');
+         // Eliminar imagen si se eliminó la establecida
+         if ($request->media_cleared) {
+            $product->clearMediaCollection();
+        }
 
         return to_route('products.index');
     }
-
 
     public function updateWithMedia(Request $request, product $product)
     {
@@ -168,25 +160,26 @@ class productController extends Controller
             ]);
         }
 
-          // update image
-        $product->clearMediaCollection();
-        $product->addAllMediaFromRequest()->each(fn ($file) => $file->toMediaCollection());
+        // media ------------
+        // Eliminar imágenes antiguas solo si se proporcionan nuevas imágenes
+        if ($request->hasFile('media')) {
+            $product->clearMediaCollection();
+        }
 
-        request()->session()->flash('flash.banner', '¡Se ha actualizado correctamente!');
-        request()->session()->flash('flash.bannerStyle', 'success');
+        // Guardar el archivo en la colección 'media'
+        if ($request->hasFile('media')) {
+            $product->addMediaFromRequest('media')->toMediaCollection();
+        }
 
         return to_route('products.index');
     }
 
-
     public function destroy(product $product)
     {
         $product->delete();
-        request()->session()->flash('flash.banner', '¡Se ha eliminado correctamente!');
-        request()->session()->flash('flash.bannerStyle', 'success');
+        
         return redirect()->route('products.index');
     }
-
 
     public function searchProduct(Request $request)
     {
@@ -202,11 +195,29 @@ class productController extends Controller
         return response()->json(['items' => $products]);
     }
 
-
     public function getProductScaned($product_id)
     {
         $product = Product::where('id', $product_id)->with(['media', 'currentPrice'])->first();
 
         return response()->json(['item' => $product]);
+    }
+
+    public function getAllForIndexedDB()
+    {
+        // productos registrados
+        $products = Product::latest()
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'code' => $product->code,
+                    'public_price' => $product->currentPrice->price,
+                    'unit' => $product->unit->name,
+                    'image_url' => $product->getFirstMediaUrl(),
+                ];
+            })->toArray();
+
+        return response()->json(compact('products'));
     }
 }

@@ -13,7 +13,7 @@
     <div
         class="max-w-2xl md:mx-auto mt-5  rounded-lg px-5 py-4 bg-transparent border border-gray3 mx-4 my-2"
       >
-        <form @submit.prevent="update">
+        <form @submit.prevent="store">
 
           <div class="flex items-center space-x-2">
             <div class="mb-3 w-full group">
@@ -33,13 +33,14 @@
           <div class="my-2 w-full">
             <InputLabel value="Descripción" class="ml-3 mb-1 text-sm" />
             <textarea
-              v-model="form.notes"
+              v-model="form.description"
               rows="2"
               type="text"
               autocomplete="off"
               placeholder="Escribe la descripción"
               class="textarea"
             />
+            <InputError :message="$page.props?.errors.description" />
           </div>
 
           <div class="flex justify-start mt-4">

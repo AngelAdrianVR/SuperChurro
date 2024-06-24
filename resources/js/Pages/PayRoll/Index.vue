@@ -50,10 +50,10 @@
                                     <span>Incapacidades ({{ payroll.week_attendance.sickness }})</span>
                                     <span>${{ payroll.paid_sickness }}</span>
                                 </p>
-                                <p v-for="(commission, index) in payroll.commissions.filter(item => item > 0)" :key="index"
+                                <p v-for="(commission, index) in getCommissions(payroll)" :key="index"
                                     class="flex items-center justify-between px-2 self-start">
-                                    <span>Comisión {{ week_days[index] }}</span>
-                                    <span>${{ commission }}</span>
+                                    <span> {{ commission.day }}</span>
+                                    <span>${{ commission.amount }}</span>
                                 </p>
                                 <p v-if="payroll.salary_for_extras"
                                     class="flex items-center justify-between px-2 self-start">
@@ -113,6 +113,16 @@ export default {
         PayRollTable,
     },
     methods: {
+        getCommissions(payroll) {
+            return payroll.commissions.map((item, index) => {
+                if (item > 0) {
+                    return {
+                        'day': this.week_days[index],
+                        'amount': item,
+                    };
+                }
+            }).filter(item => item);
+        },
         getShiftsWorked(payrollUser) {
             return payrollUser.week_attendance.days_as_double
                 + payrollUser.week_attendance.attendances;

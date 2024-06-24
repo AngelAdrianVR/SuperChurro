@@ -14,6 +14,7 @@ class Sale extends Model
         'quantity',
         'price',
         'product_id',
+        'created_at',
     ];
 
     // relationships

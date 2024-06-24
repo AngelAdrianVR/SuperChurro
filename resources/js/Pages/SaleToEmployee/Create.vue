@@ -17,24 +17,6 @@
             <el-radio label="1">Venta a empleado</el-radio>
             <el-radio label="0">Cortesías</el-radio>
           </el-radio-group>
-          <!-- <div class="flex items-center mb-4">
-            <div class="flex items-center mr-3">
-              <input  v-model="form.is_sell_to_employee" id="sell-option-1" type="radio" name="sell_type" value="1"
-                class="h-4 w-4 border-gray-400 focus:ring-2 focus:ring-primary text-primary bg-transparent"
-                aria-labelledby="sell-option-1" aria-describedby="sell-option-1" checked="" />
-              <label for="sell-option-1" class="text-sm font-medium text-gray-900 ml-2 block">
-                Venta a empleado
-              </label>
-            </div>
-            <div class="flex items-center">
-              <input v-model="form.is_sell_to_employee" id="sell-option-2" type="radio" name="sell_type" value="0"
-                class="h-4 w-4 border-gray-400 focus:ring-2 focus:ring-primary text-primary bg-transparent"
-                aria-labelledby="sell-option-2" aria-describedby="sell-option-2" />
-              <label for="sell-option-2" class="text-sm font-medium text-gray-900 ml-2 block">
-                Cortesías
-              </label>
-            </div>
-          </div> -->
         </div>
         <div>
           <ProductInput :products="products" show_price v-for="(item, index) in form.items" :key="item.id" :id="item.id"
@@ -55,7 +37,6 @@
             placeholder="Ej. Rocío me dió permiso de tomar una botella de agua" />
           <InputError :message="form.errors.notes" />
         </div>
-
         <PrimaryButton :disabled="form.processing">Registrar</PrimaryButton>
       </form>
     </div>

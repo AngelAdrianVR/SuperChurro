@@ -9,8 +9,7 @@
       </div>
     </template>
 
-    <div
-      class="
+    <div class="
         max-w-2xl
         md:mx-auto
         mt-5
@@ -20,44 +19,42 @@
         bg-transparent
         border border-gray3
         mx-4
-      "
-    >
+      ">
       <form @submit.prevent="update">
-
         <div class="mb-2 w-full">
           <InputLabel value="Nombre del producto *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.name" type="text" autocomplete="off" class="input"
-           placeholder="Escribe el nombre del producto" />
+            placeholder="Escribe el nombre del producto" />
           <InputError :message="$page.props?.errors.name" />
         </div>
 
         <div class="mb-2 w-full">
           <InputLabel value="Stock mínimo *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.low_stock" type="number" autocomplete="off" class="input"
-           placeholder="Agrega el stock mínimo" />
+            placeholder="Agrega el stock mínimo" />
           <InputError :message="$page.props?.errors.low_stock" />
         </div>
 
         <div class="mb-2 w-full">
           <InputLabel value="Stock de apertura *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.initial_stock" type="number" autocomplete="off" class="input"
-           placeholder="Agrega el stock inicial" />
+            placeholder="Agrega el stock inicial" />
           <InputError :message="$page.props?.errors.initial_stock" />
         </div>
 
         <div class="mb-2 w-full relative">
           <InputLabel value="Precio *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.price" type="number" autocomplete="off" class="input pl-7"
-           placeholder="Agrega el precio" />
-           <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]">$</p>
+            placeholder="Agrega el precio" />
+          <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]">$</p>
           <InputError :message="$page.props?.errors.price" />
         </div>
 
         <div class="mb-2 w-full relative">
           <InputLabel value="Precio a empleados *" class="ml-3 mb-1 text-sm" />
           <input v-model="form.employee_price" type="number" autocomplete="off" class="input pl-7"
-           placeholder="Agrega el precio" />
-           <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]">$</p>
+            placeholder="Agrega el precio" />
+          <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]">$</p>
           <InputError :message="$page.props?.errors.employee_price" />
         </div>
 
@@ -66,29 +63,24 @@
           <option disabled selected class="text-gray-500">
             -- Seleccione --
           </option>
-          <option
-            class="text-gray-500"
-            v-for="unit in units"
-            :key="unit.id"
-            :value="unit.id"
-          >
+          <option class="text-gray-500" v-for="unit in units" :key="unit.id" :value="unit.id">
             {{ unit.name }}
           </option>
         </select>
 
         <div class="mt-3 w-ull relative">
-            <InputLabel value="Código del producto (en caso de tener)" class="ml-3 mb-1" />
-            <input v-model="form.code" type="text" autocomplete="off" class="input pl-8"
-              placeholder="Escribe el código de producto" />
-            <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]"><i class="fa-solid fa-barcode"></i></p>
-            <InputError :message="form.errors.code" />
+          <InputLabel value="Código del producto (en caso de tener)" class="ml-3 mb-1" />
+          <input v-model="form.code" type="text" autocomplete="off" class="input pl-8"
+            placeholder="Escribe el código de producto" />
+          <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]"><i
+              class="fa-solid fa-barcode"></i></p>
+          <InputError :message="form.errors.code" />
         </div>
 
         <div class="mt-5">
-            <InputLabel value="Agregar foto del producto" class="ml-3 mb-1" />
-            <InputFilePreview :imageUrl="product.media[0]?.original_url" @imagen="saveImage" />
+          <InputLabel value="Agregar foto del producto" class="ml-3 mb-1" />
+          <InputFilePreview :imageUrl="product.media[0]?.original_url" @imagen="saveImage" @cleared="clearMedia()" />
         </div>
-
         <div class="flex justify-start mt-10">
           <PrimaryButton :disabled="form.processing">Guardar cambios</PrimaryButton>
         </div>
@@ -106,6 +98,7 @@ import Back from "@/Components/Back.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputFilePreview from '@/Components/MyComponents/InputFilePreview.vue';
 import { Link, useForm } from "@inertiajs/inertia-vue3";
+import { addOrUpdateItem } from "@/dbService.js";
 
 export default {
   data() {
@@ -116,7 +109,8 @@ export default {
       price: this.product.current_price?.price,
       employee_price: this.product.current_employee_price?.price,
       code: this.product.code,
-      media: this.product.media,
+      media: this.product.media[0],
+      media_cleared: false,
     });
     return {
       form,
@@ -137,18 +131,55 @@ export default {
     units: Array,
   },
   methods: {
+    clearMedia() {
+      this.form.media_cleared = true;
+      this.form.media = null;
+    },
     update() {
       if (this.form.media == null) {
-        this.form.put(route("products.update", this.product.id));
+        this.form.put(route("products.update", this.product.id), {
+          onSuccess: async () => {
+            // guardar nuevo producto a IndexedDB
+            // Obtener producto mas reciente agregado
+            const response = await axios.get(route('products.get-all-for-indexedDB'));
+            const product = response.data.products.find(item => item.id == this.product.id);
+            // actualizar a indexedDB
+            if (product) {
+              addOrUpdateItem('products', product);
+            }
+
+            this.$notify({
+              title: "Correcto",
+              message: 'Se ha editado el producto ' + this.product.name,
+              type: "success",
+            });
+          },
+        });
       } else {
         this.form.post(route("products.update-with-media", this.product.id), {
-          method: '_put'
+          method: '_put',
+          onSuccess: async () => {
+            // guardar nuevo producto a IndexedDB
+            // Obtener producto mas reciente agregado
+            const response = await axios.get(route('products.get-all-for-indexedDB'));
+            const product = response.data.products.find(item => item.id == this.product.id);
+            // actualizar a indexedDB
+            if (product) {
+              addOrUpdateItem('products', product);
+            }
+
+            this.$notify({
+              title: "Correcto",
+              message: 'Se ha editado el producto ' + this.product.name,
+              type: "success",
+            });
+          },
         });
       }
     },
     saveImage(image) {
-    this.form.media = image;
-  }
+      this.form.media = image;
+    }
   },
 };
 </script>

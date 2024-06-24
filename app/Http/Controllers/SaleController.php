@@ -15,10 +15,7 @@ class SaleController extends Controller
 {
     public function pointIndex()
     {
-        $products = Product::all(['id','name','code']);
-
-        //recupera la primera caja registradora de la tienda para mandar su info como current_cash
-        // $cash_register = CashRegister::where('store_id', auth()->user()->store_id)->first();
+        $products = Product::all(['id', 'name', 'code']);
 
         return inertia('Sales/Point', compact('products'));
     }
@@ -26,9 +23,7 @@ class SaleController extends Controller
 
     public function index()
     {
-        $products = Product::all();
-
-        return inertia('Sales/Index', compact('products'));
+        return inertia('Sales/Index');
     }
 
 
@@ -43,62 +38,7 @@ class SaleController extends Controller
 
     public function store(Request $request)
     {
-        $cart = Cart::first();
-        $is_after3PM = now()->isAfter(today()->setHour(15));
-
-        foreach ($request->saleProducts as $sale) {
-            $product_sold_today = Sale::whereDate('created_at', today())->where('product_id', $sale['product']['id'])->latest()->first(); 
-            // obtener el precio de producto depende del tipo de venta seleccionado (a publico, empleado o cortesia)
-            if ($request->saleType == 'publico') {
-                $price = $sale['product']['current_price']['price'];
-            } elseif ($request->saleType == 'empleado') {
-                $price = $sale['product']['current_employee_price']['price'];
-            } else {
-                $price = 0;
-            }
-
-            //si es despues de las 3pm (turno vespertino) se revisa si el registro creado ya es del turno vespertino
-            if ( $is_after3PM ) {
-                // si el producto se creó despues de las 3pm se incrementa la cantidad del mismo registro para evitar crear mas registros
-                if ( $product_sold_today?->created_at->isAfter(today()->setHour(15)) ) {
-                    $product_sold_today->increment('quantity', $sale['quantity']);
-                } else {
-                    // Si el registro de ese producto no se ha creado entonces lo crea
-                    Sale::create([
-                        'quantity' => $sale['quantity'],
-                        'product_id' => $sale['product']['id'],
-                        'price' => $price,
-                    ]);
-                }
-            } else {
-                if ( $product_sold_today ) {
-                    $product_sold_today->increment('quantity', $sale['quantity']);
-                } else {
-                    Sale::create([
-                        'quantity' => $sale['quantity'],
-                        'product_id' => $sale['product']['id'],
-                        'price' => $price,
-                    ]);
-                }
-            }
-            
-            // Verificar si el producto está presente en el carrito
-            if (isset($cart->products[$sale['product']['id']])) {
-                $cart_products = $cart->products;
-                // Actualizar la cantidad de productos que hay en el carrito con la venta realizada
-                // Guardar el carrito actualizado
-                $cart_products[$sale['product']['id']] -= $sale['quantity'];
-                $cart->update([
-                    'products' => $cart_products
-                ]);
-            }
-            
-        }
-
-        // request()->session()->flash('flash.banner', '¡Se ha creado el corte correctamente!');
-        // request()->session()->flash('flash.bannerStyle', 'success');
-        
-    return redirect()->route('carts.index');
+        $this->storeEachProductSold($request->saleProducts);
     }
 
     public function show($sale_date)
@@ -170,7 +110,6 @@ class SaleController extends Controller
         return response()->json(compact('month_sales', 'month_sales_to_employees', 'month_stored_cash'));
     }
 
-
     public function printSales()
     {
         // Obtener todas las ventas con sus productos relacionados donde la cantidad sea mayor que 0
@@ -197,5 +136,63 @@ class SaleController extends Controller
 
         // Devolver los totales por fecha
         return inertia('Sales/Print', compact('totalsByDate'));
+    }
+
+    public function syncLocalstorage(Request $request)
+    {
+        //recorre el arreglo de ventas registradas.
+        foreach ($request->sales as $sale) {
+            //recorre el arreglo de productos registrados en la venta.
+            $this->storeEachProductSold($sale['saleProducts'], $sale['created_at']);
+        }
+    }
+
+    private function storeEachProductSold($sold_products, $created_at = null)
+    {
+        $cart = Cart::first();
+        $is_after3PM = now()->isAfter(today()->setHour(15));
+
+        foreach ($sold_products as $sale) {
+            $product_sold_today = Sale::whereDate('created_at', today())->where('product_id', $sale['product']['id'])->latest()->first();
+            // obtener el precio de producto depende del tipo de venta seleccionado (a publico, empleado o cortesia)
+            $price = $sale['product']['public_price'];
+
+            //si es despues de las 3pm (turno vespertino) se revisa si el registro creado ya es del turno vespertino
+            if ($is_after3PM) {
+                // si el producto se creó despues de las 3pm se incrementa la cantidad del mismo registro para evitar crear mas registros
+                if ($product_sold_today?->created_at->isAfter(today()->setHour(15))) {
+                    $product_sold_today->increment('quantity', $sale['quantity']);
+                } else {
+                    // Si el registro de ese producto no se ha creado entonces lo crea
+                    Sale::create([
+                        'quantity' => $sale['quantity'],
+                        'product_id' => $sale['product']['id'],
+                        'price' => $price,
+                        'created_at' => $created_at ?? now(),
+                    ]);
+                }
+            } else {
+                if ($product_sold_today) {
+                    $product_sold_today->increment('quantity', $sale['quantity']);
+                } else {
+                    Sale::create([
+                        'quantity' => $sale['quantity'],
+                        'product_id' => $sale['product']['id'],
+                        'price' => $price,
+                    ]);
+                }
+            }
+
+            // Verificar si el producto está presente en el carrito
+            if (isset($cart->products[$sale['product']['id']])) {
+                $cart_products = $cart->products;
+                // Actualizar la cantidad de productos que hay en el carrito con la venta realizada
+                // Guardar el carrito actualizado
+                $cart_products[$sale['product']['id']] -= $sale['quantity'];
+                $cart->update([
+                    'products' => $cart_products
+                ]);
+            }
+        }
     }
 }

@@ -14,6 +14,7 @@
           <p @click.stop="showCalcsOptions = !showCalcsOptions" class="px-3 py-1 cursor-pointer hover:bg-gray4">Cálculos</p>
           <p v-if="showCalcsOptions" @click="$inertia.get(route('chrismas-bonus.show', user.id))" class="pr-3 pl-5 py-1 cursor-pointer hover:bg-gray4 text-xs">Aguinaldo</p>
           <p v-if="showCalcsOptions" @click="$inertia.get(route('settlement.show', user.id))" class="pr-3 pl-5 py-1 cursor-pointer hover:bg-gray4 text-xs">Finiquito</p>
+          <p v-if="showCalcsOptions" @click="$inertia.get(route('liquidation.show', user.id))" class="pr-3 pl-5 py-1 cursor-pointer hover:bg-gray4 text-xs">Liquidación</p>
           <p v-if="showCalcsOptions" @click="$inertia.get(route('vacation-bonus.show', user.id))" class="pr-3 pl-5 py-1 cursor-pointer hover:bg-gray4 text-xs">Prima vacacional</p>
           <p v-if="user.is_active" @click.stop="$inertia.put(route('user.disable', user.id))" class="px-3 py-1 cursor-pointer hover:bg-gray4">Dar de baja</p>
           <p v-else @click="$inertia.put(route('user.enable', user.id))" class="px-3 py-1 cursor-pointer hover:bg-gray4">Dar de alta</p>

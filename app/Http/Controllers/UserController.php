@@ -202,6 +202,42 @@ class UserController extends Controller
         compact('user', 'chrismas_bonus', 'month_salary', 'proporcional_vacations', 'vacation_bonus', 'settlement', 'vacations'));
     }
 
+    public function showUserLiquidation(User $user)
+    {
+        $current_year = now()->year;
+        $initial_date = Carbon::createMidnightDate($current_year, 1, 1);
+        $worked_days = $initial_date->diffInDays(now()->addDays());
+        $work_days_per_week = count($user->employee_properties['work_days']);
+        $base_salary = $user->employee_properties['base_salary'];
+        $month_salary = $work_days_per_week * $base_salary * 4;
+        $daily_salary = $month_salary / 30;
+        
+        // Aguinaldo proporcional
+        $bonus_days = ($worked_days * 15) / 365;
+        $chrismas_bonus = $bonus_days * $daily_salary;
+        
+        // Vacaciones proporcionales y prima vacacional
+        $vacations =  $user->employee_properties['vacations'];
+        $proporcional_vacations = $vacations * $base_salary;
+        $vacation_bonus =  $vacations * $base_salary * 0.25;
+        
+        // Indemnización de tres meses
+        $indemnization = $month_salary * 3;
+    
+        // // Prima de antigüedad (solo si ha trabajado más de 15 años)
+        // $years_worked = $user->employee_properties['years_worked'];
+        // $seniority_bonus = 0;
+        // if ($years_worked > 15) {
+        //     $seniority_bonus = min($years_worked, 12) * $daily_salary * 12;
+        // }
+    
+        // Liquidación total
+        $settlement = round($proporcional_vacations + $vacation_bonus + $chrismas_bonus + $indemnization);
+    
+        return inertia('User/Calculations/LiquidationTemplate', 
+            compact('user', 'chrismas_bonus', 'month_salary', 'proporcional_vacations', 'vacation_bonus', 'indemnization', 'settlement', 'vacations'));
+    }
+
     public function showUserVacationBonus(User $user)
     {
 

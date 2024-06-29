@@ -131,6 +131,7 @@ Route::post('consumables/update-with-media/{consumable}', [ConsumableController:
 Route::resource('users', UserController::class)->middleware(['auth', 'admin']);
 Route::get('/admin/christmas-bonus/show/{user}', [UserController::class, 'showUsersCrhismasBonus'])->middleware(['auth', 'admin'])->name('chrismas-bonus.show');
 Route::get('/admin/settlement/show/{user}', [UserController::class, 'showUserSettlement'])->middleware(['auth', 'admin'])->name('settlement.show');
+Route::get('/admin/liquidation/show/{user}', [UserController::class, 'showUserLiquidation'])->middleware(['auth', 'admin'])->name('liquidation.show');
 Route::put('/disable/{user}', [UserController::class, 'disable'])->middleware('auth')->name('user.disable');
 Route::put('/enable/{user}', [UserController::class, 'enable'])->middleware('auth')->name('user.enable');
 Route::put('/reset-pass/{user}', [UserController::class, 'resetPass'])->middleware('auth')->name('user.reset-pass');

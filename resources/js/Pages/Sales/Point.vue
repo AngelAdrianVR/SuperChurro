@@ -63,178 +63,182 @@
         Por favor, evita recargar la página y espera a que los datos se carguen a la nube.
       </p>
     </div>
-    <div class="px-1 lg:px-6 py-7">
-      <!-- header botones -->
-      <div class="md:flex justify-between items-center mx-3">
-        <h1 class="font-bold text-lg">Registrar venta</h1>
-        <!-- Dropdown -->
-        <div class="inline-block border border-primary rounded-full px-4 pt-[3px] mt-3 md:mt-0">
-          <el-col :span="3">
-            <el-dropdown trigger="click">
-              <p class="text-sm text-primary flex items-center">
-                <span>Acciones</span>
-                <i class="fa-solid fa-angle-down text-[10px] ml-2 mt-px"></i>
-              </p>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item @click="$inertia.visit(route('product-request.create'))">
-                    Solicitar mercancía
-                  </el-dropdown-item>
-                  <el-dropdown-item @click="$inertia.visit(route('consumable-request.create'))">
-                    Solicitar consumible
-                  </el-dropdown-item>
-                  <el-dropdown-item @click="$inertia.visit(route('sales-to-employees.create'))">
-                    Ventas a empleado / Cortesías</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </el-col>
-        </div>
-      </div>
-      <!-- cuerpo de la pagina -->
-      <div class="md:flex space-x-3 mt-5">
-        <!-- scaner de código  -->
-        <section class="md:w-[70%]">
-          <!-- Pestañas -->
-          <div class="lg:mx-7">
-            <el-tabs v-model="editableTabsValue" type="card" class="demo-tabs">
-              <el-tab-pane v-for="tab in editableTabs" :key="tab.name" :label="tab.title" :name="tab.name">
-                <el-popconfirm v-if="tab.saleProducts.length" confirm-button-text="Si" cancel-button-text="No"
-                  icon-color="#C30303" title="Se eliminará todo el registro de productos ¿Deseas continuar?"
-                  @confirm="clearTab()">
-                  <template #reference>
-                    <ThirthButton class="!text-[#F80505] !border-[#F80505] !py-1 !px-2 mb-2"><i
-                        class="fa-regular fa-trash-can mr-2"></i> Limpiar registro</ThirthButton>
-                  </template>
-                </el-popconfirm>
-                <SaleTable @delete-product="deleteProduct" :saleProducts="tab.saleProducts" :saleType="saleType" />
-              </el-tab-pane>
-            </el-tabs>
-          </div>
-        </section>
-        <!-- seccion de desgloce de montos -->
-        <section class="md:w-[30%]">
-          <!-- buscador de productos -->
-          <div class="relative">
-            <input v-model="searchQuery" @focus="searchFocus = true" @blur="handleBlur" @input="searchProducts"
-              ref="searchInput" class="input w-full pl-9" placeholder="Buscar código o nombre de producto"
-              type="search">
-            <i class="fa-solid fa-magnifying-glass text-xs text-gray99 absolute top-[10px] left-4"></i>
-            <!-- Resultados de la búsqueda -->
-            <div v-if="searchFocus && searchQuery"
-              class="absolute mt-1 bg-white border border-gray-300 rounded shadow-lg w-full z-50 max-h-48 overflow-auto">
-              <ul v-if="productsFound?.length > 0 && !loading">
-                <li @click="selectProductFromList(product)" v-for="(product, index) in productsFound" :key="index"
-                  class="hover:bg-gray-200 cursor-pointer text-xs px-3 py-2 flex space-x-2">
-                  <span class="w-4/5">{{ product.name }}</span>
-                  <span v-if="product.code" class="w-1/5 text-[10px] text-gray99">
-                    {{ product.code }}
-                  </span>
-                </li>
-              </ul>
-              <p v-else-if="!loading" class="text-center text-sm text-gray-600 px-5 py-2">
-                No se encontraron coincidencias
-              </p>
-              <!-- estado de carga -->
-              <div v-if="loading" class="flex justify-center items-center py-10">
-                <i class="fa-solid fa-square fa-spin text-4xl text-primary"></i>
-              </div>
-            </div>
-          </div>
-          <!-- Detalle de producto encontrado -->
-          <div class="border border-grayD9 rounded-lg p-4 mt-2 text-xs lg:text-base">
-            <div class="relative" v-if="productFoundSelected">
-              <i @click="productFoundSelected = null"
-                class="fa-solid fa-xmark cursor-pointer size-5 rounded-full flex items-center justify-center absolute right-3"></i>
-              <figure class="h-28">
-                <img v-if="productFoundSelected.imageUrl" :src="productFoundSelected.imageUrl"
-                  :alt="productFoundSelected.name" class="object-contain h-28 mx-auto">
-                <p v-else class="text-center text-xs text-gray99 pt-10 px-8">Este producto no tiene imagen registrada
+    <div class="px-1 lg:px-6 py-2 h-[85vh]">
+      <section class="h-[60%] overflow-auto">
+        <!-- header botones -->
+        <div class="md:flex justify-between items-center mx-3">
+          <h1 class="font-bold text-base">Registrar venta</h1>
+          <!-- Dropdown -->
+          <div class="inline-block border border-primary rounded-full px-2 pt-px mt-1 md:mt-0">
+            <el-col :span="3">
+              <el-dropdown trigger="click">
+                <p class="text-sm text-primary flex items-center">
+                  <span>Acciones</span>
+                  <i class="fa-solid fa-angle-down text-[10px] ml-2 mt-px"></i>
                 </p>
-              </figure>
-              <div class="flex justify-between items-center mt-2 mb-4">
-                <p class="font-bold">{{ productFoundSelected.name }}</p>
-                <p class="text-[#5FCB1F]">${{ productFoundSelected.public_price }}</p>
-              </div>
-              <div class="flex justify-between items-center">
-                <p class="text-gray99">Cantidad</p>
-                <el-input-number v-model="quantity" :min="0" :precision="2" />
-              </div>
-              <div class="text-center mt-2">
-                <PrimaryButton @click="addSaleProduct(productFoundSelected); productFoundSelected = null"
-                  class="!rounded-full !px-24" :disabled="quantity == 0">
-                  Agregar
-                </PrimaryButton>
-              </div>
-            </div>
-            <p v-else class="text-center text-[#999999] text-sm">
-              Busca el producto
-              <i class="fa-regular fa-hand-point-up ml-3"></i>
-            </p>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="$inertia.visit(route('product-request.create'))">
+                      Solicitar mercancía
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="$inertia.visit(route('consumable-request.create'))">
+                      Solicitar consumible
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="$inertia.visit(route('sales-to-employees.create'))">
+                      Ventas a empleado / Cortesías</el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </el-col>
           </div>
-
-          <!-- Total por cobrar -->
-          <div v-if="editableTabs[editableTabsValue - 1]?.saleProducts?.length"
-            class="border border-grayD9 rounded-lg p-4 mt-2 text-xs lg:text-base">
-            <div v-if="!editableTabs[this.editableTabsValue - 1]?.paying">
-              <div class="flex items-center justify-between text-lg mx-5">
-                <p class="font-bold">Total</p>
-                <p v-if="(calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) < 0"
-                  class="text-red-600 text-xs">El descuento es más grande que el total</p>
-                <p v-else class="text-gray-99">$ <strong class="ml-3">{{ (calculateTotal() -
-                  editableTabs[this.editableTabsValue
-                    - 1].discount)?.toLocaleString('en-US', {
-                      minimumFractionDigits: 2
-                    }) }}</strong></p>
-              </div>
-              <div class="text-center mt-2">
-                <PrimaryButton @click="receive()"
-                  :disabled="editableTabs[this.editableTabsValue - 1]?.saleProducts?.length == 0 || (calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) < 0"
-                  class="!rounded-full !px-16 !bg-[#5FCB1F] disabled:!bg-[#999999]">Cobrar</PrimaryButton>
+        </div>
+        <!-- cuerpo de la pagina -->
+        <div class="md:flex space-x-3 mt-2">
+          <!-- scaner de código  -->
+          <section class="md:w-[70%]">
+            <!-- Pestañas -->
+            <div class="lg:mx-7">
+              <el-tabs v-model="editableTabsValue" type="card" class="demo-tabs">
+                <el-tab-pane v-for="tab in editableTabs" :key="tab.name" :label="tab.title" :name="tab.name">
+                  <el-popconfirm v-if="tab.saleProducts.length" confirm-button-text="Si" cancel-button-text="No"
+                    icon-color="#C30303" title="Se eliminará todo el registro de productos ¿Deseas continuar?"
+                    @confirm="clearTab()">
+                    <template #reference>
+                      <ThirthButton class="!text-[#F80505] !border-[#F80505] !py-1 !px-2 mb-1 !text-[10px]"><i
+                          class="fa-regular fa-trash-can mr-2"></i> Limpiar registro</ThirthButton>
+                    </template>
+                  </el-popconfirm>
+                  <SaleTable @delete-product="deleteProduct" :saleProducts="tab.saleProducts" :saleType="saleType" />
+                </el-tab-pane>
+              </el-tabs>
+            </div>
+          </section>
+          <!-- seccion de desgloce de montos -->
+          <section class="md:w-[30%]">
+            <!-- buscador de productos -->
+            <div class="relative">
+              <input v-model="searchQuery" @focus="searchFocus = true" @blur="handleBlur" @input="searchProducts"
+                ref="searchInput" class="input w-full pl-9" placeholder="Buscar código o nombre de producto"
+                type="search">
+              <i class="fa-solid fa-magnifying-glass text-xs text-gray99 absolute top-[10px] left-4"></i>
+              <!-- Resultados de la búsqueda -->
+              <div v-if="searchFocus && searchQuery"
+                class="absolute mt-1 bg-white border border-gray-300 rounded shadow-lg w-full z-50 max-h-48 overflow-auto">
+                <ul v-if="productsFound?.length > 0 && !loading">
+                  <li @click="selectProductFromList(product)" v-for="(product, index) in productsFound" :key="index"
+                    class="hover:bg-gray-200 cursor-pointer text-xs px-3 py-2 flex space-x-2">
+                    <span class="w-4/5">{{ product.name }}</span>
+                    <span v-if="product.code" class="w-1/5 text-[10px] text-gray99">
+                      {{ product.code }}
+                    </span>
+                  </li>
+                </ul>
+                <p v-else-if="!loading" class="text-center text-sm text-gray-600 px-5 py-2">
+                  No se encontraron coincidencias
+                </p>
+                <!-- estado de carga -->
+                <div v-if="loading" class="flex justify-center items-center py-10">
+                  <i class="fa-solid fa-square fa-spin text-4xl text-primary"></i>
+                </div>
               </div>
             </div>
-
-            <!-- cobrando -->
-            <div v-else>
-              <p class="text-gray-99 text-center mb-2 text-lg">Total $ <strong>{{ (calculateTotal() -
-                editableTabs[this.editableTabsValue - 1].discount)?.toLocaleString('en-US', {
-                  minimumFractionDigits: 2
-                }) }}</strong>
+            <!-- Detalle de producto encontrado -->
+            <div class="border border-grayD9 rounded-lg p-4 mt-2 text-xs lg:text-base">
+              <div class="relative" v-if="productFoundSelected">
+                <i @click="productFoundSelected = null"
+                  class="fa-solid fa-xmark cursor-pointer size-5 rounded-full flex items-center justify-center absolute right-3"></i>
+                <figure class="h-28">
+                  <img v-if="productFoundSelected.imageUrl" :src="productFoundSelected.imageUrl"
+                    :alt="productFoundSelected.name" class="object-contain h-28 mx-auto">
+                  <p v-else class="text-center text-xs text-gray99 pt-10 px-8">Este producto no tiene imagen registrada
+                  </p>
+                </figure>
+                <div class="flex justify-between items-center mt-2 mb-4">
+                  <p class="font-bold">{{ productFoundSelected.name }}</p>
+                  <p class="text-[#5FCB1F]">${{ productFoundSelected.public_price }}</p>
+                </div>
+                <div class="flex justify-between items-center">
+                  <p class="text-gray99">Cantidad</p>
+                  <el-input-number v-model="quantity" :min="0" :precision="2" />
+                </div>
+                <div class="text-center mt-2">
+                  <PrimaryButton @click="addSaleProduct(productFoundSelected); productFoundSelected = null"
+                    class="!rounded-full !px-24" :disabled="quantity == 0">
+                    Agregar
+                  </PrimaryButton>
+                </div>
+              </div>
+              <p v-else class="text-center text-[#999999] text-sm">
+                Busca el producto
+                <i class="fa-regular fa-hand-point-up ml-3"></i>
               </p>
-              <div class="flex items-center justify-between mx-5 space-x-10">
-                <p>Entregado</p>
-                <input v-model="editableTabs[this.editableTabsValue - 1].moneyReceived" @keydown.enter="store"
-                  type="number" class="input !rounded-md w-1/3" ref="receivedInput" placeholder="$0.00">
-              </div>
-              <div class="flex items-center justify-between mx-5 my-1 relative">
-                <p>Cambio</p>
-                <p
-                  v-if="(calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) <= editableTabs[this.editableTabsValue - 1]?.moneyReceived">
-                  ${{
-                    (editableTabs[this.editableTabsValue - 1]?.moneyReceived - (calculateTotal() -
-                      editableTabs[this.editableTabsValue - 1].discount)).toLocaleString('en-US', {
+            </div>
+
+            <!-- Total por cobrar -->
+            <div v-if="editableTabs[editableTabsValue - 1]?.saleProducts?.length"
+              class="border border-grayD9 rounded-lg p-4 mt-2 text-xs lg:text-base">
+              <div v-if="!editableTabs[this.editableTabsValue - 1]?.paying">
+                <div class="flex items-center justify-between text-lg mx-5">
+                  <p class="font-bold">Total</p>
+                  <p v-if="(calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) < 0"
+                    class="text-red-600 text-xs">El descuento es más grande que el total</p>
+                  <p v-else class="text-gray-99">$ <strong class="ml-3">{{ (calculateTotal() -
+                    editableTabs[this.editableTabsValue
+                      - 1].discount)?.toLocaleString('en-US', {
                         minimumFractionDigits: 2
-                      }) }}</p>
+                      }) }}</strong></p>
+                </div>
+                <div class="text-center mt-2">
+                  <PrimaryButton @click="receive()"
+                    :disabled="editableTabs[this.editableTabsValue - 1]?.saleProducts?.length == 0 || (calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) < 0"
+                    class="!rounded-full !px-16 !bg-[#5FCB1F] disabled:!bg-[#999999]">Cobrar</PrimaryButton>
+                </div>
               </div>
-              <p v-if="((calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) > editableTabs[this.editableTabsValue - 1]?.moneyReceived) && editableTabs[this.editableTabsValue - 1].moneyReceived"
-                class="text-xs text-primary text-center mb-3">La cantidad es insuficiente. Por favor, ingrese una
-                cantidad igual o mayor al total de compra.</p>
-              <div class="flex space-x-2 justify-end">
-                <CancelButton @click="editableTabs[this.editableTabsValue - 1].paying = false">Cancelar</CancelButton>
-                <PrimaryButton @click="store" class="!rounded-full">Aceptar</PrimaryButton>
+
+              <!-- cobrando -->
+              <div v-else>
+                <p class="text-gray-99 text-center mb-2 text-lg">Total $ <strong>{{ (calculateTotal() -
+                  editableTabs[this.editableTabsValue - 1].discount)?.toLocaleString('en-US', {
+                    minimumFractionDigits: 2
+                  }) }}</strong>
+                </p>
+                <div class="flex items-center justify-between mx-5 space-x-10">
+                  <p>Entregado</p>
+                  <input v-model="editableTabs[this.editableTabsValue - 1].moneyReceived" @keydown.enter="store"
+                    type="number" class="input !rounded-md w-1/3" ref="receivedInput" placeholder="$0.00">
+                </div>
+                <div class="flex items-center justify-between mx-5 my-1 relative">
+                  <p>Cambio</p>
+                  <p
+                    v-if="(calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) <= editableTabs[this.editableTabsValue - 1]?.moneyReceived">
+                    ${{
+                      (editableTabs[this.editableTabsValue - 1]?.moneyReceived - (calculateTotal() -
+                        editableTabs[this.editableTabsValue - 1].discount)).toLocaleString('en-US', {
+                          minimumFractionDigits: 2
+                        }) }}</p>
+                </div>
+                <p v-if="((calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) > editableTabs[this.editableTabsValue - 1]?.moneyReceived) && editableTabs[this.editableTabsValue - 1].moneyReceived"
+                  class="text-xs text-primary text-center mb-3">La cantidad es insuficiente. Por favor, ingrese una
+                  cantidad igual o mayor al total de compra.</p>
+                <div class="flex space-x-2 justify-end">
+                  <CancelButton @click="editableTabs[this.editableTabsValue - 1].paying = false">Cancelar</CancelButton>
+                  <PrimaryButton @click="store" class="!rounded-full">Aceptar</PrimaryButton>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
-      </div>
+          </section>
+        </div>
+      </section>
       <!-- lista de productos -->
-      <section class="border-t-2">
+      <section class="border-t-2 h-[40%]">
         <h1 class="mt-2 ml-3 text-sm">Selecciona los productos</h1>
-        <div class="border mt-2 px-3 py-1 rounded-[10px] border-[#D9D9D9] grid grid-cols-7 gap-2 overflow-auto h-[180px]">
-          <button type="button" v-for="(item, index) in allProducts" :key="index" class="border border-[#D9D9D9] px-3 py-2">
+        <div
+          class="border mt-2 px-3 py-1 rounded-[10px] border-[#D9D9D9] grid grid-cols-7 gap-2 overflow-auto h-[180px]">
+          <button @click="addSaleProduct(item)" type="button" v-for="(item, index) in allProducts" :key="index"
+            class="border border-[#D9D9D9] px-3 py-2">
             <h2 class="text-xs text-center">{{ item.name }}</h2>
             <figure class="flex items-center justify-center h-14">
-              <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.name" class="object-contain h-14 mx-auto">
+              <img v-if="item.image_url" :src="item.image_url" :alt="item.name" class="object-contain h-14 mx-auto">
               <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-10 text-gray-300">
                 <path stroke-linecap="round" stroke-linejoin="round"

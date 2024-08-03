@@ -8,13 +8,13 @@
       <div class="font-bold pb-3 text-left w-[15%]">Importe</div>
       <div class="font-bold pb-3 text-left w-[5%]"></div>
     </div>
-    <div class="overflow-auto h-[500px]">
+    <div class="overflow-auto h-[180px] px-2">
       <div v-for="(sale, index) in saleProducts" :key="index"
         class="mb-2 flex items-center space-x-4 border rounded-full relative">
-        <div class="grid grid-cols-2 items-center h-14 w-[45%]">
-          <img class="mx-auto h-14 object-contain" v-if="sale.product.imageUrl" :src="sale.product.imageUrl"
+        <div class="grid grid-cols-2 items-center h-10 w-[45%]">
+          <img class="mx-auto h-10 object-contain" v-if="sale.product.imageUrl" :src="sale.product.imageUrl"
             :alt="sale.product.name">
-          <p class="font-bold">{{ sale.product.name }}</p>
+          <p class="font-bold ml-2">{{ sale.product.name }}</p>
         </div>
         <div :class="editMode !== null ? 'w-[35%]' : 'w-[15%]'" class="text-base flex items-center">
           <template v-if="editMode !== index">
@@ -65,7 +65,7 @@
   </div>
 
   <!-- vista movil -->
-  <div :class="saleProducts?.length ? 'h-[230px]' : 'h-[40px]'" class="overflow-y-auto md:hidden text-[11px]">
+  <div class="overflow-y-auto md:hidden text-[11px] h-[180px]">
     <div v-for="(sale, index) in saleProducts" :key="index"
       class="mb-2 grid grid-cols-3 gap-2 border rounded-md items-center relative">
       <figure>
@@ -121,12 +121,18 @@
       </div>
     </div>
   </div>
-  <div class="text-center text-gray-500 text-sm mt-14" v-if="saleProducts?.length == 0">
+  <div class="text-center text-gray-500 text-sm h-[180px]" v-if="saleProducts?.length == 0">
+    <p class="flex items-center justify-center text-gray99 text-sm">
+      Selecciona un producto para comenzar la venta
+      <i class="fa-regular fa-hand-point-down ml-3"></i>
+    </p>
+  </div>
+  <!-- <div class="text-center text-gray-500 text-sm h-[180px]" v-if="saleProducts?.length == 0">
     <p class="flex items-center justify-center text-gray99 text-sm">
       Escanea un producto o buscalo por nombre para comenzar la venta
       <i class="fa-regular fa-hand-point-up ml-3"></i>
     </p>
-  </div>
+  </div> -->
 </template>
 
 <script>

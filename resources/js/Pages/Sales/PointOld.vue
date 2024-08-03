@@ -92,9 +92,14 @@
         </div>
       </div>
       <!-- cuerpo de la pagina -->
-      <div class="md:flex space-x-3 mt-5">
+      <div class="md:flex space-x-3 my-5">
         <!-- scaner de código  -->
         <section class="md:w-[70%]">
+          <div class="relative lg:w-1/2 mx-auto mb-4">
+            <input v-model="scannerQuery" :disabled="scanning" @keydown.enter="getProductByCode" ref="scanInput"
+              class="input w-full pl-9" placeholder="Escanea o teclea el código del producto" type="text">
+            <i class="fa-solid fa-barcode text-xs text-gray99 absolute top-[10px] left-4"></i>
+          </div>
           <!-- Pestañas -->
           <div class="lg:mx-7">
             <el-tabs v-model="editableTabsValue" type="card" class="demo-tabs">
@@ -107,11 +112,18 @@
                         class="fa-regular fa-trash-can mr-2"></i> Limpiar registro</ThirthButton>
                   </template>
                 </el-popconfirm>
+                <!-- <el-radio-group v-if="tab.saleProducts.length" v-model="saleType"
+                  class="!flex justify-center mb-4 mt-1 mx-2 lg:mx-14">
+                  <el-radio label="publico">Venta al público</el-radio>
+                  <el-radio label="empleado">Venta a empleado</el-radio>
+                  <el-radio label="cortesia">Cortesias</el-radio>
+                </el-radio-group> -->
                 <SaleTable @delete-product="deleteProduct" :saleProducts="tab.saleProducts" :saleType="saleType" />
               </el-tab-pane>
             </el-tabs>
           </div>
         </section>
+
         <!-- seccion de desgloce de montos -->
         <section class="md:w-[30%]">
           <!-- buscador de productos -->
@@ -142,13 +154,13 @@
             </div>
           </div>
           <!-- Detalle de producto encontrado -->
-          <div class="border border-grayD9 rounded-lg p-4 mt-2 text-xs lg:text-base">
+          <div class="border border-grayD9 rounded-lg p-4 mt-5 text-xs lg:text-base">
             <div class="relative" v-if="productFoundSelected">
               <i @click="productFoundSelected = null"
                 class="fa-solid fa-xmark cursor-pointer size-5 rounded-full flex items-center justify-center absolute right-3"></i>
-              <figure class="h-28">
+              <figure class="h-36">
                 <img v-if="productFoundSelected.imageUrl" :src="productFoundSelected.imageUrl"
-                  :alt="productFoundSelected.name" class="object-contain h-28 mx-auto">
+                  :alt="productFoundSelected.name" class="object-contain h-36 mx-auto">
                 <p v-else class="text-center text-xs text-gray99 pt-10 px-8">Este producto no tiene imagen registrada
                 </p>
               </figure>
@@ -160,7 +172,7 @@
                 <p class="text-gray99">Cantidad</p>
                 <el-input-number v-model="quantity" :min="0" :precision="2" />
               </div>
-              <div class="text-center mt-2">
+              <div class="text-center mt-7">
                 <PrimaryButton @click="addSaleProduct(productFoundSelected); productFoundSelected = null"
                   class="!rounded-full !px-24" :disabled="quantity == 0">
                   Agregar
@@ -175,7 +187,7 @@
 
           <!-- Total por cobrar -->
           <div v-if="editableTabs[editableTabsValue - 1]?.saleProducts?.length"
-            class="border border-grayD9 rounded-lg p-4 mt-2 text-xs lg:text-base">
+            class="border border-grayD9 rounded-lg p-4 mt-5 text-xs lg:text-base">
             <div v-if="!editableTabs[this.editableTabsValue - 1]?.paying">
               <div class="flex items-center justify-between text-lg mx-5">
                 <p class="font-bold">Total</p>
@@ -187,7 +199,7 @@
                       minimumFractionDigits: 2
                     }) }}</strong></p>
               </div>
-              <div class="text-center mt-2">
+              <div class="text-center mt-7">
                 <PrimaryButton @click="receive()"
                   :disabled="editableTabs[this.editableTabsValue - 1]?.saleProducts?.length == 0 || (calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) < 0"
                   class="!rounded-full !px-16 !bg-[#5FCB1F] disabled:!bg-[#999999]">Cobrar</PrimaryButton>
@@ -196,7 +208,7 @@
 
             <!-- cobrando -->
             <div v-else>
-              <p class="text-gray-99 text-center mb-2 text-lg">Total $ <strong>{{ (calculateTotal() -
+              <p class="text-gray-99 text-center mb-3 text-lg">Total $ <strong>{{ (calculateTotal() -
                 editableTabs[this.editableTabsValue - 1].discount)?.toLocaleString('en-US', {
                   minimumFractionDigits: 2
                 }) }}</strong>
@@ -206,7 +218,7 @@
                 <input v-model="editableTabs[this.editableTabsValue - 1].moneyReceived" @keydown.enter="store"
                   type="number" class="input !rounded-md w-1/3" ref="receivedInput" placeholder="$0.00">
               </div>
-              <div class="flex items-center justify-between mx-5 my-1 relative">
+              <div class="flex items-center justify-between mx-5 my-2 relative">
                 <p>Cambio</p>
                 <p
                   v-if="(calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) <= editableTabs[this.editableTabsValue - 1]?.moneyReceived">
@@ -218,7 +230,8 @@
               </div>
               <p v-if="((calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) > editableTabs[this.editableTabsValue - 1]?.moneyReceived) && editableTabs[this.editableTabsValue - 1].moneyReceived"
                 class="text-xs text-primary text-center mb-3">La cantidad es insuficiente. Por favor, ingrese una
-                cantidad igual o mayor al total de compra.</p>
+                cantidad
+                igual o mayor al total de compra.</p>
               <div class="flex space-x-2 justify-end">
                 <CancelButton @click="editableTabs[this.editableTabsValue - 1].paying = false">Cancelar</CancelButton>
                 <PrimaryButton @click="store" class="!rounded-full">Aceptar</PrimaryButton>
@@ -227,23 +240,6 @@
           </div>
         </section>
       </div>
-      <!-- lista de productos -->
-      <section class="border-t-2">
-        <h1 class="mt-2 ml-3 text-sm">Selecciona los productos</h1>
-        <div class="border mt-2 px-3 py-1 rounded-[10px] border-[#D9D9D9] grid grid-cols-7 gap-2 overflow-auto h-[180px]">
-          <button type="button" v-for="(item, index) in allProducts" :key="index" class="border border-[#D9D9D9] px-3 py-2">
-            <h2 class="text-xs text-center">{{ item.name }}</h2>
-            <figure class="flex items-center justify-center h-14">
-              <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.name" class="object-contain h-14 mx-auto">
-              <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-10 text-gray-300">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-              </svg>
-            </figure>
-          </button>
-        </div>
-      </section>
     </div>
 
     <DialogModal :show="showCourtesyModal" @close="showCourtesyModal = false">
@@ -285,7 +281,7 @@ import InputError from "@/Components/InputError.vue";
 import Modal from "@/Components/Modal.vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 import axios from 'axios';
-import { getItemByPartialAttributes, getItemByAttributes, getAll } from '@/dbService.js';
+import { getItemByPartialAttributes, getItemByAttributes } from '@/dbService.js';
 import { format } from 'date-fns';
 
 export default {
@@ -307,7 +303,6 @@ export default {
       saleType: 'publico',
       showCourtesyModal: false,
       showCashRegisterMoney: false,
-      allProducts: [],
       // cargas
       loading: false, //cargando la busqueda de productos
       storingCourtesies: false,
@@ -389,6 +384,7 @@ export default {
       this.scannerQuery = null;
       this.quantity = 1;
       this.scanning = false;
+      this.inputFocus();
 
       // indicar al navegador mediante el local storage que hay proceso pendiente
       const pendentProcess = JSON.parse(localStorage.getItem('pendentProcess'));
@@ -421,7 +417,7 @@ export default {
       this.editableTabs[this.editableTabsValue - 1].paying = false;
       this.editableTabs[this.editableTabsValue - 1].discount = 0;
       this.editableTabs[this.editableTabsValue - 1].moneyReceived = null;
-      // this.inputFocus();
+      this.inputFocus();
     },
     calculateTotal() {
       // Suma de los productos del precio y la cantidad para cada elemento en saleProducts
@@ -430,6 +426,11 @@ export default {
       }, 0);
 
       return total;
+    },
+    inputFocus() {
+      this.$nextTick(() => {
+        this.$refs.scanInput.focus();
+      });
     },
     handleBlur() {
       // Introducir un retraso para dar tiempo al evento click de ejecutarse antes del blur
@@ -585,19 +586,30 @@ export default {
           this.storingCourtesies = false;
         }
       });
+
+      // try {
+      //   const response = await axios.post(route('sales-to-employees.store-special-courtesies'));
+
+      //   if (response.status === 200) {
+
+      //   }
+      // } catch (error) {
+      //   console.log(error);
+      // } finally {
+      //   this.storingCourtesies = false;
+      // }
     },
   },
-  async mounted() {
+  mounted() {
     // enfocar input de scaner al abrir la vista
+    this.$refs.scanInput.focus();
+
     // resetear variable de local storage a false
     localStorage.setItem('pendentProcess', false);
 
     // Agregar escuchadores de eventos online/offline
     window.addEventListener('online', this.handleOnline);
     window.addEventListener('offline', this.handleOffline);
-
-    // obtener todos los productos de inexedDB
-    this.allProducts = await getAll('products');
   },
   beforeUnmount() {
     // Eliminar los escuchadores de eventos al desmontar el componente

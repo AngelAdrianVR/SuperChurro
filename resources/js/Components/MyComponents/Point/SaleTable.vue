@@ -12,7 +12,7 @@
       <div v-for="(sale, index) in saleProducts" :key="index"
         class="mb-2 flex items-center space-x-4 border rounded-full relative">
         <div class="grid grid-cols-2 items-center h-10 w-[45%]">
-          <img class="mx-auto h-10 object-contain" v-if="sale.product.imageUrl" :src="sale.product.imageUrl"
+          <img class="mx-auto h-10 object-contain" v-if="sale.product.image_url" :src="sale.product.image_url"
             :alt="sale.product.name">
           <p class="font-bold ml-2">{{ sale.product.name }}</p>
         </div>
@@ -69,7 +69,7 @@
     <div v-for="(sale, index) in saleProducts" :key="index"
       class="mb-2 grid grid-cols-3 gap-2 border rounded-md items-center relative">
       <figure>
-        <img class="mx-auto h-14 object-contain" v-if="sale.product.imageUrl" :src="sale.product.imageUrl"
+        <img class="mx-auto h-14 object-contain" v-if="sale.product.image_url" :src="sale.product.image_url"
           :alt="sale.product.name">
       </figure>
       <div class="col-span-2 flex flex-col space-y-1 justify-center py-1">

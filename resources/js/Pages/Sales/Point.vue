@@ -93,8 +93,7 @@
           </div>
         </div>
         <!-- cuerpo de la pagina -->
-        <div class="md:flex space-x-3 mt-2">
-          <!-- scaner de código  -->
+        <div class="md:flex md:space-x-3 mt-2">
           <section class="md:w-[70%]">
             <!-- Pestañas -->
             <div class="lg:mx-7">
@@ -233,7 +232,7 @@
       <section class="border-t-2 h-[40%]">
         <h1 class="mt-2 ml-3 text-sm">Selecciona los productos</h1>
         <div
-          class="border mt-2 px-3 py-1 rounded-[10px] border-[#D9D9D9] grid grid-cols-7 gap-2 overflow-auto h-[92%]">
+          class="border mt-2 px-3 py-1 rounded-[10px] border-[#D9D9D9] grid grid-cols-5 md:grid-cols-7 gap-2 overflow-auto h-[92%]">
           <button @click="addSaleProduct(item)" type="button" v-for="(item, index) in allProducts" :key="index"
             class="border border-[#D9D9D9] px-3 py-2 active:bg-gray-300">
             <h2 class="text-xs text-center">{{ item.name }}</h2>

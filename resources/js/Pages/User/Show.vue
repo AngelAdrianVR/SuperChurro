@@ -288,7 +288,7 @@ export default {
         vacations_updated_date: this.user.employee_properties.vacations_updated_date,
         bonuses: this.user.employee_properties.bonuses ?? [],
       },
-      created_at: this.user.created_at,
+      created_at: this.user.created_at.split('T')[0],
       resources: [],
     });
     return {

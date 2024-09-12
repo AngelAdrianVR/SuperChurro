@@ -74,6 +74,7 @@ Route::put('/reject/loans/{loan}', [AdminRequestController::class, 'rejectLoan']
 // warehouses ---------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------
 Route::resource('warehouses', WarehouseController::class)->middleware('auth');
+Route::get('warehouses-get-products', [WarehouseController::class, 'getProducts'])->name('warehouses.get-products');
 
 
 

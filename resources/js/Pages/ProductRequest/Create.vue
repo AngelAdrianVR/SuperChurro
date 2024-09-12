@@ -10,6 +10,12 @@
     </template>
 
     <div class="max-w-lg md:mx-auto mt-5 rounded-lg px-5 pt-4 pb-5 border border-gray3 bg-transparent mx-4">
+      <div class="flex justify-end mb-3">
+        <SecondaryButton @click="updateWarehouseProducts" :disabled="updating" class="!h-6 !flex !items-center !justify-center space-x-2 !text-black">
+          <span>Sincronizar mercancia de cocina</span>
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </SecondaryButton>
+      </div>
       <p v-if="validation_message" class="text-red-400 text-xs mb-2" v-html="validation_message"></p>
       <form @submit.prevent="store">
         <div>
@@ -39,6 +45,7 @@ import ProductInput from "@/Components/ProductInput.vue";
 import InputError from "@/Components/InputError.vue";
 import Back from "@/Components/Back.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
+import axios from "axios";
 export default {
   data() {
     const form = useForm({
@@ -54,6 +61,8 @@ export default {
       validation_message: "",
       next_item_id: 2,
       form,
+      updating: false,
+      warehouse_stock: [],
     };
   },
   components: {
@@ -67,7 +76,6 @@ export default {
   },
   props: {
     products: Array,
-    warehouse_stock: Object,
   },
   methods: {
     addNewItem() {
@@ -84,7 +92,15 @@ export default {
     store() {
       this.quantityValidated();
       if (this.validation_message == "") {
-        this.form.post(this.route("product-request.store"));
+        this.form.post(this.route("product-request.store"), {
+          onSuccess: () => {
+            this.$notify({
+              title: 'Solicitud registrada',
+              message: '',
+              type: 'success',
+            });
+          }
+        });
       }
     },
     quantityValidated() {
@@ -99,6 +115,27 @@ export default {
         }
       });
     },
+    async updateWarehouseProducts() {
+      await this.fetchWarehouseProducts();
+      this.quantityValidated();
+    },
+    async fetchWarehouseProducts() {
+      this.updating = true;
+      try {
+        const response = await axios.get(route('warehouses.get-products'));
+
+        if (response.status === 200) {
+          this.warehouse_stock = response.data.item;
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.updating = false;
+      }
+    },
   },
+  async mounted() {
+    await this.fetchWarehouseProducts();
+  }
 };
 </script>

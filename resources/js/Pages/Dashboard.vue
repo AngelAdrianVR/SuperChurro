@@ -102,8 +102,8 @@ export default {
         },
         {
           label: "Carrito",
-          latitudes: [20.71244, 20.73268],
-          longitudes: [-103.38807, -103.36766]
+          latitudes: [20.70000, 20.75000],
+          longitudes: [-103.39000, -103.35000]
         },
         {
           label: "Casa",

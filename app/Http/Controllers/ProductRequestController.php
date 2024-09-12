@@ -23,9 +23,8 @@ class ProductRequestController extends Controller
     public function create()
     {
         $products = Product::all();
-        $warehouse_stock = Warehouse::find(1)->products;
 
-        return inertia('ProductRequest/Create', compact('products', 'warehouse_stock'));
+        return inertia('ProductRequest/Create', compact('products'));
     }
 
     public function store(Request $request)
@@ -64,9 +63,6 @@ class ProductRequestController extends Controller
 
         $warehouse->update(['products' => $current_products]);
         $cart->update(['products' => $current_products_cart]);
-
-        request()->session()->flash('flash.banner', 'Se ha pasado la mercancía de la cocina al carrito');
-        request()->session()->flash('flash.bannerStyle', 'success');
 
         return to_route('sales.point');
     }

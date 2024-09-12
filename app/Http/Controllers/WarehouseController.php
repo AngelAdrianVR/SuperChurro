@@ -17,8 +17,6 @@ class WarehouseController extends Controller
             fn($user) => $user->hasCheckedInToday() && $user->shiftOn(today()->dayOfWeek) === 'cocina'
         );
 
-        // return $warehouse;
-
         return inertia('Warehouse/Index', compact('warehouse', 'products', 'employees'));
     }
 
@@ -37,37 +35,25 @@ class WarehouseController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Warehouse  $warehouse
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Warehouse $warehouse)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Warehouse  $warehouse
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Warehouse $warehouse)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Warehouse  $warehouse
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Warehouse $warehouse)
     {
         //
+    }
+
+    public function getProducts()
+    {
+        $item = Warehouse::find(1)->products;
+
+        return response()->json(compact('item'));
     }
 }

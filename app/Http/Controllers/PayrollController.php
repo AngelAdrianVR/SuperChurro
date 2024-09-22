@@ -95,6 +95,7 @@ class PayrollController extends Controller
         // Crear el recurso PayrollResource
         $payroll = PayrollResource::make($payroll);
 
+        // return $payroll;
         return inertia('PayRoll/Admin/Receipt', compact('payroll'));
     }
 

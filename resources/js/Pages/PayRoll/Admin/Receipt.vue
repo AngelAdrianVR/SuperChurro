@@ -30,7 +30,9 @@
                     <h2 class="col-span-full border-b border-black self-start py-px px-2">PERCEPCIONES</h2>
                     <p class="flex items-center justify-between px-2 self-start">
                         <span>Sueldo ({{ getShiftsWorked(current) }} turnos)</span>
-                        <span>${{ current.base_salary }}</span>
+                        <!-- Se resta del sueldo total el dinero de los dias de vacaciones sin la prima -->
+                        <span>${{ current.week_attendance.vacations ? (current.raw_base_salary - ((current.raw_vacations * 100) / 125))?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                             : current.base_salary }}</span>
                     </p>
                     <p v-for="bonus in getBonuses(current)" :key="bonus.name"
                         class="flex items-center justify-between px-2 self-start">
@@ -43,7 +45,13 @@
                     </p>
                     <p v-if="current.week_attendance.vacations" class="flex items-center justify-between px-2 self-start">
                         <span>Vacaciones ({{ current.week_attendance.vacations }})</span>
-                        <span>${{ current.paid_vacations }}</span>
+                        <!-- se quita el 25% de prima vacacional -->
+                        <span>${{ ((current.raw_vacations * 100) / 125 )?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}</span> 
+                    </p>
+                    <p v-if="current.week_attendance.vacations" class="flex items-center justify-between px-2 self-start">
+                        <span>Prima vacacional</span>
+                        <!-- se muestra unicamente la prima vacacional -->
+                        <span>${{ ((current.raw_vacations * 25) / 125)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> 
                     </p>
                     <p v-if="current.week_attendance.holidays" class="flex items-center justify-between px-2 self-start">
                         <span>Día feriado</span>
@@ -78,7 +86,8 @@
             </article>
             <p class="w-1/4 lg:w-1/6 ml-auto flex justify-between font-bold text-[#373737] mt-3 mr-3">
                 <span>Total:</span>
-                <span>${{ current.paid }}</span>
+                <!-- si hay vacaciones resta el monto de vacaciones sin prima vacacional porque lo sumaba al total -->
+                <span>${{ current.week_attendance.vacations ? (current.raw_paid - ((current.raw_vacations * 100) / 125))?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : current.paid }}</span>
             </p>
             <small class="text-[6px] mt-3 leading-3">
                 RECBÍ DE LA EMPRESA "PURO CHURRO" LA CANTIDAD SEÑALADA MISMA QUE CUBRE LAS PERCEPCIONES QUE ME CORRESPONDEN

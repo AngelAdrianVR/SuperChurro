@@ -21,6 +21,7 @@ class PayrollUserResource extends JsonResource
             'bonuses' => $this->pivot->bonuses(),
             'paid' => number_format($this->pivot->paid(), 2),
             'paid_vacations' => number_format($this->pivot->payVacations(), 2),
+            'raw_vacations' => $this->pivot->payVacations(),
             'paid_leaves' => number_format($this->pivot->payLeaves(), 2),
             'paid_holiday' => number_format($this->pivot->payHoliday(), 2),
             'paid_sickness' => number_format($this->pivot->paySickness(), 2),

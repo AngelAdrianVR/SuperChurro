@@ -61,7 +61,7 @@ class PayrollUser extends Pivot
 
         for ($i = 0; $i < 7; $i++) {
             $current_day_in_loop = $current_payroll->start_date->addDays($i);
-            if (!array_key_exists($i, $current_attendance)) {
+            if (!array_key_exists($i, $current_attendance ?? [])) {
                 // check if this day is off, applied leave or holyday
                 $current_attendance[$i] = $this->typeOfAbsent($current_day_in_loop);
 

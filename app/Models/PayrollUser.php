@@ -80,16 +80,31 @@ class PayrollUser extends Pivot
                 $attendances--;
             } else if ($current_attendance[$i]['out'] !== '--:--:--') { // si trabajó el colaborador
                 // colaborador trabajó en día feriado
-                // Si trabaja 2 turnos o si es dia feriado se da $ por minutos extras a las salida
-                if ($user->shiftOn($current_day_in_loop->dayOfWeek) == 'carrito 2 turnos' || $this->isHoliday($current_day_in_loop)) {
-                    if ($user->shiftOn($current_day_in_loop->dayOfWeek) == 'carrito 2 turnos' && $this->isHoliday($current_day_in_loop)) {
-                        // se da el doble si se trabaja todo el dia en dia feriado
-                        $days_as_double += 3;
+                if ($this->isHoliday($current_day_in_loop)) {
+                    if ($user->shiftOn($current_day_in_loop->dayOfWeek) == 'carrito 2 turnos') {
+                        // se dan 5 turnos adicionales si se trabaja todo el dia en dia feriado
+                        $days_as_double += 5;
                     } else {
-                        $days_as_double++;
+                        // se dan 2 turnos adicionales si se trabaja 1 turno en dia feriado
+                        $days_as_double += 2;
+                    }
+                    $double_commission_on[] = $i;
+                } else { //no es dia feriado
+                    if ($user->shiftOn($current_day_in_loop->dayOfWeek) == 'carrito 2 turnos') {
+                        // sumar 1 turno adicional si trabaja 2 turnos 
+                        $days_as_double += 1;
                     }
                     $double_commission_on[] = $i;
                 }
+                // if ($user->shiftOn($current_day_in_loop->dayOfWeek) == 'carrito 2 turnos' || $this->isHoliday($current_day_in_loop)) {
+                //     if ($user->shiftOn($current_day_in_loop->dayOfWeek) == 'carrito 2 turnos' && $this->isHoliday($current_day_in_loop)) {
+                //         // se da el doble si se trabaja todo el dia en dia feriado
+                //         $days_as_double += 3;
+                //     } else {
+                //         $days_as_double++;
+                //     }
+                //     $double_commission_on[] = $i;
+                // }
                 // else if ($user->shiftOn($current_day_in_loop->dayOfWeek) !== 'carrito vespertino') {
                 //     $tolerance = 135;
                 // }
@@ -115,7 +130,7 @@ class PayrollUser extends Pivot
 
                 $late += $late_per_day;
 
-                // calculate extras solo 
+                // calcular extras 
                 $current_shift = $user->shiftOn($current_day_in_loop->dayOfWeek);
                 if ($current_shift == 'carrito vespertino' || $current_shift == 'carrito 2 turnos') {
                     $extras_per_day = Carbon::parse($current_attendance[$i]['out'])

@@ -302,7 +302,7 @@ class UserController extends Controller
 
     public function getInStation()
     {
-        $users = User::all();
+        $users = User::where('is_active', 1)->get();
         
         $employees_in_cart = $users->filter(
             fn ($user) => $user->hasCheckedInToday() && $user->shiftOn(today()->dayOfWeek) !== 'cocina'

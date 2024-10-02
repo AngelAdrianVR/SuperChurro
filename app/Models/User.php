@@ -132,20 +132,19 @@ class User extends Authenticatable implements HasMedia
 
     public function hasCheckedInToday()
     { //Remove this method and just keep hasCheckeInOn ***
-
         $current_payroll_id = Payroll::firstWhere('is_active', true)->id;
-
         $payroll_user = PayrollUser::firstOrNew([
             'payroll_id' => $current_payroll_id,
             'user_id' => $this->id
         ], ['attendance' => []]);
 
-        return array_key_exists(today()->dayOfWeek, $payroll_user->attendance);
+        $attendance = $payroll_user->attendance ?? [];
+
+        return array_key_exists(today()->dayOfWeek, $attendance);
     }
 
     public function hasCheckedInOn($day_of_week)
     {
-
         $current_payroll_id = Payroll::firstWhere('is_active', true)->id;
 
         $payroll_user = PayrollUser::firstOrNew([
@@ -153,7 +152,9 @@ class User extends Authenticatable implements HasMedia
             'user_id' => $this->id
         ], ['attendance' => []]);
 
-        return array_key_exists($day_of_week, $payroll_user->attendance);
+        $attendance = $payroll_user->attendance ?? [];
+
+        return array_key_exists($day_of_week, $attendance);
     }
 
     public function hasAttendanceOn($date)

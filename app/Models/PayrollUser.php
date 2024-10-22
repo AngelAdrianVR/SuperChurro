@@ -240,7 +240,7 @@ class PayrollUser extends Pivot
             $base_salary = User::find($this->user_id)->employee_properties['base_salary'];
         }
 
-        return ($week_attendance['attendances'] + $week_attendance['days_as_double'] + $week_attendance['vacations']) * $base_salary;
+        return ($week_attendance['attendances'] + $week_attendance['days_as_double']) * $base_salary;
     }
 
     public function salaryForExtras()

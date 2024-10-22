@@ -31,8 +31,7 @@
                     <p class="flex items-center justify-between px-2 self-start">
                         <span>Sueldo ({{ getShiftsWorked(current) }} turnos)</span>
                         <!-- Se resta del sueldo total el dinero de los dias de vacaciones sin la prima -->
-                        <span>${{ current.week_attendance.vacations ? (current.raw_base_salary - ((current.raw_vacations * 100) / 125))?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                             : current.base_salary }}</span>
+                        <span>${{ current.base_salary }}</span>
                     </p>
                     <p v-for="bonus in getBonuses(current)" :key="bonus.name"
                         class="flex items-center justify-between px-2 self-start">
@@ -87,7 +86,7 @@
             <p class="w-1/4 lg:w-1/6 ml-auto flex justify-between font-bold text-[#373737] mt-3 mr-3">
                 <span>Total:</span>
                 <!-- si hay vacaciones resta el monto de vacaciones sin prima vacacional porque lo sumaba al total -->
-                <span>${{ current.week_attendance.vacations ? (current.raw_paid - ((current.raw_vacations * 100) / 125))?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : current.paid }}</span>
+                <span>${{ current.paid }}</span>
             </p>
             <small class="text-[6px] mt-3 leading-3">
                 RECBÍ DE LA EMPRESA "PURO CHURRO" LA CANTIDAD SEÑALADA MISMA QUE CUBRE LAS PERCEPCIONES QUE ME CORRESPONDEN

@@ -33,7 +33,15 @@
                                 <p v-if="payroll.week_attendance.vacations"
                                     class="flex items-center justify-between px-2 self-start">
                                     <span>Vacaciones ({{ payroll.week_attendance.vacations }})</span>
-                                    <span>${{ payroll.paid_vacations }}</span>
+                                    <span>${{ ((payroll.raw_vacations * 100) / 125 )?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}</span> 
+                                </p>
+                                <p v-if="payroll.week_attendance.vacations"
+                                    class="flex items-center justify-between px-2 self-start">
+                                    <span>Prima vacacional</span>
+                                    <!-- se muestra unicamente la prima vacacional -->
+                                    <span>${{ ((payroll.raw_vacations * 25) /
+                                        125)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,
+                                            ",") }}</span>
                                 </p>
                                 <p v-if="payroll.week_attendance.holidays"
                                     class="flex items-center justify-between px-2 self-start">
@@ -71,7 +79,8 @@
                                 </p>
                             </div>
                         </article>
-                        <p class="text-xs w-1/4 lg:w-1/6 ml-auto flex justify-between font-bold text-[#373737] mt-3 mr-3">
+                        <p
+                            class="text-xs w-1/4 lg:w-1/6 ml-auto flex justify-between font-bold text-[#373737] mt-3 mr-3">
                             <span>Total:</span>
                             <span>${{ payroll.paid }}</span>
                         </p>

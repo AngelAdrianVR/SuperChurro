@@ -18,7 +18,7 @@
     </div>
 </template>
 <script>
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 export default {
@@ -33,8 +33,9 @@ export default {
     methods: {
         formatDate(date) {
             const parsedDate = new Date(date);
-            return format(parsedDate, 'dd \'de\' MMMM', { locale: es }); // Formato personalizado
-        },
+            const adjustedDate = addDays(parsedDate, 1); // Sumar 1 día
+            return format(adjustedDate, "dd 'de' MMMM", { locale: es });
+        }
     }
 }
 </script>

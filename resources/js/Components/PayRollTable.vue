@@ -25,6 +25,8 @@
                 <th class="px-6 align-middle py-3 text-xs uppercase whitespace-nowrap text-left font-bold">
                   Salida</th>
                 <th class="px-6 align-middle py-3 text-xs uppercase whitespace-nowrap text-left font-bold">
+                  Turno</th>
+                <th class="px-6 align-middle py-3 text-xs uppercase whitespace-nowrap text-left font-bold">
                   T. extra</th>
                 <th class="px-6 align-middle py-3 text-xs uppercase whitespace-nowrap text-left font-bold">
                   H. totales</th>
@@ -49,6 +51,12 @@
                   <input v-if="dayInEdition == index" v-model="form.payroll[index].out" type="time"
                     class="bg-transparent text-sm rounded-md">
                   <p v-else>{{ attendance.out }}</p>
+                </td>
+                <td class="px-6 align-middle text-sm font-bold whitespace-nowrap p-2 border-white"
+                  :class="getColor(attendance.in)">
+                  <Link :href="route('users.show', payroll?.user.id)" class="text-blue-700">
+                    {{ payroll?.user.employee_properties.work_days.find(item => item.day == index)?.shift }}
+                  </Link>
                 </td>
                 <td class="px-6 align-middle text-sm whitespace-nowrap p-2 border-white rounded-r-md"
                   :class="getColor(attendance.in)">

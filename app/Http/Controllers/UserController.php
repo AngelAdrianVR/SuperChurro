@@ -23,8 +23,6 @@ class UserController extends Controller
     {
         $users = UserResource::collection(User::where('id', '!=', auth()->id())->get());
 
-        // return $users;
-
         return inertia('User/Index', compact('users'));
     }
 

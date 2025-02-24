@@ -38,7 +38,7 @@
         <b>Es importante que no recargues la página para poder registrar ventas</b>
       </p>
     </div>
-    <div v-if="syncingData" class="w-2/3 ml-auto mt-3 rounded-s-[5px] px-4 py-1 bg-secondary text-[#333333] text-xs">
+    <div v-if="syncingData || syncingIDB" class="w-2/3 ml-auto mt-3 rounded-s-[5px] px-4 py-1 bg-secondary text-[#333333] text-xs">
       <p class="text-sm flex items-center space-x-3 font-semibold">
         <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
           id="Rotate-Right--Streamline-Sharp" height="16" width="16">
@@ -288,7 +288,7 @@ import InputError from "@/Components/InputError.vue";
 import Modal from "@/Components/Modal.vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 import axios from 'axios';
-import { getItemByPartialAttributes, getItemByAttributes, getAll } from '@/dbService.js';
+import { getItemByPartialAttributes, getItemByAttributes, getAll, syncIDBProducts } from '@/dbService.js';
 import { format } from 'date-fns';
 
 export default {
@@ -316,6 +316,7 @@ export default {
       storingCourtesies: false,
       storeProcessing: false, //cargando store de venta
       scanning: false, //cargando la busqueda de productos por escaner
+      syncingIDB: false,
       // buscador
       scannerQuery: null, //input para scanear el codigo de producto
       searchQuery: null, //buscador
@@ -591,7 +592,10 @@ export default {
     },
   },
   async mounted() {
-    // enfocar input de scaner al abrir la vista
+    this.syncingIDB = true;
+    await syncIDBProducts();
+    this.syncingIDB = false;
+
     // resetear variable de local storage a false
     localStorage.setItem('pendentProcess', false);
 

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { Inertia } from "@inertiajs/inertia";
 import { Head, Link } from "@inertiajs/inertia-vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
@@ -8,6 +8,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import { syncIDBProducts } from '@/dbService.js';
 
 defineProps({
   title: String,
@@ -130,10 +131,24 @@ const menues = [
 ];
 
 const showingNavigationDropdown = ref(false);
+const syncInterval = ref(null);
 
 const logout = () => {
   Inertia.post(route("logout"));
 };
+
+onMounted(() => {
+    // sincronizacion periodica de IDB para todos los usuarios autenticados
+    syncInterval.value = setInterval(() => {
+        syncIDBProducts();
+    }, 300000); // 5 minutos
+});
+
+onUnmounted(() => {
+    // Limpiar el intervalo cuando el componente se desmonte
+    clearInterval(syncInterval.value);
+});
+
 </script>
 
 <template>

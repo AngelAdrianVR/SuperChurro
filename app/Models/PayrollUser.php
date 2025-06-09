@@ -83,12 +83,12 @@ class PayrollUser extends Pivot
                 if ($this->isHoliday($current_day_in_loop)) {
                     if ($user->shiftOn($current_day_in_loop->dayOfWeek) == 'carrito 2 turnos') {
                         // se dan 5 turnos adicionales si se trabaja todo el dia en dia feriado
-                        // $days_as_double += 5;
-                        $days_as_double += 3;
+                        $days_as_double += 5; //triple
+                        // $days_as_double += 3; //doble
                     } else {
                         // se dan 2 turnos adicionales si se trabaja 1 turno en dia feriado
-                        // $days_as_double += 2;
-                        $days_as_double += 1;
+                        $days_as_double += 2; //triple
+                        // $days_as_double += 1; //doble
                     }
                     $double_commission_on[] = $i;
                 } else { //no es dia feriado

@@ -1,52 +1,69 @@
 <template>
   <AppLayout title="Historial de movimientos">
     <template #header>
-      <div class="flex items-center mt-2">
+      <!-- MODIFICADO: Se añade 'gap-4' para un espaciado limpio y mejor alineación -->
+      <div class="flex items-center mt-2 gap-4">
         <Back />
-        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
-           Historial de "{{ product.name }}"
+        <!-- MODIFICADO: Se elimina 'ml-5 lg:ml-28' -->
+        <h2 class="font-semibold text-xl text-gray-800">
+          Historial de "{{ product.name }}"
         </h2>
       </div>
     </template>
 
-    <div
-      class="border-y border-[#9a9a9a] flex mt-4 transition ease-linearn duration-300"
-    >
-      <p
-        @click="tab = 1"
-        :class="tab == 1 ? 'text-primary' : ''"
-        class="px-7 py-2 md:ml-48 cursor-pointer hover:text-primary"
-      >
-        Historial
-      </p>
-      <!-- <div class="border-r my-2 border-[#9a9a9a]"></div>
-      <p
-        @click="tab = 2"
-        :class="tab == 2 ? 'text-primary' : ''"
-        class="px-4 py-2 cursor-pointer hover:text-primary"
-      >
-        Stock
-      </p> -->
+    <!-- 
+      MODIFICADO: 
+      - Se rediseña la navegación de pestañas.
+      - Se elimina 'border-y border-[#9a9a9a]' y se reemplaza por un contenedor flex con fondo ligero.
+      - Se añaden estilos de "píldora" (pill) para la pestaña activa.
+    -->
+    <div class="mt-4 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto">
+        <div class="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+          <button @click="tab = 1" :class="tab == 1 ? 'bg-white text-indigo-700 shadow' : 'text-gray-600 hover:bg-gray-200'"
+            class="w-full px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ease-in-out">
+            Historial
+          </button>
+          <!-- <button
+            @click="tab = 2"
+            :class="tab == 2 ? 'bg-white text-indigo-700 shadow' : 'text-gray-600 hover:bg-gray-200'"
+            class="w-full px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ease-in-out"
+          >
+            Stock
+          </button> -->
+        </div>
+      </div>
     </div>
 
-    
+    <!-- 
+      MODIFICADO: 
+      - Se envuelve el contenido de las pestañas en un contenedor con espaciado.
+    -->
+    <div class="mt-6 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto">
+        <!-- Contenido de la Pestaña 1: Historial -->
+        <div v-if="tab == 1" class="overflow-x-auto bg-white shadow-xl rounded-2xl">
+          <!-- 
+            NOTA: Asumo que WarehouseRecordTable es un <table>. 
+            El 'overflow-x-auto' y el 'bg-white shadow-xl rounded-2xl' deben ir en el contenedor padre 
+            para que la tabla sea responsive y tenga el estilo de tarjeta.
+          -->
+          <WarehouseRecordTable :movements="movements.data" :product="product" />
+          <MovementPagination :pagination="movements" />
+        </div>
 
-    <!-- --------------------------------tab 1 History starts ------------------------- -->
-    <div v-if="tab == 1" class="overflow-auto">
-      <WarehouseRecordTable :movements="movements.data" :product="product" />
-      <MovementPagination :pagination="movements" />
+        <!-- Contenido de la Pestaña 2: Stock -->
+        <div v-if="tab == 2" class="overflow-x-auto bg-white shadow-xl rounded-2xl">
+          <ProductStockTable />
+        </div>
+      </div>
     </div>
-    <!-- --------------------------------tab 1 History ends ------------------------- -->
 
-    <!-- --------------------------------tab 1 History starts ------------------------- -->
-    <div v-if="tab == 2">
-      <ProductStockTable />
-    </div>
-    <!-- --------------------------------tab 1 History ends ------------------------- -->
   </AppLayout>
 </template>
 
 <script>
+// El script permanece sin cambios
 import AppLayout from "@/Layouts/AppLayout.vue";
 import MovementPagination from "@/Components/MovementPagination.vue";
 import WarehouseRecordTable from "@/Components/MyComponents/WarehouseRecord/WarehouseRecordTable.vue";

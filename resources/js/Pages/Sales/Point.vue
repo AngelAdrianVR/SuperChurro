@@ -1,7 +1,19 @@
 <template>
-  <AppLayout title="Punto de venta">
-    <div v-if="!isOnline" class="w-2/3 ml-auto mt-3 rounded-s-[5px] px-4 py-1 bg-[#232323] text-white text-xs">
-      <p class="text-sm flex items-center space-x-3 font-semibold">
+  <!-- 
+    AppLayout: Asumimos que este es el layout principal.
+    Cambiamos el fondo general a un gris muy claro (bg-gray-50) para un look más suave.
+  -->
+  <AppLayout title="Punto de venta" class="bg-gray-50">
+    <!-- 
+      Alertas de Conexión y Sincronización:
+      - Aumentamos el padding (px-4 py-3).
+      - Usamos esquinas redondeadas más pronunciadas (rounded-lg).
+      - Añadimos una sombra sutil (shadow-md).
+      - Estandarizamos los colores: bg-gray-900 para offline, bg-blue-100/text-blue-800 para "info" (syncing).
+    -->
+    <div v-if="!isOnline"
+      class="w-2/3 ml-auto mt-3 rounded-lg shadow-md px-4 py-3 bg-gray-900 text-white text-sm">
+      <p class="text-base flex items-center space-x-3 font-semibold">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="-0.855 -0.855 24 24"
           id="Wifi-Disabled--Streamline-Core" height="16" width="16">
           <desc>Wifi Disabled Streamline Icon: https://streamlinehq.com</desc>
@@ -31,15 +43,16 @@
         </svg>
         <span>Sin conexión a Internet</span>
       </p>
-      <p class="text-xs">
+      <p class="text-sm mt-1">
         Las ventas que realices se guardan en el dispositivo que estas utilizando y
         luego se transfieren automáticamente a la nube cuando tengas internet.
         ¡Así nunca perderán información!. <br>
-        <b>Es importante que no recargues la página para poder registrar ventas</b>
+        <b class="font-semibold">Es importante que no recargues la página para poder registrar ventas</b>
       </p>
     </div>
-    <div v-if="syncingData || syncingIDB" class="w-2/3 ml-auto mt-3 rounded-s-[5px] px-4 py-1 bg-secondary text-[#333333] text-xs">
-      <p class="text-sm flex items-center space-x-3 font-semibold">
+    <div v-if="syncingData || syncingIDB"
+      class="w-2/3 ml-auto mt-3 rounded-lg shadow-md px-4 py-3 bg-blue-100 text-blue-800 text-sm">
+      <p class="text-base flex items-center space-x-3 font-semibold">
         <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
           id="Rotate-Right--Streamline-Sharp" height="16" width="16">
           <desc>Rotate Right Streamline Icon: https://streamlinehq.com</desc>
@@ -59,22 +72,33 @@
         </svg>
         <span>Sincronizando datos</span>
       </p>
-      <p class="text-xs">
+      <p class="text-sm mt-1">
         Por favor, evita recargar la página y espera a que los datos se carguen a la nube.
       </p>
     </div>
-    <div class="px-1 lg:px-6 py-2 h-[85vh]">
+
+    <!-- 
+      Contenedor Principal:
+      - Aumentamos el padding general (px-4 lg:px-6 py-4).
+    -->
+    <div class="px-4 lg:px-6 py-4 h-[85vh]">
       <section class="h-[60%] overflow-auto">
         <!-- header botones -->
-        <div class="md:flex justify-between items-center mx-3">
-          <h1 class="font-bold text-base">Registrar venta</h1>
-          <!-- Dropdown -->
-          <div class="inline-block border border-primary rounded-full px-2 pt-px mt-1 md:mt-0">
-            <el-col :span="3">
+        <div class="md:flex justify-between items-center mb-4">
+          <!-- Título: Más grande y con más peso -->
+          <h1 class="font-bold text-2xl text-gray-900">Registrar venta</h1>
+          <!-- 
+            Dropdown:
+            - Eliminamos el borde redondeado del div contenedor.
+            - Convertimos el <p> interior en un botón moderno con sombra, borde sutil y estado hover.
+           -->
+          <div class="inline-block mt-2 md:mt-0">
+            <el-col :span="3"> <!-- Mantenemos esta estructura de Element UI -->
               <el-dropdown trigger="click">
-                <p class="text-sm text-primary flex items-center">
+                <p
+                  class="flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                   <span>Acciones</span>
-                  <i class="fa-solid fa-angle-down text-[10px] ml-2 mt-px"></i>
+                  <i class="fa-solid fa-angle-down text-xs ml-2"></i>
                 </p>
                 <template #dropdown>
                   <el-dropdown-menu>
@@ -93,17 +117,22 @@
           </div>
         </div>
         <!-- cuerpo de la pagina -->
-        <div class="md:flex md:space-x-3 mt-2">
+        <div class="md:flex md:space-x-6 mt-2">
           <section class="md:w-[70%]">
-            <!-- Pestañas -->
-            <div class="lg:mx-7">
+            <!-- 
+              Pestañas:
+              - Las envolvemos en una "tarjeta" (bg-white, rounded-xl, shadow-sm) para darles definición.
+            -->
+            <div class="bg-white rounded-xl shadow-sm p-4 h-full">
               <el-tabs v-model="editableTabsValue" type="card" class="demo-tabs">
                 <el-tab-pane v-for="tab in editableTabs" :key="tab.name" :label="tab.title" :name="tab.name">
                   <el-popconfirm v-if="tab.saleProducts.length" confirm-button-text="Si" cancel-button-text="No"
                     icon-color="#C30303" title="Se eliminará todo el registro de productos ¿Deseas continuar?"
                     @confirm="clearTab()">
                     <template #reference>
-                      <ThirthButton class="!text-[#F80505] !border-[#F80505] !py-1 !px-2 mb-1 !text-[10px]"><i
+                      <!-- Botón Limpiar: Estilo de "peligro" más estándar y suave -->
+                      <ThirthButton
+                        class="!text-red-600 !border-red-600 hover:!bg-red-50 !py-1 !px-2 mb-2 !text-xs !rounded-md"><i
                           class="fa-regular fa-trash-can mr-2"></i> Limpiar registro</ThirthButton>
                     </template>
                   </el-popconfirm>
@@ -113,102 +142,128 @@
             </div>
           </section>
           <!-- seccion de desgloce de montos -->
-          <section class="md:w-[30%]">
-            <!-- buscador de productos -->
+          <section class="md:w-[30%] space-y-4"> <!-- Añadimos space-y-4 para separar las tarjetas -->
+            <!-- 
+              Buscador de productos:
+              - Input: Esquinas más redondeadas (rounded-lg), borde estándar (border-gray-300), y foco moderno.
+              - Icono: Centrado verticalmente y color más sutil (text-gray-400).
+            -->
             <div class="relative">
               <input v-model="searchQuery" @focus="searchFocus = true" @blur="handleBlur" @input="searchProducts"
-                ref="searchInput" class="input w-full pl-9" placeholder="Buscar código o nombre de producto"
-                type="search">
-              <i class="fa-solid fa-magnifying-glass text-xs text-gray99 absolute top-[10px] left-4"></i>
-              <!-- Resultados de la búsqueda -->
+                ref="searchInput"
+                class="input w-full pl-10 pr-4 py-2 rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
+                placeholder="Buscar código o nombre de producto" type="search">
+              <i
+                class="fa-solid fa-magnifying-glass text-sm text-gray-400 absolute top-1/2 -translate-y-1/2 left-3"></i>
+              <!-- 
+                Resultados de la búsqueda:
+                - Sombra más pronunciada (shadow-lg) y esquinas (rounded-md).
+                - Hover con color primario sutil (hover:bg-indigo-50).
+              -->
               <div v-if="searchFocus && searchQuery"
-                class="absolute mt-1 bg-white border border-gray-300 rounded shadow-lg w-full z-50 max-h-48 overflow-auto">
+                class="absolute mt-1 bg-white border border-gray-200 rounded-md shadow-lg w-full z-50 max-h-48 overflow-auto">
                 <ul v-if="productsFound?.length > 0 && !loading">
                   <li @click="selectProductFromList(product)" v-for="(product, index) in productsFound" :key="index"
-                    class="hover:bg-gray-200 cursor-pointer text-xs px-3 py-2 flex space-x-2">
-                    <span class="w-4/5">{{ product.name }}</span>
-                    <span v-if="product.code" class="w-1/5 text-[10px] text-gray99">
+                    class="hover:bg-indigo-50 cursor-pointer text-sm px-4 py-2 flex space-x-2">
+                    <span class="w-4/5 font-medium text-gray-800">{{ product.name }}</span>
+                    <span v-if="product.code" class="w-1/5 text-xs text-gray-500">
                       {{ product.code }}
                     </span>
                   </li>
                 </ul>
-                <p v-else-if="!loading" class="text-center text-sm text-gray-600 px-5 py-2">
+                <p v-else-if="!loading" class="text-center text-sm text-gray-500 px-5 py-3">
                   No se encontraron coincidencias
                 </p>
                 <!-- estado de carga -->
                 <div v-if="loading" class="flex justify-center items-center py-10">
-                  <i class="fa-solid fa-square fa-spin text-4xl text-primary"></i>
+                  <i class="fa-solid fa-square fa-spin text-4xl text-indigo-600"></i> <!-- Color primario -->
                 </div>
               </div>
             </div>
-            <!-- Detalle de producto encontrado -->
-            <div class="border border-grayD9 rounded-lg p-4 mt-2 text-xs lg:text-base">
+            <!-- 
+              Detalle de producto encontrado:
+              - Convertido en "tarjeta" (bg-white, rounded-xl, shadow-sm).
+              - Bordes sutiles (border-gray-200).
+              - Mejoramos la tipografía y el color de precio (text-green-600).
+              - Botón "Agregar": Ancho completo (w-full) y esquinas (rounded-lg).
+            -->
+            <div class="border border-gray-200 bg-white rounded-xl shadow-sm p-4">
               <div class="relative" v-if="productFoundSelected">
                 <i @click="productFoundSelected = null"
-                  class="fa-solid fa-xmark cursor-pointer size-5 rounded-full flex items-center justify-center absolute right-3"></i>
-                <figure class="h-28">
+                  class="fa-solid fa-xmark cursor-pointer size-6 rounded-full flex items-center justify-center absolute -top-1 -right-1 text-gray-600 hover:bg-gray-100"></i>
+                <figure class="h-32"> <!-- Un poco más de altura para la imagen -->
                   <img v-if="productFoundSelected.imageUrl" :src="productFoundSelected.imageUrl"
-                    :alt="productFoundSelected.name" class="object-contain h-28 mx-auto">
-                  <p v-else class="text-center text-xs text-gray99 pt-10 px-8">Este producto no tiene imagen registrada
+                    :alt="productFoundSelected.name" class="object-contain h-32 mx-auto">
+                  <p v-else class="text-center text-sm text-gray-400 pt-12 px-8">Este producto no tiene imagen
+                    registrada
                   </p>
                 </figure>
-                <div class="flex justify-between items-center mt-2 mb-4">
-                  <p class="font-bold">{{ productFoundSelected.name }}</p>
-                  <p class="text-[#5FCB1F]">${{ productFoundSelected.public_price }}</p>
+                <div class="flex justify-between items-center mt-3 mb-4">
+                  <p class="font-semibold text-lg text-gray-900">{{ productFoundSelected.name }}</p>
+                  <p class="text-green-600 font-bold text-lg">${{ productFoundSelected.public_price }}</p>
                 </div>
                 <div class="flex justify-between items-center">
-                  <p class="text-gray99">Cantidad</p>
+                  <p class="text-gray-600">Cantidad</p>
                   <el-input-number v-model="quantity" :min="0" :precision="2" />
                 </div>
-                <div class="text-center mt-2">
+                <div class="text-center mt-4">
                   <PrimaryButton @click="addSaleProduct(productFoundSelected); productFoundSelected = null"
-                    class="!rounded-full !px-24" :disabled="quantity == 0">
+                    class="w-full !rounded-lg !py-3 !text-base !bg-indigo-600 hover:!bg-indigo-700"
+                    :disabled="quantity == 0">
                     Agregar
                   </PrimaryButton>
                 </div>
               </div>
-              <p v-else class="text-center text-[#999999] text-sm">
+              <p v-else class="text-center text-gray-500 text-base py-12"> <!-- Más padding vertical -->
                 Busca el producto
                 <i class="fa-regular fa-hand-point-up ml-3"></i>
               </p>
             </div>
 
-            <!-- Total por cobrar -->
+            <!-- 
+              Total por cobrar:
+              - Convertido en "tarjeta".
+              - Tipografía de "Total" más grande y clara.
+              - Botón "Cobrar": Ancho completo y color verde (bg-green-600).
+            -->
             <div v-if="editableTabs[editableTabsValue - 1]?.saleProducts?.length"
-              class="border border-grayD9 rounded-lg p-4 mt-2 text-xs lg:text-base">
+              class="border border-gray-200 bg-white rounded-xl shadow-sm p-4">
               <div v-if="!editableTabs[this.editableTabsValue - 1]?.paying">
-                <div class="flex items-center justify-between text-lg mx-5">
-                  <p class="font-bold">Total</p>
+                <div class="flex items-center justify-between text-xl mx-2">
+                  <p class="font-bold text-gray-900">Total</p>
                   <p v-if="(calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) < 0"
-                    class="text-red-600 text-xs">El descuento es más grande que el total</p>
-                  <p v-else class="text-gray-99">$ <strong class="ml-3">{{ (calculateTotal() -
-                    editableTabs[this.editableTabsValue
-                      - 1].discount)?.toLocaleString('en-US', {
-                        minimumFractionDigits: 2
-                      }) }}</strong></p>
+                    class="text-red-600 text-sm">El descuento es más grande que el total</p>
+                  <p v-else class="text-gray-500">$ <strong class="ml-2 font-bold text-gray-900 text-2xl">{{
+                    (calculateTotal() -
+                      editableTabs[this.editableTabsValue
+                        - 1].discount)?.toLocaleString('en-US', {
+                          minimumFractionDigits: 2
+                        }) }}</strong></p>
                 </div>
-                <div class="text-center mt-2">
+                <div class="text-center mt-3">
                   <PrimaryButton @click="receive()"
                     :disabled="editableTabs[this.editableTabsValue - 1]?.saleProducts?.length == 0 || (calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) < 0"
-                    class="!rounded-full !px-16 !bg-[#5FCB1F] disabled:!bg-[#999999]">Cobrar</PrimaryButton>
+                    class="w-full !rounded-lg !py-3 !text-base !bg-green-600 hover:!bg-green-700 disabled:!bg-gray-400">
+                    Cobrar</PrimaryButton>
                 </div>
               </div>
 
               <!-- cobrando -->
-              <div v-else>
-                <p class="text-gray-99 text-center mb-2 text-lg">Total $ <strong>{{ (calculateTotal() -
-                  editableTabs[this.editableTabsValue - 1].discount)?.toLocaleString('en-US', {
-                    minimumFractionDigits: 2
-                  }) }}</strong>
+              <div v-else class="space-y-3">
+                <p class="text-gray-600 text-center text-xl">Total $ <strong
+                    class="font-bold text-gray-900 text-2xl">{{ (calculateTotal() -
+                      editableTabs[this.editableTabsValue - 1].discount)?.toLocaleString('en-US', {
+                        minimumFractionDigits: 2
+                      }) }}</strong>
                 </p>
-                <div class="flex items-center justify-between mx-5 space-x-10">
-                  <p>Entregado</p>
+                <div class="flex items-center justify-between">
+                  <p class="font-medium">Entregado</p>
                   <input v-model="editableTabs[this.editableTabsValue - 1].moneyReceived" @keydown.enter="store"
-                    type="number" class="input !rounded-md w-1/3" ref="receivedInput" placeholder="$0.00">
+                    type="number" class="input !rounded-lg w-1/2 !text-right" ref="receivedInput" placeholder="$0.00">
                 </div>
-                <div class="flex items-center justify-between mx-5 my-1 relative">
-                  <p>Cambio</p>
-                  <p
+                <div class="flex items-center justify-between text-lg">
+                  <p class="font-medium">Cambio</p>
+                  <p class="font-bold"
                     v-if="(calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) <= editableTabs[this.editableTabsValue - 1]?.moneyReceived">
                     ${{
                       (editableTabs[this.editableTabsValue - 1]?.moneyReceived - (calculateTotal() -
@@ -217,29 +272,36 @@
                         }) }}</p>
                 </div>
                 <p v-if="((calculateTotal() - editableTabs[this.editableTabsValue - 1].discount) > editableTabs[this.editableTabsValue - 1]?.moneyReceived) && editableTabs[this.editableTabsValue - 1].moneyReceived"
-                  class="text-xs text-primary text-center mb-3">La cantidad es insuficiente. Por favor, ingrese una
-                  cantidad igual o mayor al total de compra.</p>
-                <div class="flex space-x-2 justify-end">
-                  <CancelButton @click="editableTabs[this.editableTabsValue - 1].paying = false">Cancelar</CancelButton>
-                  <PrimaryButton @click="store" class="!rounded-full">Aceptar</PrimaryButton>
+                  class="text-sm text-red-600 text-center">La cantidad es insuficiente.</p>
+                <div class="flex space-x-2 justify-end pt-2">
+                  <CancelButton @click="editableTabs[this.editableTabsValue - 1].paying = false" class="!rounded-lg">
+                    Cancelar</CancelButton>
+                  <PrimaryButton @click="store" class="!rounded-lg !bg-indigo-600 hover:!bg-indigo-700">Aceptar
+                  </PrimaryButton>
                 </div>
               </div>
             </div>
           </section>
         </div>
       </section>
-      <!-- lista de productos -->
-      <section class="border-t-2 h-[40%]">
-        <h1 class="mt-2 ml-3 text-sm">Selecciona los productos</h1>
+      <!-- 
+        lista de productos:
+        - Borde superior más sutil (border-t border-gray-200).
+        - Título más grande.
+        - Contenedor de grid como "tarjeta" (bg-white, rounded-xl, shadow-sm, p-3).
+        - Botones de producto: Bordes suaves (border-gray-200), estados hover y focus modernos (hover:shadow-md, hover:border-indigo-300, focus:ring-2).
+      -->
+      <section class="border-t border-gray-200 h-[40%] pt-4 mt-4">
+        <h1 class="ml-1 text-lg font-semibold text-gray-800">Selecciona los productos</h1>
         <div
-          class="border mt-2 px-3 py-1 rounded-[10px] border-[#D9D9D9] grid grid-cols-5 md:grid-cols-7 gap-2 overflow-auto h-[92%]">
+          class="bg-white border mt-2 p-3 rounded-xl shadow-sm border-gray-200 grid grid-cols-4 md:grid-cols-6 gap-3 overflow-auto h-[92%]">
           <button @click="addSaleProduct(item)" type="button" v-for="(item, index) in allProducts" :key="index"
-            class="border border-[#D9D9D9] px-3 py-2 active:bg-gray-300">
-            <h2 class="text-xs text-center">{{ item.name }}</h2>
-            <figure class="flex items-center justify-center h-14">
-              <img v-if="item.image_url" :src="item.image_url" :alt="item.name" class="object-contain h-14 mx-auto">
+            class="border border-gray-200 rounded-lg p-2 text-center transition-all duration-150 hover:shadow-md hover:border-indigo-300 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <h2 class="text-xs text-center font-medium text-gray-700 h-8">{{ item.name }}</h2>
+            <figure class="flex items-center justify-center h-16 mt-1"> <!-- Altura de imagen aumentada -->
+              <img v-if="item.image_url" :src="item.image_url" :alt="item.name" class="object-contain h-16 mx-auto">
               <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-10 text-gray-300">
+                stroke="currentColor" class="w-9 text-gray-400"> <!-- Color de placeholder más oscuro -->
                 <path stroke-linecap="round" stroke-linejoin="round"
                   d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
               </svg>
@@ -249,26 +311,33 @@
       </section>
     </div>
 
+    <!-- 
+      Modal:
+      - Los estilos de los botones (CancelButton, PrimaryButton) se heredarán si los has modernizado globalmente.
+      - Si no, puedes añadir !rounded-lg aquí también.
+    -->
     <DialogModal :show="showCourtesyModal" @close="showCourtesyModal = false">
       <template #title>
-        <h1>Cortesias a viene viene</h1>
+        <h1 class="text-xl font-semibold text-gray-900">Cortesias a "viene viene"</h1>
       </template>
       <template #content>
-        <form @submit.prevent="storeCourtesies" class="space-y-2">
-          <div class="flex items-center space-x-6 *:w-1/4">
-            <span class="text-sm text-gray1">Bolis</span>
+        <form @submit.prevent="storeCourtesies" class="space-y-3 p-2">
+          <div class="flex items-center space-x-6">
+            <span class="text-sm text-gray-600 w-1/4">Bolis</span>
             <el-input-number v-model="courtesyForm.bolis" :min="0" :max="10" />
           </div>
-          <div class="flex items-center space-x-6 *:w-1/4">
-            <span class="text-sm text-gray1">Botana</span>
+          <div class="flex items-center space-x-6">
+            <span class="text-sm text-gray-600 w-1/4">Botana</span>
             <el-input-number v-model="courtesyForm.botana" :min="0" :max="10" />
           </div>
         </form>
       </template>
       <template #footer>
-        <div class="space-x-1">
-          <CancelButton @click="showCourtesyModal = false" :disabled="storingCourtesies">Cancelar</CancelButton>
-          <PrimaryButton @click="storeCourtesies" :disabled="storingCourtesies">Registrar cortesias</PrimaryButton>
+        <div class="space-x-2">
+          <CancelButton @click="showCourtesyModal = false" :disabled="storingCourtesies" class="!rounded-lg">Cancelar
+          </CancelButton>
+          <PrimaryButton @click="storeCourtesies" :disabled="storingCourtesies"
+            class="!rounded-lg !bg-indigo-600 hover:!bg-indigo-700">Registrar cortesias</PrimaryButton>
         </div>
       </template>
     </DialogModal>

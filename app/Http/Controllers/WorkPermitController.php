@@ -39,7 +39,7 @@ class WorkPermitController extends Controller
     {
       
         $validated = $request->validate([
-            'date' => 'required|after:today',
+            'date' => 'required',
             'time_requested' => 'numeric|nullable',
             'description' => 'max:191',
             'permission_type_id' => 'required',

@@ -1,36 +1,52 @@
 <template>
+    <!--
+      MODERNIZACIÓN:
+      - Estilo de tarjeta unificado: 'bg-white rounded-2xl shadow-lg p-6'.
+      - Título más sutil (típico de KPIs).
+      - Layout simplificado con flex.
+      - Reemplazada la sección de % por un "Pill" (cápsula) moderno.
+    -->
     <div
-        class="min-h-[100px] self-start border border-gray3 rounded-[10px] lg:rounded-xl lg:p-5 py-2 px-4 text-xs lg:text-sm relative">
-        <h1 class="font-bold text-center">{{ title }} <span v-html="icon"></span></h1>
-        <main class="flex items-center space-x-4 pt-4">
-            <section class="flex flex-col items-center space-y-1 w-2/3">
-                <el-tooltip :content="options.tooltipCurrentVal" placement="left">
-                    <p class="font-bold text-3xl">{{ options.unit }}{{ options.currentVal.toLocaleString('en-US', {
+        class="w-full bg-white rounded-2xl shadow-lg p-6">
+        <h1 class="text-sm font-medium text-gray-500 mb-2">{{ title }} <span v-html="icon"></span></h1>
+        
+        <main class="flex items-end justify-between pt-2">
+            <!-- Sección de Valores -->
+            <section class="flex flex-col">
+                <el-tooltip :content="options.tooltipCurrentVal" placement="top">
+                    <p class="font-bold text-3xl text-gray-900">{{ options.unit }}{{ options.currentVal.toLocaleString('en-US', {
                         minimumFractionDigits: 2
                     }) }}</p>
                 </el-tooltip>
-                <el-tooltip :content="options.tooltipRefVal" placement="left">
-                    <p class="text-sm text-gray1">{{ options.unit }}{{ options.refVal.toLocaleString('en-US', {
+                <el-tooltip :content="options.tooltipRefVal" placement="bottom">
+                    <p class="text-sm text-gray-500 mt-1">vs {{ options.unit }}{{ options.refVal.toLocaleString('en-US', {
                         minimumFractionDigits: 2
                     }) }}</p>
                 </el-tooltip>
             </section>
-            <section :class="options.currentVal - options.refVal < 0 ? 'text-red-600' : 'text-green-600'"
-                class="w-1/3 text-3xl text-center">
-                <span>{{
-                    calcPercentage() }}%</span>
-                <svg v-if="options.currentVal - options.refVal >= 0" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
-                </svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181" />
-                </svg>
 
+            <!-- 
+              Sección de Porcentaje (Pill Moderno)
+              - Se usa 'v-if' para cambiar color y contenido.
+            -->
+            <section v-if="percentageChange >= 0"
+                class="flex items-center space-x-1 rounded-full px-3 py-1 bg-green-100 text-green-800">
+                 <!-- Icono de flecha arriba -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                  <path fill-rule="evenodd" d="M10 17a.75.75 0 0 1-.75-.75V5.612L5.22 9.64a.75.75 0 0 1-1.06-1.06l5.25-5.25a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 1 1-1.06 1.06L10.75 5.612V16.25A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm font-semibold">{{ formattedPercentage }}%</span>
             </section>
+
+            <section v-else
+                class="flex items-center space-x-1 rounded-full px-3 py-1 bg-red-100 text-red-800">
+                 <!-- Icono de flecha abajo -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                  <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v10.638l3.97-3.969a.75.75 0 1 1 1.06 1.06l-5.25 5.25a.75.75 0 0 1-1.06 0l-5.25-5.25a.75.75 0 1 1 1.06-1.06l3.97 3.969V3.75A.75.75 0 0 1 10 3Z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm font-semibold">{{ formattedPercentage.replace('-', '') }}%</span>
+            </section>
+
         </main>
     </div>
 </template>
@@ -50,11 +66,16 @@ export default {
         },
         options: Object,
     },
-    methods: {
-        calcPercentage() {
+    computed: {
+        // Calculamos el % para usarlo en el template
+        percentageChange() {
+            if (this.options.refVal === 0) return 0; // Evitar división por cero
             const dif = this.options.currentVal - this.options.refVal;
-            const percentage = dif * 100 / this.options.refVal;
-            return percentage.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            return (dif * 100) / this.options.refVal;
+        },
+        // Formateamos el %
+        formattedPercentage() {
+            return this.percentageChange.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
     }
 }

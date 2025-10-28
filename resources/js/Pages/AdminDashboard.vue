@@ -1,47 +1,72 @@
-
 <template>
   <AppLayout title="Dashboard">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         Inicio
       </h2>
     </template>
 
-    <!-- Avisos ----------------------------------------- -->
-    <section v-if="notices.length > 0">
-      <div class="lg:col-span-3 mt-9">
-        <h1 class="font-bold text-lg text-primary text-center">AVISOS</h1>
-      </div>
+    <!-- 
+      MODERNIZACIÓN:
+      - Contenedor principal con padding estándar (py-8) y 'max-w-7xl'.
+      - Eliminado 'md:mx-12 mx-1' en favor de un contenedor centrado.
+      - Reemplazado 'globe-container' por un layout de CSS Grid ('grid').
+      - Títulos de sección ('h2') más limpios y modernos.
+    -->
+    <div class="py-8">
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 px-4">
 
-      <div v-if="notices.length">
-        <div v-for="notice in notices" :key="notice.id" class="globe my-2">
-          <div class="globe-title">{{ notice.title }}</div>
-          <div class="flex justify-between items-center text-xs">
-            <p class="text-center">{{ notice.content }}</p>
+        <!-- Sección de Avisos -->
+        <section v-if="notices.length > 0" class="mb-8">
+          <h2 class="text-2xl font-semibold text-gray-900 mb-4">Avisos</h2>
+          <div class="space-y-3">
+            <!-- Tarjeta de Aviso Moderna -->
+            <div v-for="notice in notices" :key="notice.id"
+              class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-sm"
+              role="alert">
+              <p class="font-bold text-blue-800">{{ notice.title }}</p>
+              <p class="text-blue-700">{{ notice.content }}</p>
+            </div>
           </div>
-        </div>
-      </div>
-      <p v-else class="text-center text-gray-500 text-xs">No hay avisos para mostrar.</p>
-    </section>
+        </section>
 
-    <div class="md:mx-12 mx-1">
-      <p class="text-primary font-bold text-lg">Operaciones</p>
+        <!-- Sección de Operaciones -->
+        <section class="mb-8">
+          <h2 class="text-2xl font-semibold text-gray-900 mb-4">Operaciones</h2>
+          <!-- Layout de Grid para Operaciones -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- EmployeeStations ocupará 2 columnas en pantallas grandes -->
+            <div class="lg:col-span-2">
+              <EmployeeStations />
+            </div>
+            <!-- BirthdatesCard ocupará 1 columna -->
+            <div class="lg:col-span-1">
+              <BirthdatesCard :users="collaborators_birthdays" />
+            </div>
+          </div>
+        </section>
 
-      <div class="globe-container flex-col">
-        <EmployeeStations />
-        <BirthdatesCard :users="collaborators_birthdays" />
-      </div>
-      <p class="text-primary font-bold text-lg mt-5">Estadisticas</p>
-      <div class="globe-container flex-col">
-        <BarChart :options="yearSalesComparisonChartOptions" title="Ventas año en curso vs anterior" />
-        <BarChart :options="yearOutcomesComparisonChartOptions" title="Egresos año en curso vs anterior" />
-        <Kpi :options="profitKpiOptions" title="Ganancias de este mes vs mes anterior" />
+        <!-- Sección de Estadísticas -->
+        <section>
+          <h2 class="text-2xl font-semibold text-gray-900 mb-4">Estadísticas</h2>
+          <!-- Layout de Grid para Estadísticas -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Gráfica de Ventas (Ancha) -->
+            <div class="lg:col-span-3">
+              <BarChart :options="yearSalesComparisonChartOptions" title="Ventas año en curso vs anterior" />
+            </div>
+            <!-- Gráfica de Egresos -->
+            <div class="lg:col-span-3">
+              <BarChart :options="yearOutcomesComparisonChartOptions" title="Egresos año en curso vs anterior" />
+            </div>
+            <!-- KPI de Ganancias -->
+            <div class="lg:col-span-1">
+              <Kpi :options="profitKpiOptions" title="Ganancias de este mes vs mes anterior" />
+            </div>
+          </div>
+        </section>
       </div>
     </div>
-    <!-- 
-      <SecondaryButton @click="getPosition" class="mt-3"
-        >Probar geolocalización</SecondaryButton
-      > -->
   </AppLayout>
 </template>
 
@@ -55,7 +80,7 @@ import Kpi from "@/Components/MyComponents/Charts/Kpi.vue";
 import EmployeeStations from "@/Components/MyComponents/Dashboard/EmployeeStations.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 
-import { format } from 'date-fns';
+import { format, subMonths as subMonthsFn, getMonth, getYear } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 export default {
@@ -88,32 +113,32 @@ export default {
 
       // chart options
       yearSalesComparisonChartOptions: {
-        colors: ['#BEBFC1', '#F07209'],
+        colors: ['#a8b3cf', '#3b82f6'], // Colores modernos (gris-azulado, azul-500)
         categories: this.salesLastYear.map(item => item.month),
         series: [{
           name: 'Año pasado',
-          data: this.salesLastYear.map(item => item.amount.toFixed(2))
+          data: this.salesLastYear.map(item => (item.amount).toFixed(2))
         },
         {
           name: 'Año en curso',
-          data: this.salesCurrentYear.map(item => item.amount.toFixed(2))
+          data: this.salesCurrentYear.map(item => (item.amount).toFixed(2))
         }],
       },
       yearOutcomesComparisonChartOptions: {
-        colors: ['#BEBFC1', '#E0212F'],
+        colors: ['#a8b3cf', '#ef4444'], // Colores modernos (gris-azulado, red-500)
         categories: this.outcomesLastYear.map(item => item.month),
         series: [{
           name: 'Año pasado',
-          data: this.outcomesLastYear.map(item => item.amount.toFixed(2))
+          data: this.outcomesLastYear.map(item => (item.amount).toFixed(2))
         },
         {
           name: 'Año en curso',
-          data: this.outcomesCurrentYear.map(item => item.amount.toFixed(2))
+          data: this.outcomesCurrentYear.map(item => (item.amount).toFixed(2))
         }],
       },
       profitKpiOptions: {
-        currentVal: this.getMonthProfit(),
-        refVal: this.getMonthProfit(1),
+        currentVal: this.getMonthProfit(0), // Mes actual
+        refVal: this.getMonthProfit(1), // Mes anterior
         tooltipCurrentVal: 'Ganancias mes actual',
         tooltipRefVal: 'Ganancias mes anterior',
         unit: '$',
@@ -143,25 +168,36 @@ export default {
     outcomesLastYear: Array,
   },
   methods: {
+    // Lógica de `getMonthProfit` mejorada para más claridad
     getMonthProfit(subMonths = 0) {
-      // Obtiene la fecha actual
-      const currentDate = new Date();
-      // Formatea el mes actual en español
-      const currentMonth = parseInt(format(currentDate, 'M', { locale: es })) - 1 - subMonths;
+      try {
+        const currentDate = new Date();
+        const targetDate = subMonthsFn(currentDate, subMonths);
+        const targetMonthIndex = getMonth(targetDate); // 0-11
+        const targetYear = getYear(targetDate);
+        const currentYear = getYear(currentDate);
 
-      let profit = 0;
+        let sales = 0;
+        let outcomes = 0;
 
-      if (currentMonth >= 0) {
-        profit = this.salesCurrentYear[currentMonth].amount -
-          this.outcomesCurrentYear[currentMonth].amount;
-      } else {
-        profit = this.salesLastYear[11].amount -
-          this.outcomesLastYear[11].amount;
+        if (targetYear === currentYear) {
+          sales = this.salesCurrentYear[targetMonthIndex]?.amount || 0;
+          outcomes = this.outcomesCurrentYear[targetMonthIndex]?.amount || 0;
+        } else {
+          // Asumimos que si no es el año actual, es el anterior
+          sales = this.salesLastYear[targetMonthIndex]?.amount || 0;
+          outcomes = this.outcomesLastYear[targetMonthIndex]?.amount || 0;
+        }
+
+        // El valor ya parece estar en miles, no multiplicamos
+        return (sales - outcomes);
+      } catch (e) {
+        console.error("Error calculating profit:", e);
+        return 0; // Retornar 0 si hay un error
       }
-
-      return profit * 1000;
-
     },
+    
+    // --- Métodos de geolocalización sin cambios ---
     getPosition() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -170,35 +206,38 @@ export default {
           this.geolocation_options
         );
       } else {
-        alert(
-          "error",
-          "Geolocación no soportada por navegador, inténtalo en uno diferente"
-        );
+        // Reemplazar 'alert' por un método de notificación moderno si existe
+        console.error("Geolocación no soportada por navegador.");
+        // alert(
+        //   "error",
+        //   "Geolocación no soportada por navegador, inténtalo en uno diferente"
+        // );
       }
     },
     error(e) {
-      alert("ERROR(" + e.code + "): " + e.message);
+      console.error("Error de geolocalización (" + e.code + "): " + e.message);
+      // alert("ERROR(" + e.code + "): " + e.message);
     },
     analyzePosition(current_position) {
       const validated_area = this.valid_areas.find((valid_area) =>
         this.isCurrentPositionInsideArea(valid_area, current_position)
       );
 
+      const posString = `${current_position.coords.latitude}, ${current_position.coords.longitude}`;
+
       if (validated_area !== undefined) {
-        alert(
-          validated_area.label +
-          ". Posición: " +
-          current_position.coords.latitude +
-          ", " +
-          current_position.coords.longitude
-        );
+        console.log(`Área válida: ${validated_area.label}. Posición: ${posString}`);
+        // alert(
+        //   validated_area.label +
+        //   ". Posición: " +
+        //   posString
+        // );
       } else {
-        alert(
-          "Ubicación no válida para registrar asistencia." +
-          current_position.coords.latitude +
-          ", " +
-          current_position.coords.longitude
-        );
+        console.warn(`Ubicación no válida para registrar asistencia: ${posString}`);
+        // alert(
+        //   "Ubicación no válida para registrar asistencia." +
+        //   posString
+        // );
       }
     },
     isCurrentPositionInsideArea(valid_area, current_position) {

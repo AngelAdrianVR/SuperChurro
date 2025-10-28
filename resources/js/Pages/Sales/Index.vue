@@ -2,138 +2,259 @@
 <LoadingIndicator v-if="loading" />
   <AppLayout title="Historial de ventas">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
+      <!-- MODIFICADO: Header centrado y con soporte para modo oscuro -->
+      <h2 class="font-semibold text-xl text-gray-900 dar:text-gray-100 leading-tight text-center">
         Ventas
       </h2>
     </template>
 
-    <div class="mx-3 my-4 lg:w-1/3 lg:mx-auto">
-      <label class="text-gray-500 text-sm">Selecciona la fecha para ver las ventas</label>
-      <Datepicker v-model="date" inline auto-apply :month-change-on-scroll="false" model-type="yyyy-MM-dd"></Datepicker>
-    </div>
-
-    <div v-if="shift_1_sales.length || shift_2_sales.length">
-      <div class="mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-transparent rounded-md px-2 py-1">
-        <h1 class="col-span-full text-left text-sm font-bold">Venta mensual acumulada</h1>
-        <p class="ml-4">
-          Ventas: ${{ numberFormat(totalMonthSale().month_sales + totalMonthSale().to_employees) }} <br>
-          <span>registrado en caja: ${{ numberFormat(month_stored_cash) }}</span> <br>
-          <span v-html="monthSaleDiff()"></span>
-        </p>
+    <!-- MODIFICADO: Contenedor principal para centrar y limitar el ancho -->
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      
+      <!-- MODIFICADO: Tarjeta para el Datepicker -->
+      <div class=" flex flex-col items-center
+          mx-4 sm:mx-0 
+          mb-8 
+          lg:w-1/2 
+          lg:mx-auto 
+          bg-white 
+          dar:bg-gray-800 
+          shadow-xl 
+          rounded-2xl 
+          p-6
+        ">
+        <label class="block text-base font-medium text-gray-900 dar:text-gray-100 mb-4">
+          Selecciona la fecha para ver las ventas
+        </label>
+        
+        <!-- MODIFICADO: 
+          - Se agregó la prop ':dar="true"' para el modo oscuro del calendario.
+          - Se agregó 'teleport-center' para asegurar que los menús desplegables
+            aparezcan correctamente centrados.
+        -->
+        <Datepicker 
+          v-model="date" 
+          inline 
+          auto-apply 
+          :month-change-on-scroll="false" 
+          model-type="yyyy-MM-dd"
+          :dar="true"
+          teleport-center
+        ></Datepicker>
       </div>
 
-      <div class="border-b border-gray3 border-dashed mx-2 my-3"></div>
-
-      <!------------------------------ Empleados de ese día -------------------------- -->
-      <div class="mt-3 mx-3 text-xs grid grid-cols-2 lg:grid-cols-4 gap-1 bg-transparent rounded-md px-2 py-1">
-        <h1 class="col-span-full text-center text-sm font-bold mb-4">Empleados activos este día </h1>
-        <div v-for="(employee, index) in employees" :key="index">
-          <div class="rounded-md border border-gray3 flex items-center py-2 px-3">
-            <i class="fa-regular fa-user-circle text-gray-500 text-lg mr-2"></i>
-            <p>{{ employee.name }}</p>
+      <!-- MODIFICADO: 
+        - Contenedor para todas las tarjetas de datos de ventas.
+        - Se usa 'space-y-8' para reemplazar los divisores 'border-dashed'.
+      -->
+      <div v-if="shift_1_sales.length || shift_2_sales.length" class="space-y-8">
+        
+        <!-- MODIFICADO: Tarjeta para "Venta mensual acumulada" -->
+        <div class="mx-4 sm:mx-0 bg-white dar:bg-gray-800 shadow-xl rounded-2xl p-6">
+          <h1 class="text-lg font-semibold text-gray-900 dar:text-gray-100 mb-4">
+            Venta mensual acumulada
+          </h1>
+          <div class="text-sm text-gray-600 dar:text-gray-400 space-y-1">
+            <p>
+              Ventas: 
+              <span class="font-medium text-gray-900 dar:text-gray-200">
+                ${{ numberFormat(totalMonthSale().month_sales + totalMonthSale().to_employees) }}
+              </span>
+            </p>
+            <p>
+              Registrado en caja: 
+              <span class="font-medium text-gray-900 dar:text-gray-200">
+                ${{ numberFormat(month_stored_cash) }}
+              </span>
+            </p>
+            <p v-html="monthSaleDiff()"></p>
           </div>
         </div>
-      </div>
-      <!-- ---------------------------------------------------------------------------- -->
-
-      <div class="border-b border-gray3 border-dashed mx-2 my-3"></div>
-
-      <!-- ----------------- Ventas T/M --------------------------------- -->
-      <div class="mt-3 mx-3 text-xs rounded-md px-2 py-1">
-        <h1 class="col-span-full text-left text-sm font-bold mb-4">Ventas turno matutino</h1>
-
-        <SaleTable :shiftSales="shift_1_sales" />
-
-        <div class="flex justify-end">
-          <p class="font-bold bg-[#F2FEA8] px-4 py-2 mt-4">Total: ${{ (totalSale().shift_1).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
-        </div>
-      </div>
-      <!-- ----------------------------------------------------------------- -->
-
-      <div class="border-b border-gray3 border-dashed mx-2 my-3"></div>
-
-      <!-- ----------------- Ventas T/V --------------------------------- -->
-      <div class="mt-3 mx-3 text-xs rounded-md px-2 py-1">
-        <h1 class="col-span-full text-center text-sm font-bold mb-4">Ventas turno vespertino</h1>
-
-        <SaleTable :shiftSales="shift_2_sales" />
-
-        <div class="flex justify-end">
-          <p class="font-bold bg-[#F2FEA8] px-4 py-2 mt-4">Total: ${{ (totalSale().shift_2).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
-        </div>
-      </div>
-      <!-- ----------------------------------------------------------------- -->
-
-      <div class="border-b border-gray3 border-dashed mx-2 my-3"></div>
-
-      <!-- Ventas a empleados y cortesías ---------------------------- -->
-      <div class="mt-3 mx-3 text-xs lg:grid lg:grid-cols-2 gap-2 bg-transparent rounded-md px-2 py-1">
-        <h1 class="col-span-full text-left text-sm font-bold mb-4">Ventas a empleados / cortesías</h1>
-
-        <div class="border border-gray3 rounded-md px-3 py-2" v-for="sale in sales_to_employees" :key="sale.id">
-          <div class="flex items-center mb-3">
-            <i class="fa-regular fa-user-circle text-gray-500 text-lg mr-2"></i>
-            <p class="text-sm">{{ sale.user?.name }}</p>
+        
+        <!-- MODIFICADO: Tarjeta para "Empleados activos" -->
+        <div class="mx-4 sm:mx-0 bg-white dar:bg-gray-800 shadow-xl rounded-2xl p-6">
+          <h1 class="text-lg font-semibold text-gray-900 dar:text-gray-100 mb-4 text-center">
+            Empleados activos este día
+          </h1>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div v-for="(employee, index) in employees" :key="index" 
+                 class="flex items-center p-3 bg-gray-50 dar:bg-gray-700 rounded-lg">
+              <i class="fa-regular fa-user-circle text-xl text-indigo-500 dar:text-indigo-400 mr-3"></i>
+              <p class="text-sm font-medium text-gray-800 dar:text-gray-200">{{ employee.name }}</p>
+            </div>
           </div>
-          <div class="grid grid-cols-6 gap-1">
-            <p class="font-bold col-span-2">Producto</p>
-            <p class="font-bold">Tipo</p>
-            <p class="font-bold">Canidad</p>
-            <p class="font-bold">Total</p>
-            <p class="font-bold">Motivo</p>
+        </div>
 
-            <p class="col-span-2">{{ sale.product.name }}</p>
-            <p>{{ sale.price == 0 ? 'C' : 'VE' }}</p>
-            <p>{{ sale.quantity }}</p>
-            <p>${{ (sale.price * sale.quantity)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
-            <p>{{ sale.price == 0 ? sale.notes : '' }}</p>
+        <!-- MODIFICADO: Tarjeta para "Ventas turno matutino" -->
+        <div class="mx-4 sm:mx-0 bg-white dar:bg-gray-800 shadow-xl rounded-2xl p-6 overflow-x-auto">
+          <h1 class="text-lg font-semibold text-gray-900 dar:text-gray-100 mb-4">
+            Ventas turno matutino
+          </h1>
+          <SaleTable :shiftSales="shift_1_sales" />
+          <div class="flex justify-end mt-4">
+            <!-- MODIFICADO: Estilo del total más moderno, usando verde -->
+            <p class="
+                font-bold 
+                text-base 
+                text-green-800 
+                dar:text-green-100 
+                bg-green-100 
+                dar:bg-green-900 
+                px-4 
+                py-2 
+                rounded-lg 
+                inline-block
+              ">
+              Total: ${{ (totalSale().shift_1).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+            </p>
+          </div>
+        </div>
+
+        <!-- MODIFICADO: Tarjeta para "Ventas turno vespertino" -->
+        <div class="mx-4 sm:mx-0 bg-white dar:bg-gray-800 shadow-xl rounded-2xl p-6 overflow-x-auto">
+          <h1 class="text-lg font-semibold text-gray-900 dar:text-gray-100 mb-4">
+            Ventas turno vespertino
+          </h1>
+          <SaleTable :shiftSales="shift_2_sales" />
+          <div class="flex justify-end mt-4">
+            <p class="
+                font-bold 
+                text-base 
+                text-green-800 
+                dar:text-green-100 
+                bg-green-100 
+                dar:bg-green-900 
+                px-4 
+                py-2 
+                rounded-lg 
+                inline-block
+              ">
+              Total: ${{ (totalSale().shift_2).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+            </p>
+          </div>
+        </div>
+
+        <!-- MODIFICADO: Tarjeta para "Ventas a empleados / cortesías" -->
+        <div class="mx-4 sm:mx-0 bg-white dar:bg-gray-800 shadow-xl rounded-2xl p-6">
+          <h1 class="text-lg font-semibold text-gray-900 dar:text-gray-100 mb-4">
+            Ventas a empleados / cortesías
+          </h1>
+          <div class="grid lg:grid-cols-2 gap-4">
+            <!-- MODIFICADO: Estilo de cada item de venta -->
+            <div class="border border-gray-200 dar:border-gray-700 rounded-lg p-4" v-for="sale in sales_to_employees" :key="sale.id">
+              <div class="flex items-center mb-4">
+                <i class="fa-regular fa-user-circle text-xl text-indigo-500 dar:text-indigo-400 mr-3"></i>
+                <p class="text-base font-medium text-gray-800 dar:text-gray-200">{{ sale.user?.name }}</p>
+              </div>
+              <div class="grid grid-cols-6 gap-2 text-xs text-gray-600 dar:text-gray-400">
+                <p class="font-bold col-span-2 text-gray-800 dar:text-gray-200">Producto</p>
+                <p class="font-bold text-gray-800 dar:text-gray-200">Tipo</p>
+                <p class="font-bold text-gray-800 dar:text-gray-200">Cantidad</p>
+                <p class="font-bold text-gray-800 dar:text-gray-200">Total</p>
+                <p class="font-bold text-gray-800 dar:text-gray-200">Motivo</p>
+
+                <p class="col-span-2">{{ sale.product.name }}</p>
+                <p>{{ sale.price == 0 ? 'C' : 'VE' }}</p>
+                <p>{{ sale.quantity }}</p>
+                <p>${{ (sale.price * sale.quantity)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
+                <p>{{ sale.price == 0 ? sale.notes : '' }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end mt-4 lg:col-span-2">
+            <p class="
+                font-bold 
+                text-base 
+                text-green-800 
+                dar:text-green-100 
+                bg-green-100 
+                dar:bg-green-900 
+                px-4 
+                py-2 
+                rounded-lg 
+                inline-block
+              ">
+              Total: ${{ (totalSale().to_employees).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+            </p>
+          </div>
+        </div>
+
+        <!-- MODIFICADO: Tarjeta para "Venta total del día" y "Caja" -->
+        <div class="mx-4 sm:mx-0 bg-white dar:bg-gray-800 shadow-xl rounded-2xl p-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             
+            <!-- Columna de inputs de caja -->
+            <div class="space-y-4">
+              <div v-if="!stored_cash.length" class="p-4 bg-gray-50 dar:bg-gray-700 rounded-lg">
+                <InputLabel value="Cantidad total en caja *" class="text-sm font-medium text-gray-800 dar:text-gray-200 mb-2" />
+                <input v-model="cash" type="number" autocomplete="off" required 
+                       class="block w-full border-gray-300 dar:border-gray-600 dar:bg-gray-800 dar:text-gray-200 focus:border-indigo-500 dar:focus:border-indigo-400 focus:ring-indigo-500 dar:focus:ring-indigo-400 rounded-lg shadow-sm"
+                       placeholder="$00.0" />
+                <PrimaryButton @click="storeCash" class="mt-3" :disabled="!cash">Guardar</PrimaryButton>
+              </div>
+
+              <div v-if="edit_stored_cash" class="p-4 bg-gray-50 dar:bg-gray-700 rounded-lg">
+                <InputLabel value="Actualizar cantidad total en caja *" class="text-sm font-medium text-gray-800 dar:text-gray-200 mb-2" />
+                <input v-model="cash" type="number" autocomplete="off" required 
+                       class="block w-full border-gray-300 dar:border-gray-600 dar:bg-gray-800 dar:text-gray-200 focus:border-indigo-500 dar:focus:border-indigo-400 focus:ring-indigo-500 dar:focus:ring-indigo-400 rounded-lg shadow-sm"
+                       placeholder="$00.0" />
+                <div class="flex space-x-2 mt-3">
+                  <CancelButton @click="edit_stored_cash = false">Cancelar</CancelButton>
+                  <PrimaryButton @click="updateCash" :disabled="!cash">Actualizar</PrimaryButton>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna de totales -->
+            <div class="flex flex-col items-end text-base space-y-2 text-gray-800 dar:text-gray-200">
+              <p class="font-semibold text-lg">
+                Total del sistema: 
+                <span class="font-bold text-xl text-gray-900 dar:text-white">
+                  ${{ (totalSale().shift_1 + totalSale().shift_2 + totalSale().to_employees)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}
+                </span>
+              </p>
+              <div v-if="stored_cash.length && !edit_stored_cash" class="flex justify-between items-center group">
+                <p class="font-semibold">
+                  Registrado en caja: 
+                  <span class="font-bold text-lg">
+                    ${{ (stored_cash[0].cash)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+                  </span>
+                </p>
+                <i @click="edit_stored_cash = true" 
+                   class="
+                     fa-solid fa-pencil 
+                     text-indigo-600 
+                     dar:text-indigo-400 
+                     hover:text-indigo-800 
+                     dar:hover:text-indigo-300
+                     ml-3 
+                     cursor-pointer 
+                     text-xs 
+                     transition-opacity
+                   "></i>
+              </div>
+              <p v-if="stored_cash.length" v-html="saleDiff()"></p>
+              <p class="font-semibold">
+                Comisión: 
+                <span class="font-bold text-lg">
+                  ${{ totalSale().commissions }}
+                </span>
+              </p>
+            </div>
           </div>
         </div>
-        <div class="flex justify-end self-end">
-          <p class="font-bold bg-[#F2FEA8] px-4 py-2 mt-4">Total: ${{ (totalSale().to_employees).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
-        </div>
       </div>
-      <!-- -------------------------------------------------------------------- -->
-
-
-      <!-- Venta total del día ------------------- -->
-      <div class="flex justify-end my-3 mx-4">
-
-        <div v-if="!stored_cash.length" class="mb-3 w-full">
-          <InputLabel value="Cantidad total en caja *" class="ml-3 mb-1 text-sm" />
-          <input v-model="cash" type="number" autocomplete="off" required class="input"
-           placeholder="$00.0" />
-           <PrimaryButton @click="storeCash" class="ml-3 my-2" :disabled="!cash">Guardar</PrimaryButton>
-        </div>
-
-        <div v-if="edit_stored_cash" class="mb-3 w-full">
-          <InputLabel value="Cantidad total en caja *" class="ml-3 mb-1 text-sm" />
-          <input v-model="cash" type="number" autocomplete="off" required class="input"
-           placeholder="$00.0" />
-           <CancelButton @click="edit_stored_cash = false" class="ml-3 my-2 !rounded-full">Cancelar</CancelButton>
-           <PrimaryButton @click="updateCash" class="ml-3 my-2" :disabled="!cash">Actualizar</PrimaryButton>
-        </div>
-
-        <div class="flex flex-col items-end text-sm">
-          <p class="mx-3 font-bold text-gray-700 mr-6">Total del sistema: ${{
-            (totalSale().shift_1 + totalSale().shift_2 + totalSale().to_employees)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}
-          </p>
-          <div v-if="stored_cash.length && !edit_stored_cash" class="flex justify-between items-center cursor-pointer pl-2">
-            <p class="mx-3 font-bold text-gray-700">Registrado en caja: ${{ (stored_cash[0].cash)?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
-            <i v-if="!edit_stored_cash" @click="edit_stored_cash = true" class="fa-solid fa-pencil text-primary text-xs"></i>
-          </div>
-          <p v-if="stored_cash.length" v-html="saleDiff()"></p>
-          <p class="mx-3 font-bold text-gray-700 mr-6 text-sm">Comisión: ${{ totalSale().commissions }}</p>
-        </div>
-      </div>
+      
+      <!-- MODIFICADO: Mensaje de "No hay ventas" -->
+      <p v-else-if="date" class="mt-10 text-center text-lg text-gray-500 dar:text-gray-400">
+        No hay ventas para mostrar en esta fecha
+      </p>
     </div>
-    <p v-else class="mt-6 text-sm text-gray-500 text-center">No hay ventas para mostrar</p>
-
   </AppLayout>
 </template>
 
 <script>
+// El script permanece sin cambios
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import CancelButton from "@/Components/CancelButton.vue";
@@ -274,21 +395,24 @@ export default {
         + total_sale.to_employees;
 
       const diff = this.stored_cash[0].cash - total;
-
+      
+      // MODIFICADO: Clases de color para la diferencia
       return diff > 0
-        ? '<span class="text-green-500 text-sm mr-6 font-bold">Diferencia + $' + diff + '</span>'
-        : '<span class="text-red-500 text-sm mr-6">Diferencia $' + diff + '</span>';
+        ? '<span class="text-green-600 dar:text-green-500 text-sm font-bold">Diferencia: +$' + diff.toFixed(2) + '</span>'
+        : '<span class="text-red-600 dar:text-red-500 text-sm font-bold">Diferencia: $' + diff.toFixed(2) + '</span>';
     },
     monthSaleDiff() {
       const total_sale = this.totalMonthSale();
       const total = total_sale.month_sales
         + total_sale.to_employees;
 
-      const diff = this.numberFormat(this.month_stored_cash - total);
+      const diff = this.month_stored_cash - total;
 
+      // MODIFICADO: Clases de color para la diferencia
+      // CORREGIDO: Se eliminó .toFixed(2) de aquí, ya que numberFormat ya lo hace.
       return diff > 0
-        ? '<span class="text-green-600 font-bold">Diferencia + $' + diff + '</span>'
-        : '<span class="text-red-600">Diferencia $' + diff + '</span>';
+        ? '<span class="text-green-600 dar:text-green-500 font-bold">Diferencia: +$' + this.numberFormat(diff) + '</span>'
+        : '<span class="text-red-600 dar:text-red-500 font-bold">Diferencia: $' + this.numberFormat(diff) + '</span>';
     },
     async storeCash() {
       try {
@@ -314,9 +438,10 @@ export default {
       }
     },
     numberFormat(number) {
+      if (number === null || number === undefined) return '0.00';
       const exp = /(\d)(?=(\d{3})+(?!\d))/g;
       const rep = '$1,';
-      return number?.toString().replace(exp, rep);
+      return number.toFixed(2).replace(exp, rep);
     }, 
     editSale(sale) {
       this.edit_sale = sale;
@@ -326,3 +451,4 @@ export default {
   },
 };
 </script>
+

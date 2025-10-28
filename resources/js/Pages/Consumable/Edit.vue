@@ -1,56 +1,81 @@
 <template>
   <AppLayout title="Editar consumible">
     <template #header>
-      <div class="flex items-center mt-2">
-        <Back />
-        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
-          Editar consumible <strong class="ml-2 text-primary">{{ consumable.name }}</strong>
+      <!-- 
+        MODIFICACIÓN: 
+        - Mismo layout de header que en 'Create'.
+        - Se usa un color azul (text-blue-600) para el nombre,
+          en lugar de 'text-primary' para asegurar consistencia.
+      -->
+      <div class="relative flex items-center justify-center py-2">
+        <div class="absolute left-0">
+          <Back />
+        </div>
+        <h2 class="font-semibold text-xl text-gray-900 leading-tight">
+          Editar consumible <strong class="ml-2 text-blue-600">{{ consumable.name }}</strong>
         </h2>
       </div>
     </template>
 
-    <div class="max-w-2xl md:mx-auto mt-5 rounded-lg px-5 py-8 bg-transparent border border-gray3 mx-4">
+    <!-- 
+      MODIFICACIÓN: 
+      - Mismo estilo de 'card' moderno que en 'Create'.
+      - Se unifica a max-w-xl por consistencia (antes era 2xl).
+    -->
+    <div class="max-w-xl mx-auto mt-8 p-6 lg:p-8 bg-white rounded-xl shadow-lg mb-8">
       <form @submit.prevent="update">
 
-        <div class="mb-2 w-full">
-          <InputLabel value="Nombre del consumible *" class="ml-3 mb-1 text-sm" />
-          <input v-model="form.name" type="text" autocomplete="off" class="input"
+        <!-- 
+          MODIFICACIÓN: 
+          - Espaciado estandarizado (mb-6).
+        -->
+        <div class="mb-6 w-full">
+          <!-- 
+            MODIFICACIÓN: 
+            - Estilo de label mejorado.
+          -->
+          <InputLabel value="Nombre del consumible *" class="block mb-2 text-sm font-medium text-gray-700" />
+          <!-- 
+            MODIFICACIÓN: 
+            - Estilos de input modernos.
+          -->
+          <input v-model="form.name" type="text" autocomplete="off"
+            class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
             placeholder="Escribe el nombre del consumible" />
           <InputError :message="$page.props?.errors.name" />
         </div>
 
-        <!-- <div class="mb-2 w-full">
-          <InputLabel value="Stock mínimo *" class="ml-3 mb-1 text-sm" />
-          <input v-model="form.low_stock" type="number" autocomplete="off" class="input"
-            placeholder="Agrega el stock mínimo" />
-          <InputError :message="$page.props?.errors.low_stock" />
-        </div> -->
+        <!-- Campos comentados eliminados para mayor claridad -->
 
-        <InputLabel value="Unidad de medida *" class="ml-3 mb-1 text-sm" />
-        <select class="select mb3" v-model="form.unit_id">
-          <option disabled selected class="text-gray-500">
-            -- Seleccione --
-          </option>
-          <option class="text-gray-500" v-for="unit in units" :key="unit.id" :value="unit.id">
-            {{ unit.name }}
-          </option>
-        </select>
+        <div class="mb-6 w-full">
+          <InputLabel value="Unidad de medida *" class="block mb-2 text-sm font-medium text-gray-700" />
+          <!-- 
+            MODIFICACIÓN: 
+            - Estilos de select modernos.
+          -->
+          <select class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-600 focus:border-blue-600 sm:text-sm" v-model="form.unit_id">
+            <option disabled value.="null" class="text-gray-500">
+              -- Seleccione --
+            </option>
+            <option class="text-gray-600" v-for="unit in units" :key="unit.id" :value="unit.id">
+              {{ unit.name }}
+            </option>
+          </select>
+          <InputError :message="$page.props?.errors.unit_id" />
+        </div>
 
-        <!-- <div class="mt-3 w-ull relative">
-          <InputLabel value="Código del consumible (en caso de tener)" class="ml-3 mb-1" />
-          <input v-model="form.code" type="text" autocomplete="off" class="input pl-8"
-            placeholder="Escribe el código de consumible" />
-          <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]"><i
-              class="fa-solid fa-barcode"></i></p>
-          <InputError :message="form.errors.code" />
-        </div> -->
+        <!-- Campos comentados eliminados para mayor claridad -->
 
-        <div class="mt-5">
-          <InputLabel value="Agregar foto del consumible" class="ml-3 mb-1" />
+        <div class="mt-6">
+          <InputLabel value="Agregar foto del consumible" class="block mb-2 text-sm font-medium text-gray-700" />
           <InputFilePreview :imageUrl="consumable.media[0]?.original_url" @imagen="saveImage" />
         </div>
 
-        <div class="flex justify-start mt-10">
+        <!-- 
+          MODIFICACIÓN: 
+          - Botón alineado a la derecha (justify-end).
+        -->
+        <div class="flex justify-end mt-10">
           <PrimaryButton :disabled="form.processing">Guardar cambios</PrimaryButton>
         </div>
       </form>
@@ -58,6 +83,7 @@
   </AppLayout>
 </template>
 
+<!-- El script se mantiene idéntico -->
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PayRollTable from "@/Components/PayRollTable.vue";

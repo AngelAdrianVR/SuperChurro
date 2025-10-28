@@ -1,20 +1,34 @@
 <template>
-    <div class="globe relative text-center self-start z-0">
-        <div class="globe-title pb-2">
-            <h1 class="font-bold">Cumpleaños de este mes</h1>
+    <!--
+      MODERNIZACIÓN:
+      - Estilo de tarjeta unificado: 'bg-white rounded-2xl shadow-lg p-6'.
+      - Título alineado a la izquierda, más profesional.
+      - Lista con mejor espaciado (space-y-4).
+      - Icono de regalo (gift) más limpio.
+      - Layout de item (flex justify-between) para alinear nombre y fecha.
+    -->
+    <div class="w-full bg-white rounded-2xl shadow-lg p-6 self-start">
+        <div class="globe-title pb-4 border-b border-gray-200">
+            <h1 class="text-lg font-semibold text-gray-800">Cumpleaños de este mes</h1>
         </div>
-        <ul class="text-[#373737]">
-            <li v-for="user in users" :key="user.id" class="flex text-sm space-x-2">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513M15 8.25v-1.5m-6 1.5v-1.5m12 9.75-1.5.75a3.354 3.354 0 0 1-3 0 3.354 3.354 0 0 0-3 0 3.354 3.354 0 0 1-3 0 3.354 3.354 0 0 0-3 0 3.354 3.354 0 0 1-3 0L3 16.5m15-3.379a48.474 48.474 0 0 0-6-.371c-2.032 0-4.034.126-6 .371m12 0c.39.049.777.102 1.163.16 1.07.16 1.837 1.094 1.837 2.175v5.169c0 .621-.504 1.125-1.125 1.125H4.125A1.125 1.125 0 0 1 3 20.625v-5.17c0-1.08.768-2.014 1.837-2.174A47.78 47.78 0 0 1 6 13.12M12.265 3.11a.375.375 0 1 1-.53 0L12 2.845l.265.265Zm-3 0a.375.375 0 1 1-.53 0L9 2.845l.265.265Zm6 0a.375.375 0 1 1-.53 0L15 2.845l.265.265Z" />
-                </svg>
-                <span>{{ user.name }}</span>
-                <span>({{ formatDate(user.employee_properties?.birthdate) }})</span>
+        <ul class="text-gray-700 mt-4 space-y-4">
+            <li v-for="user in users" :key="user.id" class="flex items-center justify-between text-sm">
+                <div class="flex items-center space-x-3">
+                    <!-- Icono de Regalo -->
+                    <div class="flex-shrink-0 bg-blue-100 rounded-full p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-blue-600">
+                          <path d="M10 4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 10 4.5Z" />
+                          <path fill-rule="evenodd" d="M8.5 1.75A2.75 2.75 0 0 0 5.75 4.5v.5H4.5a.75.75 0 0 0 0 1.5h1.25V15A2.75 2.75 0 0 0 8.5 17.75h3A2.75 2.75 0 0 0 14.25 15V6.5h1.25a.75.75 0 0 0 0-1.5H14.25v-.5A2.75 2.75 0 0 0 11.5 1.75h-3ZM7.25 6.5v8.5A1.25 1.25 0 0 0 8.5 16.25h3A1.25 1.25 0 0 0 12.75 15V6.5H7.25Z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <!-- Nombre -->
+                    <span class="font-medium text-gray-800">{{ user.name }}</span>
+                </div>
+                <!-- Fecha -->
+                <span class="text-gray-500">{{ formatDate(user.employee_properties?.birthdate) }}</span>
             </li>
         </ul>
-        <p v-if="!users.length" class="text-xs text-gray1">No hay cumpleaños este mes</p>
+        <p v-if="!users.length" class="mt-4 text-sm text-gray-500">No hay cumpleaños este mes</p>
     </div>
 </template>
 <script>
@@ -32,8 +46,10 @@ export default {
     },
     methods: {
         formatDate(date) {
+            // Fix para fechas que pueden estar en UTC
+            if (!date) return '';
             const parsedDate = new Date(date);
-            const adjustedDate = addDays(parsedDate, 1); // Sumar 1 día
+            const adjustedDate = addDays(parsedDate, 1); // Sumar 1 día por posible ajuste de zona horaria
             return format(adjustedDate, "dd 'de' MMMM", { locale: es });
         }
     }

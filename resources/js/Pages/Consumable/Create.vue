@@ -1,69 +1,90 @@
 <template>
   <AppLayout title="Nuevo Consumible">
     <template #header>
-      <div class="flex items-center mt-2">
-        <Back />
-        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+      <!-- 
+        MODIFICACIÓN: 
+        - Se usa un layout relativo/absoluto para centrar el título 
+          independientemente del botón "Back".
+        - Se añade padding vertical (py-2) y se oscurece el texto (text-gray-900).
+      -->
+      <div class="relative flex items-center justify-center py-2">
+        <div class="absolute left-0">
+          <Back />
+        </div>
+        <h2 class="font-semibold text-xl text-gray-900 leading-tight">
           Nuevo Consumible
         </h2>
       </div>
     </template>
 
-    <div
-      class="max-w-xl md:mx-auto mt-5 rounded-lg px-5 py-4 mb-4 bg-transparent border border-gray3 mx-4"
-    >
+    <!-- 
+      MODIFICACIÓN: 
+      - Contenedor principal del formulario.
+      - Se cambia de 'border' a un 'card' con fondo blanco, sombra y bordes redondeados.
+      - Se aumenta el padding (p-6 lg:p-8) y el margen superior (mt-8).
+    -->
+    <div class="max-w-xl mx-auto mt-8 p-6 lg:p-8 bg-white rounded-xl shadow-lg mb-8">
       <form @submit.prevent="store">
 
-        <div class="mb-2 w-full">
-          <InputLabel value="Nombre del consumible *" class="ml-3 mb-1 text-sm" />
-          <input v-model="form.name" type="text" autocomplete="off" class="input"
-           placeholder="Escribe el nombre del consumible" />
+        <!-- 
+          MODIFICACIÓN: 
+          - Espaciado estandarizado (mb-6) para cada grupo de formulario.
+        -->
+        <div class="mb-6 w-full">
+          <!-- 
+            MODIFICACIÓN: 
+            - Estilo de label mejorado: más legible, sin margen izquierdo.
+          -->
+          <InputLabel value="Nombre del consumible *" class="block mb-2 text-sm font-medium text-gray-700" />
+          <!-- 
+            MODIFICACIÓN: 
+            - Clases de Tailwind modernas para el input.
+            - Se reemplaza la clase genérica 'input' por clases específicas
+              para bordes, sombras en foco y esquinas redondeadas.
+          -->
+          <input v-model="form.name" type="text" autocomplete="off"
+            class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
+            placeholder="Escribe el nombre del consumible" />
           <InputError :message="$page.props?.errors.name" />
         </div>
 
-        <!-- <div class="mb-2 w-full">
-          <InputLabel value="Stock mínimo *" class="ml-3 mb-1 text-sm" />
-          <input v-model="form.low_stock" type="number" autocomplete="off" class="input"
-           placeholder="Agrega el stock mínimo" />
-          <InputError :message="$page.props?.errors.low_stock" />
-        </div> -->
+        <!-- Campos comentados eliminados para mayor claridad -->
 
-        <!-- <div class="mb-2 w-full">
-          <InputLabel value="Stock de apertura *" class="ml-3 mb-1 text-sm" />
-          <input v-model="form.initial_stock" type="number" autocomplete="off" class="input"
-           placeholder="Agrega el stock inicial" />
-          <InputError :message="$page.props?.errors.initial_stock" />
-        </div> -->
+        <div class="mb-6 w-full">
+          <InputLabel value="Unidad de medida *" class="block mb-2 text-sm font-medium text-gray-700" />
+          <!-- 
+            MODIFICACIÓN: 
+            - Mismos estilos modernos aplicados al 'select'.
+          -->
+          <select class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-600 focus:border-blue-600 sm:text-sm" v-model="form.unit_id">
+            <option disabled selected value.="null" class="text-gray-500">
+              -- Seleccione --
+            </option>
+            <option
+              class="text-gray-600"
+              v-for="unit in units"
+              :key="unit.id"
+              :value="unit.id"
+            >
+              {{ unit.name }}
+            </option>
+          </select>
+           <InputError :message="$page.props?.errors.unit_id" />
+        </div>
 
-        <InputLabel value="Unidad de medida *" class="ml-3 mb-1 text-sm" />
-        <select class="select mb3" v-model="form.unit_id">
-          <option disabled selected class="text-gray-500">
-            -- Seleccione --
-          </option>
-          <option
-            class="text-gray-500"
-            v-for="unit in units"
-            :key="unit.id"
-            :value="unit.id"
-          >
-            {{ unit.name }}
-          </option>
-        </select>
+        <!-- Campos comentados eliminados para mayor claridad -->
 
-        <!-- <div class="mt-3 w-ull relative">
-            <InputLabel value="Código del consumible (en caso de tener)" class="ml-3 mb-1" />
-            <input v-model="form.code" type="text" autocomplete="off" class="input pl-8"
-              placeholder="Escribe el código de consumible" />
-            <p class="text-sm text-gray-500 absolute top-[26px] left-2 border-r border-gray2 pr-[4px] py-[5px]"><i class="fa-solid fa-barcode"></i></p>
-            <InputError :message="form.errors.code" />
-        </div> -->
-
-        <div class="mt-5">
-            <InputLabel value="Agregar foto del consumible" class="ml-3 mb-1" />
+        <div class="mt-6">
+            <InputLabel value="Agregar foto del consumible" class="block mb-2 text-sm font-medium text-gray-700" />
             <InputFilePreview @imagen="saveImage" />
         </div>
 
-        <div class="flex justify-start mt-10">
+        <!-- 
+          MODIFICACIÓN: 
+          - Se alinea el botón a la derecha (justify-end), 
+            que es una convención más moderna para formularios.
+        -->
+        <div class="flex justify-end mt-10">
           <PrimaryButton :disabled="form.processing">Agregar</PrimaryButton>
         </div>
       </form>
@@ -71,6 +92,7 @@
   </AppLayout>
 </template>
 
+<!-- El script se mantiene idéntico -->
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";

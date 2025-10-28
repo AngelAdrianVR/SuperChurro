@@ -1,44 +1,105 @@
 <template>
   <AppLayout title="Solicitar consumibles">
     <template #header>
-      <div class="flex items-center mt-2">
-        <Back />
-        <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
+      <!-- 
+        MODIFICACIÓN: 
+        - Layout de header centrado y consistente.
+      -->
+      <div class="relative flex items-center justify-center py-2">
+        <div class="absolute left-0">
+          <Back />
+        </div>
+        <h2 class="font-semibold text-xl text-gray-900 leading-tight">
           Solicitud de consumibles
         </h2>
       </div>
     </template>
 
-    <div class="max-w-lg md:mx-auto mt-5 rounded-lg px-5 pt-4 pb-5 border border-gray3 bg-transparent mx-4">
-      <!-- <p v-if="validation_message" class="text-red-600 text-xs mb-2" v-html="validation_message"></p> -->
+    <!-- 
+      MODIFICACIÓN: 
+      - Contenedor del formulario estilo 'card' moderno.
+      - Se usa max-w-2xl para dar más espacio a los items.
+    -->
+    <div class="max-w-2xl mx-auto mt-8 p-6 lg:p-8 bg-white rounded-xl shadow-lg mb-8">
+      <!-- <p v-if="validation_message" class="text-red-600 text-sm mb-4" v-html="validation_message"></p> -->
       <form @submit.prevent="store">
         <div>
-          <header class="flex items-center">
-            <label class="w-1/2 font-bold ml-2 text-sm">Consumible</label>
-            <label class="font-bold ml-4 text-sm">Cantidad</label>
+          <!-- 
+            MODIFICACIÓN: 
+            - Header de la lista con mejor espaciado y tipografía.
+          -->
+          <header class="flex items-center border-b pb-2 mb-3">
+            <label class="w-1/2 font-semibold text-sm text-gray-700">Consumible</label>
+            <label class="font-semibold text-sm text-gray-700">Cantidad</label>
           </header>
-          <ConsumableInput :consumables="consumables" v-for="(item, index) in form.items" :key="item.id" :id="item.id"
-            @deleteItem="deleteItem(index)" @syncItem="syncItems(index, $event)" class="mb-1" />
+          <!-- 
+            MODIFICACIÓN: 
+            - Se añade un contenedor para los items con espaciado.
+          -->
+          <div class="space-y-3">
+            <ConsumableInput
+              :consumables="consumables"
+              v-for="(item, index) in form.items"
+              :key="item.id"
+              :id="item.id"
+              @deleteItem="deleteItem(index)"
+              @syncItem="syncItems(index, $event)"
+            />
+          </div>
         </div>
-        <p v-if="!form.items.length" class="text-sm text-gray-600">
+
+        <!-- 
+          MODIFICACIÓN: 
+          - Mensaje de "sin items" centrado y más claro.
+        -->
+        <p v-if="!form.items.length" class="text-sm text-gray-500 text-center py-4">
           Click al botón de "+" para empezar a agregar consumibles
         </p>
-        <div class="mt-2 mb-6 text-left">
-          <button class="text-primary text-sm" type="button" @click="addNewItem">
-            <i class="fa-solid fa-plus"></i>
+
+        <!-- 
+          MODIFICACIÓN: 
+          - Botón "Agregar" con un estilo más limpio y moderno.
+        -->
+        <div class="mt-4 mb-6 text-left">
+          <button
+            class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1"
+            type="button"
+            @click="addNewItem"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
             Agregar consumible
           </button>
         </div>
-        <div class="mt-2`">
-          <label class="font-bold ml-2 text-sm">Comentarios</label>
-          <textarea v-model="form.notes" rows="3" class="textarea"></textarea>
+
+        <!-- 
+          MODIFICACIÓN: 
+          - Estilos modernos para el 'textarea'.
+        -->
+        <div class="mt-6">
+          <label class="block mb-2 text-sm font-medium text-gray-700">Comentarios</label>
+          <textarea
+            v-model="form.notes"
+            rows="3"
+            class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
+            placeholder="Añade notas o comentarios a la solicitud..."
+          ></textarea>
         </div>
-        <PrimaryButton :disabled="form.processing" class="mt-4">Solicitar</PrimaryButton>
+
+        <!-- 
+          MODIFICACIÓN: 
+          - Botón de envío alineado a la derecha.
+        -->
+        <div class="flex justify-end mt-8">
+          <PrimaryButton :disabled="form.processing">Solicitar</PrimaryButton>
+        </div>
       </form>
     </div>
   </AppLayout>
 </template>
 
+<!-- El script se mantiene idéntico -->
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -119,3 +180,4 @@ export default {
   },
 };
 </script>
+

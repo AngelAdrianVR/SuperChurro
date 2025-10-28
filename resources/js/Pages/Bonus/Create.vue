@@ -1,89 +1,90 @@
+<script setup>
+import AppLayout from "@/Layouts/AppLayout.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue"; // Añadido InputLabel
+import Back from "@/Components/Back.vue";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
+
+const form = useForm({
+  name: null,
+  description: null,
+  amount: null,
+});
+
+const store = () => {
+  form.post(route("bonuses.store"));
+};
+</script>
+
 <template>
   <AppLayout title="Crear nuevo bono">
     <template #header>
       <div class="flex items-center mt-2">
-          <Back />
-          <h2 class="font-semibold text-xl text-gray-800 text-center ml-5 lg:ml-28">
-            Crear nuevo bono
-          </h2>
+        <Back />
+        <h2 class="font-semibold text-xl text-gray-800 dar:text-gray-200 text-center ml-5 lg:ml-28">
+          Crear nuevo bono
+        </h2>
       </div>
     </template>
 
-
-    <div
-        class="max-w-2xl md:mx-auto mt-5  rounded-lg px-5 py-4 bg-transparent border border-gray3 mx-4 my-2"
-      >
+    <!-- Contenedor principal modernizado con sombra y fondo -->
+    <div class="max-w-2xl md:mx-auto mt-6 mx-4">
+      <div class="bg-white dar:bg-gray-800 shadow-xl rounded-lg p-6">
         <form @submit.prevent="store">
-
-          <div class="flex items-center space-x-2">
-            <div class="mb-3 w-full group">
-              <InputLabel value="Nombre *" class="ml-3 mb-1 text-sm" />
-              <input v-model="form.name" type="text" autocomplete="off" class="input"
-              placeholder="Escribe el nombre del bono" />
-              <InputError :message="$page.props?.errors.name" />
+          
+          <div class="flex flex-col md:flex-row items-center gap-4">
+            <!-- Campo de Nombre -->
+            <div class="w-full group">
+              <InputLabel for="name" value="Nombre *" class="mb-2" />
+              <input 
+                id="name"
+                v-model="form.name" 
+                type="text" 
+                autocomplete="off" 
+                class="block w-full border-gray-300 dar:border-gray-700 dar:bg-gray-900 dar:text-gray-300 focus:border-indigo-500 dar:focus:border-indigo-600 focus:ring-indigo-500 dar:focus:ring-indigo-600 rounded-md shadow-sm"
+                placeholder="Escribe el nombre del bono" 
+              />
+              <InputError :message="$page.props?.errors.name" class="mt-2" />
             </div>
 
-            <div class="mb-3 w-1/3 group">
-              <InputLabel value="Cantidad *" class="ml-3 mb-1 text-sm" />
-              <input v-model="form.amount" type="number" autocomplete="off" min="0" placeholder="$00,0" class="input" />
-              <InputError :message="$page.props?.errors.amount" />
+            <!-- Campo de Cantidad -->
+            <div class="w-full md:w-1/3 group">
+              <InputLabel for="amount" value="Cantidad *" class="mb-2" />
+              <input 
+                id="amount"
+                v-model="form.amount" 
+                type="number" 
+                autocomplete="off" 
+                min="0" 
+                placeholder="$00.00" 
+                class="block w-full border-gray-300 dar:border-gray-700 dar:bg-gray-900 dar:text-gray-300 focus:border-indigo-500 dar:focus:border-indigo-600 focus:ring-indigo-500 dar:focus:ring-indigo-600 rounded-md shadow-sm" 
+              />
+              <InputError :message="$page.props?.errors.amount" class="mt-2" />
             </div>
           </div>
 
-          <div class="my-2 w-full">
-            <InputLabel value="Descripción" class="ml-3 mb-1 text-sm" />
-            <textarea
-              v-model="form.description"
-              rows="2"
-              type="text"
-              autocomplete="off"
+          <!-- Campo de Descripción -->
+          <div class="mt-4 w-full">
+            <InputLabel for="description" value="Descripción" class="mb-2" />
+            <textarea 
+              id="description"
+              v-model="form.description" 
+              rows="3" 
+              type="text" 
+              autocomplete="off" 
               placeholder="Escribe la descripción"
-              class="textarea"
+              class="block w-full border-gray-300 dar:border-gray-700 dar:bg-gray-900 dar:text-gray-300 focus:border-indigo-500 dar:focus:border-indigo-600 focus:ring-indigo-500 dar:focus:ring-indigo-600 rounded-md shadow-sm"
             />
-            <InputError :message="$page.props?.errors.description" />
+            <InputError :message="$page.props?.errors.description" class="mt-2" />
           </div>
 
-          <div class="flex justify-start mt-4">
+          <!-- Botón de Guardar -->
+          <div class="flex justify-start mt-6">
             <PrimaryButton :disabled="form.processing">Guardar</PrimaryButton>
           </div>
         </form>
       </div>
+    </div>
   </AppLayout>
 </template>
-  
-<script>
-import AppLayout from "@/Layouts/AppLayout.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import InputError from "@/Components/InputError.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import Back from "@/Components/Back.vue";
-import { Link, useForm } from "@inertiajs/inertia-vue3";
-export default {
-  data() {
-    const form = useForm({
-      name: null,
-      description: null,
-      amount: null,
-    });
-    return {
-      form,
-    };
-  },
-  components: {
-    AppLayout,
-    PrimaryButton,
-    InputError,
-    SecondaryButton,
-    Back,
-    Link
-  },
-  props: {
-
-  },
-  methods: {
-    store() {
-      this.form.post(this.route("bonuses.store"));
-    },
-  },
-};
-</script>

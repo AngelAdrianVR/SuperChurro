@@ -164,5 +164,7 @@ return [
         'payment_method' => 'método de pago',
         'provider' => 'proveedor o comercio',
         'notes' => 'motivo',
+        'amount' => 'cantidad',
+        'permission_type_id' => 'tipo de permiso',
     ],
 ];

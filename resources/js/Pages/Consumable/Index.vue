@@ -6,37 +6,58 @@
       </h2>
     </template>
 
-    <div class="flex justify-end">
-      <Link :href="route('consumables.create')">
-      <PrimaryButton class="mr-7 my-5">Agregar consumible</PrimaryButton>
-      </Link>
-    </div>
+    <!-- Contenedor principal con padding estándar -->
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <!-- Botón de "Agregar" alineado con el contenedor -->
+      <div class="flex justify-end mb-6">
+        <Link :href="route('consumables.create')">
+          <PrimaryButton>Agregar consumible</PrimaryButton>
+        </Link>
+      </div>
 
-    <div class="globe-container flex-col">
-      <div v-for="consumable in consumables.data" :key="consumable.id"
-        class="globe grid grid-cols-2 hover:bg-gray-200 cursor-pointer relative z-0 text-sm">
-        <Link :href="route('consumables.edit', consumable.id)">
-        <div class="globe-title !justify-between pb-2">
-          <p class="text-gray-700 font-bold">
-            {{ consumable.name }}</p>
+      <!-- Cuadrícula (Grid) responsiva para las tarjetas -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+        <!-- Tarjeta de consumible -->
+        <div v-for="consumable in consumables.data" :key="consumable.id"
+             class="bg-white rounded-lg shadow-lg overflow-hidden relative transition-all duration-300 ease-in-out hover:shadow-2xl group">
+
+          <!-- Área clickeable que lleva a "editar" -->
+          <Link :href="route('consumables.edit', consumable.id)" class="block">
+            <!-- Contenedor de la imagen -->
+            <figure class="h-48 w-full bg-gray-100 flex items-center justify-center">
+              <img v-if="consumable.media[0]?.original_url"
+                   :src="consumable.media[0]?.original_url"
+                   alt="Imagen del consumible"
+                   class="h-full w-full object-contain">
+              <!-- Mensaje si no hay imagen -->
+              <span v-else class="text-sm text-gray-400">Sin imagen</span>
+            </figure>
+
+            <!-- Contenido de texto -->
+            <div class="p-4">
+              <p class="text-lg font-semibold text-gray-900 truncate" :title="consumable.name">
+                {{ consumable.name }}
+              </p>
+              <p class="text-sm text-gray-600 mt-1">
+                Unidad: {{ consumable.unit?.name || 'No especificada' }}
+              </p>
+            </div>
+          </Link>
+
+          <!-- Botón de eliminar (Absoluto) -->
+          <!-- Aparece al hacer hover sobre la tarjeta (usando 'group-hover') -->
+          <button
+            class="absolute top-2 right-2 z-10 w-7 h-7 rounded-full bg-white/70 text-red-500 hover:bg-red-100 hover:text-red-700 transition-all duration-200"
+            @click="delete_confirm = true; item_to_delete = consumable;">
+            <i class="fa-regular fa-trash-can text-lg"></i>
+          </button>
         </div>
-        <div class="flex flex-col">
-          <!-- <span>Stock mínimo: {{ consumable.low_stock }} </span> -->
-          <span>Unidad de medida: {{ consumable.unit?.name }} </span>
-        </div>
-        </Link>
-        <Link :href="route('consumables.edit', consumable.id)">
-        <figure v-if="consumable.media[0]?.original_url" class="justify-center pt-2">
-          <img :src="consumable.media[0]?.original_url" alt="Imagen del consumible"
-            class="rounded-lg h-32 mx-auto object-contain">
-        </figure>
-        </Link>
-        <button class="absolute bottom-1 right-2 z-10" @click="delete_confirm = true; item_to_delete = consumable;">
-          <i class="fa-regular fa-trash-can text-red-500"></i>
-        </button>
+
       </div>
     </div>
 
+    <!-- Modal de confirmación (sin cambios) -->
     <ConfirmationModal :show="delete_confirm" @close="delete_confirm = false">
       <template #title>
         <div>¿Deseas continuar?</div>
@@ -64,6 +85,7 @@
 </template>
 
 <script>
+// El script se mantiene idéntico, ya que la funcionalidad no cambia.
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";

@@ -5,17 +5,14 @@
       <div class="flex items-center justify-between">
         <p class="font-bold text-sm flex items-center">Categoría: <span class="mx-2 text-primary">{{ outcomes[0].category }}</span>
         </p>
-        <!-- <div class="flex items-center space-x-1">
-          <i class="fa-solid fa-pencil text-sm rounded-full py-1 px-[7px] hover:bg-gray5 cursor-pointer text-primary"></i>
-          <i class="fa-regular fa-trash-can text-sm rounded-full py-1 px-[7px] hover:bg-gray5 cursor-pointer text-primary"></i>
-        </div> -->
       </div>
 
       <div class="grid grid-cols-4 lg:mx-4 mt-2 space-y-2 py-2 overflow-auto">
         <p class="text-sm font-bold col-span-1">Método de pago:</p>
         <p class="text-sm col-span-3">{{ outcomes[0].payment_method ?? '--' }}</p>
         <p class="text-sm font-bold col-span-1">Monto:</p>
-        <p class="text-sm col-span-3">{{ getTotal().toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</p>
+        <!-- MEJORA: Se usa la propiedad computada 'formattedTotal' -->
+        <p class="text-sm col-span-3">${{ formattedTotal }}</p>
         <p class="text-sm font-bold col-span-1">Descripción:</p>
 
         <table @click="showOptions = false" class="w-full mx-auto text-sm mt-5 col-span-3">
@@ -37,7 +34,7 @@
             </thead>
             <tbody>
                 <tr @click="editOutcome(outcome)"
-                    v-for="outcome in outcomes" :key="outcome.id" class="mb-4 cursor-pointer">
+                    v-for="outcome in outcomes" :key="outcome.id" class="mb-4 hover:bg-gray-200 cursor-pointer">
                     <td class="py-1 pl-3">
                         {{ outcome.concept }}
                     </td>
@@ -87,7 +84,7 @@
 
       </template>
       <template #footer>
-        <CancelButton class="!rounded-full" @click="show_edit_outcome_modal = false">Cancelar</CancelButton>
+        <CancelButton @click="show_edit_outcome_modal = false">Cancelar</CancelButton>
         <PrimaryButton @click="updateOutcome" class="ml-2" :disabled="form.processing">Guardar</PrimaryButton>
       </template>
     </DialogModal>
@@ -109,7 +106,7 @@ data(){
     });
     return {
         form,
-        outcomes_reversed: null,
+        // outcomes_reversed: null, // No se estaba usando
         show_edit_outcome_modal: false,
         edit_outcome: null,
     }
@@ -123,14 +120,28 @@ PrimaryButton
 props:{
 outcomes: Array
 },
-methods:{
-getTotal() {
+// MEJORA: Se mueven los cálculos a 'computed'
+computed: {
+    /**
+     * Calcula el total numérico.
+     */
+    total() {
         let total = 0;
         this.outcomes.forEach(outcome => {
             total += outcome.quantity * outcome.cost;
         });
         return total;
     },
+    /**
+     * Formatea el total para mostrarlo en la UI.
+     */
+    formattedTotal() {
+        return this.total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+},
+methods:{
+    // MEJORA: 'getTotal' se movió a 'computed'
+    // getTotal() { ... },
     editOutcome(item){
       this.edit_outcome = item; 
       this.form.concept = item.concept;
@@ -142,7 +153,8 @@ getTotal() {
       this.form.put(route('outcomes.update', this.edit_outcome.id), {
         onSuccess: () => {
           this.show_edit_outcome_modal = false;
-          location.reload();
+          // MEJORA: Se elimina location.reload()
+          // Inertia actualizará los 'props' automáticamente.
         },
       });
     },

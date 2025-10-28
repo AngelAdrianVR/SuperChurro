@@ -15,9 +15,11 @@
       </p>
     </HideableLabel>
 
+    <!-- Usamos la propiedad computada 'groupedOutcomes' -->
     <OutcomesCard v-for="(outcomes, category) in groupedOutcomes" :key="category" :outcomes="outcomes" />
 
-      <p class="text-right mx-4 font-bold text-sm mt-5 mb-5">Total= ${{getTotal().toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}} </p>
+      <!-- Usamos la propiedad computada 'formattedTotal' -->
+      <p class="text-right mx-4 font-bold text-sm mt-5 mb-5">Total= ${{ formattedTotal }} </p>
     
   </AppLayout>
 </template>
@@ -29,12 +31,12 @@ import HideableLabel from "@/Components/MyComponents/HideableLabel.vue";
 import Back from "@/Components/Back.vue";
 
 export default {
-  data() {
-    
-    return {
-      groupedOutcomes: {}, // Objeto para almacenar los resultados agrupados
-    };
-  },
+  // --- MEJORA: data() ya no es necesario ---
+  // data() {
+  //   return {
+  //     groupedOutcomes: {}, // Movido a computed
+  //   };
+  // },
   components: {
     AppLayout,
     OutcomesCard,
@@ -44,17 +46,15 @@ export default {
   props: {
     outcomes: Array,
   },
-  methods: {
-    getTotal() {
-        let total = 0;
-        this.outcomes.forEach(outcome => {
-           total += outcome.quantity * outcome.cost;
-        });
-        return total;
-    },
-    groupOutcomesByCategory() {
+  // --- MEJORA: Usar Propiedades Computadas ---
+  computed: {
+    /**
+     * Agrupa los 'outcomes' por categoría.
+     * Se recalcula automáticamente si 'this.outcomes' cambia.
+     */
+    groupedOutcomes() {
       // Agrupar los registros por categoría
-      this.groupedOutcomes = this.outcomes.reduce((result, outcome) => {
+      return this.outcomes.reduce((result, outcome) => {
         const category = outcome.category;
 
         if (!result[category]) {
@@ -66,9 +66,30 @@ export default {
         return result;
       }, {});
     },
+    /**
+     * Calcula el total numérico.
+     */
+    total() {
+        let total = 0;
+        this.outcomes.forEach(outcome => {
+           total += outcome.quantity * outcome.cost;
+        });
+        return total;
+    },
+    /**
+     * Formatea el total para mostrarlo en la UI.
+     */
+    formattedTotal() {
+        return this.total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
   },
-  mounted() {
-    this.groupOutcomesByCategory();
-  },
+  // --- MEJORA: methods y mounted ya no son necesarios para esto ---
+  // methods: {
+  //   getTotal() { ... }, // Movido a computed
+  //   groupOutcomesByCategory() { ... }, // Movido a computed
+  // },
+  // mounted() {
+  //   this.groupOutcomesByCategory(); // Movido a computed
+  // },
 };
 </script>

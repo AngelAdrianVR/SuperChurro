@@ -1,4 +1,5 @@
 <template>
+  <!-- Usamos 'loading' para mostrar el indicador mientras Inertia carga -->
   <LoadingIndicator v-if="loading" />
   <AppLayout title="Historial de Egresos">
     <template #header>
@@ -12,12 +13,12 @@
     <div class="flex justify-between mx-5">
       <div class="block">
         <el-date-picker
-        @change="applyFilter"
-          v-model="date"
-          type="month"
-          placeholder="Selecciona el mes"
-          format="MMM YYYY"
-          value-format="MM YYYY"
+          @change="filterData"
+          v-model="dateRange"
+          type="daterange"
+          placeholder="Selecciona rango de fechas"
+          format="DD/MM/YYYY"
+          value-format="YYYY-MM-DD"
         />
       </div>
       <Link :href="route('outcomes.create')">
@@ -25,20 +26,20 @@
       </Link>
     </div>
 
-      <p v-if="month" class="font-bold text-sm mx-5">Total de egresos: $</p>
+    <!-- El total ahora es siempre el del mes filtrado -->
+    <div class="text-center font-bold mb-4">
+      <label>Egresos del período: ${{ total_outcomes_money }} </label>
+    </div>
 
-      <div class="text-center font-bold mb-4">
-        
-        <label v-if="!total_outcome">Egresos totales: ${{ total_outcomes_money }} </label>
-        <label v-else>Egresos totales: ${{ total_outcome }} </label>
-      </div>
+    <!-- Pasamos 'outcomes_groups' a la tabla -->
+    <div v-if="!loading" class="mx-auto">
+      <OutcomesTable class="w-[95%]" :outcomes="outcomes_groups" />
+    </div>
 
-
-      <div v-if="!loading" class="mx-auto">
-        <OutcomesTable class="w-[95%]" :outcomes="filtered_outcomes" />
-      </div>
-
-    <!-- <Pagination :pagination="filtered_outcomes" /> -->
+    <!-- Componente de paginación. Asume que 'Pagination.vue' acepta el objeto paginador de Laravel -->
+    <div class="mt-4 flex justify-center">
+        <Pagination :pagination="outcomes" />
+    </div>
   </AppLayout>
 </template>
 
@@ -46,28 +47,21 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import Pagination from "@/Components/Pagination.vue";
+import Pagination from "@/Components/Pagination.vue"; // Tu componente de paginación
 import OutcomesTable from "@/Components/MyComponents/Outcome/OutcomesTable.vue";
 import LoadingIndicator from "@/Components/MyComponents/LoadingIndicator.vue";
 import Back from "@/Components/Back.vue";
-import { Link, useForm } from "@inertiajs/inertia-vue3";
-import axios from 'axios';
-
+import { Link } from "@inertiajs/inertia-vue3";
+// Quitamos la importación de 'router' que causaba el error
 
 export default {
   data() {
-    const form = useForm({
-      quantity: null,
-      
-    });
     return {
-      form,
-      date: null,
-      selected_year: '',
-      selected_month: '',
-      filtered_outcomes: [],
-      total_outcome: null,
-      loading: false,
+      // Inicializa 'dateRange' con los filtros si existen, si no, null
+      dateRange: this.filters.date_from && this.filters.date_to
+            ? [this.filters.date_from, this.filters.date_to]
+            : null,
+      loading: false, // Controlamos el estado de carga
     }
   },
   components: {
@@ -81,39 +75,36 @@ export default {
     Link
   },
   props: {
-    outcomes: Object,
-    total_outcomes_money: String
+    outcomes: Object, // Objeto paginador de Laravel (contiene links, data, total, etc.)
+    outcomes_groups: Object, // Los egresos agrupados por día para la página actual
+    total_outcomes_money: String, // Total del período
+    filters: Object, // Objeto con { date_from, date_to }
   },
-
   methods: {
-     calculateTotal(outcomeItems) {
-      // Calcular el total multiplicando quantity por cost y sumándolos
-      return outcomeItems.reduce((total, item) => {
-        return total + item.quantity * item.cost;
-      }, 0);
-    },
-   async applyFilter(){
-      try {
-        this.loading = true;
-        const response = await axios.post(route('outcomes.filter'),{year: this.date.split(' ')[1], month: this.date.split(' ')[0]});
-        if(response.status == 200){
-         this.filtered_outcomes = response.data.outcomes;
-         this.total_outcome = response.data.total_outcomes_money;
-        }
-      } catch (error) {
-        console.log(error);
-        this.$notify({
-            title: "Algo salió mal",
-            message: "No se pudo recuperar el historial de egresos. Intenta más tarde",
-            type: "error",
-          });
-      } finally {
-        this.loading = false;
+    /**
+     * Filtra los datos haciendo una visita Inertia GET a la misma ruta (index)
+     * con los nuevos parámetros de rango de fechas.
+     */
+    filterData() {
+      let params = {};
+      
+      // Si tenemos un rango de fechas, lo agregamos a los parámetros
+      if (this.dateRange && this.dateRange.length === 2) {
+        params = {
+            date_from: this.dateRange[0],
+            date_to: this.dateRange[1],
+        };
       }
+      
+      // CORRECCIÓN: Usamos 'this.$inertia.get' en lugar de 'router.get'
+      this.$inertia.get(route('outcomes.index'), params, {
+        preserveState: true, // Mantiene el estado del scroll
+        replace: true, // No agrega una nueva entrada al historial del navegador
+        onStart: () => { this.loading = true },
+        onFinish: () => { this.loading = false }
+      });
     }
-  },
-  mounted() {
-    this.filtered_outcomes = this.outcomes; 
   }
 };
 </script>
+

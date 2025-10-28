@@ -21,7 +21,7 @@
         border border-gray3
         mx-4
       ">
-      <p v-if="validation_message" class="text-red-400 text-xs mb-2" v-html="validation_message"></p>
+      <!-- Mensaje de validación eliminado, InputError se encarga de eso -->
       <form @submit.prevent="store">
         <div class="mb-3">
           <InputLabel value="Categoría" class="ml-3 mb-1 text-sm" />
@@ -29,7 +29,7 @@
             class="select w-full"
             v-model="form.category"
           >
-            <option disabled selected class="text-gray-500">
+            <option disabled :value="null" class="text-gray-500">
               -- Seleccione --
             </option>
             <option
@@ -57,7 +57,7 @@
             class="select w-full"
             v-model="form.payment_method"
           >
-            <option disabled selected class="text-gray-500">
+            <option disabled :value="null" class="text-gray-500">
               -- Seleccione --
             </option>
             <option
@@ -127,7 +127,7 @@ export default {
   data() {
     const form = useForm({
       category: null,
-      date: null,
+      date: new Date().toISOString().slice(0, 10), // --- MEJORA: Fecha actual por defecto ---
       payment_method: "Efectivo",
       provider: null,
       items: [
@@ -142,26 +142,11 @@ export default {
     })
     return {
       form,
-      validation_message: "",
+      // validation_message: "", // Eliminado, se usa InputError
       next_item_id: 2,
-      categories: [
-        'Gastos varios',
-        'Compra de insumos',
-        'Gasto de alimento para colaboradores',
-        'Costo de operaciones del carrito',
-        'Servicios públicos',
-        'Gastos administrativos',
-        'Material de limpieza',
-        'Gastos de farmacia',
-        'Otro',
-      ],
-      payment_methods: [
-        'Efectivo',
-        'Transferencia bancaria',
-        'Tarjeta de crédito',
-        'Tarjeta de débito',
-        'Otro',
-      ],
+      // --- MEJORA: Eliminados, ahora vienen de props ---
+      // categories: [ ... ],
+      // payment_methods: [ ... ],
     }
   },
   components: {
@@ -175,12 +160,14 @@ export default {
     Link,
   },
   props: {
-
+    // --- MEJORA: Recibir categorías y métodos de pago desde el controlador ---
+    categories: Array,
+    payment_methods: Array,
   },
 
   methods: {
     addNewItem() {
-      this.form.items.push({ id: this.next_item_id++, quantity: null, });
+      this.form.items.push({ id: this.next_item_id++, quantity: 1, concept: null, cost: null }); // Aseguramos valores iniciales
     },
     deleteItem(index) {
       if (this.form.items.length > 1) {

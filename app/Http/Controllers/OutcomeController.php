@@ -4,28 +4,60 @@ namespace App\Http\Controllers;
 
 use App\Models\Outcome;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class OutcomeController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $total_outcomes_money = 0;
-        $outcomes = Outcome::with('user')->latest()->get()->groupBy(function ($data) {
-            return $data->created_at->toDateString();
-        });
+        // Valida y obtiene el rango de fechas.
+        $validated = $request->validate([
+            'date_from' => 'nullable|date_format:Y-m-d',
+            'date_to' => 'nullable|date_format:Y-m-d',
+        ]);
 
-        // return $outcomes;
-        
-        foreach ($outcomes as $outcome) {
-            $total_outcomes_money += $outcome->sum(function ($outcome) {
-                return $outcome->cost * $outcome->quantity;
+        // Usa el mes actual como default si no se proveen fechas
+        $dateFrom = $validated['date_from'] ?? now()->startOfMonth()->toDateString();
+        $dateTo = $validated['date_to'] ?? now()->endOfMonth()->toDateString();
+
+        // 1. Calcula el total del rango de forma eficiente
+        // Aseguramos cubrir el día completo en 'dateTo'
+        $total_outcomes_money = Outcome::whereBetween('created_at', [$dateFrom . ' 00:00:00', $dateTo . ' 23:59:59'])
+            ->sum(DB::raw('cost * quantity'));
+
+        // 2. Crea la consulta base para los días
+        $datesQuery = Outcome::select(DB::raw('DATE(created_at) as outcome_date'))
+            ->whereBetween('created_at', [$dateFrom . ' 00:00:00', $dateTo . ' 23:59:59'])
+            ->distinct()
+            ->latest('outcome_date');
+
+        // 3. Pagina los días (ej. 10 días por página)
+        // withQueryString() agrega los parámetros (date_from, date_to) a los enlaces de paginación
+        $paginatedDates = $datesQuery->paginate(10)->withQueryString();
+
+        // 4. Obtiene los egresos solo para los días de la página actual
+        $dates = $paginatedDates->pluck('outcome_date');
+        $outcomes_groups = Outcome::with('user')
+            ->whereIn(DB::raw('DATE(created_at)'), $dates)
+            ->latest()
+            ->get()
+            // Agrupa en PHP (es rápido porque solo procesa los datos de una página)
+            ->groupBy(function ($data) {
+                return $data->created_at->toDateString();
             });
-        }
 
-        $total_outcomes_money = number_format($total_outcomes_money, 2);
-
-        return inertia('Outcome/Index', compact('outcomes', 'total_outcomes_money'));
+        // 5. Devuelve los datos a Inertia
+        return Inertia::render('Outcome/Index', [
+            'outcomes' => $paginatedDates, // Este es el objeto paginador (links, data, etc.)
+            'outcomes_groups' => $outcomes_groups, // Estos son los egresos agrupados
+            'total_outcomes_money' => number_format($total_outcomes_money, 2),
+            'filters' => [ // Devolvemos los filtros aplicados
+                'date_from' => $dateFrom,
+                'date_to' => $dateTo,
+            ]
+        ]);
     }
 
 
